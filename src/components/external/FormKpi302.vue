@@ -1,22 +1,56 @@
 <template>
 <div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="80%">
-        <el-form style="text-align:left" :model="dialogObj" :orgmodel="orgModel" :kpis="kpis" :disable="disable" v-if="dialogVisible" ref="formCall">
+        <el-form style="text-align:left" :model="dialogObj" :buildings="buildings" :floors="floors" :orgmodel="orgModel"  :disable="disable" v-if="dialogVisible" ref="formCall">
  
-            <el-form-item
-                  label="KPI"
+            
+
+              <el-form-item
+                  label="Datum van spotcheck"
                   :label-width="formLabelWidth">
-              <el-select size="mini" v-model="dialogObj.kpi" 
-                :disabled="disable"
-                placeholder="Select">
-                  <el-option
-                    v-for="item in kpis"
-                    :key="item.kpi"
-                    :label="item.kpi +'-'+ item.desc"
-                    :value="item.kpi">
-                  </el-option>
-                </el-select>
-            </el-form-item>
+                <el-date-picker
+                  :disabled="disable"
+                  v-model="dialogObj.datetimestart"
+                  :picker-options={firstDayOfWeek:1}
+                  type="datetime"
+                  size="mini"
+                  placeholder="Select date and time">
+                </el-date-picker>
+              </el-form-item>
+
+
+               <el-form-item
+                  label="Gebouw"
+                  :label-width="formLabelWidth">
+                <el-select size="mini" v-model="dialogObj.building" 
+                  :disabled="disable"
+                  placeholder="Select"
+                  @change="building_changed">
+                    <el-option
+                      v-for="item in buildings"
+                      :key="item.building"
+                      :label="item.building"
+                      :value="item.building">
+                    </el-option>
+                  </el-select>
+              </el-form-item>
+
+              <el-form-item
+                  label="Verdieping"
+                  :label-width="formLabelWidth">
+                <el-select size="mini" v-model="dialogObj.floor" 
+                  :disabled="disable"
+                  placeholder="Select"
+                  >
+                    <el-option
+                      v-for="item in floors"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+              </el-form-item>
+
 
             <el-form-item
                   label="Uitleg "
@@ -29,12 +63,31 @@
                   size="mini"></el-input>
               </el-form-item>
 
+
               <el-form-item
-                  label="Datum van het incident "
+                  label="Resultaat "
+                  :label-width="formLabelWidth">
+                                    
+                   <el-select size="mini" v-model="dialogObj.conform" 
+                    :disabled="disable"
+                    placeholder="Select">
+                      <el-option key="1"
+                        label="Conform"
+                        :value="true" >                       
+                      </el-option>
+                      <el-option key="0"
+                        label="Niet Conform"
+                        :value="false" >                       
+                      </el-option>
+                    </el-select>
+              </el-form-item> 
+                      
+             <el-form-item v-if="!dialogObj.conform"
+                  label="Datum van resolutie"
                   :label-width="formLabelWidth">
                 <el-date-picker
                   :disabled="disable"
-                  v-model="dialogObj.datetimestart"
+                  v-model="dialogObj.datetimeend"
                   :picker-options={firstDayOfWeek:1}
                   type="datetime"
                   size="mini"
@@ -42,49 +95,6 @@
                 </el-date-picker>
               </el-form-item>
 
-              <el-table-column
-                prop="_source.datetimeend"
-                label="Datum van resolutie"
-                sortable
-                width="180"
-                size="small"                
-                :formatter="formaterend">
-                
-                <template slot-scope="scope" v-if="!scope.row._source.finished">                  
-                  
-                  <el-popover
-                  placement="top-start"
-                  title="Tijd Interval"
-                  width="180"
-                  trigger="hover"
-                  :content="hintduration(scope.row)">
-                  <el-button type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
-                </el-popover>
-                </template>
-              </el-table-column>
-
-              <el-form-item
-                  label="Opgelost "
-                  :label-width="formLabelWidth">
-                  <el-switch v-model="dialogObj.finished">
-                  </el-switch>
-              </el-form-item> 
-
-              <el-form-item v-if="dialogObj.finished"
-                  label="Datum van resolutie"
-                  :label-width="formLabelWidth">
-                <el-date-picker
-                  v-model="dialogObj.datetimeend"
-                  :picker-options={firstDayOfWeek:1}
-                  type="datetime"
-                  size="mini"
-                  placeholder="Select date and time">
-                </el-date-picker>
-              </el-form-item>              
-
-              
-        
-            
         </el-form>
         
         <span slot="footer" class="dialog-footer">
@@ -117,7 +127,7 @@
   <el-row class="kpi600-container" :span="24" type="flex" justify="center">  
       <el-card class="box-card2">
         <div slot="header" class="clearfix">
-          <span style="font-weight:bold">KPI200 - Correctief Onderhoud</span>
+          <span style="font-weight:bold">KPI 302 Manier van uitvoeren</span>
         </div>
         <div class="card-body">
           <el-row class="first-row" :span="24">
@@ -164,19 +174,14 @@
           
             <el-table
               :data="tableData"
-              :default-sort = "{prop: '_source.kpi', order: 'descending'}"
+              :default-sort = "{prop: '_source.datetimestart', order: 'ascending'}"
               style="width: 100%">
-              <el-table-column
-                prop="_source.kpi"
-                label="KPI"
-                sortable
-                width="80">
-              </el-table-column>
+
               <el-table-column
                 prop="_source.datetimestart"
-                label="Datum van het incident"
+                label="Datum van spotcheck"
                 sortable
-                width="210"
+                width="190"
                 :formatter="formaterstart">
               </el-table-column>
 
@@ -188,41 +193,58 @@
                 size="small"
                 :formatter="formaterend">
                 
-                <template slot-scope="scope" v-if="scope.row._source.finished">                                    
+                <template slot-scope="scope" v-if="!scope.row._source.conform">                                    
                   <el-popover
                   placement="top-start"
                   title="Tijd Interval"
                   width="180"
                   trigger="hover"
-                  :content="hintduration(scope.row)">
-                  <el-button type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
+                  :content="hintduration(scope.row)"                  
+                  >
+
+                  <el-button type="text"  v-bind:class="{redduration:formatend(scope.row),greenduration:!formatend(scope.row)}"  slot="reference">{{formaterend(scope.row)}}</el-button>
                 </el-popover>
                 </template>
               </el-table-column>
 
               <el-table-column
-                prop="_source.finished"
-                label="Opgelost"
+                prop="_source.conform"
+                label="Conform"
                 sortable
-                width="120"
+                width="110"
                 align="center"
                 >
                 
                 <template slot-scope="scope" >
                 
-                  <v-icon name="times" scale="1.0" v-if="!scope.row._source.finished"/>
-                  <v-icon name="check" scale="1.0" v-if="scope.row._source.finished"/>
+                  <v-icon name="times" scale="1.0" v-if="!scope.row._source.conform"/>
+                  <v-icon name="check" scale="1.0" v-if="scope.row._source.conform"/>
                   <!-- <div style="text-align:center;" >
                     <v-icon name="bug" scale="1.5"/>
                   </div> -->
                 </template>
               </el-table-column>
               
+                              
               <el-table-column
+                
+                label="Gebouw"
+                width="120"
+                sortable
+                >
+                <template slot-scope="scope" >                  
+                  {{scope.row._source.building}} / {{scope.row._source.floor}}                  
+                </template>
+                
+              </el-table-column>
+              
+
+            
+            <el-table-column
                 prop="_source.desc"
                 label="Uitleg"
                 sortable
-                width="300">
+                width="290">
               </el-table-column>
 
               <el-table-column
@@ -261,21 +283,20 @@ import Vue from "vue";
 import moment from "moment";
 import axios from "axios";
 import _ from "lodash";
-import formkpi200 from "@/components/external/FormKpi200";
+import formkpi302 from "@/components/external/FormKpi302";
 import { setTimeout } from 'timers';
-Vue.component("FormKpi200", formkpi200);
+Vue.component("FormKpi302", formkpi302);
 
 export default {
-  name: "FormKpi200",
+  name: "FormKpi302",
   data() {
     return {
       query:"",
       monthSelected: null, 
       monthStart: null,      
       monthEnd: null,      
-      disable: true,
-      currentKPI600MonthlyObj: null,
-      formLabelWidth: '200px',
+      disable: true,      
+      formLabelWidth: '250px',
       writeAccess:false,
       dialogType: 'creation',
       dialogVisible:false,
@@ -284,9 +305,8 @@ export default {
       dialogObj:null,
       orgModel:null,
       tableData:[],
-      kpi:null,
-      kpis:[{"kpi": "203", "desc": "Condensatorbanken"}, {"kpi": "204", "desc": "Batterijlader 110Vdc alleenstaand"}, {"kpi": "205", "desc": "Batterijlader 110Vdc redundant"}, {"kpi": "206", "desc": "UPS"}, {"kpi": "207", "desc": "Masterpact vermogenschakelaar"}, {"kpi": "208", "desc": "Transformator"}, {"kpi": "209", "desc": "Hoogspanningcel, vermogenschakelaar en relais"}, {"kpi": "210", "desc": "Ontlastingsnet 110Vdc, deels of volledig"}, {"kpi": "211/212", "desc": "Noodstroomgroepen hoogspanning"}, {"kpi": "213", "desc": "Productiemogelijkheid LS noodstroomgroepen"}, {"kpi": "214", "desc": "Normaal-noodomschakelaar (kan omschakelen)"}]
-      
+      buildings:[{"building":"001 A","floors":["Floor K (0) Kelder","Floor E (1) Tussenkelder","Floor P (2) Platform","Floor A (3) Aankomst/Vertrek","Floor M (4) Mezzanine","Floor T (5) Techniek","Floor L (6) Koeltorens","Floor D (7) Dak"]},{"building":"001 B","floors":["Floor K (0) Kelder","Floor P (1) Platform","Floor A (2) Aankomst","Floor V (3) Vertrek","Floor S (4) Salondiensten","Floor D (5) Dak"]},{"building":"001 C","floors":["Floor K (-2) Kelder","Floor P (0) Inschepingsvloer"]},{"building":"001 G","floors":["Floor 0 (0) Platform","Floor 1 (1) Aankomst/Vertrek","Floor 2 (2) Aankomst","Floor 4 (3) Mezzanine + Vertrek","Floor T (4) Tussentechniek","Floor 5 (5) Techniek","Floor 6 (6) Dak"]},{"building":"001 New","floors":["Floor U (-3) Kruipkelder","Floor K (-2) Kelder","Floor E (-1) Technisch plafond","Floor P (0) Platform","Floor I (1) Tussenverdieping","Floor A (2) Aankomst","Floor V ( 3) Vertrek","Floor M (4) Mezzanine","Floor B (5) Burelen","Floor T (6) Techniek + parking","Floor S (7) Stand & gate","Floor D (8) Dak"]},{"building":"001 Old","floors":["Floor K (-3) 2&3 ondervloer","Floor 0 (-2) Level 00","Floor M (-1) Motorfiets Parking","Floor 1 (0) Level 01 Platform","Floor I (1) Tussenv. Sanitair","Floor 2 (2) Level 02 Aankomst","Floor 3 (3) Level 03 Vertrek","Floor 4 (4) Level 04","Floor 5 (5) Level 05","Floor 6 (6) Level 06","Floor 7 (7) Level 07","Floor 8 (8) Level 08","Floor 9 (9) Level 09","Floor A (10) Level 10","Floor B (11) Controletoren11","Floor C (12) Controletoren12","Floor D (13) Dak"]},{"building":"001 Tun","floors":["Floor K (0) Tunnel"]},{"building":"001 W","floors":["Floor K (-1) Kelder","Floor E (0) Tussenkelder"]},{"building":"056","floors":["Floor G (0) Gelijkvloers","Floor V (1) Verdieping","Floor D (2) Dak"]},{"building":"034","floors":["Floor G (0) Gelijkvloers"]},{"building":"026","floors":["Floor K (-1) Kelder","Floor G (0) Gelijkvloers"]},{"building":"016","floors":["Floor G (0) Gelijkvloers"]},{"building":"001 M","floors":["Floor K (-1) Kelder","Floor P (0) Platform","Floor I (1) Tussenverdieping","Floor A (2) Aankomst","Floor V ( 3) Vertrek","Floor 4 (4) Level 04","Floor 5 (5) Level 05","Floor 6 (6) Level 06","Floor 7 (7) Level 07","Floor 8 (8) Level 08","Floor 9 (9) Level 09","Floor 10 (10) Level 10","Floor D (11) Dak"]}],
+      floors:[]
     };
   },
   computed: {
@@ -298,16 +318,52 @@ export default {
   created: function() {
     for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
-        if(priv =='admin' || priv=='kpi200-write') {
+        if(priv =='admin' || priv=='kpi302-write') {
           this.writeAccess = true
         }
       }
     this.prepareData();
   },
   methods: {
+    building_changed(val)
+    {
+      for(var i=0;i<this.buildings.length;i++)
+      {
+        if(this.buildings[i].building==val)
+        {          
+          this.floors=this.buildings[i].floors;
+          this.dialogObj.floor=this.buildings[i].floors[0];
+
+          return
+        }  
+      }
+      
+    },
     formaterend(row, column)
     {
-      return moment(row._source.datetimeend).format("DD/MMM/YYYY HH:mm")
+      if (row._source.datetimeend !=null)
+        return moment(row._source.datetimeend).format("DD/MMM/YYYY HH:mm");
+      else
+        return "";
+      //return JSON.stringify(column);
+      }
+      ,
+      formatend(row, column)
+    {
+      if (row._source.datetimeend !=null)
+        if ((moment(row._source.datetimeend).diff(row._source.datetimestart,'hours')/24)<=15)
+          return false;
+        else
+          return true;
+      else
+        return "";
+      //return JSON.stringify(column);
+      }
+    ,
+    hintduration(row, column)
+    {
+      return  " "+(moment(row._source.datetimeend).diff(row._source.datetimestart,'hours')/24).toFixed(2)+" dag(en)"
+
       //return JSON.stringify(column);
       }
     ,
@@ -316,19 +372,12 @@ export default {
       return moment(row._source.datetimestart).format("DD/MMM/YYYY HH:mm")
       //return JSON.stringify(column);
       }
-      ,
-    hintduration(row, column)
-    {
-      return  " "+(moment(row._source.datetimeend).diff(row._source.datetimestart,'hours')/24).toFixed(2)+" dag(en)"
-
-      //return JSON.stringify(column);
-      }
     ,    
     
     clickDialogCreate(){
       var rec = {
         _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
-        _index: "biac_kpi200_monthly",
+        _index: "biac_kpi302_monthly",
         _type: "doc",
 
         _source: this.dialogObj
@@ -367,13 +416,15 @@ export default {
     },
     addRecord() {
       this.dialogObj = {
-        datetimestart: moment(),
-        datetimeend: moment(),
-        finished: false,
-        kpi:"203"
+        datetimestart: moment(),        
+        datetimeend: null,        
+        conform: true  ,
+        building:this.buildings[0].building  ,
+        floor:this.buildings[0].floors[0]        
       }
+      this.floors=this.buildings[0].floors  
       this.dialogType = 'creation'
-      this.dialogTitle   = 'Nieuw incident'
+      this.dialogTitle   = 'Nieuw spotcheck'
       this.dialogVisible = true
 
     },
@@ -381,9 +432,19 @@ export default {
       var newconfig=JSON.parse(JSON.stringify(row));
       this.dialogObj = newconfig._source;
       this.dialogType = 'update'
-      this.dialogTitle   = 'Bijwerken incident'
+      this.dialogTitle   = 'Bijwerken spotcheck'
       this.dialogVisible = true
       this.orgModel=row;
+
+      for(var i=0;i<this.buildings.length;i++)
+      {
+        if(this.buildings[i].building==this.dialogObj.building)
+        {          
+          this.floors=this.buildings[i].floors;
+
+          break
+        }  
+      }
     },
     handleDelete(index,row)
     {
@@ -412,8 +473,7 @@ export default {
 
       if(moment().format('D') > 14) {
         //console.log('report already done')
-        this.disable = (moment() > moment(this.monthSelected).endOf('Month'))        
-
+        this.disable = (moment() > moment(this.monthSelected).endOf('Month'))
       }
       else {
         this.disable = (moment().subtract(1, 'months') > moment(this.monthSelected).endOf('Month'))
@@ -426,11 +486,11 @@ export default {
 
       var url =
       this.$store.getters.apiurl +
-      "generic_search/biac_kpi200_monthly*?token=" +
+      "generic_search/biac_kpi302_monthly*?token=" +
       this.$store.getters.creds.token;
 
     var fullq={
-          "size":1000,
+          "size":900,
           "query": {
             "bool": {
               "must": [
@@ -449,7 +509,7 @@ export default {
       .post(url, fullq)
       .then((response) => {
         if(response.data.error!="")
-          console.log("KPI200 list error...");
+          console.log("KPI302 list error...");
         else
         {
           console.log(response.data.records);
@@ -473,7 +533,7 @@ export default {
   
 }
 .box-card2 {
-  width: 950px !important;
+  width: 1050px !important;
 }
 
 .kpi600-container  .parameters-selection{
@@ -500,6 +560,16 @@ export default {
 .kpi600-switches-text {
   margin-left: 20px; 
   font-size: 11px;
+}
+
+.redduration
+{
+  color:red !important;
+}
+
+.greenduration
+{
+  color:green !important;
 }
 
 .kpi600-container .row-subtitle {

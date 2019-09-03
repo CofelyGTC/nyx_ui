@@ -4,7 +4,9 @@
         <div slot="header" class="clearfix">
           <span style="font-weight:bold">KPI600 - Administratieve Vergaderingen</span>
         </div>
+        
         <div class="card-body">
+          
           <el-row class="first-row" :span="24">
               <el-col  :span="12" style="text-align:left;">
                 <el-row>
@@ -20,6 +22,7 @@
                 <el-row style="margin-left:5px; font-weight:bold;">
                   {{strPeriod1}}<br/>
                   {{strPeriod2}}
+                  
                 </el-row>
 
               </el-col>
@@ -171,6 +174,12 @@ export default {
   computed: {
     
   },
+  
+  props: {
+    config: {
+      type: Object
+    }
+  },
   created: function() {
     this.prepareData();
   },
@@ -308,11 +317,33 @@ export default {
             console.log("retrieve KPI600 model entities  success");
             console.log(response.data.data)
             console.log(typeof(response.data.data))
-            this.entityModel = JSON.parse(response.data.data)
+            var entityModel0 = JSON.parse(response.data.data)
+
+            console.log("0="+entityModel0)
+            this.entityModel=entityModel0;
+            
+            this.entityModel={}
+            
+            for(var i in entityModel0)
+            {
+              console.log("i="+i)
+              console.log(entityModel0)
+              if(this.config.config.controllerparameters=="DNB")
+              {
+                if (i =="4")
+                  this.entityModel[i]=entityModel0[i];
+              }
+              else
+              {
+                if (i !="4")
+                  this.entityModel[i]=entityModel0[i];
+              }
+              
+            }
+          
 
             for(var i in this.entityModel) {
-              console.log(i)
-              this.lotArray.push(i)
+              this.lotArray.push(i);
             }
 
             this.selectedLot = Object.keys(this.entityModel)[0]
