@@ -318,7 +318,7 @@ export default {
   created: function() {
     for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
-        if(priv =='admin' || priv=='kpi302-write' || priv=='KPI302-WRITE') {
+        if(priv =='admin' || priv=='kpi302-write' || priv=='KPI302_WRITE') {
           this.writeAccess = true
         }
       }

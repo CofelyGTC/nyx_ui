@@ -302,7 +302,7 @@ export default {
 
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
-        if(priv =='admin' || priv=='kpi600-ihm-write' || priv=='KPI600-WRITE') {
+        if(priv =='admin' || priv=='kpi600-ihm-write' || priv=='KPI600_WRITE') {
           this.writeAccess = true
         }
       }
