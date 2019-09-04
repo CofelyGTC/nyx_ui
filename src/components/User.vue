@@ -9,8 +9,7 @@
       
     <el-table
     size="mini" 
-      :data="tableData.filter(data => !search || ((JSON.stringify(data._source).toLowerCase().includes(search.toLowerCase())))      
-      )"
+      :data="tableData.filter(data => !search || ((JSON.stringify(data._source).toLowerCase().includes(search.toLowerCase()))))"
       :default-sort="{prop: '_id', order: 'descending'}"
       style="width: 100%"
       highlight-current-row @current-change="handleCurrentChange"
