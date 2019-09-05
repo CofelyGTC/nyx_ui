@@ -91,6 +91,7 @@ export default {
       flagFalse: false,
       flagTrue: false,
       disable:true,
+      writeAccess:false,
       strPeriod: '',
       switchModel: null,
       dayList: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
@@ -118,6 +119,12 @@ export default {
     },
     prepareData() {
       console.log('prepare data')
+      for(var i in this.$store.getters.creds.user.privileges) {
+        var priv = this.$store.getters.creds.user.privileges[i]
+        if(priv =='admin' ||  priv=='KPI100_WRITE') {
+          this.writeAccess = true
+        }
+      }
       this.weekSelected = moment()
       this.dateSelected()
     },
@@ -156,6 +163,9 @@ export default {
         this.disable = (moment() > moment(this.weekSelected).endOf('Week').endOf('Month'))
       else
         this.disable = (moment().subtract(1, 'months') > moment(this.weekSelected).endOf('Week').endOf('Month'))
+
+      if (!this.writeAccess)
+        this.disable=true;
 
       console.log(this.disable)
 

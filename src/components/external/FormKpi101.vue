@@ -90,7 +90,7 @@
           <el-button 
             v-if="dialogType=='modif'"
             type="primary"
-            :disabled="!callHasBeenModified" 
+            :disabled="!writeAccess || !callHasBeenModified" 
             plain 
             size="small" 
             :loading="loading"
@@ -153,7 +153,7 @@
                     :key="index">
                     <el-input-number
                       v-model="item.numberOfCall"
-                      :disabled="!monthSelected || disable" 
+                      :disabled="!monthSelected || disable || !writeAccess" 
                       size="mini"
                       @change="handleChangeNumberCall" 
                       
@@ -203,7 +203,7 @@
           </el-row>
           <el-row class="third-row" :span="24">
             <el-button
-              :disabled="!monthSelected || disable"
+              :disabled="!monthSelected || disable || !writeAccess"
               type="primary"
               icon="el-icon-plus"
               @click="addCall"
@@ -314,6 +314,7 @@ export default {
       callData: null,
       disable: false,
       targetMonth: null,
+      writeAccess:false,
       lotModel: [
         {
           label: 'Stookplaatsen',
@@ -356,6 +357,12 @@ export default {
   methods: {
     prepareData() {
       console.log('prepare data')
+      for(var i in this.$store.getters.creds.user.privileges) {
+        var priv = this.$store.getters.creds.user.privileges[i]
+        if(priv =='admin' ||  priv=='KPI100_WRITE') {
+          this.writeAccess = true
+        }
+      }
       this.monthSelected = moment()
       this.dateSelected()
     },
