@@ -50,8 +50,7 @@
                 size="small"                
                 :formatter="formaterend">
                 
-                <template slot-scope="scope" v-if="!scope.row._source.finished">                  
-                  
+                <template slot-scope="scope" v-if="!scope.row._source.finished">                                    
                   <el-popover
                   placement="top-start"
                   title="Tijd Interval"
@@ -186,7 +185,8 @@
                 sortable
                 width="180"
                 size="small"
-                :formatter="formaterend">
+                :formatter="formaterend"
+                >
                 
                 <template slot-scope="scope" v-if="scope.row._source.finished">                                    
                   <el-popover
@@ -195,7 +195,7 @@
                   width="180"
                   trigger="hover"
                   :content="hintduration(scope.row)">
-                  <el-button type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
+                  <el-button v-bind:class="{redduration:formatend(scope.row),greenduration:!formatend(scope.row)}" type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
                 </el-popover>
                 </template>
               </el-table-column>
@@ -285,7 +285,8 @@ export default {
       orgModel:null,
       tableData:[],
       kpi:null,
-      kpis:[{"kpi": "203", "desc": "Condensatorbanken"}, {"kpi": "204", "desc": "Batterijlader 110Vdc alleenstaand"}, {"kpi": "205", "desc": "Batterijlader 110Vdc redundant"}, {"kpi": "206", "desc": "UPS"}, {"kpi": "207", "desc": "Masterpact vermogenschakelaar"}, {"kpi": "208", "desc": "Transformator"}, {"kpi": "209", "desc": "Hoogspanningcel, vermogenschakelaar en relais"}, {"kpi": "210", "desc": "Ontlastingsnet 110Vdc, deels of volledig"}, {"kpi": "211/212", "desc": "Noodstroomgroepen hoogspanning"}, {"kpi": "213", "desc": "Productiemogelijkheid LS noodstroomgroepen"}, {"kpi": "214", "desc": "Normaal-noodomschakelaar (kan omschakelen)"}]
+      kpis:[{"kpi": "203", "desc": "Condensatorbanken"}, {"kpi": "204", "desc": "Batterijlader 110Vdc alleenstaand"}, {"kpi": "205", "desc": "Batterijlader 110Vdc redundant"}, {"kpi": "206", "desc": "UPS"}, {"kpi": "207", "desc": "Masterpact vermogenschakelaar"}, {"kpi": "208", "desc": "Transformator"}, {"kpi": "209", "desc": "Hoogspanningcel, vermogenschakelaar en relais"}, {"kpi": "210", "desc": "Ontlastingsnet 110Vdc, deels of volledig"}, {"kpi": "211/212", "desc": "Noodstroomgroepen hoogspanning"}, {"kpi": "213", "desc": "Productiemogelijkheid LS noodstroomgroepen"}, {"kpi": "214", "desc": "Normaal-noodomschakelaar (kan omschakelen)"}
+      , {"kpi": "215", "desc": "DNB BA inlichten van uitval van een vermogenschakelaar vanaf 80A"}]
       
     };
   },
@@ -310,7 +311,20 @@ export default {
       return moment(row._source.datetimeend).format("DD/MMM/YYYY HH:mm")
       //return JSON.stringify(column);
       }
+      ,
+      formatend(row, column)
+    {
+      if (row._source.datetimeend !=null)
+        if ((moment(row._source.datetimeend).diff(row._source.datetimestart,'hours')/24)<=3)
+          return false;
+        else
+          return true;
+      else
+        return "";
+      //return JSON.stringify(column);
+      }
     ,
+    
     formaterstart(row, column)
     {
       return moment(row._source.datetimestart).format("DD/MMM/YYYY HH:mm")
@@ -509,5 +523,15 @@ export default {
   padding-bottom: 10px;
   margin-bottom: 15px;
   border-bottom: solid 1px #eee;
+}
+
+.redduration
+{
+  color:red !important;
+}
+
+.greenduration
+{
+  color:green !important;
 }
 </style>
