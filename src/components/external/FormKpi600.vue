@@ -201,7 +201,11 @@ export default {
         this.monthSelected = moment()
 
 
-      if(moment().format('D') > 14) {
+      var limit=14;
+      if(this.config.config.controllerparameters=="DNB")
+        limit=16;
+
+      if(moment().format('D') > limit) {
         //console.log('report already done')
         this.disable = (moment() > moment(this.monthSelected).endOf('Month'))
       }

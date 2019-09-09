@@ -17,7 +17,7 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-
+              
             <el-form-item
                   label="Uitleg "
                   :label-width="formLabelWidth">
@@ -42,26 +42,7 @@
                 </el-date-picker>
               </el-form-item>
 
-              <el-table-column
-                prop="_source.datetimeend"
-                label="Datum van resolutie"
-                sortable
-                width="180"
-                size="small"                
-                :formatter="formaterend">
-                
-                <template slot-scope="scope" v-if="!scope.row._source.finished">                                    
-                  <el-popover
-                  placement="top-start"
-                  title="Tijd Interval"
-                  width="180"
-                  trigger="hover"
-                  :content="hintduration(scope.row)">
-                  <el-button type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
-                </el-popover>
-                </template>
-              </el-table-column>
-
+              
               <el-form-item
                   label="Opgelost "
                   :label-width="formLabelWidth">
@@ -74,10 +55,11 @@
                   :label-width="formLabelWidth">
                 <el-date-picker
                   v-model="dialogObj.datetimeend"
-                  :picker-options={firstDayOfWeek:1}
+                  :picker-options={firstDayOfWeek:1,disabledDate:disableDate}
                   type="datetime"
                   size="mini"
-                  placeholder="Select date and time">
+                  placeholder="Select date and time"                  
+                  >
                 </el-date-picker>
               </el-form-item>              
 
@@ -192,10 +174,18 @@
                   <el-popover
                   placement="top-start"
                   title="Tijd Interval"
-                  width="180"
+                  
                   trigger="hover"
-                  :content="hintduration(scope.row)">
-                  <el-button v-bind:class="{redduration:formatend(scope.row),greenduration:!formatend(scope.row)}" type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
+                  
+                  >
+                    <el-form>
+                      <el-form-item :label="hintduration(scope.row)">                  
+                      </el-form-item>
+                      <el-form-item :label="hintlimit(scope.row)">                  
+                      </el-form-item>
+                    </el-form >
+                    
+                  <el-button v-bind:class="{orangeduration:formatend(scope.row)==1,redduration:formatend(scope.row)==0,greenduration:formatend(scope.row)==2}" type="text" slot="reference">{{formaterend(scope.row)}}</el-button>
                 </el-popover>
                 </template>
               </el-table-column>
@@ -285,8 +275,8 @@ export default {
       orgModel:null,
       tableData:[],
       kpi:null,
-      kpis:[{"kpi": "203", "desc": "Condensatorbanken"}, {"kpi": "204", "desc": "Batterijlader 110Vdc alleenstaand"}, {"kpi": "205", "desc": "Batterijlader 110Vdc redundant"}, {"kpi": "206", "desc": "UPS"}, {"kpi": "207", "desc": "Masterpact vermogenschakelaar"}, {"kpi": "208", "desc": "Transformator"}, {"kpi": "209", "desc": "Hoogspanningcel, vermogenschakelaar en relais"}, {"kpi": "210", "desc": "Ontlastingsnet 110Vdc, deels of volledig"}, {"kpi": "211/212", "desc": "Noodstroomgroepen hoogspanning"}, {"kpi": "213", "desc": "Productiemogelijkheid LS noodstroomgroepen"}, {"kpi": "214", "desc": "Normaal-noodomschakelaar (kan omschakelen)"}
-      , {"kpi": "215", "desc": "DNB BA inlichten van uitval van een vermogenschakelaar vanaf 80A"}]
+      kpisht:{},
+      kpis:[]
       
     };
   },
@@ -306,6 +296,11 @@ export default {
     this.prepareData();
   },
   methods: {
+    disableDate(in_date)
+    {
+      return moment(this.dialogObj.datetimestart).diff(moment(in_date),'hours')>=24;      
+    }
+    ,
     formaterend(row, column)
     {
       return moment(row._source.datetimeend).format("DD/MMM/YYYY HH:mm")
@@ -314,13 +309,24 @@ export default {
       ,
       formatend(row, column)
     {
+      var config=this.kpisht[ ''+row._source.kpi];
       if (row._source.datetimeend !=null)
-        if ((moment(row._source.datetimeend).diff(row._source.datetimestart,'hours')/24)<=3)
-          return false;
+      {
+        if ((moment(row._source.datetimeend).diff(row._source.datetimestart,'hours'))<=config.limit)
+          return 2;
         else
-          return true;
+          if (row._source.kpi!="211/212")
+            return 0;
+          else
+          {
+            if ((moment(row._source.datetimeend).diff(row._source.datetimestart,'hours'))<=config.limit2)
+              return 1;
+            else
+              return 0;
+          }
+      }
       else
-        return "";
+        return 0;
       //return JSON.stringify(column);
       }
     ,
@@ -333,7 +339,23 @@ export default {
       ,
     hintduration(row, column)
     {
+
       return  " "+(moment(row._source.datetimeend).diff(row._source.datetimestart,'hours')/24).toFixed(2)+" dag(en)"
+
+      //return JSON.stringify(column);
+      }
+    ,
+    hintlimit(row, column)
+    {
+
+      var limit="Limit "+this.kpisht[ ""+row._source.kpi].limit+" uren";
+      
+      if (row._source.kpi=="211/212")
+      {
+        limit="Limit "+this.kpisht[ ""+row._source.kpi].limit+" / " +this.kpisht[ ""+row._source.kpi].limit2+" uren";
+                
+      }
+      return  limit;
 
       //return JSON.stringify(column);
       }
@@ -372,9 +394,37 @@ export default {
     
     prepareData() {
       console.log('prepare data')            
-      
-      this.monthSelected = moment()
-      this.dateSelected()
+      var url =
+      this.$store.getters.apiurl +
+          "generic/biac_kpi/lot4_200s?token=" +
+          this.$store.getters.creds.token;
+
+      axios
+          .get(url)
+          .then((response) => {
+            
+            if(response.data.error!="")
+              console.log("KPI200 list error...");
+            else
+            {
+              
+              this.kpis=response.data.data._source.kpis;
+              for(var i=0;i<this.kpis.length;i++)
+              {
+                this.kpisht[this.kpis[i].kpi]=this.kpis[i];                
+              }
+              
+              
+              this.monthSelected = moment()
+              this.dateSelected()
+
+            }
+          })
+          .catch((error)=> {
+            console.log(error);
+          });
+        
+
 
       
 
@@ -421,10 +471,10 @@ export default {
 
 
       if(this.monthSelected == null)
-        this.monthSelected = moment()
+        this.monthSelected = moment() 
 
 
-      if(moment().format('D') > 14) {
+      if(moment().format('D') > 16) {
         //console.log('report already done')
         this.disable = (moment() > moment(this.monthSelected).endOf('Month'))        
 
@@ -528,6 +578,11 @@ export default {
 .redduration
 {
   color:red !important;
+}
+
+.orangeduration
+{
+  color:orange !important;
 }
 
 .greenduration
