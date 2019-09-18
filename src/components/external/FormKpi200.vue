@@ -11,7 +11,7 @@
         ref="formCall"
       >
         <el-form-item label="KPI" :label-width="formLabelWidth">
-          <el-select size="mini" v-model="dialogObj.kpi" :disabled="disable" placeholder="Select">
+          <el-select size="mini" v-model="dialogObj.kpi" :disabled="disable" placeholder="Select" style="width:620px;">
             <el-option
               v-for="item in kpis"
               :key="item.kpi"
@@ -22,7 +22,7 @@
         </el-form-item>
 
         <el-form-item label="Uitleg " :label-width="formLabelWidth">
-          <el-input style="max-width:620px;" v-model="dialogObj.desc" :controls="false" size="mini"></el-input>
+          <el-input style="max-width:620px;" v-model="dialogObj.desc" :controls="false" size="mini" type="textarea"></el-input>
         </el-form-item>
 
         <el-form-item label="Datum van het incident " :label-width="formLabelWidth">
@@ -79,7 +79,7 @@
       </span>
     </el-dialog>
 
-    <el-row class="kpi600-container" :span="24" type="flex" justify="center">
+    <el-row class="kpi200-container" :span="24" type="flex" justify="center">
       <el-card class="box-card2">
         <div slot="header" class="clearfix">
           <span style="font-weight:bold">KPI200 - Correctief Onderhoud</span>
@@ -110,7 +110,7 @@
                   icon="el-icon-plus"
                   @click="addRecord"
                   round
-                ></el-button>
+                >Nieuw Incident</el-button>
               </el-col>
             </el-row>
           </span>
@@ -171,7 +171,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="_source.desc" label="Uitleg" sortable width="300"></el-table-column>
+            <el-table-column prop="_source.desc" label="Uitleg" sortable width="190"></el-table-column>
 
             <el-table-column label width="130">
               <template slot-scope="scope">
@@ -188,7 +188,6 @@
                   type="danger"
                   :disabled="!monthSelected || disable"
                   icon="el-icon-delete"
-                  plain
                   @click="handleDelete(scope.$index, scope.row)"
                 ></el-button>
               </template>
@@ -217,7 +216,6 @@ export default {
       monthStart: null,
       monthEnd: null,
       disable: true,
-      currentKPI600MonthlyObj: null,
       formLabelWidth: "200px",
       writeAccess: false,
       dialogType: "creation",
@@ -256,7 +254,7 @@ export default {
       );
     },
     formaterend(row, column) {
-      return moment(row._source.datetimeend).format("DD/MMM/YYYY HH:mm");
+      return moment(row._source.datetimeend).format("DD MMM YYYY - HH:mm");
       //return JSON.stringify(column);
     },
     formatend(row, column) {
@@ -277,29 +275,60 @@ export default {
       //return JSON.stringify(column);
     },
     formaterstart(row, column) {
-      return moment(row._source.datetimestart).format("DD/MMM/YYYY HH:mm");
+      return moment(row._source.datetimestart).format("DD MMM YYYY - HH:mm");
       //return JSON.stringify(column);
     },
     hintduration(row, column) {
-      var diff = (
-        (moment(row._source.datetimeend).unix() -
-          moment(row._source.datetimestart).unix()) /
-        3600 /
-        24
-      ).toFixed(2);
-      return diff + " dag(en)";
+      var diffTime = moment(row._source.datetimeend).set({millisecond:0})
+        .diff(moment(row._source.datetimestart).set({millisecond:0}));
+      var duration = moment.duration(diffTime);
+      var years = duration.years(),
+        months = duration.months(),
+        days = duration.days(),
+        hrs = duration.hours(),
+        mins = duration.minutes(),
+        secs = duration.seconds();
 
-      // return  moment(row._source.datetimeend).format('x') - moment(row._source.datetimestart).format('x')
-      return (
-        " " +
-        (
-          moment(row._source.datetimeend).diff(
-            row._source.datetimestart,
-            "hours"
-          ) / 24
-        ).toFixed(2) +
-        " dag(en)"
-      );
+      var formatDiff = ''
+      if(years!=0)
+        formatDiff += years + ' jaar '
+        
+      if(months!=0) {
+        if(months==1)
+          formatDiff += months + ' maand '
+        else
+          formatDiff += months + ' maanden '
+      }
+      
+      if(days!=0) {
+        if(days==1)
+          formatDiff += days + ' dag '
+        else
+          formatDiff += days + ' dagen '
+      }
+
+      if(hrs!=0) {
+        if(hrs==1)
+          formatDiff += hrs + ' uur '
+        else
+          formatDiff += hrs + ' uren '
+      }
+
+      if(mins!=0) {
+        if(mins==1)
+          formatDiff += mins + ' minuute '
+        else
+          formatDiff += mins + ' minuten '
+      }
+
+      if(secs!=0) {
+        if(secs==1)
+          formatDiff += secs + ' seconde '
+        else
+          formatDiff += secs + ' seconden '
+      }
+        
+      return formatDiff
     },
     hintlimit(row, column) {
       var limit = "Limit " + this.kpisht["" + row._source.kpi].limit + " uren";
@@ -468,7 +497,7 @@ export default {
 };
 </script>
 <style>
-.kpi600-container {
+.kpi200-container {
   width: 100%;
   margin: 30px 0px;
 }
@@ -476,7 +505,7 @@ export default {
   width: 950px !important;
 }
 
-.kpi600-container .parameters-selection {
+.kpi200-container .parameters-selection {
   margin: 10px;
 }
 
@@ -496,12 +525,12 @@ export default {
   border-top: solid 1px lightgrey;
 }
 
-.kpi600-switches-text {
+.kpi200-switches-text {
   margin-left: 20px;
   font-size: 11px;
 }
 
-.kpi600-container .row-subtitle {
+.kpi200-container .row-subtitle {
   border-top: solid 1px #eee;
   margin-top: 15px;
   padding-top: 10px;
