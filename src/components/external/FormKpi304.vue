@@ -244,7 +244,7 @@ export default {
             tech2: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Philippe Gonze", "Stefaan Pletinckx"],
+              titu: ["Philippe Gonze", "Hans Vanderveken"],
               backup: ["Dirk Van Leemput"]
             }
           },
@@ -274,7 +274,7 @@ export default {
             tech: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Wim Sintubin", "Stefaan Pletinckx"],
+              titu: ["Miquel Lamproye", "Hans Vanderveken"],
               backup: ["Dirk Van Leemput"]
             }
           }

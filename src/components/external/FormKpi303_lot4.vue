@@ -56,7 +56,7 @@
     <el-row class="kpi600-container" :span="24" type="flex" justify="center">
       <el-card class="box-card2">
         <div slot="header" class="clearfix">
-          <span style="font-weight:bold">KPI604 Meldingsplicht: klachten over waarheidsgetrouwe informatie</span>
+          <span style="font-weight:bold">KPI603 Vergadering: uitvoeren van specifieke actiepunten op basis van afgesproken deadlines</span>
         </div>
         <div class="card-body">
           <el-row class="first-row" :span="24">
@@ -93,8 +93,8 @@
         <div>
           <el-table
             :data="tableData"
-            :default-sort="{prop: '_source.kpi', order: 'descending'}"
             style="width: 100%"
+            :default-sort="{prop: '_source.creationdate', order: 'descending'}"
           >
             <el-table-column
               prop="_source['creationdate']"
@@ -137,12 +137,12 @@ import Vue from "vue";
 import moment from "moment";
 import axios from "axios";
 import _ from "lodash";
-import formkpi604 from "@/components/external/FormKpi604";
+import formkpi603 from "@/components/external/FormKpi603";
 import { setTimeout } from "timers";
-Vue.component("FormKpi604", formkpi604);
+Vue.component("FormKpi603", formkpi603);
 
 export default {
-  name: "FormKpi604",
+  name: "FormKpi603",
   data() {
     return {
       query: "",
@@ -166,12 +166,12 @@ export default {
       return (
         JSON.stringify(this.orgModel._source) != JSON.stringify(this.dialogObj)
       );
-    }
+    },
   },
   created: function() {
     for (var i in this.$store.getters.creds.user.privileges) {
       var priv = this.$store.getters.creds.user.privileges[i];
-      if (priv == "admin" || priv == "kpi604-write" || priv == "KPI604_WRITE") {
+      if (priv == "admin" || priv == "kpi603-write" || priv == "KPI603_WRITE") {
         this.writeAccess = true;
       }
     }
@@ -198,7 +198,7 @@ export default {
     clickDialogCreate() {
       var rec = {
         _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
-        _index: "biac_kpi604",
+        _index: "biac_kpi603",
         _type: "doc",
 
         _source: this.dialogObj
@@ -235,7 +235,7 @@ export default {
 
       var url =
       this.$store.getters.apiurl +
-      "generic_search/biac_kpi604*?token=" +
+      "generic_search/biac_kpi603*?token=" +
       this.$store.getters.creds.token;
 
       var fullq={
@@ -258,7 +258,7 @@ export default {
         .post(url, fullq)
         .then((response) => {
           if(response.data.error!="")
-            console.log("KPI604 list error...");
+            console.log("KPI603 list error...");
           else
           {
             console.log(response.data.records);

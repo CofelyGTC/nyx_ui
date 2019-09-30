@@ -42,7 +42,7 @@
 
         <el-form-item
           v-if="dialogObj.finished"
-          label="Datum van resolutie"
+          label="Datum van oplossing"
           :label-width="formLabelWidth"
         >
           <el-date-picker
@@ -133,7 +133,7 @@
 
             <el-table-column
               prop="_source.datetimeend"
-              label="Datum van resolutie"
+              label="Datum van oplossing"
               sortable
               width="180"
               size="small"

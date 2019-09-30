@@ -56,7 +56,7 @@
     <el-row class="kpi600-container" :span="24" type="flex" justify="center">
       <el-card class="box-card2">
         <div slot="header" class="clearfix">
-          <span style="font-weight:bold">KPI603 Uitvoering van taken, opdrachten, analyse, offerte bepaald tijdens een technische vergadering</span>
+          <span style="font-weight:bold">KPI603 Vergadering: uitvoeren van specifieke actiepunten op basis van afgesproken deadlines (behave projecten)</span>
         </div>
         <div class="card-body">
           <el-row class="first-row" :span="24">
