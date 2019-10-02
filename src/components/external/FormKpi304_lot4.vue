@@ -27,23 +27,6 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item label="Opgelost " :label-width="formLabelWidth">
-          <el-switch v-model="dialogObj.finished"></el-switch>
-        </el-form-item>
-
-        <el-form-item
-          v-if="dialogObj.finished"
-          label="Datum van oplossing"
-          :label-width="formLabelWidth"
-        >
-          <el-date-picker
-            v-model="dialogObj.datetimeend"
-            :picker-options="{firstDayOfWeek:1,disabledDate:disableDate}"
-            type="datetime"
-            size="mini"
-            placeholder="Select date and time"
-          ></el-date-picker>
-        </el-form-item>
 
       </el-form>
 
@@ -71,10 +54,10 @@
       </span>
     </el-dialog>
 
-    <el-row class="kpi303-container" :span="24" type="flex" justify="center">
+    <el-row class="kpi304-container" :span="24" type="flex" justify="center">
       <el-card class="box-card2">
         <div slot="header" class="clearfix">
-          <span style="font-weight:bold">KPI 303 Project: uitvoeren van bijwerken binnen de afgesproken deadlines</span>
+          <span style="font-weight:bold">KPI 304 Up to date houden van CMMS</span>
         </div>
         <div class="card-body">
           <el-row class="first-row" :span="24">
@@ -123,13 +106,7 @@
             ></el-table-column>
 
             <el-table-column prop="_source.uitleg" label="Uitleg" sortable ></el-table-column>
-            <el-table-column prop="_source.datetimeend" label="Oplossing" :formatter="formaterdate" sortable >
-              <template slot-scope="scope">
-              <!-- <template slot-scope="scope" v-if="scope.row._source.finished"> -->
-                <span v-bind:class="moreThan15Days(scope.row) ? 'date-red': 'date-green'">{{formaterdate(scope.row, scope.column)}}</span>
-              </template>
-            </el-table-column>
-
+            
             <el-table-column label width="130">
               <template slot-scope="scope">
                 <el-button
@@ -160,12 +137,12 @@ import Vue from "vue";
 import moment from "moment";
 import axios from "axios";
 import _ from "lodash";
-import formkpi303_lot4 from "@/components/external/FormKpi303_lot4";
+import formkpi304_lot4 from "@/components/external/FormKpi304_lot4";
 import { setTimeout } from "timers";
-Vue.component("FormKpi303_lot4", formkpi303_lot4);
+Vue.component("FormKpi304_lot4", formkpi304_lot4);
 
 export default {
-  name: "FormKpi303_lot4",
+  name: "FormKpi304_lot4",
   data() {
     return {
       query: "",
@@ -194,7 +171,7 @@ export default {
   created: function() {
     for (var i in this.$store.getters.creds.user.privileges) {
       var priv = this.$store.getters.creds.user.privileges[i];
-      if (priv == "admin" || priv == "kpi303_lot4-write" || priv == "KPI303_lot4_WRITE") {
+      if (priv == "admin" || priv == "kpi304_lot4-write" || priv == "KPI304_lot4_WRITE") {
         this.writeAccess = true;
       }
     }
@@ -216,43 +193,12 @@ export default {
       
     },
     formaterdate(row, column) {
-      console.log(column.property)
-      console.log(row._source[column.property.split('.')[1]])
-
-      if(row._source[column.property.split('.')[1]] == undefined)
-        return
-
-      if(column.property.split('.')[1] == 'datetimeend' && !row._source.finished)
-        return
-
       return moment(row._source[column.property.split('.')[1]]).format("DD MMM YYYY - HH:mm");
-    },
-    moreThan15Days(row) {
-      if(!row._source.finished)
-        return false
-      
-      if(row._source.datetimeend == undefined)
-        return false
-
-      if(row._source.creationdate == undefined)
-        return false
-
-      var start = moment(row._source.creationdate).unix()
-      var end   = moment(row._source.datetimeend).unix()
-
-      var diff = end - start 
-
-      console.log(diff/3600/24)
-
-      if((diff/3600/24) > 15)
-        return true
-      
-      return false
     },
     clickDialogCreate() {
       var rec = {
         _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
-        _index: "biac_kpi303_lot4",
+        _index: "biac_kpi304_lot4",
         _type: "doc",
 
         _source: this.dialogObj
@@ -289,7 +235,7 @@ export default {
 
       var url =
       this.$store.getters.apiurl +
-      "generic_search/biac_kpi303_lot4*?token=" +
+      "generic_search/biac_kpi304_lot4*?token=" +
       this.$store.getters.creds.token;
 
       var fullq={
@@ -312,7 +258,7 @@ export default {
         .post(url, fullq)
         .then((response) => {
           if(response.data.error!="")
-            console.log("KPI303_lot4 list error...");
+            console.log("KPI304_lot4 list error...");
           else
           {
             console.log(response.data.records);
@@ -380,7 +326,7 @@ export default {
 };
 </script>
 <style>
-.kpi303-container {
+.kpi304-container {
   width: 100%;
   margin: 30px 0px;
 }
@@ -388,7 +334,7 @@ export default {
   width: 950px !important;
 }
 
-.kpi303-container .parameters-selection {
+.kpi304-container .parameters-selection {
   margin: 10px;
 }
 
@@ -408,12 +354,12 @@ export default {
   border-top: solid 1px lightgrey;
 }
 
-.kpi303-switches-text {
+.kpi304-switches-text {
   margin-left: 20px;
   font-size: 11px;
 }
 
-.kpi303-container .row-subtitle {
+.kpi304-container .row-subtitle {
   border-top: solid 1px #eee;
   margin-top: 15px;
   padding-top: 10px;

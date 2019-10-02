@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="80%">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="700px">
       <el-form
         style="text-align:left"
         :model="dialogObj"
