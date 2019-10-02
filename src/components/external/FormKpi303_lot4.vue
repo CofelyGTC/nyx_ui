@@ -194,7 +194,7 @@ export default {
   created: function() {
     for (var i in this.$store.getters.creds.user.privileges) {
       var priv = this.$store.getters.creds.user.privileges[i];
-      if (priv == "admin" || priv == "kpi303_lot4-write" || priv == "KPI303_lot4_WRITE") {
+      if (priv == "admin" || priv == "kpi303_lot4-write" || priv == "KPI303_LOT4_WRITE") {
         this.writeAccess = true;
       }
     }
