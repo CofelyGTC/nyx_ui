@@ -11,7 +11,7 @@
         ref="formCall"
       >
         <el-form-item label="KPI" :label-width="formLabelWidth">
-          <el-select size="mini" v-model="dialogObj.kpi" :disabled="disable" placeholder="Select" style="width:620px;">
+          <el-select size="mini" v-model="dialogObj.kpi" :disabled="disable" placeholder="Select" style="width:460px;">
             <el-option
               v-for="item in kpis"
               :key="item.kpi"
@@ -135,7 +135,7 @@
               prop="_source.datetimeend"
               label="Datum van oplossing"
               sortable
-              width="180"
+              width="210"
               size="small"
               :formatter="formaterend"
             >
@@ -171,7 +171,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="_source.desc" label="Uitleg" sortable width="190"></el-table-column>
+            <el-table-column prop="_source.desc" label="Uitleg" sortable></el-table-column>
 
             <el-table-column label width="130">
               <template slot-scope="scope">
@@ -327,6 +327,9 @@ export default {
         else
           formatDiff += secs + ' seconden '
       }
+        
+      if(formatDiff == '')
+        formatDiff = '0 seconden'
         
       return formatDiff
     },

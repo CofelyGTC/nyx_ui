@@ -114,21 +114,58 @@
             style="width: 100%"
             :default-sort="{prop: '_source.creationdate', order: 'descending'}"
           >
+            <el-table-column label="KPI" width="80">
+              <template>303</template>
+            </el-table-column>
+
             <el-table-column
               prop="_source.creationdate"
-              label="Datum"
+              label="Datum van het incident"
               sortable
               width="210"
               :formatter="formaterdate"
             ></el-table-column>
 
-            <el-table-column prop="_source.uitleg" label="Uitleg" sortable ></el-table-column>
-            <el-table-column prop="_source.datetimeend" label="Oplossing" :formatter="formaterdate" sortable >
-              <template slot-scope="scope">
-              <!-- <template slot-scope="scope" v-if="scope.row._source.finished"> -->
-                <span v-bind:class="moreThan15Days(scope.row) ? 'date-red': 'date-green'">{{formaterdate(scope.row, scope.column)}}</span>
+            <el-table-column
+              prop="_source.datetimeend"
+              label="Datum van oplossing"
+              sortable
+              width="210"
+              size="small"
+              :formatter="formaterdate"
+            >
+              <template slot-scope="scope" v-if="scope.row._source.finished">
+                <el-popover placement="right" title="Tijd Interval" trigger="hover">
+                  <el-form>
+                    <el-form-item :label="hintduration(scope.row)"></el-form-item>
+                    <el-form-item label="Limit 15 days"></el-form-item>
+                  </el-form>
+
+                  <el-button
+                    v-bind:class="{redduration:formatend(scope.row)==0,greenduration:formatend(scope.row)==1}"
+                    type="text"
+                    slot="reference"
+                  >{{strformaterdate(scope.row._source.datetimeend)}}</el-button>
+                </el-popover>
               </template>
             </el-table-column>
+
+            <el-table-column
+              prop="_source.finished"
+              label="Opgelost"
+              sortable
+              width="120"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <v-icon name="times" scale="1.0" v-if="!scope.row._source.finished" />
+                <v-icon name="check" scale="1.0" v-if="scope.row._source.finished" />
+                <!-- <div style="text-align:center;" >
+                    <v-icon name="bug" scale="1.5"/>
+                </div>-->
+              </template>
+            </el-table-column>
+            <el-table-column prop="_source.uitleg" label="Uitleg" sortable ></el-table-column>
 
             <el-table-column label width="130">
               <template slot-scope="scope">
@@ -227,6 +264,10 @@ export default {
 
       return moment(row._source[column.property.split('.')[1]]).format("DD MMM YYYY - HH:mm");
     },
+    strformaterdate(date) {
+      
+      return moment(date).format("DD MMM YYYY - HH:mm");
+    },
     moreThan15Days(row) {
       if(!row._source.finished)
         return false
@@ -248,6 +289,95 @@ export default {
         return true
       
       return false
+    },
+    formatend(row, column) {
+      
+console.log(row)
+
+      if (row._source.datetimeend != null) {
+        var diff =
+          (moment(row._source.datetimeend).unix() -
+            moment(row._source.creationdate).unix()) /
+          3600 / 24;
+
+console.log(diff)
+
+        if (diff <= 15) return 1;
+      }
+      
+      
+      return 0
+      
+    },
+    hintduration(row, column) {
+      var diffTime = moment(row._source.datetimeend).set({millisecond:0})
+        .diff(moment(row._source.creationdate).set({millisecond:0}));
+      var duration = moment.duration(diffTime);
+      var years = duration.years(),
+        months = duration.months(),
+        days = duration.days(),
+        hrs = duration.hours(),
+        mins = duration.minutes(),
+        secs = duration.seconds();
+
+      var formatDiff = ''
+      if(years!=0)
+        formatDiff += years + ' jaar '
+        
+      if(months!=0) {
+        if(months==1)
+          formatDiff += months + ' maand '
+        else
+          formatDiff += months + ' maanden '
+      }
+      
+      if(days!=0) {
+        if(days==1)
+          formatDiff += days + ' dag '
+        else
+          formatDiff += days + ' dagen '
+      }
+
+      if(hrs!=0) {
+        if(hrs==1)
+          formatDiff += hrs + ' uur '
+        else
+          formatDiff += hrs + ' uren '
+      }
+
+      if(mins!=0) {
+        if(mins==1)
+          formatDiff += mins + ' minuute '
+        else
+          formatDiff += mins + ' minuten '
+      }
+
+      if(secs!=0) {
+        if(secs==1)
+          formatDiff += secs + ' seconde '
+        else
+          formatDiff += secs + ' seconden '
+      }
+        
+      if(formatDiff == '')
+        formatDiff = '0 seconden'
+      
+      return formatDiff
+    },
+    hintlimit(row, column) {
+      var limit = "Limit " + this.kpisht["" + row._source.kpi].limit + " uren";
+
+      if (row._source.kpi == "211/212") {
+        limit =
+          "Limit " +
+          this.kpisht["" + row._source.kpi].limit +
+          " / " +
+          this.kpisht["" + row._source.kpi].limit2 +
+          " uren";
+      }
+      return limit;
+
+      //return JSON.stringify(column);
     },
     clickDialogCreate() {
       var rec = {
@@ -329,6 +459,7 @@ export default {
     addRecord() {
       this.dialogObj = {
         'creationdate': moment(),
+        'datetimeend': moment(),
         'uitleg': ''
       };
       this.dialogType = "creation";
@@ -427,6 +558,19 @@ export default {
 }
 
 .date-green {
+  color: green !important;
+}
+
+
+.redduration {
+  color: red !important;
+}
+
+.orangeduration {
+  color: orange !important;
+}
+
+.greenduration {
   color: green !important;
 }
 </style>
