@@ -86,6 +86,8 @@ export default {
   data() {
     return {
       weekSelected: null,
+      startDate: null,
+      lastDate: null,
       checkAll: false,
       isIndeterminate: false,
       flagFalse: false,
@@ -149,6 +151,12 @@ export default {
       this.determineIsIndeterminated()
       
     },
+    detectFirstLastDate() {
+      console.log('detectFirstLastDate')
+      this.startDate = moment(this.weekSelected).day("Monday").startOf('Day')
+      this.lastDate  = moment(this.weekSelected).day("Monday").startOf('Day').add(6, 'days')
+
+    },
     dateSelected() {
       var count = 0
       for(var i in this.dayConversion) {
@@ -156,8 +164,6 @@ export default {
         this.dayConversion[i] = i+' - '+moment(this.weekSelected).day("Monday").startOf('Day').add(count, 'days').format('DD/MM/YY')
         count++
       }
-
-
 
       if(moment().format('D') > 14) 
         this.disable = (moment() > moment(this.weekSelected).endOf('Week').endOf('Month'))
@@ -237,6 +243,8 @@ export default {
           var tmp = JSON.parse(JSON.stringify(this.switchModel))
           this.switchModel = null
           this.switchModel = JSON.parse(JSON.stringify(tmp))
+
+          this.detectFirstLastDate()
         }
       })
       .catch((error)=> {
@@ -342,12 +350,12 @@ export default {
       }
 
 
-      console.log(lastDate.format('YYYY-MM-DD'))
+      // console.log(lastDate.format('YYYY-MM-DD'))
 
       setTimeout(() => {
         axios.post(
           this.$store.getters.apiurl + "biac/kpi104_monthly?token="+this.$store.getters.creds.token,
-            { 'last_update_time': lastDate.format('YYYY-MM-DD') }
+            { 'last_update_time': this.lastDate.format('YYYY-MM-DD') }
           ).then((response) => {
             if(response.data.error!="")
               console.log("KPI104 update monthly error");
