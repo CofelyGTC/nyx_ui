@@ -76,7 +76,6 @@
                 start-placeholder="Start date"
                 end-placeholder="End date"
                 align="center"
-                :default-time="['00:00:00', '23:59:59']"
               ></el-date-picker>&nbsp;&nbsp;
               <el-radio-group
                 style="margin-bottom:3px;"

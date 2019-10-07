@@ -1,10 +1,5 @@
 # Nyx User Interface
 
-![badge](https://img.shields.io/badge/made%20with-vuejs-blue.svg?style=flat-square)
-![badge](https://img.shields.io/github/languages/code-size/snuids/nyx_ui)
-![badge](https://img.shields.io/github/last-commit/snuids/nyx_ui)
-
-
 ## Introduction
 
 The NYX platform is an easy to use application builder that integrates various technologies such as:
@@ -61,7 +56,7 @@ It can include:
 
 ### Vega Panel:
 
-A Vega panel uses the Vega framework in order to build interactive dashboard.
+A Vega panel uses the Vega framework in order to build interactive dazshboard.
 
 ![Vega](https://raw.githubusercontent.com/snuids/nyx_ui/master/medias/app_vega1.png)
 
@@ -76,13 +71,6 @@ npm install
 ```
 npm run serve
 ```
-Lauching application
-
-==> http://localhost:8080/?api=https://YOUR_REST_API_SERVER/api/v1/&user=admin&password=*******#/
-
-Rest API swagger
-
-=> Rest API swagger https://YOUR_REST_API_SERVER/api/doc/
 
 
 
@@ -90,6 +78,13 @@ Rest API swagger
 ```
 npm run build
 ```
+Lauching application
+
+==> http://localhost:8080/?api=https://YOUR_REST_API_SERVER/api/v1/&user=admin&password=*******#/
+
+Rest API swagger
+
+=> Rest API swagger https://YOUR_REST_API_SERVER/api/doc/
 
 ### Extending the UI
 
