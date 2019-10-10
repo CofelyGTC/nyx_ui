@@ -18,6 +18,9 @@
         <el-form-item label="Last Update" :label-width="formLabelWidth">
           <el-date-picker :disabled="editMode!='create'" v-model="newRec._source.LastUpdate" type="date" format="yyyy/MM/dd" value-format="timestamp" ></el-date-picker>
         </el-form-item>
+        <el-form-item label="Maintenance" :label-width="formLabelWidth">
+           <el-checkbox v-model="checked">Maintenance done ?</el-checkbox>
+        </el-form-item>
         <el-form-item label="Hours" :label-width="formLabelWidth" >
           <el-input-number size="mini" v-model="newRec._source.Hours" min=0></el-input-number>
         </el-form-item>
