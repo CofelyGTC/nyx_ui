@@ -53,6 +53,7 @@ export default {
   data: () => ({
     orgRec: null,
     newRec: null,
+    checked: false,
     strOrgRec: "",
     strNewRec: "",
     orgName: "",
@@ -114,6 +115,9 @@ export default {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.LastUpdate = Date.now()
+      if (this.checked){
+        this.newRec._source.last_maintenance = this.newRec._source.LastUpdate
+      }
 
       this.$store.commit({
         type: "updateRecord",
