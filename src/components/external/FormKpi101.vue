@@ -371,7 +371,7 @@ export default {
       if(this.monthSelected == null)
         this.monthSelected = moment()
 
-      if(moment().format('D') > 14) {
+      if(moment().format('D') >= 14) {
         this.disable = (moment() > moment(this.monthSelected).endOf('Month'))
       }
       else {

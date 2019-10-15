@@ -186,7 +186,7 @@ export default {
     disableDate(in_date) {
       return false
 
-      if (moment().format("D") > 16)   
+      if (moment().format("D") >= 16)   
         return in_date < moment().startOf("Month")
       else
         return in_date < moment().subtract(1, "months").startOf("Month")
@@ -309,15 +309,13 @@ export default {
     dateSelected() {
       if (this.monthSelected == null) this.monthSelected = moment();
 
-      if (moment().format("D") > 16) {
-        //console.log('report already done')
+      if (moment().format("D") >= 16) {
         this.disable = moment() > moment(this.monthSelected).endOf("Month");
       } else {
         this.disable =
           moment().subtract(1, "months") >
           moment(this.monthSelected).endOf("Month");
       }
-      //@this.disable=false;
       this.monthStart = moment(this.monthSelected).startOf("Month");
       this.monthEnd = moment(this.monthSelected).endOf("Month");
     }
