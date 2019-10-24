@@ -352,7 +352,7 @@ export default {
     dateSelected() {
       if (this.monthSelected == null) this.monthSelected = moment();
 
-      if (moment().format("D") > 14) {
+      if (moment().format("D") >= 14) {
         //console.log('report already done')
         this.disable = moment() > moment(this.monthSelected).endOf("Month");
       } else {
