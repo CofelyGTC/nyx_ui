@@ -165,7 +165,7 @@ export default {
         count++
       }
 
-      if(moment().format('D') > 14) 
+      if(moment().format('D') >= 14) 
         this.disable = (moment() > moment(this.weekSelected).endOf('Week').endOf('Month'))
       else
         this.disable = (moment().subtract(1, 'months') > moment(this.weekSelected).endOf('Week').endOf('Month'))
