@@ -57,6 +57,7 @@ export default {
     newRec: null,
     maintenances: null,
     maintenancesMade: [],
+    maintenancesList: [],
     strOrgRec: "",
     strNewRec: "",
     orgName: "",
@@ -149,6 +150,10 @@ export default {
      this.maintenances.forEach(function(entry){
        entry.maintnenanceDone = false
      });
+     for(var key in Object.keys(recordsdata)){
+       this.maintenancesList.push(recordsdata[key]['_id'])
+     }
+
 
     },
     
@@ -159,6 +164,7 @@ export default {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.LastUpdate = Date.now()
+      this.newRec._source.maintenancesList = this.maintenancesList
       
       if (this.maintenancesMade.length > 0){
         this.newRec._source.last_maintenance = this.newRec._source.LastUpdate
