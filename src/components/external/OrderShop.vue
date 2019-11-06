@@ -1,10 +1,20 @@
 <template>
+  
   <el-row class="ordershop-container" :span="24" type="flex" justify="center">
       <el-form>
-          <el-row v-for="item in this.records" :key="_id" :span="24" class="row-record">
+        <el-table :data="this.records">
+          <el-table-column prop="_id" label="id"></el-table-column>
+          <el-table-column prop="category" label="Categorie"></el-table-column>
+          <el-table-column prop="name" label="Nom"></el-table-column>
+          <el-table-column prop="old_code" label="Code"></el-table-column>
+          <el-table-column label="Quantité">
+            <el-input-number 
+          </el-table-column>
+          <!--el-row v-for="item in this.records" :key="item._id" :span="24" class="row-record"-->
 
 
-          </el-row>    
+          <!--/el-row-->
+          </el-table>    
       </el-form>    
   </el-row>
 </template>
