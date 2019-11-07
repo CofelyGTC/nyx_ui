@@ -1,22 +1,26 @@
 <template>
-  
-  <el-row class="ordershop-container" :span="24" type="flex" justify="center">
-      <el-form>
-        <el-table :data="this.records">
+  <div style="width: 100%">
+  <el-row class="ordershop-container" style="width: 100%" >
+      <el-form style="widht: 100%">
+        <el-table :data="this.records" style="width: 100%">
           <el-table-column prop="_id" label="id"></el-table-column>
           <el-table-column prop="category" label="Categorie"></el-table-column>
           <el-table-column prop="name" label="Nom"></el-table-column>
           <el-table-column prop="old_code" label="Code"></el-table-column>
           <el-table-column label="Quantité">
-            <el-input-number 
+          <template slot-scope="scope">
+            <el-input-number v-model="scope.row.quantity"/>
+          </template>
           </el-table-column>
           <!--el-row v-for="item in this.records" :key="item._id" :span="24" class="row-record"-->
 
 
           <!--/el-row-->
-          </el-table>    
+          </el-table> 
+          <el-button type="primary" @click="onSubmit">Commander</el-button>   
       </el-form>    
   </el-row>
+    </div>
 </template>
 <script>
 import Vue from "vue";
@@ -34,6 +38,44 @@ export default {
     this.prepareData();
   },
   methods: {
+    onSubmit(){
+      var order = {};
+      var products = [];
+      var entry = {};
+      for(var itemKey in Object.keys(this.records)) {
+        var item = this.records[itemKey]
+        
+        entry = {}
+        entry._id = item._id
+        entry.name = item.name
+        entry.category = item.category
+        entry.code = item.old_code
+        entry.quantity = item.quantity
+        products.push(entry)
+      }
+      order.products = products
+      order.dateOrder = moment()
+      order.demandor = this.$store.getters.creds.user.id
+
+      
+      
+      setTimeout(() => {
+        axios.post(
+          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+          ).then((response) => {
+            if(response.data.error!="")
+              console.log("New Order error");
+            else
+              console.log("New Order success");
+        })
+        .catch((error)=> {
+          console.log(error);
+          
+        });
+      }, 3500)
+
+      console.log('Sending Command')
+    },
     prepareData() {
       console.log('prepare data')
       for(var i in this.$store.getters.creds.user.privileges) {
@@ -89,6 +131,7 @@ export default {
             this.callData=[]
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
+              response.data.records[i]._source.quantity = 0
               console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
               this.callData.push(response.data.records[i]._source)
@@ -471,7 +514,7 @@ export default {
 
 </script>
 <style>
-.kpi101-container{
+.ordershop-container{
   width: 100%;
   margin: 30px 0px;
   
