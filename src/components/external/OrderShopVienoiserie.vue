@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-  <el-row class="ordershop-container" style="width: 100%" >
+  <el-row class="ordershop-vienoiserie-container" style="width: 100%" >
       <el-form style="widht: 100%">
         <el-table :data="this.records" style="width: 100%">
           <el-table-column prop="_id" label="id"></el-table-column>
@@ -28,7 +28,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShop",
+  name: "FormOrderShopVienoiserie",
   data: () => ({
       records: null,
       editable: true,
@@ -107,10 +107,35 @@ export default {
       var url =
       this.$store.getters.apiurl +
       "generic_search/products_parameters?token=" +
-      this.$store.getters.creds.token;
+      this.$store.getters.creds.token;  
 
-      var condition= "category: '"+this.$store.getters.mainsubtitle.substring(3) +"'"
-      
+      var demandor = this.$store.getters.creds.user.id
+        
+      axios
+        .get(url, demandor)
+        .then((response) => {
+            if(response.data.error!="")
+            console.log("Order Shops Calls list error...");
+            else{
+                if(response.data.reccord == false)
+                {
+                    this.createNewForm();
+                }
+                else{
+                    var idForm = response.data.reccord
+                    this.loadForm(idForm);
+                }
+            }
+        });  
+    },
+
+    loadForm(idForm){
+        
+        
+      var url =
+      this.$store.getters.apiurl +
+      "generic_search/products_parameters?token=" +
+      this.$store.getters.creds.token;   
       var query = {
             "size":900,
             "query": {
@@ -119,7 +144,30 @@ export default {
                   {
                     "query_string": {
                       
-                      "query": condition
+                      "query": "category: 'Vienoiserie'"
+                    }
+                  }
+                ]
+              }
+            }
+        }
+    },
+
+      
+    createNewForm(){
+      var url =
+      this.$store.getters.apiurl +
+      "generic_search/products_parameters?token=" +
+      this.$store.getters.creds.token;   
+      var query = {
+            "size":900,
+            "query": {
+              "bool": {
+                "must": [
+                  {
+                    "query_string": {
+                      
+                      "query": "category: 'Vienoiserie'"
                     }
                   }
                 ]

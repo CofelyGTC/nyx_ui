@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-  <el-row class="ordershop-container" style="width: 100%" >
+  <el-row class="ordershop-tarte-container" style="width: 100%" >
       <el-form style="widht: 100%">
         <el-table :data="this.records" style="width: 100%">
           <el-table-column prop="_id" label="id"></el-table-column>
@@ -28,7 +28,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShop",
+  name: "FormOrderShopTarte",
   data: () => ({
       records: null,
       editable: true,
@@ -109,7 +109,7 @@ export default {
       "generic_search/products_parameters?token=" +
       this.$store.getters.creds.token;
 
-      var condition= "category: '"+this.$store.getters.mainsubtitle.substring(3) +"'"
+      
       
       var query = {
             "size":900,
@@ -119,7 +119,7 @@ export default {
                   {
                     "query_string": {
                       
-                      "query": condition
+                      "query": "category.keyword: 'Tarte'"
                     }
                   }
                 ]
