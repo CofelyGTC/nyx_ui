@@ -1,8 +1,9 @@
 <template>
   <div style="width: 100%">
   <el-row class="ordershop-vienoiserie-container" style="width: 100%" >
-      <el-form style="widht: 100%">
-        <el-table :data="this.records" style="width: 100%">
+      <el-form style="widht: 100%" :disabled="this.editable">
+          {{this.editable}}
+        <el-table :data="this.records" style="width: 100%" >
           <el-table-column prop="_id" label="id"></el-table-column>
           <el-table-column prop="category" label="Categorie"></el-table-column>
           <el-table-column prop="name" label="Nom"></el-table-column>
@@ -31,7 +32,8 @@ export default {
   name: "FormOrderShopVienoiserie",
   data: () => ({
       records: null,
-      editable: true,
+      oldID: null,
+      disabled: false,
 
   }),
   created: function() {
@@ -56,7 +58,9 @@ export default {
       }
       order.products = products
       order.dateOrder = moment()
+      order.category = 'Vienoiserie'
       order.demandor = this.$store.getters.creds.user.id
+      order.oldId = this.oldID
 
       
       
@@ -104,12 +108,13 @@ export default {
       this.getData()
     },
     getData() {
+      var demandor = this.$store.getters.creds.user.id          
       var url =
       this.$store.getters.apiurl +
-      "generic_search/products_parameters?token=" +
+      "schamps/check_order?demandor="+demandor+"&category=Vienoiserie&token=" +
       this.$store.getters.creds.token;  
 
-      var demandor = this.$store.getters.creds.user.id
+      
         
       axios
         .get(url, demandor)
@@ -117,41 +122,26 @@ export default {
             if(response.data.error!="")
             console.log("Order Shops Calls list error...");
             else{
-                if(response.data.reccord == false)
+                var res = JSON.parse(response.data.data)
+                console.log(res)
+                
+                if(res.reccords.length == 0)
                 {
+                    console.log("No reccord")
                     this.createNewForm();
                 }
                 else{
-                    var idForm = response.data.reccord
-                    this.loadForm(idForm);
+                    var order = res.reccords[0]['_source']['products']
+                    var oldId = res.reccords[0]['_id']
+                    this.oldID = oldId
+                    this.records = order
+                    this.editable = res.reccords[0]['_source']['confirmed']  
                 }
             }
         });  
     },
 
-    loadForm(idForm){
-        
-        
-      var url =
-      this.$store.getters.apiurl +
-      "generic_search/products_parameters?token=" +
-      this.$store.getters.creds.token;   
-      var query = {
-            "size":900,
-            "query": {
-              "bool": {
-                "must": [
-                  {
-                    "query_string": {
-                      
-                      "query": "category: 'Vienoiserie'"
-                    }
-                  }
-                ]
-              }
-            }
-        }
-    },
+    
 
       
     createNewForm(){
