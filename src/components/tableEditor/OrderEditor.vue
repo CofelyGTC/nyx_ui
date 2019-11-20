@@ -21,6 +21,9 @@
         <el-form-item label="Quantité" :label-width="formLabelWidth">
           <el-input-number size="mini" value=1 min=0></el-input-number>
         </el-form-item>
+        <el-form-item label="Quantité" :label-width="formLabelWidth">
+          <el-input type="textarea" v-model="newRec._source.remarque"></el-input>
+        </el-form-item>
       </el-card>
     </el-form>
 

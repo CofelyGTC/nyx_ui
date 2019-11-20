@@ -19,6 +19,11 @@
             <el-input-number v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
+          <el-table-column label="Remarques">
+            <template slot-scope="scope">
+              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
+            </template>
+          </el-table-column>
           <!--el-row v-for="item in this.records" :key="item._id" :span="24" class="row-record"-->
           <!--/el-row-->
           </el-table> 

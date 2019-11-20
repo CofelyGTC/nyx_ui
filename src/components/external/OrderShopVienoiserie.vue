@@ -1,8 +1,8 @@
 <template>
   <div style="width: 100%">
   <el-row class="ordershop-vienoiserie-container" style="width: 100%" >
-      <el-form style="widht: 100%" :disabled="this.editable">
-          {{this.editable}}
+      <el-form style="widht: 100%" :disabled="this.disabled">
+          {{this.disabled}}
         <el-table :data="this.records" style="width: 100%" >
           <el-table-column prop="_id" label="id"></el-table-column>
           <el-table-column prop="category" label="Categorie"></el-table-column>
@@ -12,6 +12,11 @@
           <template slot-scope="scope">
             <el-input-number v-model="scope.row.quantity"/>
           </template>
+          </el-table-column>
+          <el-table-column label="Remarques">
+            <template slot-scope="scope">
+              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
+            </template>
           </el-table-column>
           <!--el-row v-for="item in this.records" :key="item._id" :span="24" class="row-record"-->
 
@@ -54,6 +59,7 @@ export default {
         entry.category = item.category
         entry.code = item.old_code
         entry.quantity = item.quantity
+        entry.remarque = item.remarque
         products.push(entry)
       }
       order.products = products
@@ -135,7 +141,7 @@ export default {
                     var oldId = res.reccords[0]['_id']
                     this.oldID = oldId
                     this.records = order
-                    this.editable = res.reccords[0]['_source']['confirmed']  
+                    this.disabled = res.reccords[0]['_source']['confirmed']  
                 }
             }
         });  
@@ -157,13 +163,14 @@ export default {
                   {
                     "query_string": {
                       
-                      "query": "category: 'Vienoiserie'"
+                      "query": "categoryID: 'vienoiserie'"
                     }
                   }
                 ]
               }
             }
         }
+       console.log(query)
 
       axios
         .post(url, query)
@@ -173,6 +180,7 @@ export default {
           else
           {
             this.callData=[]
+            console.log(response)
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0

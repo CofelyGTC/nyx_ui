@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-  <el-row class="ordershop-creme-container" style="width: 100%" >
+  <el-row class="ordershop-tartecreme-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
           {{this.disabled}}
         <el-table :data="this.records" style="width: 100%" >
@@ -34,7 +34,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShopCreme",
+  name: "FormOrderShopTartecreme",
   data: () => ({
       records: null,
       oldID: null,
@@ -64,7 +64,7 @@ export default {
       }
       order.products = products
       order.dateOrder = moment()
-      order.category = 'Creme'
+      order.category = 'Tartecreme'
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
 
@@ -117,7 +117,7 @@ export default {
       var demandor = this.$store.getters.creds.user.id          
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order?demandor="+demandor+"&category=Creme&token=" +
+      "schamps/check_order?demandor="+demandor+"&category=Tartecreme&token=" +
       this.$store.getters.creds.token;  
 
       
@@ -163,7 +163,7 @@ export default {
                   {
                     "query_string": {
                       
-                      "query": "categoryID: 'creme'"
+                      "query": "categoryID: 'tartecreme'"
                     }
                   }
                 ]
