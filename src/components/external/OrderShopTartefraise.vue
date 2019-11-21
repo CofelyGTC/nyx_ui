@@ -2,7 +2,6 @@
   <div style="width: 100%">
   <el-row class="ordershop-tartefraise-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
-          {{this.disabled}}
         <el-table :data="this.records" style="width: 100%" >
           <el-table-column prop="_id" label="id"></el-table-column>
           <el-table-column prop="category" label="Categorie"></el-table-column>
