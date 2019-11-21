@@ -8,36 +8,51 @@
     :close-on-click-modal="false"
     class="call-editor"
   >
-    <el-card shadow="never" :body-style="{ padding: '10px' }">
+    <!-- <el-card shadow="never" :body-style="{ padding: '10px' }">
       <div slot="header" class="clearfix">
         <h2>{{newRec._source.client}} ({{newRec._source.caller}})</h2>
-      </div>
+      </div> -->
 
-      <div style="text-align:left; margin-top:10px;">
-        <el-timeline :reverse="reverse">
+
+      <el-card shadow="never" style="text-align:left; margin-top:10px; margin-left:30px; margin-right:30px; margin-bottom:30px;">
+        <h2 style="color:#409eff;"><b>{{formatStrDate(newRec._source.start_time, 'DD MMM YYYY')}}</b></h2>
+        <p>Client <b>{{newRec._source.client}}</b> called with phone number <b>{{newRec._source.caller}}</b>. The call lasted <b>{{formatDuration(newRec._source.duration)}}</b> ({{newRec._source.rings}} rings)</p>
+      </el-card>
+      <div style="text-align:left; margin-top:10px; padding-right:40px;">
+      
+        <el-timeline >
           <el-timeline-item
             v-for="(event, index) in newRec._source.events"
             :key="index"
             placement="top"
+            type="success"
+            size="normal"
             :timestamp="formatStrDate(event.start_time)"
           >
             <el-card>
-              <h4>{{event.caller}} <i class="el-icon-right"></i> {{event.target}}</h4>
-              <p>{{event}}</p>
+              <h3><b><i class="el-icon-phone-outline"></i> {{event.target}} </b><span v-if="event.desk"> - (desk {{event.desk}})</span></h3>
+              <h3><b><i class="el-icon-timer"></i> {{ formatDuration(event.duration) }} </b></h3>
+              <h3 v-if="event.rings"><b><i class="el-icon-bell"></i> {{ event.rings }} </b></h3>
             </el-card>
           </el-timeline-item>
+          <el-timeline-item
+            placement="top"
+            :timestamp="formatStrDate(newRec._source.end_time)"
+            type="danger"
+          >
+        </el-timeline-item>
         </el-timeline>
       </div>
-    </el-card>
+    <!-- </el-card> -->
 
     <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
-      <el-button
+      <el-button @click="$emit('dialogclose')">Ok</el-button>
+      <!-- <el-button
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
         :disabled="!recchanged"
         @click="saveRecord()"
-      >{{this.$t("buttons.confirm")}}</el-button>
+      >{{this.$t("buttons.confirm")}}</el-button> -->
     </span>
   </el-dialog>
 </template>
@@ -48,6 +63,7 @@ import Vue from "vue";
 import YAML from "js-yaml";
 import axios from "axios";
 import moment from "moment";
+import _ from "lodash";
 
 export default {
   name: "callEditor",
@@ -99,10 +115,23 @@ export default {
   },
   components: {},
   methods: {
-    formatStrDate: function(strDate) {
+    formatStrDate: function(strDate, format='HH:mm:ss') {
       console.log(strDate)
       console.log(moment(strDate))
-      return moment(strDate).format('HH:mm:ss')
+      return moment(strDate).format(format)
+    },
+    formatDuration: function(duration) {
+      var ret = ''
+
+      var duration = moment.duration({seconds:duration})
+      if (duration.hours() > 0)
+        ret += duration.hours() + 'h '
+      if (duration.minutes() > 0)
+        ret += duration.minutes() + 'm '
+      if (duration.seconds() > 0)
+        ret += duration.seconds() + 's'
+
+      return ret
     },
     closeDialog: function() {
       this.$emit("dialogclose");
@@ -112,6 +141,16 @@ export default {
       this.dialogFormVisible = true;
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+
+
+      var eventArray = _.sortBy(this.newRec._source.events, function(event) {
+        return  moment(event.start_time);
+      });
+
+      console.log(eventArray)
+
+
+
 
     },
     saveRecord: function() {
