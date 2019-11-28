@@ -328,10 +328,10 @@ export default {
         this.config.config.hiddenQuery != undefined &&
         this.config.config.hiddenQuery != ""
       ) {
-        if(this.config.config.hiddenQuery.includes('$user')){
+        if(this.config.config.hiddenQuery.includes('${user}')){
           console.log('keyword in query')
           var user = this.$store.getters.creds.user.id
-          this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace('$user', user)
+          this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace('${user}', user)
         }
         if (curquery == "") curquery = this.config.config.hiddenQuery;
         else
