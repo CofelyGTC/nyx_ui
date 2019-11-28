@@ -30,7 +30,7 @@
           <el-table-column prop="code" label="Code"></el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
-            <el-input-number v-model="scope.row.quantity"/>
+            <el-input-number :min=0 size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Remarques">
