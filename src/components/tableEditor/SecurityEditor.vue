@@ -262,8 +262,17 @@ export default {
       this.orgRec = JSON.parse(JSON.stringify(this.record));
     },
     saveRecord: function() {
-      if (!this.weatherActivated && this.newRec._source.weather != null) {
-        delete this.newRec._source.weather;
+      // if (!this.weatherActivated && this.newRec._source.weather != null) {
+      //   delete this.newRec._source.weather;
+      // }
+
+      console.log(this.newRec._source)
+
+      if (this.newRec._source.return_date != null || this.newRec._source.return_date != "") {
+        if(this.newRec._source.accident_date != null)
+          this.newRec._source.return_date = this.newRec._source.accident_date
+        else
+          delete this.newRec._source.return_date;
       }
 
       this.$store.commit({
