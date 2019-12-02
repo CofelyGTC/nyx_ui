@@ -9,7 +9,7 @@
           <el-table-column prop="old_code" label="Code"></el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
-            <el-input-number v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Remarques">
@@ -172,7 +172,15 @@ export default {
       var url =
       this.$store.getters.apiurl +
       "generic_search/products_parameters?token=" +
-      this.$store.getters.creds.token;   
+      this.$store.getters.creds.token;
+      var minutes = new Date().getMinutes();
+      var hours = new Date().getHours();
+      if(hours >= 18){
+        this.disabled = true
+      }
+      else if(minutes >= 45 && hours==17){
+        this.disabled = true
+      }
       var query = {
             "size":900,
             "query": {
