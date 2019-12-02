@@ -169,10 +169,8 @@ export default {
 
       
     createNewForm(){
-      var url =
-      this.$store.getters.apiurl +
-      "generic_search/products_parameters?token=" +
-      this.$store.getters.creds.token;
+      console.log('Generate Empty Form')
+      var url = this.$store.getters.apiurl + "generic_search/products_parameters?token=" + this.$store.getters.creds.token;
       var minutes = new Date().getMinutes();
       var hours = new Date().getHours();
       if(hours >= 18){
