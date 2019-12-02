@@ -16,23 +16,43 @@
 
       <el-card shadow="never" style="text-align:left; margin-top:10px; margin-left:30px; margin-right:30px; margin-bottom:30px;">
         <h2 style="color:#409eff;"><b>{{formatStrDate(newRec._source.start_time, 'DD MMM YYYY')}}</b></h2>
-        <p>Client <b>{{newRec._source.client}}</b> called with phone number <b>{{newRec._source.caller}}</b>. The call lasted <b>{{formatDuration(newRec._source.duration)}}</b> ({{newRec._source.rings}} rings)</p>
+        <p>Client <b>{{newRec._source.client}}</b> called with phone number <b>{{newRec._source.caller}}</b>. The call lasted <b>{{formatDuration(newRec._source.duration)}}</b></p>
+        <p>The client waited <b>{{formatDuration(newRec._source.waiting)}}</b> before speaking to somebody <span v-if="newRec._source.total_waiting">(total waiting time: {{formatDuration(newRec._source.total_waiting)}})</span> </p>
       </el-card>
       <div style="text-align:left; margin-top:10px; padding-right:40px;">
       
         <el-timeline >
           <el-timeline-item
-            v-for="(event, index) in newRec._source.events"
+            v-for="(event, index) in eventArray"
             :key="index"
             placement="top"
-            type="success"
+            :type="event.nodetype"
             size="normal"
             :timestamp="formatStrDate(event.start_time)"
           >
-            <el-card>
-              <h3><b><i class="el-icon-phone-outline"></i> {{event.target}} </b><span v-if="event.desk"> - (desk {{event.desk}})</span></h3>
-              <h3><b><i class="el-icon-timer"></i> {{ formatDuration(event.duration) }} </b></h3>
-              <h3 v-if="event.rings"><b><i class="el-icon-bell"></i> {{ event.rings }} </b></h3>
+            <el-card >
+              <el-row>
+
+                <el-col :span=10>
+                  <h3><b><i class="el-icon-phone-outline"></i> {{event.target}} </b><span v-if="event.desk"> - (desk {{event.desk}})</span></h3>
+                </el-col>
+                <el-col :span=6>
+                  <h3 v-if="!event.rings" ><b><i class="el-icon-timer"></i> {{ formatDuration(event.duration) }} </b></h3>
+                  <h3 v-if="event.rings"><b><i class="el-icon-bell"></i> {{ formatDuration(event.rings) }} </b></h3>
+                </el-col>
+                <el-col :span=8 style="text-align:right;">
+                  <h3 v-if="event.welcome">
+                    <span style="background-color:#ccc; color:white; padding:0px 5px; ">WELCOME</span>
+                  </h3>
+                  <h3 v-else-if="event.rings">
+                    <span style="background-color:#ccc; color:white; padding:0px 5px; ">RINGS</span>
+                    
+                  </h3>
+                  <h3 v-else>
+                    <span style="background-color:#67C23A; color:white; padding:0px 5px; ">CALL</span>
+                  </h3>
+                </el-col>
+              </el-row>
             </el-card>
           </el-timeline-item>
           <el-timeline-item
@@ -77,6 +97,7 @@ export default {
     formLabelWidth: "120px",
     changed: false,
     dialogFormVisible: false,
+    eventArray: null,
     title: "Call detail"
   }),
   computed: {
@@ -143,12 +164,49 @@ export default {
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
 
-      var eventArray = _.sortBy(this.newRec._source.events, function(event) {
+      var evArray = _.sortBy(this.newRec._source.events, function(event) {
         return  moment(event.start_time);
       });
 
-      console.log(eventArray)
+      var newArray = []
 
+      for(var i=0; i<evArray.length; i++){
+        console.log(i)
+
+
+        if(evArray[i].rings == 0) {
+          
+          if(evArray[i].welcome || evArray[i].rings)
+            evArray[i].nodetype = 'default'
+          else
+            evArray[i].nodetype = 'success'
+
+
+          newArray.push(evArray[i])
+        }
+        else{
+          var firstEvent = JSON.parse(JSON.stringify(evArray[i]))
+          var secondEvent = JSON.parse(JSON.stringify(evArray[i]))
+
+          firstEvent.duration = firstEvent.rings
+          secondEvent.duration -= secondEvent.rings
+          secondEvent.rings = 0
+
+          var newSplitDate = moment(firstEvent.start_time).add(firstEvent.duration, 'seconds').toISOString()
+
+          firstEvent.end_time = newSplitDate
+          secondEvent.start_time = newSplitDate
+          firstEvent.nodetype = 'default'
+          secondEvent.nodetype = 'success'
+        
+          newArray.push(firstEvent)
+          newArray.push(secondEvent)
+        }
+      }
+
+      console.log(newArray)
+
+      this.eventArray = newArray
 
 
 
