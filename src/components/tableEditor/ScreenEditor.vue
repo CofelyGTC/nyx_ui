@@ -40,9 +40,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
-          <!-- <el-input size="mini" v-model="newRec._source.carrousel" autocomplete="off"></el-input> -->
-
           <el-row>
             <el-col :span="8">
               <el-form-item label="Carousel" :label-width="formLabelWidth" style="text-align:left">
@@ -97,16 +94,11 @@
             </el-col>
           </el-row>
         </el-card>
-
-
         <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
             <span>Weather</span>
             <el-switch v-model="weatherActivated"></el-switch>
           </el-row>
-          <!-- <div slot="header" class="clearfix" style="text-align:left;">
-              <span>Weather</span>
-          </div>-->
           <el-collapse-transition>
             <div v-if="weatherActivated" style="padding:20px;">
               <el-row>
@@ -147,14 +139,21 @@
             <span>Actions</span>
           </el-row>
           <el-row>
-            <el-col :span="12">
-              Refresh screen&nbsp;
+            <el-col :span="6">
               <el-button
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
                 @click="refreshScreen()"
                 size="mini"
               >{{this.$t("buttons.refresh")}}</el-button>
+            </el-col>
+            <el-col :span="6">
+              <el-button
+                type="danger"
+                v-if="orgRec._source.accepted == 1"
+                @click="takeScreenshot()"
+                size="mini"
+              >Screenshot</el-button>
             </el-col>
             <el-col :span="12">
               <span v-if="dockerList.length>=1">
@@ -399,6 +398,34 @@ export default {
         position: "bottom-right"
       });
     },
+    
+    takeScreenshot: function() {
+      var command = {
+        _index: "optiboard_command",
+        _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
+        _source: {
+          "@timestamp": Date.now(),
+          cmd: "SCREENSHOT",
+          cmdType: "SCREENSHOT",
+          executed: 0,
+          guid: this.newRec._source.guid,
+          screen: this.newRec._source.optiboard
+        },
+        _type: "doc"
+      };
+      
+      this.$store.commit({
+        type: "updateRecord",
+        data: command
+      });
+      this.$notify({
+        title: "Command sent.",
+        type: "success",
+        message: "The commmand has been sent.",
+        position: "bottom-right"
+      });
+    },
+
     updateScreen: function() {
       
       var refreshrec = {
