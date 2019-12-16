@@ -1,14 +1,12 @@
 <template>
   <div style="width: 100%">
-  <el-row class="ordershop-container" style="width: 100%" >
+  <el-row class="orderhistory-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
         <el-table :data="this.records" style="width: 100%" >
-          <el-table-column prop="_id" label="id"></el-table-column>
-          <el-table-column prop="category" label="Categorie"></el-table-column>
           <el-table-column prop="name" label="Nom"></el-table-column>
           <el-table-column prop="old_code" label="Code"></el-table-column>
-          <el-table-column prop="price_tvac" label="Prix TTC"></el-table-column>
           <el-table-column label="Quantité">
+          <el-table-column prop="category" label="Categorie"></el-table-column>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
@@ -67,11 +65,10 @@ export default {
         entry = {}
         entry._id = item._id
         entry.name = item.name
-        entry.category = item.categoryID
+        entry.category = item.category
         entry.code = item.old_code
         entry.quantity = item.quantity
         entry.remarque = item.remarque
-        entry.price_tvac = item.price_tvac
         products.push(entry)
       }
       order.products = products
