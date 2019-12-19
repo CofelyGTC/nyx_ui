@@ -30,7 +30,8 @@ export const messages = {
         revoke:'Revoquer',
         revoke:'Revoke',
         refresh:'Rafraichir',
-        update:'MAJ'
+        update:'MAJ',
+        createScript:'Créer Script'
       }
       ,changepassword:{
         oldpass:'Ancien mot de passe',
