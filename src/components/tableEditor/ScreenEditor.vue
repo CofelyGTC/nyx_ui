@@ -407,6 +407,7 @@ export default {
           "@timestamp": Date.now(),
           cmd: "SCREENSHOT",
           cmdType: "SCREENSHOT",
+          token: this.$store.getters.creds.token,
           executed: 0,
           guid: this.newRec._source.guid,
           screen: this.newRec._source.optiboard
