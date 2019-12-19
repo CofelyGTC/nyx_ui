@@ -7,6 +7,13 @@
     :close-on-click-modal="false"
     class="screen-editor"
   >
+  <span v-if="newScriptVisible">
+    <NewScript
+      :config="config"
+      :record="newRec"
+      v-on:newscriptupdated="scriptUpdated()"
+      v-on:newscriptclose="newScriptVisible=false"></NewScript>
+  </span> 
     <div v-if="accepted <= 0">
       <el-button @click="validateToken()" type="primary" round icon="el-icon-circle-check">Validate</el-button>
       <el-button
@@ -139,7 +146,7 @@
             <span>Actions</span>
           </el-row>
           <el-row>
-            <el-col :span="6">
+            <el-col :span="4">
               <el-button
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
@@ -147,7 +154,15 @@
                 size="mini"
               >{{this.$t("buttons.refresh")}}</el-button>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
+              <el-button
+                type="danger"
+                v-if="orgRec._source.accepted == 1"
+                @click="openNewScript()"
+                size="mini"
+              >{{this.$t("buttons.createScript")}}</el-button>
+            </el-col>
+            <el-col :span="4">
               <el-button
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
@@ -207,10 +222,12 @@
 
 <script>
 import Vue from "vue";
-
+import newscript from "@/components/tableEditor/NewScript";
 import vieweditor from "@/components/tableEditor/ViewEditor";
 //import YAML from "js-yaml";
 import axios from "axios";
+
+Vue.component("NewScript", newscript);
 
 export default {
   name: "screenEditor",
@@ -227,6 +244,7 @@ export default {
     dialogFormVisible: false,
     accepted: false,
     weatherActivated: true,
+    newScriptVisible: false,
     title: "Screen validation",
     carouselList: [],
     dockerList: [],
@@ -352,6 +370,10 @@ export default {
       this.accepted = -1;
       this.saveRecord();
     },
+    scriptUpdated: function() {
+      this.newScriptVisible = false;
+
+    },
     loadDockerRecords: function() {
       var url =
         this.$store.getters.apiurl +
@@ -398,7 +420,11 @@ export default {
         position: "bottom-right"
       });
     },
-    
+    openNewScript: function() {
+        console.log('coucou');
+        this.newScriptVisible = true;
+    },
+
     takeScreenshot: function() {
       var command = {
         _index: "optiboard_command",
