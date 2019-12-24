@@ -77,6 +77,7 @@ export default {
       order.products = products
       order.dateOrder = moment()
       order.category = this.categoryUp
+      order.categoryID = this.category
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
       order.newId = order.category +'_'+this.ts
@@ -88,9 +89,24 @@ export default {
           this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
           ).then((response) => {
             if(response.data.error!="")
-              console.log("New Order error");
+              {
+                this.$notify({ 
+                title: "Error",
+                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                type: "error",
+                position: "bottom-right",
+                duration: 1500});
+                }
             else
-              console.log("New Order success");
+              {
+                this.$notify({ 
+                title: "Success",
+                message: "Commande en " +this.categoryUp + " envoyée !",
+                type: "success",
+                position: "bottom-right",
+                duration: 2500
+              });
+              }
         })
         .catch((error)=> {
           console.log(error);
@@ -223,66 +239,6 @@ export default {
 
           },
 
-    /*handleChangeNumberCall : _.debounce(function() {
-          var obj = { 
-            'month_to_update': moment(this.monthSelected).format('YYYY-MM-DD'),
-          }
-          
-          for(var i in this.lotModel) {
-            obj['number_of_call_'+this.lotModel[i].value] = this.lotModel[i].numberOfCall
-          }
-          
-          console.log(obj)
-
-          axios.post(
-            this.$store.getters.apiurl + "biac/kpi101_monthly?token="+this.$store.getters.creds.token, obj)
-            .then((response) => {
-              if(response.data.error!="")
-                console.log("KPI101 update monthly error");
-              else {
-                console.log("KPI101 update monthly success");
-                console.log(response.data.data)
-
-
-                var res = JSON.parse(response.data.data)
-
-                try {
-                  for(var i in this.lotModel) {
-                    var lotModel = this.lotModel[i]
-                    lotModel.numberOfCall = res['number_of_call_'+lotModel.value]
-                    lotModel.notTimelyAnswered = res['not_timely_answer_'+lotModel.value]
-                    
-                    if(lotModel.numberOfCall == 0)
-                      lotModel.percentage = 0
-                    else {
-                      var percent = 100*((lotModel.numberOfCall-lotModel.notTimelyAnswered)/lotModel.numberOfCall)
-                      lotModel.percentage = Math.round(percent*100)/100
-                    }
-                  }
-                }
-                catch(error) {
-                  console.log(error)
-                  for(var i in this.lotModel) {
-                    this.lotModel[i].percentage = 0
-                  }
-                }
-
-                this.$notify({
-                  title: "Success",
-                  message: "Data Saved",
-                  type: "success",
-                  position: "bottom-right"
-                });
-              }
-          })
-          .catch((error)=> {
-            console.log(error);
-          });
-        
-      }, 500),
-    
-    
-    */
    
    setTableCurrent(row) {
       this.$refs.callTable.setCurrentRow(row);
