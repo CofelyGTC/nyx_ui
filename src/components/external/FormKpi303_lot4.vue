@@ -120,7 +120,7 @@
 
             <el-table-column
               prop="_source.creationdate"
-              label="Datum van het incident"
+              label="Datum van de klacht"
               sortable
               width="210"
               :formatter="formaterdate"
