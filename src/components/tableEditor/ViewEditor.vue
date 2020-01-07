@@ -506,8 +506,8 @@ export default {
       }
     },
     uploadPictureSuccess: function(response, file, fileList) {
-      this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '') 
-      this.newRec._source.target += 'public/pictures/singleimage.html?image=' + file.name
+      // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '') 
+      this.newRec._source.target = './public/pictures/singleimage.html?image=' + file.name
 
       var tmp = JSON.parse(JSON.stringify(this.newRec))
       this.newRec = null
