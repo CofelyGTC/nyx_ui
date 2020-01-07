@@ -75,6 +75,9 @@
                   ></el-option>
                 </el-select>
               </div>
+              <div v-else-if="(header.type=='long' || header.type=='double') && header.format != null && header.format.length > 0">
+                {{computeRec(scope.row,header.field) | numeral(header.format)}}
+              </div>
               <div v-else-if="header.type=='boolean'">
                 <el-switch
                   v-model="scope.row._source[header.field.replace('_source.', '')]"
@@ -726,11 +729,11 @@ export default {
                     var curtime = _.get(record["_source"], curcol.field.replace("_source.", ""))
 
 
-                    if (curcol.type == "timestamp") {
-                      if (curtime != undefined) {
-                        curtime = parseInt(curtime);
-                      }
-                    }
+                    // if (curcol.type == "timestamp") {
+                    //   if (curtime != undefined) {
+                    //     curtime = parseInt(curtime);
+                    //   }
+                    // }
 
                     if (curtime != undefined) {
                       record["_source"][
