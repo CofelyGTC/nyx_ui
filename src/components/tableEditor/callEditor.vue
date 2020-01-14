@@ -40,7 +40,11 @@
                   <h3 v-if="!event.rings" ><b><i class="el-icon-timer"></i> {{ formatDuration(event.duration) }} </b></h3>
                   <h3 v-if="event.rings"><b><i class="el-icon-bell"></i> {{ formatDuration(event.rings) }} </b></h3>
                 </el-col>
-                <el-col :span=8 style="text-align:right;">
+                <el-col :span=2>
+                  <h3><b>{{event.code}}</b></h3>
+                  
+                </el-col>
+                <el-col :span=6 style="text-align:right;">
                   <h3 v-if="event.welcome">
                     <span style="background-color:#ccc; color:white; padding:0px 5px; ">WELCOME</span>
                   </h3>
