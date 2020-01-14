@@ -200,11 +200,15 @@ export default {
         }
       };
 
-      var weekNumber = moment(this.weekSelected).week()
+      console.log(this.weekSelected)
+
+      // var weekNumber = moment(this.weekSelected).week()
 
 
-      var start = moment().day("Monday").week(weekNumber).startOf('day');
-      var end   = moment().day("Sunday").week(weekNumber+1).endOf('day');
+      var start = moment(this.weekSelected).day("Monday").startOf('day');
+      var end   = moment(this.weekSelected).day("Sunday").endOf('day').add(7, 'days');
+      // var start = moment().day("Monday").week(weekNumber).startOf('day');
+      // var end   = moment().day("Sunday").week(weekNumber+1).endOf('day');
 
 
       var range = {
@@ -218,6 +222,10 @@ export default {
         range: range
       });
 
+      console.log(this.startDate)
+      console.log(this.lastDate)
+      console.log(query)
+
       axios
       .post(url, query)
       .then((response) => {
@@ -226,6 +234,8 @@ export default {
         else {
           this.flagFalse = false
           this.flagTrue = false
+
+          console.log(response.data)
 
           for(var i in response.data.records) {
             var rec = response.data.records[i]._source
