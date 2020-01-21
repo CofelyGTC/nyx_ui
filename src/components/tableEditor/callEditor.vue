@@ -17,7 +17,8 @@
       <el-card shadow="never" style="text-align:left; margin-top:10px; margin-left:30px; margin-right:30px; margin-bottom:30px;">
         <h2 style="color:#409eff;"><b>{{formatStrDate(newRec._source.start_time, 'DD MMM YYYY')}}</b></h2>
         <p>Client <b>{{newRec._source.client}}</b> called with phone number <b>{{newRec._source.caller}}</b>. The call lasted <b>{{formatDuration(newRec._source.duration)}}</b></p>
-        <p>The client waited <b>{{formatDuration(newRec._source.waiting)}}</b> before speaking to somebody <span v-if="newRec._source.total_waiting">(total waiting time: {{formatDuration(newRec._source.total_waiting)}})</span> </p>
+        <p v-if="newRec._source.speak_with_sbd" >The client waited <b>{{formatDuration(newRec._source.waiting)}}</b> before speaking to somebody <span v-if="newRec._source.total_waiting">(total waiting time: {{formatDuration(newRec._source.total_waiting)}})</span> </p>
+        <p v-else >Nobody answered the call</p>
       </el-card>
       <div style="text-align:left; margin-top:10px; padding-right:40px;">
       
@@ -34,12 +35,13 @@
               <el-row>
 
                 <el-col :span=10>
-                  <h3><b><i class="el-icon-phone-outline"></i> {{event.target}} </b><span v-if="event.desk"> - (desk {{event.desk}})</span></h3>
+                  <h3><b><i class="el-icon-phone-outline"></i> {{event.desk}} </b><span v-if="event.target"> - (target {{event.target}})</span></h3>
                 </el-col>
                 <el-col :span=6>
-                  <h3 v-if="!event.rings" ><b><i class="el-icon-timer"></i> {{ formatDuration(event.duration) }} </b></h3>
-                  <h3 v-if="event.rings"><b><i class="el-icon-bell"></i> {{ formatDuration(event.rings) }} </b></h3>
+                  <h3 v-if="!event.rings || event.solidus" ><b><i class="el-icon-timer"></i> {{ formatDuration(event.duration) }} </b></h3>
+                  <h3 v-else><b><i class="el-icon-bell"></i> {{ formatDuration(event.rings) }} </b></h3>
                 </el-col>
+                
                 <el-col :span=2>
                   <h3><b>{{event.code}}</b></h3>
                   
@@ -47,6 +49,10 @@
                 <el-col :span=6 style="text-align:right;">
                   <h3 v-if="event.welcome">
                     <span style="background-color:#ccc; color:white; padding:0px 5px; ">WELCOME</span>
+                  </h3>
+                  <h3 v-else-if="event.solidus">
+                    <span style="background-color:#ccc; color:white; padding:0px 5px; ">SOLIDUS</span>
+                    
                   </h3>
                   <h3 v-else-if="event.rings">
                     <span style="background-color:#ccc; color:white; padding:0px 5px; ">RINGS</span>
@@ -174,16 +180,22 @@ export default {
 
       var newArray = []
 
+      console.log(evArray)
       for(var i=0; i<evArray.length; i++){
         console.log(i)
 
+        
 
-        if(evArray[i].rings == 0) {
-          
-          if(evArray[i].welcome || evArray[i].rings)
-            evArray[i].nodetype = 'default'
-          else
+        if(evArray[i].solidus == 1) {
+          evArray[i].nodetype = 'default'
+          newArray.push(evArray[i])
+
+        }
+        else if(evArray[i].rings == 0) {
+          if(evArray[i].speak_with_sbd == 1)
             evArray[i].nodetype = 'success'
+          else
+            evArray[i].nodetype = 'default'
 
 
           newArray.push(evArray[i])
