@@ -34,7 +34,7 @@ export default new Vuex.Store({
   state: {
     apiurl: "api/v1/",
     kibanaurl:"/kibana/",
-    version: "v2.22.1",
+    version: "v2.23.0",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -61,6 +61,7 @@ export default new Vuex.Store({
     containerSize: { "width": 1200, "height": 800 },
     appConfigObj: null,
     redirection: null,
+    searchCache: {},
   },
   getters: {
     apiurl: state => state.apiurl,
@@ -93,6 +94,7 @@ export default new Vuex.Store({
     version: state => state.version,
     appConfigObj: state => state.appConfigObj,
     redirection: state => state.redirection,
+    searchCache: state => state.searchCache,
 
   },
   actions: {
@@ -182,12 +184,15 @@ export default new Vuex.Store({
       for (var i in cmenus) {
         if (cmenus[i].category != "apps")
         {
-          cmenus[i].category=cmenus[i].category.replace(/ /g,'').toLowerCase();
+          // cmenus[i].category=cmenus[i].category.replace(/ /g,'').toLowerCase();
+          cmenus[i].value=cmenus[i].category.replace(/ /g,'').toLowerCase();
           for (var j in cmenus[i].submenus)
           {
             
-            cmenus[i].submenus[j].title=cmenus[i].submenus[j].title.replace(/ /g,'').toLowerCase();
-            cmenus[i].submenus[j].fulltitle=(cmenus[i].category+"/"+cmenus[i].submenus[j].title)//.replace(/ /g,'').toLowerCase();
+            // cmenus[i].submenus[j].title=cmenus[i].submenus[j].title.replace(/ /g,'').toLowerCase();
+            cmenus[i].submenus[j].value=cmenus[i].submenus[j].title.replace(/ /g,'').toLowerCase();
+            cmenus[i].submenus[j].fulltitle=(cmenus[i].value+"/"+cmenus[i].submenus[j].value)//.replace(/ /g,'').toLowerCase();
+            // cmenus[i].submenus[j].fulltitle=(cmenus[i].category+"/"+cmenus[i].submenus[j].title)//.replace(/ /g,'').toLowerCase();
           }
           state.filteredmenus.push(cmenus[i]);
         }
@@ -520,5 +525,6 @@ export default new Vuex.Store({
           console.log(error);
         });
     }
+    ,
   }
 })

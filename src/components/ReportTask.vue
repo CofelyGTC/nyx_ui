@@ -2,11 +2,12 @@
   <!--MAIN DIALOG -->
   <div>
     <el-dialog
-      fullscreen
       title="Logs Viewer"
       :visible.sync="LogViewerVisible"
       :before-close="closeDialog"
+      width="80%"
     >
+      <!-- fullscreen -->
       <!-- <div style="max-height:100%;"> -->
 
       <el-collapse>
@@ -16,8 +17,8 @@
             class="table-details-report-run"
             border
             :show-header="false"
-            style="width: 330px"
           >
+            <!-- style="width: 330px" -->
             <el-table-column prop="attr" label="Attr" width="130"></el-table-column>
             <el-table-column prop="value" label="Value" width="200"></el-table-column>
           </el-table>
@@ -139,7 +140,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="_source.report.downloads.length" align="right">
+      <el-table-column prop="_source.downloads.length" align="right">
         <!-- Removed from line below: slot-scope="scope" -->
         <template slot="header" slot-scope="scope">
           <el-input v-model="search" size="mini" placeholder="Type to search" class="searchfield" />
@@ -174,6 +175,7 @@ export default {
     search: "",
     dialogFormVisible: false,
     LogViewerVisible: false,
+    loadingData: false,
     formLabelWidth: "120px",
     curReport: {},
     logObj: {},
@@ -193,6 +195,7 @@ export default {
       this.logObj = {}
       this.logObj.indice = "nyx_reportlog";
       this.logObj.id = row._id;
+      this.logObj.search = true;
       this.LogViewerVisible = true;
 
 
@@ -272,8 +275,17 @@ export default {
           if (response.data.error != "") console.log("Report list error...");
           else {
             console.log(this);
-            this.$globalbus.$emit("reportgenerated");
+            // this.$globalbus.$emit("reportgenerated");
           }
+
+          this.$notify({
+            title: "Report asked.",
+            type: "success",
+            message: "Regeneration of a report asked",
+            position: "bottom-right"
+          });
+
+          setTimeout(() => {this.loadData()}, 500)
         })
         .catch(error => {
           console.log(error);
@@ -306,10 +318,18 @@ export default {
       // var win =
       window.open(item.url, "_blank");
     },
-    loadData() {
+    loadData : _.throttle(function() {
+      if(this.loadingData)
+        return
+
+      this.loadingData = true
+
       var query = {
+        _source: ['creds.user.id', 'id', 'report.title', 'report.parameters', 'report.icon', 'treatment.status', 'treatment.creation', 
+                  'treatment.error', 'treatment.start', 'treatment.end', 'treatment.duration',
+                  'report.reportType', 'downloads', 'report'],
         sort: [{ "treatment.creation": { order: "desc" } }],
-        size: 100
+        size: 50
       };
 
       var url =
@@ -322,7 +342,7 @@ export default {
         .then(response => {
           if (response.data.error != "") console.log("Report list error...");
           else {
-            //console.log(response.data.records);
+            console.log(response.data.records);
             for (var i in response.data.records) {
               // console.log(response.data.records[i]._source.report);
               response.data.records[i]._source.report = JSON.parse(
@@ -331,11 +351,13 @@ export default {
             }
             this.tableData = response.data.records;
           }
+          this.loadingData = false
         })
         .catch(error => {
+          this.loadingData = false
           console.log(error);
         });
-    },
+    },1500),
     closeDialog: function() {
       this.LogViewerVisible = false;
       this.$emit("dialogclose");
