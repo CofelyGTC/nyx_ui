@@ -1,25 +1,73 @@
 <template>
   <div style="width: 100%">
-  <el-row class="productionresults-container" style="width: 100%" >
-      <el-form style="widht: 100%" :disabled="this.disabled">
-        <el-table :data="this.records" style="width: 100%" >
-          <el-table-column prop="_id" label="id"></el-table-column>
-          <el-table-column prop="category" label="Categorie"></el-table-column>
-          <el-table-column prop="name" label="Nom"></el-table-column>
-          <el-table-column prop="confirmed" label="Confirmé">
-            <template slot-scope="scope">
-            <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(scope.row)"></el-switch>
-            </template>
-          </el-table-column>
+
+    <el-form v-model="orders">
+      <el-tabs v-model="selectedTab">
+      <!--el-table>
+        <el-row v-for="(index, order) in orders" :key="'TAB-'+order">
+            <td>{{order}}</td><td>{{index}}</td>
+        </el-row>
+      </el-table--> 
+      <el-tab-pane
           
-          <el-table-column label="Quantité Produite">
-          <template slot-scope="scope">
-            <el-input-number :disabled="scope.row.confirmed" :min="0" size="mini" v-model="scope.row.quantity" @changed="recordModify(scope.row)"/>
-          </template>
-          </el-table-column>
-          </el-table> 
-      </el-form>    
-  </el-row>
+          v-for="(order, index) in orders"
+          :key="'TAB-'+index"
+          :label="order['_id']"
+          :name="'TAB-'+index"
+        >
+        <el-tabs v-model="selectedUnderTab">
+          <el-tab-pane
+          
+          v-for="(category, index1) in order._source.categories"
+          :key="'TAB-'+index+'-'+index1"
+          :label="category"
+          :name="'TAB-'+index+'-'+index1"
+          :lazy="true"
+        >
+            <el-table :data="order._source[category]" style="width: 100%">
+              <el-table-column prop="code" label="Code"></el-table-column>
+              
+              <el-table-column prop="name" label="Name"></el-table-column>
+              <el-table-column prop="confirmed" label="Confirmé">
+                <template slot-scope="scope">
+                <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(scope.row)"></el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column label="Quantité">
+                <template slot-scope="scope">
+                <el-input-number :min=0 size="mini" v-model="scope.row.quantity"/>
+                </template>
+              </el-table-column>
+            </el-table>
+            </el-tab-pane>
+        </el-tabs>
+      </el-tab-pane>
+
+
+
+      </el-tabs>
+    </el-form>  
+
+        <!--el-row class="productionresults-container" style="width: 100%" >
+            <el-form style="widht: 100%" :disabled="this.disabled">
+                <el-table :data="this.records" style="width: 100%" >
+                <el-table-column prop="_id" label="id"></el-table-column>
+                <el-table-column prop="category" label="Categorie"></el-table-column>
+                <el-table-column prop="name" label="Nom"></el-table-column>
+                <el-table-column prop="confirmed" label="Confirmé">
+                    <template slot-scope="scope">
+                    <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(scope.row)"></el-switch>
+                    </template>
+                </el-table-column>
+                
+                <el-table-column label="Quantité Produite">
+                <template slot-scope="scope">
+                    <el-input-number :disabled="scope.row.confirmed" :min="0" size="mini" v-model="scope.row.quantity" @changed="recordModify(scope.row)"/>
+                </template>
+                </el-table-column>
+                </el-table> 
+            </el-form>    
+        </el-row-->
     </div>
 </template>
 <script>
@@ -28,14 +76,20 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "ProductionResults",
+  name: "Livraison",
   data: () => ({
       records: null,
       oldID: null,
+      orders:null,
       disabled: false,
       category: '',
       categoryUp: '',
       ts: 0,
+      changed: false,
+      dialogFormVisible: false,
+      title: "Commande",
+      selectedTab: "TAB-0",
+      selectedUnderTab: "TAB-0-0"
 
   }),
   props: {
@@ -61,7 +115,7 @@ export default {
       console.log('prepare data')
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
-        if(priv =='admin' ||  priv=='SHOP_FORM') {
+        if(priv =='admin' ||  priv=='LIVR_FORM') {
           this.writeAccess = true
         }
       }
@@ -72,6 +126,30 @@ export default {
     loadData(){
         this.records = [];
         this.getData();
+    },
+    handleTabClick: function(tab) {
+      var index = parseInt(tab.name.substring(4));
+      
+      this.$store.commit({
+        type: "setTab",
+        data: this.$store.getters.currentApps.apps[index]
+      });
+
+      if (this.$store.getters.currentApps.apps[index].type == "kibana") {
+        this.$globalbus.$emit(
+          "kibanaactivated",
+          this.$store.getters.currentApps.apps[index]
+        );
+      }
+    },
+    changeApp: function() {
+      this.currentApps = null
+
+      this.selectedTab = "TAB-0"
+
+      this.$nextTick(() => {
+        this.currentApps = JSON.parse(JSON.stringify(this.$store.getters.currentApps))
+      });
     },
     dateSelected() {
       
@@ -93,7 +171,7 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       var url =
       this.$store.getters.apiurl +
-      "schamps/getProductionResult?start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" +
+      "schamps/getDeliveredList?start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" +
       this.$store.getters.creds.token;  
 
       
@@ -114,19 +192,7 @@ export default {
                 }
                 else{
                     var orders = res.reccords
-                    var records = []
-                    console.log("list order test")
-                    console.log(orders)
-                    for(var itemKey in orders) {
-                      var obj = {}
-                      obj = orders[itemKey]._source
-                      obj._id = orders[itemKey]._id
-                      if(obj.originalquantity > 0)
-                      {
-                        records.push(obj)
-                      }
-                    }
-                    this.records = records
+                    this.orders=orders;
                      
                 }
             }
@@ -151,7 +217,7 @@ export default {
         products._id = _id
         products._record = cats
         var body = {}
-        body.destination = "/queue/PRODUCTION_RESULT_UPDATE";
+        body.destination = "/queue/LIVRAISON_UPDATE";
         body.body = JSON.stringify(products);
 
 

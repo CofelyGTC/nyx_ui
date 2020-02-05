@@ -9,7 +9,7 @@
   >
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
-          <el-tabs v-model="selectedTab" @tab-click="handleClick">
+          <el-tabs v-model="selectedTab">
               <!--el-tab-pane v-for="(category) in newRec._source.categories" v-bind:category  :label="category" :name="category"></el-tab-pane-->
         
         <el-tab-pane
