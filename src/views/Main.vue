@@ -170,7 +170,7 @@
             <el-row class="tac">
               <el-col :span="24">
                 <el-menu
-                  :default-active="$store.getters.currentApps.fulltitle"
+                  :default-active="$store.getters.currentSubCategory.fulltitle"
                   :unique-opened="true"
                   class="el-menu-vertical"
                   text-color="#666"
@@ -246,7 +246,7 @@ export default {
     resizeListener: null,
     changePasswordVisible: false,
     timeType: "absolute",
-    maintitleicon: "spider",
+
     relativeTimeType: "h",
     relativeTimeValue: 4,
 
@@ -426,21 +426,6 @@ export default {
         subtype: "classic"
       });
     }, 500),    
-    // logout() {
-    //   console.log("BEFCOMMIT");
-    //   this.$store.commit({
-    //     type: "logout",
-    //     data: {}
-    //   });
-    //   console.log("AFTERCOMMIT");
-    //   this.$notify({
-    //     title: "Success",
-    //     message: "Bye Bye",
-    //     type: "success",
-    //     position: "bottom-right"
-    //   });
-    //   this.$router.push("/");
-    // },
     dayChanged(e) {
       console.log("DAY CHANGED");
       var dstart = moment(e);
@@ -536,16 +521,17 @@ export default {
         window.open(e.config.url);
       } else {
         this.maintitle = e.loc_title;
-        this.maintitleicon = e.icon;
+    
 
-        this.$store.commit({
-          type: "changeApps",
-          data: e
-        });
+        // this.$store.commit({
+        //   type: "changeApps",
+        //   data: e
+        // });
 
         console.log(this.$route)
 
-        var path = "/main/" + e.fulltitle
+        // var path = "/main/" + e.fulltitle
+        var path = "/main/" + e.apps[0].rec_id
 
         if(path != this.$route.path)
           this.$router.push(path);
@@ -561,13 +547,13 @@ export default {
   created: async function() {
     console.log("Main vue created");
 
-    if (this.$store.getters.currentApps == undefined && localStorage.authResponse) {
+    if (this.$store.getters.currentSubCategory == undefined && localStorage.authResponse) {
         // console.log(localStorage.authResponse)
         var path = this.$route.path
         if(path[path.length-1] == '/')
           path = path.substring(0, path.length-1)
 
-        this.$store.state.redirection = path
+        var rec_id = path.replace('/main/', '')
 
         var authResponse = JSON.parse(localStorage.authResponse)
 
@@ -585,6 +571,11 @@ export default {
               type: "login",
               data: authResponse.data
             });
+            
+            this.$store.commit({
+              type: "changeApp",
+              data: rec_id
+            });
           }
         }
         catch (e){
@@ -593,7 +584,7 @@ export default {
     }
 
 
-    if (this.$store.getters.currentApps == undefined) {
+    if (this.$store.getters.currentSubCategory == undefined) {
       console.log('NOT LOGGED YET')
       var path = this.$route.path
       if(path[path.length-1] == '/')
@@ -724,7 +715,8 @@ body {
 }
 
 .el-header .el-col-5 span {
-  color: black !important;
+  font-weight: bold;
+  color: #c0c4cc;
 }
 
 .el-header .el-col-5 {
