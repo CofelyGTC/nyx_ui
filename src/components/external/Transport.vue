@@ -30,7 +30,7 @@
               <el-table-column prop="name" label="Name"></el-table-column>
               <el-table-column prop="confirmed" label="Confirmé">
                 <template slot-scope="scope">
-                <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(scope.row)"></el-switch>
+                <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(index)"></el-switch>
                 </template>
               </el-table-column>
               <el-table-column id= "quantity" prop="quantity" label="Quantité">
@@ -178,26 +178,12 @@ export default {
         });  
     },
     
-    recordConfirmed(row)
+    recordConfirmed(index)
     {
-        var _id = row._id;
-        var products = {};
-        var cats = {};
 
-        cats.code = row.code;
-        cats.category = row.category;
-        cats.name = row.name;
-        cats.quantity = row.quantity;
-        cats.remarque = row.remarque;
-        cats['@timestamp'] = row['@timestamp'];
-        cats.confirmed = row.confirmed;
-        cats.originalquantity = row.originalquantity;
-
-        products._id = _id
-        products._record = cats
         var body = {}
         body.destination = "/queue/TRANSPORT_UPDATE";
-        body.body = JSON.stringify(products);
+        body.body = JSON.stringify(this.orders[index]);
 
 
         setTimeout(() => {
@@ -233,10 +219,6 @@ export default {
       console.log('Sending Command')
     },
 
-    recordModify(row)
-    {
-      this.recordConfirmed(row);
-    },
 
    setTableCurrent(row) {
       this.$refs.callTable.setCurrentRow(row);

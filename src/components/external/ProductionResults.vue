@@ -11,7 +11,6 @@
             <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(scope.row)"></el-switch>
             </template>
           </el-table-column>
-          
           <el-table-column label="Quantité Produite">
           <template slot-scope="scope">
             <el-input-number :disabled="scope.row.confirmed" :min="0" size="mini" v-model="scope.row.quantity" @changed="recordModify(scope.row)"/>
