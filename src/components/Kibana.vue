@@ -141,9 +141,9 @@ export default {
     config: {
       type: Object
     },
-    directLoad: {
-      type: Boolean
-    }
+    // directLoad: {
+    //   type: Boolean
+    // }
   },
   computed: {
     configin: function() {
@@ -151,7 +151,7 @@ export default {
     },
     containerHeight: function() {
       var headerheight = 0;
-      if (this.$store.getters.currentApps.apps.length > 1) {
+      if (this.$store.getters.currentSubCategory.apps.length > 1) {
         headerheight += 50;
       }
       if (
@@ -175,7 +175,7 @@ export default {
     },
     iFrameContainerComputed: function() {
       var headerheight = 0;
-      if (this.$store.getters.currentApps.apps.length > 1) {
+      if (this.$store.getters.currentSubCategory.apps.length > 1) {
         headerheight += 50;
       }
       if (
@@ -201,7 +201,7 @@ export default {
       return {};
     },
     styleContainerComputed: function() {
-      if (this.$store.getters.currentApps.apps.length == 1) {
+      if (this.$store.getters.currentSubCategory.apps.length == 1) {
         return {
           border: "10px solid green",
           overflow: "hidden !important",
@@ -486,11 +486,14 @@ export default {
       }.bind(this),
       1500
     );
+      
+    this.ready = true;
+    this.createUrl();
 
-    if (this.directLoad) {
-      this.ready = true;
-      this.createUrl();
-    }
+    // if (this.directLoad) {
+    //   this.ready = true;
+    //   this.createUrl();
+    // }
   },
   mounted: function() {
     console.log("===============  REGISTERING KIBANA:");
@@ -498,21 +501,21 @@ export default {
       console.log("GLOBALBUS/KIBANATIMERANGE/");
       this.createUrl();
     });
-    this.$globalbus.$on("kibanaactivated", payLoad => {
-      console.log("GLOBALBUS/KIBANAACTIVATED/");
-      if (payLoad.title == this.config.title && !this.ready) {
-        this.ready = true;
-      }
+    // this.$globalbus.$on("kibanaactivated", payLoad => {
+    //   console.log("GLOBALBUS/KIBANAACTIVATED/");
+    //   if (payLoad.title == this.config.title && !this.ready) {
+    //     this.ready = true;
+    //   }
 
-      setTimeout(
-        function() {
-          this.injectStyleIframe();
-        }.bind(this),
-        1500
-      );
+    //   setTimeout(
+    //     function() {
+    //       this.injectStyleIframe();
+    //     }.bind(this),
+    //     1500
+    //   );
 
-      this.createUrl();
-    });
+    //   this.createUrl();
+    // });
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING KIBANA:");
