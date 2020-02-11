@@ -440,7 +440,7 @@ export default {
       });
       this.loadData();
     },
-    loadData: function(download, exportformat) {  
+    loadData: function(download, exportformat) {
       console.log("GENERIC TABLE - Load DATA");
       if (download == undefined) download = false;
       // console.log("LOAD DATA...Download=" + download);
@@ -605,7 +605,9 @@ export default {
         .then(response => {
           this.ready = true;
 
-          if (response.data.records != null) {
+          console.log(response);
+
+          if (response.data.records != null || (download && response.status==200)) {
             if (download) {
               if (response.data.type == "mail") {
                 this.$notify({
@@ -736,8 +738,6 @@ export default {
             position: "bottom-right"
           });
         });
-    
-
     },
     graphClicked() {
       var newvalue =
@@ -762,12 +762,12 @@ export default {
     },
 
     queryBarChanged: function(q) {
-      console.log('********************************queryBarChanged')
+      console.log("********************************queryBarChanged");
       this.queryField = q;
       this.refreshData();
     },
     queryFilterChanged: function(q) {
-      console.log('********************************queryFilterChanged')
+      console.log("********************************queryFilterChanged");
       this.queryfilter = q;
       this.refreshData();
     },
@@ -778,7 +778,7 @@ export default {
   created: function() {
     console.log("===============  CREATED:");
 
-    if(!this.config.queryFilterChecked && !this.config.queryBarChecked)
+    if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
       this.loadData();
 
     console.log("===============  REGISTERING: timerangechanged");

@@ -1,11 +1,11 @@
 
 <template>
-  <div  v-if="$store.getters.currentSubCategory && !loading" style="border: 0px solid pink;height: 100%;overflow:hidden;"  v-loading="loading">
+  <div  v-if="$store.getters.currentSubCategory" style="border: 0px solid pink;height: 100%;overflow:hidden;"  v-loading="loading">
     <div
       v-if="$store.getters.currentSubCategory.apps.length==1"
       style="border: 20px solid orange;height: 100%;overflow:auto;margin-top:5px;" v-bind:style="singleStyleContainerComputed"
     >
-      <div style="overflow:auto;">
+      <div style="overflow:auto;"  v-if="!loading">
         <div v-if="$store.getters.currentSubCategory.apps[0].type=='generic-table'">
           <GenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
         </div>
@@ -31,7 +31,8 @@
     </div>
     <!-- More than one application -->
     <div v-else style="overflow:hidden;">
-      <el-tabs v-model="selectedTab" @tab-click="handleTabClick">
+      <el-tabs v-model="selectedTab" 
+        @tab-click="handleTabClick">
         <el-tab-pane
           v-bind:style="styleContainerComputed"
           v-for="(app,index) in $store.getters.currentSubCategory.apps"
@@ -40,29 +41,29 @@
           :name="app.rec_id"
           :lazy="true"
         >
-          <!-- :name="'TAB-'+index"
-          :key="'TAB-'+index" -->
-          <div style="overflow:auto !important;border:0px solid pink">
+          <div 
+            v-if="!loading"
+            style="overflow:auto !important;border:0px solid pink" >
             <div v-if="app.type=='generic-table'">
-              <GenericTable :config="app"/>
+              <GenericTable :config="app" :key="app.rec_id" v-if="selectedTab===app.rec_id"/>
             </div>
             <div v-else-if="app.type=='external'">
-              <External :config="app"></External>
+              <External :config="app" :key="app.rec_id" v-if="selectedTab===app.rec_id"></External>
             </div>
             <div class="kibana" v-else-if="app.type=='kibana'">
-              <Kibana :config="app"></Kibana>
-              <!-- <Kibana :config="app" :directLoad="index==0"></Kibana> -->
+              <Kibana :config="app" :key="app.rec_id"></Kibana>
             </div>
             <div v-else-if="app.type=='form'">
-              <Form :config="app"></Form>
+              <Form :config="app" :key="app.rec_id" v-if="selectedTab===app.rec_id"></Form>
             </div>
             <div v-else-if="app.type=='upload'">
-              <Upload :config="app"></Upload>
+              <Upload :config="app" :key="app.rec_id" v-if="selectedTab===app.rec_id"></Upload>
             </div>
             <div v-else>
-              <component :config="app" v-bind:is="app.config.controller"></component>
+              <component :config="app" v-bind:is="app.config.controller" :key="app.rec_id" v-if="selectedTab===app.rec_id"></component>
             </div>
           </div>
+          <!-- <div v-else>LOADING</div> -->
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -138,7 +139,9 @@ const myExport = {
       console.log(from)
       console.log('to')
       console.log(to)
+
       this.loading=true
+      
       this.selectedTab=this.$route.params.recid
 
       this.$store.commit({
@@ -147,7 +150,7 @@ const myExport = {
       });
 
       this.$nextTick(() => this.loading=false);
-      
+      // setTimeout(() => {this.loading=false}, 500) 
 
     }
   },
