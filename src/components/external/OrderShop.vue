@@ -2,29 +2,39 @@
   <div style="width: 100%">
   <el-row class="ordershop-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
+        <div style="bottom: 5%;">
+        Total TTC : {{totalPrice | roundTo2 }} €
         <el-table :data="this.records" style="width: 100%" >
-          <el-table-column prop="_id" label="id"></el-table-column>
-          <el-table-column prop="category" label="Categorie"></el-table-column>
-          <el-table-column prop="name" label="Nom"></el-table-column>
           <el-table-column prop="old_code" label="Code"></el-table-column>
-          <el-table-column prop="price_tvac" label="Prix TTC"></el-table-column>
+          <el-table-column prop="name" label="Nom"></el-table-column>
+          <el-table-column label="Prix TTC">
+            <template slot-scope="scope">
+              {{scope.row.price_tvac | roundTo2 }} €
+            </template>
+          </el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
+          </el-table-column>
+          <el-table-column label="Total">
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.price_tvac | roundTo2}} €
+            </template>
           </el-table-column>
           <el-table-column label="Remarques">
             <template slot-scope="scope">
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
-          <!--el-row v-for="item in this.records" :key="item._id" :span="24" class="row-record"-->
-
-
-          <!--/el-row-->
           </el-table> 
-          <el-button type="primary" @click="onSubmit">Commander</el-button>   
-      </el-form>    
+          </div>
+          <div class="footer">
+          Total TTC : {{totalPrice}} €
+          <br><br>
+          <el-button type="primary" @click="onSubmit">Commander</el-button>
+          </div>   
+      </el-form> 
   </el-row>
     </div>
 </template>
@@ -49,12 +59,33 @@ export default {
       type: Object
     }
   },
+  filters: {
+      roundTo2: function(value){
+        return value.toFixed(2);
+      }
+  },
   created: function() {
     this.ts = Date.now().toString();
     var params = JSON.parse(this.config.config.controllerparameters);
     this.category = params.param1;
     this.categoryUp = params.param2
     this.prepareData();
+  },
+  computed: {
+    totalPrice: function() {
+      var price = 0
+
+      if(this.records != null)
+      {
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          price += (item.quantity*item.price_tvac)
+        }
+        
+      }
+      return price
+    }
   },
   methods: {
     onSubmit(){
@@ -576,5 +607,12 @@ export default {
 
 .table-disable {
   cursor: not-allowed;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 1%;
+  width: 100%;
+  text-align: center;
 }
 </style>

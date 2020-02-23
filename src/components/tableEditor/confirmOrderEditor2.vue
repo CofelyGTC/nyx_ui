@@ -7,6 +7,7 @@
     :close-on-click-modal="false"
     class="confirm-order-editor"
   >
+  Total TTC : {{totalPrice | roundTo2 }} €<br>
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-tabs v-model="selectedTab" @tab-click="handleClick">
@@ -19,19 +20,26 @@
           :label="index"
           :name="'TAB-'+category"
         >
-
         
         
         
         <el-table :data="newRec._source[index]" style="width: 100%">
-          <el-table-column prop="_id" label="id"></el-table-column>
-          <el-table-column prop="category" label="Categorie"></el-table-column>
-          <el-table-column prop="name" label="Nom"></el-table-column>
           <el-table-column prop="code" label="Code"></el-table-column>
+          <el-table-column prop="name" label="Nom"></el-table-column>
+          <el-table-column label="Prix TTC">
+            <template slot-scope="scope">
+              {{scope.row.price_tvac | roundTo2 }} €
+            </template>
+          </el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
             <el-input-number :min=0 size="mini" v-model="scope.row.quantity"/>
           </template>
+          </el-table-column>
+          <el-table-column label="Total">
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.price_tvac | roundTo2}} €
+            </template>
           </el-table-column>
           <el-table-column label="Remarques">
             <template slot-scope="scope">
@@ -45,6 +53,7 @@
     </el-form>
 
     <span slot="footer" class="dialog-footer">
+      Total TTC : {{totalPrice | roundTo2 }} €
       <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
       <el-button
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
@@ -78,6 +87,24 @@ export default {
     selectedTab: "TAB-0"
   }),
   computed: {
+      totalPrice: function() {
+        var price = 0
+        var categories = this.newRec['_source']['categories']
+
+        for(var categoryId in categories){
+          var category = categories[categoryId]
+          var records = this.newRec['_source'][category]
+          console.log(records)
+          for(var itemKey in Object.keys(records))
+          {
+            var item = records[itemKey]
+            price += (item.quantity*item.price_tvac)
+          }
+          
+        }
+        return price
+      
+    },
     recordin: function() {
       return this.record;
     },
@@ -87,6 +114,11 @@ export default {
     recchanged: function() {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
     }
+  },
+  filters: {
+      roundTo2: function(value){
+        return value.toFixed(2);
+      }
   },
   props: {
     record: {

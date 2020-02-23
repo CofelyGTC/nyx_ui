@@ -24,7 +24,7 @@
           :name="'TAB-'+index+'-'+index1"
           :lazy="true"
         >
-            <el-table :data="order._source[category]" :default-sort = "{prop: 'quantity', order: 'descending'}" style="width: 100%">
+            <el-table :row-key="order._source[category].code" :data="order._source[category]" :default-sort = "{prop: 'quantity', order: 'descending'}" style="width: 100%">
               <el-table-column prop="code" label="Code"></el-table-column>
               
               <el-table-column prop="name" label="Name"></el-table-column>
@@ -33,7 +33,7 @@
                 <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(index)"></el-switch>
                 </template>
               </el-table-column>
-              <el-table-column id= "quantity" prop="quantity" label="Quantité">
+              <el-table-column  id= "quantity" prop="quantity" label="Quantité">
                 <template slot-scope="scope">
                 <el-input-number :min=0 size="mini" v-model="scope.row.quantity"/>
                 </template>
