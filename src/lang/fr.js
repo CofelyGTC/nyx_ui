@@ -28,10 +28,10 @@ export const messages = {
         cancel:'Annuler',
         confirm:'Confirmer',
         revoke:'Revoquer',
-        revoke:'Revoke',
         refresh:'Rafraichir',
         update:'MAJ',
-        createScript:'Créer Script'
+        createScript:'Créer Script',
+        quit:'Quitter',
       }
       ,changepassword:{
         oldpass:'Ancien mot de passe',
