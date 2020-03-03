@@ -94,26 +94,33 @@
                 </el-select>
               </el-form-item>
             </el-col>
-              <el-col :span="8">
+            <el-col :span="8">
               <el-form-item label="Kibana Wrapper" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.kibanawrapper" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="Opti Conso ID" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.opticonsoid" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+
+            
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="Primary Color" :label-width="formLabelWidth">
-                    <el-color-picker v-model="newRec._source.primaryColor"></el-color-picker>
+                    <el-color-picker v-model="newRec._source.primarycolor"></el-color-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="Secondary Color" :label-width="formLabelWidth">
-                    <el-color-picker v-model="newRec._source.secondaryColor"></el-color-picker>
+                    <el-color-picker v-model="newRec._source.secondarycolor"></el-color-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="Icon URL" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.iconUrl" autocomplete="off"></el-input>
+                <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -322,10 +329,10 @@ export default {
 
 
       
-      if (this.newRec._source.primaryColor== undefined)
-        this.newRec._source.primaryColor="#00B0EF";
-      if (this.newRec._source.secondaryColor== undefined)
-        this.newRec._source.secondaryColor="#0BCBF5";
+      if (this.newRec._source.primarycolor== undefined)
+        this.newRec._source.primarycolor="#00B0EF";
+      if (this.newRec._source.secondarycolor== undefined)
+        this.newRec._source.secondarycolor="#0BCBF5";
 
     //console.log(this.newRec);
 
