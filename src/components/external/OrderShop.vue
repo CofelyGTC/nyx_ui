@@ -14,7 +14,7 @@
           </el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" :disabled="!scope.row.available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Total">
@@ -30,7 +30,7 @@
           </el-table> 
           </div>
           <div class="footer">
-          Total TTC : {{totalPrice}} €
+          Total TTC : {{totalPrice | roundTo2}} €
           <br><br>
           <el-button type="primary" @click="onSubmit">Commander</el-button>
           </div>   
