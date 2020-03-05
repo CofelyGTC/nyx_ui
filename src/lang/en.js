@@ -27,7 +27,8 @@ export const messages = {
         revoke:'Revoke',
         refresh:'Refresh',
         update:'Update',
-        createScript:'Create Script'
+        createScript:'Create Script',
+        quit:'Quit',
 
       }
       ,changepassword:{
