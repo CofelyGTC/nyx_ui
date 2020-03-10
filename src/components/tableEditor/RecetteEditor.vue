@@ -11,7 +11,6 @@
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
 
-          {{newRec}}
        <el-row>
            <el-col :span="6">
             <el-form-item label="Code" :label-width="formLabelWidth">
@@ -20,11 +19,11 @@
         </el-col>    
         <el-col :span="6">
             <el-form-item label="Poids" :label-width="formLabelWidth">
-                <el-input-number size="mini" v-model="newRec._source.weight" min=0></el-input-number>
+                <el-input-number size="mini" v-model="newRec._source.weight" :min="0"></el-input-number>
             </el-form-item>
         </el-col>    
         <el-col :span="6">
-            <el-form-item label="Code" :label-width="formLabelWidth">
+            <el-form-item label="Unité" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.unity" autocomplete="off"></el-input>
             </el-form-item>
        </el-col>     
@@ -40,9 +39,14 @@
                               {{ingredient.code}}
                            </el-form-item>
                         </el-col>
+                        <el-col :span=6>
+                           <el-form-item label="Ingr." :label-width="formLabelWidth">
+                              {{ingredient.name}}
+                           </el-form-item>
+                        </el-col>
                         <el-col :span=6>    
                            <el-form-item label="Quantity" :label-width="formLabelWidth">
-                               <el-input-number size="mini" v-model="ingredient.quantity" min=0></el-input-number>
+                               <el-input-number size="mini" v-model="ingredient.quantity" :min="0"></el-input-number>
                            </el-form-item>
                        </el-col>
                        <el-col :span=3>
@@ -51,6 +55,25 @@
                        </el-col>
                 </el-row>
            </el-col>
+       </el-row>
+       <el-row style="text-align:left;">
+         <el-col :span="4">
+           <label>Ajouter ingrédient : </label>
+         </el-col>
+         <el-col :span="4">
+           <el-select v-model="newIngredient" placeholder="Choisissez un ingrédient" filterable size="mini">
+             <el-option v-for="(_source, index) in this.allIngredients" :key="index" :value="[_source._source['Code ingrédient'], _source._source['Ingrédient']]" :label="_source._source['Code ingrédient']+ ' ' + _source._source['Ingrédient']" ></el-option>
+           </el-select>
+         </el-col>
+          <el-col :span="3">
+           <label>Quantité : </label>
+         </el-col>
+         <el-col :span=3>    
+           <el-input-number size="mini" v-model="newIngredientQuantity" :min="0" :value="1"></el-input-number>
+         </el-col>
+         <el-col :span="4">
+           <el-button type="primary" @click="addIngredient()" icon="el-icon-plus" circle></el-button>
+         </el-col>
        </el-row>
 
       </el-card>
@@ -86,7 +109,10 @@ export default {
     formLabelWidth: "120px",
     changed: false,
     dialogFormVisible: false,
-    title: "Recette"
+    title: "Recette",
+    allIngredients: null,
+    newIngredient: null,
+    newIngredientQuantity: 1
   }),
   computed: {
     recordin: function() {
@@ -136,8 +162,51 @@ export default {
     prepareData: function() {
       console.log("prepare data");
       this.dialogFormVisible = true;
+      if(!this.record._source.ingredients)
+      {
+        console.log("New record")
+        this.record._source.ingredients = []
+        console.log(this.record)
+      }
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+      this.allIngredients = this.getIngredients();
+    },
+    addIngredient: function() {
+      var ingredientToAdd = {
+        "code": this.newIngredient[0],
+        "name": this.newIngredient[1],
+        "quantity": this.newIngredientQuantity
+      }
+      this.newRec._source.ingredients.push(ingredientToAdd);
+    },
+    getIngredients: function() {
+      var url =
+        this.$store.getters.apiurl +
+        "generic_search/schamp_ingredients" +
+        "?token=" +
+        this.$store.getters.creds.token;
+        
+      var query = {
+          "size": 10000
+        }
+
+        axios
+        .post(url, query)
+        .then(response => {
+          if (response.data.error != "") {
+            console.log("fail to retrieve ingredients");
+          } else {
+            console.log(response);
+
+            this.allIngredients = response.data.records
+
+
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     saveRecord: function() {
 
@@ -151,7 +220,7 @@ export default {
       this.$notify({ 
         title: "Record saved.",
         type: "success",
-        message: "La commande a été enregistrée.",
+        message: "La recette a été enregistrée.",
         position: "bottom-right"
       });
       this.$emit("dialogcloseupdated");

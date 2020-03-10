@@ -12,6 +12,7 @@
               {{scope.row.price_tvac | roundTo2 }} €
             </template>
           </el-table-column>
+          <el-table-column prop="size" label="Size"></el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.available" v-model="scope.row.quantity"/>
