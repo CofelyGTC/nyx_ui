@@ -64,12 +64,12 @@
             <el-row>
               <el-col :span="8"  style="text-align: left;">
                 <el-form-item label="RSS" :label-width="formLabelWidth">
-                  <el-input size="mini" autocomplete="off"></el-input>
+                  <el-input size="mini" autocomplete="off" v-model="newRec._source.rss"></el-input>
                 </el-form-item>
               </el-col>              
               <el-col :span="8"  style="text-align: left;">
                 <el-form-item label="Youtube" :label-width="formLabelWidth">
-                  <el-input size="mini" autocomplete="off"></el-input>
+                  <el-input size="mini" autocomplete="off"  v-model="newRec._source.youtube"></el-input>
                 </el-form-item>
               </el-col>                            
             </el-row>
