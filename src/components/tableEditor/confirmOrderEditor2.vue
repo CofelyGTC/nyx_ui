@@ -36,6 +36,11 @@
             <el-input-number :min=0 size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
+          <el-table-column label="Quantité en commande">
+            <template slot-scope="scope">
+              {{scope.row.orderquantity }}
+            </template>
+          </el-table-column>
           <el-table-column label="Total">
             <template slot-scope="scope">
               {{scope.row.quantity * scope.row.price_tvac | roundTo2}} €

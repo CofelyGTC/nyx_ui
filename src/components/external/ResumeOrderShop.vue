@@ -1,63 +1,63 @@
 <template>
   <div style="width: 100%">
+      <span v-if="dialogFormVisible">
+      <PanierViewer
+        :record="currentRecord"
+        :config="config"    
+        v-on:dialogclose="dialogFormVisible=false"
+      ></PanierViewer>
+    </span>
   <el-row class="ordershop-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
         <div style="bottom: 5%;">
         Total TTC : {{totalPrice | roundTo2 }} €
         <el-table :data="this.records" style="width: 100%" >
           
-          <el-table-column prop="old_code" label="Code"></el-table-column>
-          <el-table-column prop="name" label="Nom"></el-table-column>
-          <el-table-column label="Prix TTC">
-            <template slot-scope="scope">
-              {{scope.row.price_tvac | roundTo2 }} €
-            </template>
+          <el-table-column prop="category" label="Catégorie"></el-table-column>
+          <el-table-column prop="totQuantity" label="Quantité Commandée"></el-table-column>
+          <el-table-column prop="totPrice" label="Total TTC (€)"></el-table-column>
+          <el-table-column label="Détail" align="right">
+             <template slot-scope="scope">
+              <el-button
+                size="mini"
+                plain
+                icon="el-icon-view"
+                @click="handleView(scope.$index, scope.row)"
+              ></el-button>
+             </template>
           </el-table-column>
-          <el-table-column prop="size" label="Size"></el-table-column>
-          <el-table-column label="Quantité">
-          <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" :disabled="!scope.row.available" v-model="scope.row.quantity"/>
-          </template>
-          </el-table-column>
-          <el-table-column label="Quantité en Commande">
-          <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.available" v-model="scope.row.orderquantity"/>
-          </template>
-          </el-table-column>
-          <el-table-column label="Total">
-            <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.price_tvac | roundTo2}} €
-            </template>
-          </el-table-column>
-          <el-table-column label="Remarques">
-            <template slot-scope="scope">
-              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
-            </template>
-          </el-table-column>
-          </el-table> 
-          </div>
-          <div class="footer">
-          Total TTC : {{totalPrice | roundTo2}} €
-          <br><br>
-          <el-button type="primary" @click="onSubmit">Commander</el-button>
+          
+          
+          </el-table>
           </div>   
       </el-form> 
   </el-row>
-  {{ records }}
+  <el-row>
+      <el-button type="primary" @click="refreshData">Refresh</el-button>
+  </el-row>
     </div>
-    
 </template>
 <script>
 import Vue from "vue";
 import moment,{ months } from "moment";
 import axios from "axios";
+import panierviewer from "@/components/tableEditor/PanierViewer";
+
+const req = require.context("../../components/tableEditor/", true, /\.vue$/);
+
+Vue.component("PanierViewer", panierviewer);
 
 export default {
-  name: "FormOrderShop",
+  name: "ResumeOrderShop",
   data: () => ({
       records: null,
+      currentRecord: { original: {} },
+      editMode: null,
       oldID: null,
       disabled: false,
+      loadOnEdit: true,
+      totalPrice: 0,
+      dialogFormVisible: false,
       category: '',
       categoryUp: '',
       search: '',
@@ -76,91 +76,14 @@ export default {
   },
   created: function() {
     this.ts = Date.now().toString();
-    var params = JSON.parse(this.config.config.controllerparameters);
-    this.category = params.param1;
-    this.categoryUp = params.param2
     this.prepareData();
   },
   computed: {
-    totalPrice: function() {
-      var price = 0
 
-      if(this.records != null)
-      {
-        for(var itemKey in Object.keys(this.records))
-        {
-          var item = this.records[itemKey]
-          price += (item.quantity*item.price_tvac)
-        }
-        
-      }
-      return price
-    }
   },
   methods: {
-    onSubmit(){
-      var order = {};
-      var products = [];
-      var entry = {};
-      for(var itemKey in Object.keys(this.records)) {
-        var item = this.records[itemKey]
-        
-        entry = {}
-        entry._id = item._id
-        entry.name = item.name
-        entry.category = item.categoryID
-        entry.code = item.old_code
-        entry.quantity = item.quantity
-        entry.orderquantity = item.orderquantity
-        entry.size = item.size
-        entry.remarque = item.remarque
-        entry.price_tvac = item.price_tvac
-        entry.available = item.available
-        products.push(entry)
-      }
-      order.products = products
-      order.dateOrder = moment()
-      order.category = this.categoryUp
-      order.categoryID = this.category
-      order.demandor = this.$store.getters.creds.user.id
-      order.oldId = this.oldID
-      order.newId = order.category +'_'+this.ts
 
-      
-      
-      setTimeout(() => {
-        axios.post(
-          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
-          ).then((response) => {
-            if(response.data.error!="")
-              {
-                this.$notify({ 
-                title: "Error",
-                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                type: "error",
-                position: "bottom-right",
-                duration: 1500});
-                }
-            else
-              {
-                this.$notify({ 
-                title: "Success",
-                message: "Commande en " +this.categoryUp + " envoyée !",
-                type: "success",
-                position: "bottom-right",
-                duration: 2000
-              });
-              }
-        })
-        .catch((error)=> {
-          console.log(error);
-          
-        });
-      }, 1000)
-
-      console.log('Sending Command')
-    },
-    prepareData() {
+      prepareData() {
       console.log('prepare data')
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
@@ -186,105 +109,130 @@ export default {
       this.strPeriod = moment(this.monthSelected).startOf('Month').format('DD MMM YYYY')+' to '+moment(this.monthSelected).endOf('Month').format('DD MMM YYYY')
       this.getData()
     },
+    
     getData() {
       var demandor = this.$store.getters.creds.user.id          
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order?demandor="+demandor+"&category="+this.categoryUp+"&token=" +
-      this.$store.getters.creds.token;  
+      "schamps/check_resume_order?demandor="+demandor+"&token=" + this.$store.getters.creds.token; 
 
-      
-        
+      console.log(url)
+
       axios
         .get(url, demandor)
         .then((response) => {
             if(response.data.error!="")
             console.log("Order Shops Calls list error...");
             else{
+                console.log(response.data.data)
                 var res = JSON.parse(response.data.data)
                 console.log(res)
                 
                 if(res.reccords.length == 0)
                 {
                     console.log("No reccord")
-                    this.createNewForm();
+                    
                 }
                 else{
-                    var order = res.reccords[0]['_source']['products']
-                    console.log("list order")
-                    
-                    for(var itemKey in order) {
-                      
-                      order[itemKey].old_code = order[itemKey].code
-                      delete order[itemKey].code
+
+                    var callData=[]
+                    this.totalPrice = 0
+
+                    for(var key in res.reccords)
+                    {
+                        var newRec = res.reccords[key]['_source'];
+                        newRec['_id'] = res.reccords[key]['_id'];
+                        newRec['_index'] = res.reccords[key]['_index'];
+                        newRec['_type'] = res.reccords[key]['_type'];
+                        var subTotPrice = 0
+                        var subQuantity = 0
+                        var products = newRec['products']
+                        for(var index in products)
+                        {
+                            subQuantity += products[index]['quantity']
+                            
+                            var subTot = products[index]['quantity'] * products[index]['price_tvac']
+                            subTotPrice += subTot
+                        }
+                        newRec['totPrice'] = subTotPrice
+                        newRec['totQuantity'] = subQuantity
+                        this.totalPrice += subTotPrice
+                        callData.push(newRec);
                     }
-                    var oldId = res.reccords[0]['_id']
-                    this.oldID = oldId
-                    this.records = order
-                    this.disabled = res.reccords[0]['_source']['confirmed']  
+
+                    var tmp = JSON.parse(JSON.stringify(callData))
+                    this.records = null
+                    this.records = JSON.parse(JSON.stringify(tmp))
+                    console.log("Records added")
+                    console.log(this.records)
                 }
             }
         });  
     },
 
-
-
-    
-
+    refreshData: function() {
       
-    createNewForm(){
-      console.log('Generate Empty Form')
-      var url = this.$store.getters.apiurl + "generic_search/products_parameters?token=" + this.$store.getters.creds.token;
-      var minutes = new Date().getMinutes();
-      var hours = new Date().getHours();
-      if(hours >= 18){
-        this.disabled = true
+      this.getData();
+    },
+    
+    handleView(index, row) {
+      this.currentRecord = {}; // required by the detail watcher
+      this.editMode = "edit";
+      console.log('coucou')
+
+      if(this.loadOnEdit) {
+        this.getRecordFromRow(row)
+        .then(response => {
+          this.currentRecord = response;
+          console.log(this.currentRecord)
+          this.dialogFormVisible = true;
+        })
+        .catch(error => {
+          this.currentRecord = response;
+          this.dialogFormVisible = true;
+          console.log(error);
+        });
       }
-      else if(minutes >= 45 && hours==17){
-        this.disabled = true
+      else {
+        this.currentRecord = row;
+        this.dialogFormVisible = true;
       }
-      var query = {
-            "size":900,
-            "query": {
-              "bool": {
-                "must": [
-                  {
-                    "query_string": {
-                      
-                      "query": "categoryID: "+this.category
-                    }
-                  }
-                ]
-              }
-            }
+    },
+    async getRecordFromRow(row) {
+      console.log('getRecordFromRow')
+      console.log(row)
+      try {
+        var url =
+        this.$store.getters.apiurl +
+        "generic/"+row._index+"/" +
+        row._id +
+        "?token=" +
+        this.$store.getters.creds.token +
+        "&doc_type="+row._type;
+      
+        const response = await axios.get(url);
+
+        console.log(response)
+
+        if (response.status == 200) {
+          console.warn("fail to retrieve the document, returning the parameters");
+          return row
+          
+        } else {
+          let updatedRecord = JSON.parse(JSON.stringify(response.data.data));
+          updatedRecord.original = JSON.parse(
+            JSON.stringify(response.data.data)
+          );
+
+          return updatedRecord
         }
-       console.log(query)
+      } catch (e) {
+        console.error(e);
+        return row;
+      }
 
-      axios
-        .post(url, query)
-        .then((response) => {
-          if(response.data.error!="")
-            console.log("Order Shops Calls list error...");
-          else
-          {
-            this.callData=[]
-            console.log(response)
-            for(var i in response.data.records) {
-              response.data.records[i]._source._id = response.data.records[i]._id 
-              response.data.records[i]._source.quantity = 0
-              response.data.records[i]._source.orderquantity = 0
-              console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
-              this.callData.push(response.data.records[i]._source)
-            }
-
-            
-                var tmp = JSON.parse(JSON.stringify(this.callData))
-                this.records = null
-                this.records = JSON.parse(JSON.stringify(tmp))
-          }});
-
-          },
+    },
 
    
    setTableCurrent(row) {
@@ -564,7 +512,7 @@ export default {
             .catch((error)=> {
               console.log(error);
             });
-          }, 2500)
+          }, 1000)
 
           if(this.targetMonth != this.currentMonth) {
             setTimeout(() => {
