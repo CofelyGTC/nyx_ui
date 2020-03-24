@@ -14,8 +14,12 @@
         <el-table :data="this.records" style="width: 100%" >
           
           <el-table-column prop="category" label="Catégorie"></el-table-column>
-          <el-table-column prop="totQuantity" label="Quantité Commandée"></el-table-column>
-          <el-table-column prop="totPrice" label="Total TTC (€)"></el-table-column>
+          <el-table-column label="Total TTC (€)">
+            <template slot-scope="scope">
+              {{scope.row.totPrice | roundTo2}}
+
+            </template>
+          </el-table-column>
           <el-table-column label="Détail" align="right">
              <template slot-scope="scope">
               <el-button

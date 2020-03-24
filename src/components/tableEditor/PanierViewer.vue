@@ -9,11 +9,23 @@
   >
 
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
-          <el-table :data="products" style="width: 100%" >
+          <el-table :data="this.products" style="width: 100%" >
               <el-table-column prop="name" label="Name"></el-table-column>
-              <el-table-column prop="quantity" label="Quantité"></el-table-column>
-              <el-table-column prop="price_tvac" label="Prix TTC (€)"></el-table-column>
-              <el-table-column prop="totPrice" label="Prix Total TTC (€)"></el-table-column>
+              <el-table-column label="Quantité">
+                <template slot-scope="scope">
+                    {{scope.row.quantity | roundTo2}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="price_tvac" label="Prix TTC">
+                <template slot-scope="scope">
+                    {{scope.row.price_tvac | roundTo2}} €
+                </template>
+              </el-table-column>
+              <el-table-column label="Prix Total TTC">
+                 <template slot-scope="scope">
+                    {{scope.row.quantity * scope.row.price_tvac | roundTo2}} €
+                </template>
+              </el-table-column>
 
           </el-table>
       </el-card>

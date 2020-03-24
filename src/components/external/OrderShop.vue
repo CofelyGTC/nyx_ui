@@ -36,6 +36,7 @@
           </el-table-column>
           </el-table> 
           </div>
+          <br><br>
           <div class="footer">
           Total TTC : {{totalPrice | roundTo2}} €
           <br><br>
@@ -43,7 +44,7 @@
           </div>   
       </el-form> 
   </el-row>
-  {{ records }}
+  
     </div>
     
 </template>
