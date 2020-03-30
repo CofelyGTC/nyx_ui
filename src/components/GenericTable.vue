@@ -880,8 +880,9 @@ export default {
       this.loadData(true, format);
     }
   },
-  created: function() {
-    console.log("===============  CREATED:");
+  mounted: function() {
+    console.log("===============  MOUNTED:");
+    // this.$globalbus.$off("timerangechanged");
 
     if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
       this.loadData();
