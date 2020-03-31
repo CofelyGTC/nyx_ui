@@ -227,6 +227,8 @@ export default {
           category: "",
           order: 1000,
           privileges: [],
+          queryBarChecked: false,
+          queryFilterChecked: false,
           config: { headercolumns: [], tableFieldsToDownload: [], tableFieldsToFilter: [], queryfilters: [] }
         },
 
@@ -237,14 +239,7 @@ export default {
 
       this.$store.commit({
         type: "setAppConfigObj",
-        data: {
-          title: "New App",
-          type: "generic-table",
-          category: "",
-          order: 1000,
-          privileges: [],
-          config: { headercolumns: [], tableFieldsToDownload: [], tableFieldsToFilter: [], queryfilters: [] }
-        }
+        date: newrec._source
       });
 
       this.dialogHeaderVisible = false;
@@ -267,7 +262,11 @@ export default {
         row._source.config.tableFieldsToFilter = []
       if(row._source.config != null && row._source.config.queryfilters == null)
         row._source.config.queryfilters = []
-      
+      if(row._source != null && row._source.queryBarChecked == null)
+        row._source.queryBarChecked = false
+      if(row._source != null && row._source.queryFilterChecked == null)
+        row._source.queryFilterChecked = false
+        
       this.curConfig = JSON.parse(JSON.stringify(row._source));
 
       this.$store.commit({
