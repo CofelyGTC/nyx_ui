@@ -7,6 +7,7 @@
     :close-on-click-modal="false"
     class="lambda-editor"
   >
+
     <!-- <h1>{{locEditMode}}</h1> -->
     <el-tabs v-model="activeName">
       <el-tab-pane label="Main" name="main">
@@ -112,6 +113,9 @@
             <el-col :span="5">
               <el-button @click="setFocus()" type="text">Crashed</el-button>
             </el-col>
+            <el-col :span="5">
+              <el-button @click="setFocus()" type="text">Result</el-button>
+            </el-col>
           </el-row>
 
           <el-row style="text-align:left;" type="flex" v-if="locEditMode=='edit'">
@@ -142,7 +146,11 @@
                 v-model="newRec._source.crashed"
               ></el-input>
             </el-col>
-            <el-col :span="9" style="text-align:right;">
+            <el-col :span="5">
+              <v-icon :style='"color:"+newRec._source.result_icon.split(">")[1]' :name="newRec._source.result_icon.split('>')[0]" scale="1.5"/>
+              
+            </el-col>
+            <el-col :span="4" style="text-align:right;">
               <el-button
                 style="min-width: 112px;"
                 icon="el-icon-refresh-left"
@@ -221,22 +229,41 @@
       <el-tab-pane label="Info" name="info">
         <el-form v-model="newRec._source">
           <el-card shadow="hover" :body-style="{ padding: '10px' }">
-            <el-form-item label="File" :label-width="formLabelWidth">
-              <el-input
-                :disabled="true"
-                size="mini"
-                v-model="newRec._source.file"
-                autocomplete="off"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="Function" :label-width="formLabelWidth">
-              <el-input
-                :disabled="true"
-                size="mini"
-                v-model="newRec._source.function"
-                autocomplete="off"
-              ></el-input>
-            </el-form-item>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="File" :label-width="formLabelWidth">
+                  <el-input
+                    :disabled="true"
+                    size="mini"
+                    v-model="newRec._source.file"
+                    autocomplete="off"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="Function" :label-width="formLabelWidth">
+                  <el-input
+                    :disabled="true"
+                    size="mini"
+                    v-model="newRec._source.orgfunction"
+                    autocomplete="off"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row v-if="newRec._source.type=='message'">
+              <el-col :span="12">
+                <el-form-item label="Topics" :label-width="formLabelWidth">
+                  <el-input
+                    :disabled="true"
+                    size="mini"
+                    v-model="newRec._source.topics"
+                    autocomplete="off"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
             <el-row>
               <el-col :span="6">
                 <el-form-item
@@ -375,11 +402,11 @@ export default {
     }
   },
   created: function() {
-    console.log("created event");
+    // console.log("created event");
     this.locEditMode = this.editMode;
     this.locRecord = this.record;
 
-    console.log(this.record);
+    // console.log(this.record);
     this.prepareData();
   },
   components: {},
@@ -400,7 +427,7 @@ export default {
             console.log("fail to retrieve lambda");
             this.resetStatsLoading = false;
           } else {
-            console.log(response);
+            // console.log(response);
 
             let obj = response.data.data;
             obj._source.runs = 0;
@@ -410,7 +437,7 @@ export default {
             axios
               .post(url, obj._source)
               .then(response => {
-                console.log("update");
+                // console.log("update");
                 this.newRec = JSON.parse(JSON.stringify(obj));
                 this.orgRec = JSON.parse(JSON.stringify(obj));
 
@@ -476,7 +503,6 @@ export default {
       this.$emit("dialogclose");
     },
     handleSelectRun(item) {
-      console.log(item);
       this.logObj = null;
       this.logObj = {};
       this.logObj.indice = "nyx_lambdalog";
@@ -485,9 +511,6 @@ export default {
       this.selectedRun = JSON.parse(JSON.stringify(item));
     },
     handleSelectRunner(item) {
-      console.log("handleSelectRunner");
-      console.log(item);
-
       this.fileOptions = [];
 
       if (item == "") {
@@ -495,8 +518,6 @@ export default {
 
       if (this.hierarchy.hasOwnProperty(item)) {
         Object.keys(this.hierarchy[item]).forEach(not => {
-          console.log(not);
-
           this.fileOptions.push({
             value: not,
             label: not
@@ -505,9 +526,6 @@ export default {
       }
     },
     prepareData: function() {
-      // console.log("prepare data");
-      // console.log(this.locRecord);
-
       var url =
         this.$store.getters.apiurl +
         "generic_search/nyx_lambda?token=" +
@@ -543,8 +561,6 @@ export default {
               this.hierarchy[runner][notebook].add(funct);
             });
 
-            // console.log(this.hierarchy)
-
             this.allRunners.forEach(runner => {
               this.runnerOptions.push({
                 value: runner,
@@ -564,8 +580,6 @@ export default {
           console.log(error);
         });
 
-      // console.log(this.locEditMode)
-
       this.newRec = JSON.parse(JSON.stringify(this.locRecord));
       this.orgRec = JSON.parse(JSON.stringify(this.locRecord));
 
@@ -576,8 +590,7 @@ export default {
 
         this.getLastRunsUuid("", 1)
           .then(response => {
-            if(response.length == 0)
-              return;
+            if (response.length == 0) return;
 
             this.selectedUuid = response[0].uuid;
             this.selectedRun = response[0];
@@ -677,17 +690,14 @@ export default {
               this.locRecord = null;
               this.locRecord = JSON.parse(JSON.stringify(response.data.data));
               this.prepareData();
-              // console.log('after prepare data')
             }
           })
           .catch(error => {
             console.log(error);
           });
       }, 5000);
-      // this.$emit("dialogclose");
     },
     async getLastRunsUuid(queryString, size) {
-      // console.log("getLastRunsUuid");
       let request = {
         version: true,
         size: size,
@@ -727,8 +737,6 @@ export default {
 
       request.query.bool.must[0].match_phrase["function"].query = _function;
 
-      // console.log(queryString);
-
       if (
         queryString != null &&
         queryString != "" &&
@@ -755,8 +763,6 @@ export default {
 
         const response = await axios.post(url, request);
 
-        // console.log(response);
-
         if (response.status == 200) {
           this.lastRuns = [];
           if (
@@ -766,11 +772,7 @@ export default {
             console.warn("no runs retrieved");
             return [];
           }
-
           let ret = [];
-
-          console.log(response.data.records);
-
           response.data.records.forEach(obj => {
             let newObj = {
               value: obj._id,
@@ -807,6 +809,7 @@ export default {
           return cb([]);
         });
     }
+    
   }
 };
 </script>

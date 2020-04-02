@@ -43,8 +43,9 @@
       </el-col>
     </el-row>
     <el-row>
+    </el-row>
+    <el-row>
       <el-col :span="24">
-        
         <el-table
           size="mini"
           :data="tableData"
@@ -52,18 +53,20 @@
           highlight-current-row
           @current-change="handleCurrentRecordChange"
           v-loading="!ready"
+          ref="genericTable"
+          fit
         >
-        
           <el-table-column
             v-for="header in config.config.headercolumns"
             :key="header.field"
             :label="computeTranslatedText(header.title,$store.getters.creds.user.language)"
             :prop="header.field"
+            :width="header.format=='icon'?'100px':''"
             sortable
           >
+            <!-- show-overflow-tooltip -->
             <template slot-scope="scope">
-              
-              <div v-if="header.type=='select'">
+              <span v-if="header.type=='select'">
                 <el-select
                   @change="selectChanged(scope.row, header)"
                   size="mini"
@@ -77,29 +80,29 @@
                     :value="item.value"
                   ></el-option>
                 </el-select>
-              </div>
-              <div
+              </span>
+              <span
                 v-else-if="(header.type=='long' || header.type=='double') && header.format != null && header.format.length > 0"
-              >{{computeRec(scope.row,header.field) | numeral(header.format)}}</div>
-              <div v-else-if="header.type=='boolean'">
+              >{{computeRec(scope.row,header.field) | numeral(header.format)}}</span>
+              <span v-else-if="header.type=='boolean'">
                 <el-switch
                   v-model="scope.row._source[header.field.replace('_source.', '')]"
                   :disabled="header.disabled"
                   @change="switchChanged(scope.row, header)"
                 ></el-switch>
-              </div>
-              <div v-else-if="header.format=='icon'">
-                
-                <!--div style="text-align:center;">
-                  <v-icon name="bug" scale="1.5" />
-              </div-->
-
-                <v-icon :color="computeIconColor(scope.row,header.field)" :name="computeIcon(scope.row,header.field)" scale="1.5" />
-              </div>
-              <div v-else>{{computeRec(scope.row,header.field)}}</div>
+              </span>
+              <span v-else-if="header.format=='icon'" class="icon-cell">
+                <v-icon
+                  v-if="computeIcon(scope.row,header.field)!=''"
+                  :color="computeIconColor(scope.row,header.field)"
+                  :name="computeIcon(scope.row,header.field)"
+                  scale="1.5"
+                />
+              </span>
+              <span v-else>{{computeRec(scope.row,header.field)}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="Actions" align="right">
+          <el-table-column label="Actions" align="right" width="150px;">
             <template slot="header" slot-scope="scope">
               <div>
                 <el-tooltip
@@ -184,7 +187,7 @@ import map from "@/components/Map";
 import barchart from "@/components/BarChart";
 import querybar from "@/components/QueryBar";
 import _ from "lodash";
-import {computeTranslatedText} from '../globalfunctions'
+import { computeTranslatedText } from "../globalfunctions";
 
 const req = require.context("../components/tableEditor/", true, /\.vue$/);
 
@@ -305,9 +308,8 @@ export default {
     }
   },
   methods: {
-    computeTranslatedText: function(inText,inLocale){
-      
-      return computeTranslatedText(inText,inLocale);
+    computeTranslatedText: function(inText, inLocale) {
+      return computeTranslatedText(inText, inLocale);
     },
     handleCommand: function(e) {
       console.log("Command changed.....");
@@ -399,12 +401,15 @@ export default {
         if (field.indexOf("@") == -1)
           res = _.get(rec, field.replace("_source.", ""));
         else res = rec[field.replace("_source.", "")];
+
         if (res == undefined) return "";
         else return this.cutRec("" + res).split(">")[0];
       }
-      if (field.indexOf("@") == -1) return this.cutRec(_.get(rec, field)).split(">")[0];
+      if (field.indexOf("@") == -1)
+        return this.cutRec(_.get(rec, field)).split(">")[0];
       else res = rec[field].split(">")[0];
-      //return field;
+
+      return res;
     },
     computeIconColor: function(row, field) {
       var rec = row;
@@ -413,16 +418,12 @@ export default {
         var res = "";
         if (field.indexOf("@") == -1)
           res = _.get(rec, field.replace("_source.", ""));
-        else 
-        res = rec[field.replace("_source.", "")];
+        else res = rec[field.replace("_source.", "")];
         if (res == undefined) return "grey";
-
-
-        else 
-          if (field.indexOf(">") == -1)
-            return this.cutRec("" + res).split(">")[1];
+        else if (field.indexOf(">") == -1)
+          return this.cutRec("" + res).split(">")[1];
       }
-      
+
       return "grey";
     },
     recordUpdated: function() {
@@ -446,69 +447,69 @@ export default {
       this.loadData();
     }, 1500),
     async getRecordFromRow(row) {
-      console.log('getRecordFromRow')
-      console.log(row)
       try {
         var url =
-        this.$store.getters.apiurl +
-        "generic/"+row._index+"/" +
-        row._id +
-        "?token=" +
-        this.$store.getters.creds.token +
-        "&doc_type="+row._type;
-      
+          this.$store.getters.apiurl +
+          "generic/" +
+          row._index +
+          "/" +
+          row._id +
+          "?token=" +
+          this.$store.getters.creds.token +
+          "&doc_type=" +
+          row._type;
+
         const response = await axios.get(url);
 
-        console.log(response)
-
-        if (response.status == 200) {
-          console.warn("fail to retrieve the document, returning the parameters");
-          return row
-          
-        } else {
+        if (
+          response.status == 200 &&
+          response.data != null &&
+          response.data.error != null &&
+          response.data.error == ""
+        ) {
+          console.log('get record from db')
           let updatedRecord = JSON.parse(JSON.stringify(response.data.data));
           updatedRecord.original = JSON.parse(
             JSON.stringify(response.data.data)
           );
 
-          return updatedRecord
+          return updatedRecord;
+        } else {
+          console.warn(
+            "fail to retrieve the document, returning the row"
+          );
+          return row;
         }
       } catch (e) {
         console.error(e);
         return row;
       }
-
-
     },
     handleView(index, row) {
       this.currentRecord = {}; // required by the detail watcher
       this.editMode = "edit";
 
-      if(this.loadOnEdit) {
+      if (this.loadOnEdit) {
         this.getRecordFromRow(row)
-        .then(response => {
-          this.currentRecord = response;
-          this.dialogFormVisible = true;
-        })
-        .catch(error => {
-          this.currentRecord = response;
-          this.dialogFormVisible = true;
-          console.log(error);
-        });
-      }
-      else {
+          .then(response => {
+            this.currentRecord = response;
+            this.dialogFormVisible = true;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
         this.currentRecord = row;
         this.dialogFormVisible = true;
       }
     },
     handleDelete(index, row) {
       this.$confirm(
-        this.$t('generic.delete_record')
-        ,
-        this.$t('generic.warning'),
+        this.$t("generic.delete_record"),
+        this.$t("generic.warning"),
         {
-          confirmButtonText: this.$t('generic.ok'),
-          cancelButtonText: this.$t('generic.cancel'),
+          confirmButtonText: this.$t("generic.ok"),
+          cancelButtonText: this.$t("generic.cancel"),
           type: "warning"
         }
       )
@@ -712,7 +713,10 @@ export default {
 
           console.log(response);
 
-          if (response.data.records != null || (download && response.status==200)) {
+          if (
+            response.data.records != null ||
+            (download && response.status == 200)
+          ) {
             if (download) {
               if (response.data.type == "mail") {
                 this.$notify({
@@ -813,9 +817,6 @@ export default {
                       format = curcol.format;
                     }
 
-                    var curtime =
-                      record["_source"][curcol.field.replace("_source.", "")];
-
                     var curtime = _.get(
                       record["_source"],
                       curcol.field.replace("_source.", "")
@@ -832,6 +833,7 @@ export default {
             }
 
             this.tableData = response.data.records;
+            this.$refs.genericTable.doLayout()
           }
         })
         .catch(error => {
@@ -887,7 +889,6 @@ export default {
     if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
       this.loadData();
 
-    
     console.log("===============  REGISTERING: timerangechanged");
     this.$globalbus.$on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
@@ -915,5 +916,11 @@ export default {
   width: 130px;
   margin-top: 3px;
   margin-right: 5px;
+}
+
+.icon-cell {
+  height: 24px;
+  text-align: center;
+  max-width: 40px;
 }
 </style>

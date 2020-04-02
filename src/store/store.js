@@ -36,7 +36,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.9.0",
+    version: "v3.13.0",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -456,12 +456,13 @@ export default new Vuex.Store({
     deleteRecord(state, payload) {
       console.log('deleteRecord')
       console.log(payload)
-      var url =
+      let url =
         state.apiurl +
         "generic/" + payload.data._index + "/" + payload.data._id + "?token=" +
         state.creds.token;
 
       if(Object.keys(payload.data).includes('_type'))
+        url += '&doc_type=' + payload.data._type
 
       axios
         .delete(url)
@@ -544,7 +545,7 @@ export default new Vuex.Store({
         .then(response => {
           if (response.data.error != "") console.log("Unable to send message");
           else {
-            
+            console.log('message sent')
           }
         })
         .catch(error => {

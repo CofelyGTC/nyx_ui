@@ -276,36 +276,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- Specific Time -->
-            <!-- <el-row v-if="curConfig.type === 'kibana'">
-              <el-col :span="8">
-                <el-form-item label="Time Field" :label-width="formLabelWidth">
-                  <el-input
-                    size="mini"
-                    v-model="curConfig.config.specificTimeField"
-                    autocomplete="off"
-                    placeholder="Use only if the time field must be formatted"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="16">
-                <el-form-item label="Time Format" :label-width="formLabelWidth">
-                  <el-input
-                    size="mini"
-                    v-model="curConfig.config.specificTimeFormat"
-                    autocomplete="off"
-                    placeholder="Use only if the time field must be formatted. (Moment Format)"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row> -->
-
-            <!-- URL -->
-            <!-- <el-form-item
-              v-if="(curConfig.type === 'external') || (curConfig.type === 'kibana')"
-              label="Url"
-              :label-width="formLabelWidth"
-            > -->
+           
             <el-form-item
               v-if="(curConfig.type === 'external')"
               label="Url"
@@ -336,12 +307,24 @@
 
             <!-- Upload -->
             <div v-if="(curConfig.type === 'upload')">
-              <el-form-item label="Queue" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="curConfig.config.queue" autocomplete="off"></el-input>
-              </el-form-item>
+              <el-row>
+                <el-col span="12">
+                <el-form-item label="Queue" :label-width="formLabelWidth">
+                  <el-input size="mini" v-model="curConfig.config.queue" autocomplete="off"></el-input>
+                </el-form-item>
+                </el-col>
+                <el-col span="12">                  
+                <el-form-item label="File Types" :label-width="formLabelWidth">
+                  <el-input size="mini" placeholder=".docx,.doc or nothing for all types" v-model="curConfig.config.filetypes" autocomplete="off"></el-input>
+                </el-form-item>                              
+                </el-col>
+              </el-row>
+
+              <el-row>
               <el-form-item label="Tip" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="curConfig.config.tip" autocomplete="off"></el-input>
-              </el-form-item>
+                  <el-input size="mini" v-model="curConfig.config.tip" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-row>
             </div>
           </el-card>
         </el-tab-pane>
@@ -731,9 +714,9 @@
 //import axios from "axios";
 import freetextdetails from "@/components/FreeTextDetails";
 
-import queryfiltereditor from "@/components/QueryFilterEditor";
-import estableeditor from "@/components/ESTableEditor";
-import formeditor from "@/components/FormEditor";
+import queryfiltereditor from "@/components/appConfigEditor/QueryFilterEditor";
+import estableeditor from "@/components/appConfigEditor/ESTableEditor";
+import formeditor from "@/components/appConfigEditor/FormEditor";
 
 
 import Vue from "vue";

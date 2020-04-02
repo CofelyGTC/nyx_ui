@@ -9,8 +9,8 @@
         style="text-align:left"
       >
         {{queryfilter.title}}
-        
-        <el-select v-if="queryfilter.type == 'selecter'"
+        <el-select
+          v-if="queryfilter.type == 'selecter'"
           filterable
           size="mini"
           v-model="queryfilter.selected"
@@ -25,11 +25,17 @@
           ></el-option>
         </el-select>
 
-        <el-input @change="refresh()" size="mini" style="width:170px" v-if="queryfilter.type == 'text'" placeholder="Please input" v-model="queryfilter.selected"></el-input>
-
+        <el-input
+          @change="refresh()"
+          size="mini"
+          style="width:170px"
+          v-if="queryfilter.type == 'text'"
+          placeholder="Please input"
+          v-model="queryfilter.selected"
+        ></el-input>
       </el-col>
     </div>
-    <div class="refresh-button">
+    <div class="refresh-button" v-if="config.type != 'kibana'">
       <el-button @click="refresh()" style="width:90%;" size="mini" type="primary">refresh</el-button>
     </div>
     <div class="download-button" v-if="config && config.downloadChecked">
@@ -79,77 +85,79 @@ export default {
       type: Object
     }
   },
-  // computed: {
-  //   configin: function() {
-  //     this.queryFilterCopy = JSON.parse(JSON.stringify(this.config.config.queryfilters));
-  //     return this.config;
-  //   },
-  // },
   methods: {
-
-
     refresh: _.throttle(function() {
-
-      console.log("refresh");
       var querya = [];
       for (let queryind in this.queryFilterCopy) {
-
-
         // cache the last search
-        var cacheKey = this.config.rec_id+'-'+this.queryFilterCopy[queryind].title
-        this.$store.getters.searchCache[cacheKey] = this.queryFilterCopy[queryind].selected
+        var cacheKey =
+          this.config.rec_id + "-" + this.queryFilterCopy[queryind].title;
+        this.$store.getters.searchCache[cacheKey] = this.queryFilterCopy[
+          queryind
+        ].selected;
 
-        if (this.queryFilterCopy[queryind].selected != "*")
-        {
-          var valq=this.queryFilterCopy[queryind].selected;
-          if(valq.indexOf("*")>=0 || valq.indexOf("[")>=0 || valq.indexOf("{")>=0)
-          {
-              querya.push(
-              this.queryFilterCopy[queryind].field +
-                ':' +
-                this.queryFilterCopy[queryind].selected +
-                ''
-            );
+        var valq = this.queryFilterCopy[queryind].selected;
+
+        if (this.queryFilterCopy[queryind].type == "text") {
+          if (valq == undefined || valq == "") valq = "*";
+          else if (valq.indexOf("*") == -1) {
+            valq = "*" + valq + "*";
           }
-          else
-          {
+        } else if (this.queryFilterCopy[queryind].type == "selecter") {
+          if (valq == undefined) {
+            if (
+              this.queryFilterCopy[queryind].selectOptions != null &&
+              this.queryFilterCopy[queryind].selectOptions.length > 0
+            ) {
+              valq = this.queryFilterCopy[queryind].selectOptions[0].split(
+                "="
+              )[0];
+            } else {
+              console.error(
+                "no default value and no options for: " +
+                  this.queryFilterCopy[queryind].field
+              );
+            }
+          }
+        }
+
+        if (valq != "*") {
+          if (
+            valq.indexOf("*") >= 0 ||
+            valq.indexOf("[") >= 0 ||
+            valq.indexOf("{") >= 0
+          ) {
+            querya.push(this.queryFilterCopy[queryind].field + ":" + valq + "");
+          } else {
             querya.push(
-              this.queryFilterCopy[queryind].field +
-                ':"' +
-                this.queryFilterCopy[queryind].selected +
-                '"'
+              this.queryFilterCopy[queryind].field + ':"' + valq + '"'
             );
           }
         }
       }
       this.queryfilter = querya.join(" AND ");
-      console.log('query: '+ querya.join(" AND "))
+      console.log("QUERY FILTER - Sending query: " + querya.join(" AND "));
       this.$emit("queryfilterchanged", this.queryfilter);
-
     }, 1000),
     downloadSelection: function(format) {
       this.$emit("downloadasked", format);
     },
 
     prepareData: function(e) {
-      console.log('prepare data')
-
-      this.queryFilterCopy = JSON.parse(JSON.stringify(this.config.config.queryfilters));
-
+      this.queryFilterCopy = JSON.parse(
+        JSON.stringify(this.config.config.queryfilters)
+      );
 
       if (this.queryFilterCopy != undefined) {
         for (let queryind in this.queryFilterCopy) {
           var queryf = this.queryFilterCopy[queryind];
 
-          console.log(queryf)
-
-          queryf.selected = queryf.default
+          if (queryf.default != null) queryf.selected = queryf.default;
 
           // try to retrieve a past search in the cache
-          var cacheKey = this.config.rec_id+'-'+queryf.title
-          if(this.$store.getters.searchCache[cacheKey] != null)
+          var cacheKey = this.config.rec_id + "-" + queryf.title;
+          if (this.$store.getters.searchCache[cacheKey] != null)
             queryf.selected = this.$store.getters.searchCache[cacheKey];
-
 
           if (queryf.type == "selecter") {
             queryf.options = [];
@@ -165,20 +173,16 @@ export default {
         }
       }
 
-
-      var tmp = JSON.parse(JSON.stringify(this.queryFilterCopy))
-      this.queryFilterCopy = null
-      this.queryFilterCopy = tmp
-
+      var tmp = JSON.parse(JSON.stringify(this.queryFilterCopy));
+      this.queryFilterCopy = null;
+      this.queryFilterCopy = tmp;
     }
   },
   created: function() {
-    console.log('created event')
-
     this.prepareData();
   },
   mounted: function() {
-    this.refresh()
+    this.refresh();
   }
 };
 </script>
