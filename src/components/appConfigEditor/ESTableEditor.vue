@@ -454,13 +454,21 @@
             </el-row>
             <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
               <el-col :span="12">
-                <el-button @click="setFocus('long')" type="text">Lon.</el-button>
+                <el-button @click="setFocus('lat')" type="text">Lat.</el-button>
               </el-col>
               <el-col :span="12">
-                <el-button @click="setFocus('lat')" type="text">Lat.</el-button>
+                <el-button @click="setFocus('long')" type="text">Lon.</el-button>
               </el-col>
             </el-row>
             <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="12">
+                <el-input-number
+                  size="mini"
+                  ref="lat"
+                  v-model="currentConfig.config.maplat"
+                  autocomplete="off"
+                ></el-input-number>
+              </el-col>
               <el-col :span="12">
                 <el-input-number
                   size="mini"
@@ -469,13 +477,49 @@
                   autocomplete="off"
                 ></el-input-number>
               </el-col>
-              <el-col :span="12">
-                <el-input-number
+            </el-row>
+
+          <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="24">
+                <el-button @click="setFocus('transparency')" type="text">Transparency</el-button>
+              </el-col>
+            </el-row>
+            <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="24">
+                <el-slider :min="0" :max="90" v-model="currentConfig.config.transparency" ref="transparency"></el-slider>
+              </el-col>
+            </el-row>
+
+            <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="24">
+                <el-button @click="setFocus('colorfunc')" type="text">Color Function</el-button>
+              </el-col>
+            </el-row>
+            <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="24">
+                <el-input
                   size="mini"
-                  ref="lat"
-                  v-model="currentConfig.config.maplat"
+                  ref:="colorfunc"
+                  v-model="currentConfig.config.colorfunction"
                   autocomplete="off"
-                ></el-input-number>
+                ></el-input>
+              </el-col>
+            </el-row>
+
+
+            <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="24">
+                <el-button @click="setFocus('iconfunc')" type="text">Icon Function</el-button>
+              </el-col>
+            </el-row>
+            <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
+              <el-col :span="24">
+                <el-input
+                  size="mini"
+                  ref:="iconfunc"
+                  v-model="currentConfig.config.iconfunction"
+                  autocomplete="off"
+                ></el-input>
               </el-col>
             </el-row>
           </el-card>
