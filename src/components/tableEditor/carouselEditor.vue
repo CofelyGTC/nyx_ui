@@ -1,139 +1,172 @@
 <template>
-  <el-dialog 
-      width="80%" 
-      title="Carousel editor" 
-      :visible.sync="dialogFormVisible"
-      :before-close="closeDialog"
-      :close-on-click-modal="false"
-      class="carousel-editor">    
-
+  <el-dialog
+    width="80%"
+    title="Carousel editor"
+    :visible.sync="dialogFormVisible"
+    :before-close="closeDialog"
+    :close-on-click-modal="false"
+    class="carousel-editor"
+    v-if="newRec"
+  >
     <el-dialog
-        width="30%"
-        title="Select a view"
-        :visible.sync="dialogAddViewVisible"
-        append-to-body>
+      width="30%"
+      title="Select a view"
+      :visible.sync="dialogAddViewVisible"
+      append-to-body
+    >
 
-      <el-select v-model="newView" filterable placeholder="Select" @change="viewSelected()">
-          <el-option
-            v-for="item in viewListAll"
-            :key="item.id"
-            :label="item.type + ' - ' + item.description + ' ('+item.duration/1000+'s)'"
-            :value="item">
-          </el-option>
-        </el-select>
+      <el-select
+        size="mini"
+        v-model="newView"
+        filterable
+        placeholder="Select"
+        @change="viewSelected()"
+      >
+        <el-option
+          v-for="item in viewListAll"
+          :key="item.id"
+          :label="item.type + ' - ' + item.description + ' ('+item.duration/1000+'s)'"
+          :value="item"
+        ></el-option>
+      </el-select>
     </el-dialog>
     <ViewEditor
-        v-if="dialogViewVisible"
-        :record="viewToModify"
-        :config="config"
-        v-on:dialogcloseupdated="viewUpdated()"
-        v-on:dialogclose="dialogViewVisible=false;"
+      v-if="dialogViewVisible"
+      :record="viewToModify"
+      :config="config"
+      v-on:dialogcloseupdated="viewUpdated()"
+      v-on:dialogclose="dialogViewVisible=false;"
     ></ViewEditor>
+      <span slot="title" class="dialog-header">
+        <el-row type="flex" class="row-bg" justify="space-between">
+          <el-col :span="12" style="text-align:left;">
+            <h1 style=" color:white;">{{orgRec._source.name}}</h1>
+          </el-col>
+          <el-col :span="12" style="text-align:right;">
+            <el-button
+              :disabled="loading || !recchanged || newRec._source.name==''"
+              type="primary"
+              size="mini"
+              @click="submitForm('newRec')"
+            >{{this.$t("buttons.save")}}</el-button>
+            <el-button plain size="mini" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
+          </el-col>
+        </el-row>
+      </span>
 
-  
+    <el-form :model="newRec" :rules="rules" ref="newRec">
+    <el-row style="text-align:left;">
+      <el-col :span="12">
+        <el-button @click="setFocus('carName')" type="text">Carousel Name</el-button>
+      </el-col>
+      <el-col :span="12" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
+        <el-button @click="setFocus('client')" type="text">Client</el-button>
+      </el-col>
+    </el-row>
 
-   
-       
-          <el-input 
-            class="carousel-name-input"
-            placeholder="carousel name" 
-            v-model="newName"
-            size="mini">
-          </el-input>
+    <el-row>
+      <el-col :span="12" class="padding-right">
+        <el-form-item label="" prop="_source.name">
+          <el-input
+            placeholder="carousel name"
+            ref="carName"
+            v-model="newRec._source.name"
+            size="mini"
+          ></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12"  v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
+        <el-input
+          placeholder="clients to filter"
+          :disabled="!$store.getters.creds.hasPrivilege('admin')"
+          ref="client"
+          v-model="newRec._source.client"
+          size="mini"
+        ></el-input>
+      </el-col>
+    </el-row>
+    <el-row style="text-align:left;" v-if="viewList && viewList.length>0">
+      <el-col :span="8">
+        <el-button type="text">Views</el-button>
+      </el-col>
+    </el-row>
 
+    <el-row>
+      <el-card 
+        
+        :body-style="{ padding: '0px' }" style="margin-bottom:20px;" shadow="never" v-if="viewList && viewList.length>0">
+        <table class="table-carousel" v-loading="loadingViewList">
+          <thead class="thead-carousel">
+            <tr>
+              <th scope="col">Type</th>
+              <th style="text-align:left;" scope="col">Desc.</th>
+              <th style="text-align:left;" scope="col">Duration</th>
+              <th scope="col">Action</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <draggable v-bind="dragOptions" v-model="viewList" tag="tbody" handle=".handle">
+            <tr v-for="(item, index) in viewList" :key="index">
+              <td scope="row">{{ item.type }}</td>
+              <td style="text-align:left;">{{ item.description }}</td>
+              <td style="text-align:left;">{{ item.duration }}</td>
+              <td style="text-align:left; width:400px;">
+                <el-button
+                  size="mini"
+                  circle
+                  plain
+                  type="danger"
+                  @click="handleDeleteView(index)"
+                  icon="el-icon-close"
+                ></el-button>
 
+                <el-button
+                  size="mini"
+                  round
+                  @click="handlePreviewView(index)"
+                  icon="el-icon-view"
+                >Preview</el-button>
+                <el-button
+                  size="mini"
+                  v-if="!(item.type=='kibana' && $store.getters.creds.hasPrivilege('optiboard-nokibana') && !$store.getters.creds.hasPrivilege('admin'))"
+                  round
+                  @click="clickModifyView(item)"
+                  icon="el-icon-setting"
+                >Modify</el-button>
+                <el-button
+                  v-if="item.type=='kibana' && (!$store.getters.creds.hasPrivilege('optiboard-nokibana') || $store.getters.creds.hasPrivilege('admin'))"
+                  size="mini"
+                  round
+                  type="danger"
+                  plain
+                  @click="handleOpenInKibana(index)"
+                  icon="el-icon-news"
+                >Open in Kibana</el-button>
+              </td>
+              <td>
+                <i class="el-icon-d-caret handle"></i>
+              </td>
+            </tr>
+          </draggable>
+        </table>
+      </el-card>
+    </el-row>
 
-          <table class="table-carousel">
-            <thead class="thead-carousel">
-              <tr>
-                <th scope="col">Type</th>
-                <th style="text-align:left;" scope="col">Desc.</th>
-                <th style="text-align:left;" scope="col">Duration</th>
-                <th scope="col">Action</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <draggable v-bind="dragOptions" v-model="viewList" tag="tbody" handle=".handle">
-              <tr v-for="(item, index) in viewList" :key="index">
-                <td scope="row">{{ item.type }}</td>
-                <td style="text-align:left;">{{ item.description }}</td>
-                <td style="text-align:left;" >{{ item.duration }}</td>
-                <td style="text-align:left; width:400px;">
-                  <el-button
-                    size="mini"
-                    circle
-                    plain
-                    type="danger"
-                    @click="handleDeleteView(index)"
-                    icon="el-icon-close"
-                  ></el-button>
-                  
-                  <el-button
-                    size="mini"
-                    round
-                    
-                    @click="handlePreviewView(index)"
-                    icon="el-icon-view"
-                  >Preview</el-button>
-                  <el-button
-                    size="mini"
-                    round
-                    @click="clickModifyView(item)"
-                    icon="el-icon-setting"
-                  >Modify</el-button>
-                  <el-button
-                    v-if="item.type=='kibana'"
-                    size="mini"
-                    round
-                    type="danger"
-                    plain
-                    @click="handleOpenInKibana(index)"
-                    icon="el-icon-news"
-                  >Open in Kibana</el-button>
+    <el-row style="height:40px;">
+      <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add Exsting view</el-button>
+      <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New view</el-button>
+    </el-row>
 
-                 
-                </td>
-                <td><i class="el-icon-d-caret handle"></i></td>
-              </tr>
-            </draggable>
-          </table>
-
-
-
-
-
-          <el-button 
-            round
-            type="primary"
-            @click="addView"
-            class="add-view-button">
-            Add a view
-          </el-button>
-
-
-
-
-
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
-      <el-button v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
-        type="primary"
-        :disabled="!viewlistchanged && !namechanged"
-        @click="saveRecord()"
-      >{{this.$t("buttons.confirm")}}</el-button>
-    </span>
- 
+    </el-form>
   </el-dialog>
 </template>
 
 <script>
 import Vue from "vue";
+import axios from "axios";
+import _ from "lodash";
 
 import vieweditor from "@/components/tableEditor/ViewEditor";
-import YAML from "js-yaml";
-import axios from "axios";
-
-
 
 Vue.component("ViewEditor", vieweditor);
 
@@ -143,12 +176,11 @@ export default {
     activeName: "first",
     orgRec: null,
     newRec: null,
-    strOrgRec: '',
-    strNewRec: '',
-    orgName: '',
-    newName: '',
+    loading: false,
+    orgName: "",
+    newName: "",
     formLabelWidth: "120px",
-    changed:false,
+    changed: false,
     viewList: [],
     viewListAll: [],
     currentView: null,
@@ -157,35 +189,23 @@ export default {
     dialogFormVisible: false,
     dialogViewVisible: false,
     viewToModify: null,
+    viewModifyMode: 'add',
     dragging: false,
+    loadingViewList: false,
+    rules: {
+      _source: {
+        name : [
+          { required: true, message: "Carousel name cannot be empty", trigger: "change" }
+        ],
+      }
+    },
   }),
   computed: {
     recordin: function() {
       return this.record;
     },
-    recordstr:function(){
-      return JSON.stringify(this.record);
-    },
-    newrecordstr:function(){
-      return JSON.stringify(this.newRec);
-    },
-    viewliststr:function(){
-      return JSON.stringify(this.viewList);
-    },
-    viewlistorgstr:function(){
-      return JSON.stringify(this.viewListOrg);
-    },
-    newrecordstryaml:function(){
-      return this.strNewRec;
-    },
-    recchanged:function() {
-      return JSON.stringify(this.recordin)!=JSON.stringify(this.newRec);
-    },
-    viewlistchanged:function() {
-      return JSON.stringify(this.viewList)!=JSON.stringify(this.viewListOrg);
-    },
-    namechanged:function() {
-      return this.newName!=this.orgName;
+    recchanged: function() {
+      return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
     },
     dragOptions() {
       return {
@@ -194,120 +214,83 @@ export default {
         disabled: false,
         ghostClass: "ghost"
       };
-    },
+    }
   },
   props: {
     record: {
       type: Object
-    }
-    ,config: {
+    },
+    config: {
       type: Object
     }
   },
   watch: {
-    recordin: {
+    viewList: {
       handler: function() {
-        this.prepareData();
-      },
-      deep: true
-    }
-    ,
-    newrecordstryaml: {
-      handler: function() {
-        this.newRec = YAML.safeLoad(this.strNewRec)
+        this.viewListToRecord()
       },
       deep: true
     },
+    // viewListAll: {
+    //   handler: function() {
+    //     this.viewListAllToViewList()
+    //   },
+    //   deep: true
+    // },
   },
-  mounted:function() {
-    console.log('mounted event')
+  mounted: function() {
+    console.log("mounted event");
+    console.log(this.record)
     this.prepareData();
   },
   components: {
-      editor:require('vue2-ace-editor')
   },
   methods: {
     closeDialog: function() {
       this.$emit("dialogclose");
     },
-    refresh: function() {
-      this.strNewRec = ''
-      this.strOrgRec = ''
-
-      this.$nextTick(() => {
-          this.refresh2()
-      })
-    },
-    refresh2: function() {
-
-
-      this.newRec = JSON.parse(JSON.stringify(this.record));
-      this.orgRec = JSON.parse(JSON.stringify(this.record));
+    viewListToRecord: _.debounce(function() {
+      this.newRec._source.id_array = this.viewList.map(function (obj) {
+                                                        return {'id': obj.id};
+                                                      });
+    }, 500),
+    viewListAllToViewList: _.debounce(function() {
+      console.log('viewListAllToViewList')
+      console.log(this.newRec._source.id_array)
       
-      this.strNewRec = YAML.safeDump(this.newRec,10)
-      this.strOrgRec = YAML.safeDump(this.orgRec,10)
-      
-    },
-    editorInitRO: function (editor) {
-        require('brace/ext/language_tools') //language extension prerequsite...
-        require('brace/mode/html')                
-        require('brace/mode/yaml')                
-        require('brace/mode/javascript')    //language
-        require('brace/mode/less')
-        require('brace/theme/chrome')
-        require('brace/snippets/javascript') //snippet
+      this.viewList = []
 
-        editor.setReadOnly(true)
-    },
-    editorInit: function (editor) { // eslint-disable-line
-        require('brace/ext/language_tools') //language extension prerequsite...
-        require('brace/mode/html')                
-        require('brace/mode/yaml')                
-        require('brace/mode/javascript')    //language
-        require('brace/mode/less')
-        require('brace/theme/chrome')
-        require('brace/snippets/javascript') //snippet
+      for (var i in this.newRec._source.id_array) {
+        for (var j in this.viewListAll) {
+          var viewRec = this.viewListAll[j];
+          if (this.newRec._source.id_array[i].id == viewRec.id) {
+            this.viewList.push(JSON.parse(JSON.stringify(viewRec)));
+          }
+        }
+      }
 
-    },
-    valueChanged:function(item){
-      this.newRec._source[item.key]=item.value;
-      this.changed=true;
-
-    },
+      var tmp = JSON.parse(JSON.stringify(this.viewList));
+      this.viewList = null;
+      this.viewList = JSON.parse(JSON.stringify(tmp));
+    }, 500),
     prepareData: function() {
-      console.log('prepare data')
-      console.log(this.record._id)
-      this.dialogFormVisible=true
-      this.strNewRec = ''
-      this.strOrgRec = ''
-      
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
-      
-      this.strNewRec = YAML.safeDump(this.newRec,10)
-      this.strOrgRec = YAML.safeDump(this.orgRec,10)
 
-      console.log(this.newRec._id)
-      console.log(this.orgRec._id)
+      // if (this.orgRec._source.id_array == null) {
+      //   this.orgRec._source.id_array = [];
+      // }
 
-      if(this.orgRec._source.id_array == null) {
-        this.orgRec._source.id_array = []
-      }
+      this.getViews();
 
-      if(this.orgRec._source.name!=null) {
-        this.newName = this.orgRec._source.name
-        this.orgName = this.orgRec._source.name
-      }
-
-      this.getViews()
-
-      this.changed=false;
-      
+      this.dialogFormVisible = true;
+      this.changed = false;
     },
     handleCurrentViewChange(val) {
       this.currentView = val;
     },
-    handleEditView(index, row) { // eslint-disable-line
+    handleEditView(index, row) {
+      // eslint-disable-line
       //this.dialogHeaderVisible = true; -> coming soon
     },
     handleDeleteView(index) {
@@ -320,83 +303,94 @@ export default {
       else this.viewList.splice(index + 1, 0, row);
     },
     handleOpenInKibana(index) {
-      console.log('index')
-      console.log(index)
-      console.log(this.viewList[index])
-      window.open(this.viewList[index].target.replace('kibananyx','kibana').replace('embed=true','').replace(',title:Test','').replace('title:Test,',''))
+      window.open(
+        this.viewList[index].target
+          .replace("kibananyx", "kibana")
+          .replace("embed=true", "")
+          .replace(",title:Test", "")
+          .replace("title:Test,", "")
+      );
     },
     handlePreviewView(index) {
-      window.open(this.viewList[index].target)
+      window.open(this.viewList[index].target);
     },
-    addView() {
-      this.newView = null
+    addExistingView() {
+      this.newView = null;
       this.dialogAddViewVisible = true;
     },
     viewSelected() {
-      console.log(this.newView)
-      this.viewList.push(JSON.parse(JSON.stringify(this.newView)))
+      this.viewList.push(JSON.parse(JSON.stringify(this.newView)));
       this.dialogAddViewVisible = false;
     },
     viewUpdated() {
-      console.log('view updated')
-      this.viewToModify = null
-      this.dialogViewVisible=false
 
+      if(this.viewModifyMode == 'add') {
+        this.newRec._source.id_array.push({'id':this.viewToModify._id});
+      }
+
+      this.loadingViewList = true;
       setTimeout(() => {
-        this.getViews()
-      }, 1500)
+        this.getViews();
+      }, 1500);
+
+
+      this.viewToModify = null;
+      this.dialogViewVisible = false;
+
+    },
+    addNewView() {
+      this.viewModifyMode = 'add'
+      this.viewToModify = {
+        _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
+        _index: 'nyx_view_carousel',
+        _source: {
+          duration: 30000
+        }
+      };
+
+      if(this.newRec._source.client)
+        this.viewToModify._source.client = this.newRec._source.client
+
+      this.dialogViewVisible = true;
     },
     clickModifyView(view) {
-      console.log(view)
+      this.viewModifyMode = 'modify'
       var url =
-                this.$store.getters.apiurl +
-                "generic/nyx_view_carousel/" +
-                view.id +
-                "?token=" +
-                this.$store.getters.creds.token;
-      console.log(url)
+        this.$store.getters.apiurl +
+        "generic/nyx_view_carousel/" +
+        view.id +
+        "?token=" +
+        this.$store.getters.creds.token;
       axios
         .get(url)
         .then(response => {
           if (response.data.error != "") console.log("GET VIEW ERROR...");
           else {
-            console.log('response')
-            console.log(response)
-            this.viewToModify = response.data.data
-            this.dialogViewVisible=true
+            this.viewToModify = response.data.data;
+            this.dialogViewVisible = true;
           }
         })
         .catch(error => {
           console.log(error);
         });
-
-
-
-
     },
-    saveRecord:function()
-    {  
-      var id_array = []
-      for(var i in this.viewList) {
-        var obj = {
-          'id': this.viewList[i].id
-        }
-        id_array.push(obj)
-      }
+    submitForm(formName) {
 
-
-      this.newRec._source.name = this.newName
-      this.newRec._source.id_array = id_array
-
-
-      console.log(this.orgRec._source.id_array)
-      console.log(this.newRec._source.id_array)
-
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.saveRecord();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+    },
+    saveRecord: function() {
       this.$store.commit({
         type: "updateRecord",
         data: this.newRec
       });
-      this.$emit("dialogcloseupdated")
+      this.$emit("dialogcloseupdated");
       this.$notify({
         title: "Record saved.",
         type: "success",
@@ -405,12 +399,13 @@ export default {
       });
     },
     getViews() {
-      this.viewList = []
-      this.viewListAll = []
+      // this.viewList = [];
+      this.loadingViewList = true
+      this.viewListAll = [];
       var url =
-      this.$store.getters.apiurl +
-      "generic_search/nyx_view_carousel*?token=" +
-      this.$store.getters.creds.token;
+        this.$store.getters.apiurl +
+        "generic_search/nyx_view_carousel*?token=" +
+        this.$store.getters.creds.token;
 
       var query = {
         size: 2000,
@@ -427,83 +422,71 @@ export default {
 
       axios
         .post(url, query)
-        .then((response) => {
-          if(response.data.error!="")
+        .then(response => {
+          if (response.data.error != "")
             console.log("generic search view carousel error...");
-          else
-          {
-            console.log(response.data.records) 
-            for(var i in response.data.records) {
-              var viewRec = response.data.records[i]
+          else {
+            for (var i in response.data.records) {
+              var viewRec = response.data.records[i];
 
               var viewObj = {
-                'id': viewRec._id,
-                'type': viewRec._source.type,
-                'description': viewRec._source.description,
-                'duration': viewRec._source.duration,
-                'target': viewRec._source.target,
-              }
+                id: viewRec._id,
+                type: viewRec._source.type,
+                description: viewRec._source.description,
+                duration: viewRec._source.duration,
+                target: viewRec._source.target
+              };
 
-              this.viewListAll.push(viewObj)
+              this.viewListAll.push(viewObj);
             }
 
-            // really important for ordering to not integrate this double iteration into the one above !
-            for(var i in this.orgRec._source.id_array) {                
-              for(var j in this.viewListAll) {
-                var viewRec = this.viewListAll[j]
-                if(this.orgRec._source.id_array[i].id == viewRec.id) {
-                  this.viewList.push(JSON.parse(JSON.stringify(viewRec)))
-                }
-              }
-            }
+            this.viewListAllToViewList()
 
-            var tmp = JSON.parse(JSON.stringify(this.viewList))
-            this.viewList = null
-            this.viewList = JSON.parse(JSON.stringify(tmp))
-
-            this.viewListOrg = JSON.parse(JSON.stringify(tmp))
-
-            //console.log(this.viewList)
+            this.loadingViewList = false
           }
         })
-        .catch((error)=> {
+        .catch(error => {
+          this.loadingViewList = false
           console.log(error);
         });
-
     },
+
+    setFocus: function(el) {
+      this.$nextTick(() => this.$refs[el].focus());
+    },
+    setFocusInput: function() {
+      let input = this.$refs.indexPattern;
+      this.$nextTick(() => input.focus());
+    },
+    setFocusSelect: function() {
+      let select = this.$refs.timeField;
+      this.$nextTick(() => select.focus());
+    }
   }
 };
 </script>
 
 <style >
 .carousel-editor .view-table {
-  margin-bottom:30px;
-}
-.carousel-editor .carousel-name-input {
-  margin-bottom:10px;
+  margin-bottom: 30px;
 }
 
 .carousel-editor .add-view-button {
-  margin-bottom:30px;
+  margin-bottom: 30px;
 }
-
 
 .carousel-editor .table-carousel {
   width: 100%;
   border-spacing: 0px !important;
 }
 
-.carousel-editor .thead-carousel th{
+.carousel-editor .thead-carousel th {
   padding-bottom: 10px;
 }
 
-.carousel-editor .table-carousel tr{
-}
-.carousel-editor .table-carousel td{
-  padding:5px;
+.carousel-editor .table-carousel td {
+  padding: 5px;
   border-top: solid 1px #ebeef5;
-
-  
 }
 
 .carousel-editor .flip-list-move {
@@ -525,5 +508,13 @@ export default {
   color: white;
   background-color: #409eff !important;
 }
-  
+
+
+.carousel-editor .padding-right {
+  padding-right: 10px;
+}
+.carousel-editor .el-form-item__content {
+  padding-bottom: 5px;
+  line-height: normal;
+}
 </style>

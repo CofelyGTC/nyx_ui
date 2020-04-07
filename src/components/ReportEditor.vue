@@ -112,7 +112,6 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="Output" :label-width="formLabelWidth">
-                <!--<el-input size="mini" v-model="newRec.output" autocomplete="off"></el-input>-->
                 <div style="display:">
                   <el-tag
                     :key="tag"
@@ -140,18 +139,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <!-- <el-form-item label="Type" :label-width="formLabelWidth">
-                <el-select
-                  size="mini"
-                  v-model="newRec.reportType"
-                  placeholder="Please select a type"
-                >
-                  <el-option label="Python" value="python"></el-option>
-                  <el-option label="Notebook + Word" value="notebook_doc"></el-option>
-                  <el-option label="Notebook" value="notebook"></el-option>
-                  <el-option label="Jasper" value="jasper"></el-option>
-                </el-select>
-              </el-form-item> -->
             </el-col>
           </el-row>
           <el-row :span="24" v-show="newRec.reportType=='jasper_jdbc'">
@@ -545,7 +532,6 @@ export default {
     },
     prepareData: function() {
       this.newRec = JSON.parse(JSON.stringify(this.record));
-      //this.reportForm.newRec=this.newRec;
 
       this.activeName = "main";
       this.changed = false;
@@ -563,17 +549,7 @@ export default {
             return false;
           }
         });
-      // eslint-disable-line
-      //this.$refs[formName].validate((valid) => {
-      // if (valid) {
-      
-      /*} else {
-          console.log('error submit!!');
-          return false;
-        }
-      });*/
-    }
-    ,
+    },
     createNewReport: function()
     {
       this.$refs["newRec"].validate((valid) => {
