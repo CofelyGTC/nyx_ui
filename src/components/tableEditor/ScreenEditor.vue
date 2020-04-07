@@ -28,12 +28,12 @@
       <el-form v-model="newRec._source">
         <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
-            <span>Basics</span>
+            <h2><b>Basics</b></h2>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="Name" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.optiboard" autocomplete="off"></el-input>
+                <el-input :disabled="!isAdmin" size="mini" v-model="newRec._source.optiboard" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -66,17 +66,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="LifeSign (ms)" :label-width="formLabelWidth">
+              <el-form-item v-show="isAdmin" label="LifeSign (ms)" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.lifesigninterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Poll (ms)" :label-width="formLabelWidth">
+              <el-form-item v-show="isAdmin" label="Poll (ms)" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.pollinterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row v-show="isAdmin">
             <el-col :span="8">
             <el-form-item label="Mode" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
@@ -107,7 +107,7 @@
 
             
           </el-row>
-          <el-row>
+          <el-row v-show="isAdmin">
             <el-col :span="8">
               <el-form-item label="Primary Color" :label-width="formLabelWidth">
                     <el-color-picker v-model="newRec._source.primarycolor"></el-color-picker>
@@ -126,9 +126,9 @@
           </el-row>
       
         </el-card>
-        <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
-            <span>Weather</span>
+            <h2><b>Weather</b></h2>
             <el-switch v-model="weatherActivated"></el-switch>
           </el-row>
           <el-collapse-transition>
@@ -167,20 +167,28 @@
         </el-card>
         <div></div>
         <el-card shadow="hover" :body-style="{ padding: '10px' }" style="margin-top:10px">
-          <el-row type="flex" slot="header" class="row-bg" justify="space-between">
-            <span>Actions</span>
+          <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
+            <h2><b>Actions</b></h2>
           </el-row>
           <el-row>
             <el-col :span="4">
-              <el-button
-                type="danger"
-                v-if="orgRec._source.accepted == 1"
-                @click="refreshScreen()"
-                size="mini"
-              >{{this.$t("buttons.refresh")}}</el-button>
+              <el-tooltip
+                class="item"
+                effect="light"
+                content="Sends a refresh signal to the screen in order to refresh its configuration."
+                placement="bottom-end"
+              >
+                <el-button
+                  type="danger"
+                  v-if="orgRec._source.accepted == 1"
+                  @click="refreshScreen()"
+                  size="mini"
+                >{{this.$t("buttons.refresh")}}</el-button>
+                </el-tooltip>
             </el-col>
             <el-col :span="4">
               <el-button
+                v-show="isAdmin"
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
                 @click="openNewScript()"
@@ -189,6 +197,7 @@
             </el-col>
             <el-col :span="4">
               <el-button
+                v-show="isAdmin"
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
                 @click="takeScreenshot()"
@@ -196,7 +205,7 @@
               >Screenshot</el-button>
             </el-col>
             <el-col :span="12">
-              <span v-if="dockerList.length>=1">
+              <span v-show="isAdmin" v-if="dockerList.length>=1">
                 Update screen&nbsp;
                 <el-select
                   size="mini"
@@ -230,13 +239,14 @@
 
     <span slot="footer" class="dialog-footer" v-if="accepted == 1">
       <el-button
+        v-show="isAdmin"
         type="danger"
         v-if="orgRec._source.accepted == 1"
         @click="revokeToken"
       >{{this.$t("buttons.revoke")}}</el-button>
       <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
+        <!-- v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)" -->
       <el-button
-        v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
         :disabled="!recchanged && readytovalidate"
         @click="saveRecord()"
@@ -264,13 +274,14 @@ export default {
     strNewRec: "",
     orgName: "",
     newName: "",
+    isAdmin:false,
     formLabelWidth: "120px",
     changed: false,
     dialogFormVisible: false,
     accepted: false,
     weatherActivated: true,
     newScriptVisible: false,
-    title: "Screen validation",
+    title: "Screen configuration",
     carouselList: [],
     dockerList: [],
     modeList: ["Main","Main3G"]
@@ -320,14 +331,14 @@ export default {
   methods: {
     closeDialog: function() {
       this.$emit("dialogclose");
-    },
+    },    
     prepareData: function() {
       console.log("prepare data");
       this.dialogFormVisible = true;
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
-
+      this.isAdmin=this.$store.getters.creds.hasPrivilege("admin");
       
       if (this.newRec._source.primarycolor== undefined)
         this.newRec._source.primarycolor="#00B0EF";
