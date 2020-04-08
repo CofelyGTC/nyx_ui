@@ -75,7 +75,7 @@
           <el-form-item label>
             <el-input-number
               ref="duration"
-              :min="5000"
+              :min="10000"
               size="mini"
               v-model="newRec._source.duration"
               autocomplete="off"
@@ -370,7 +370,18 @@ export default {
       );
     },
     closeDialog: function() {
-      this.$emit("dialogclose");
+      if (this.recchanged )
+      {
+        this.$confirm('There are unsaved changes. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.$emit("dialogclose");
+        })      
+      }
+      else
+        this.$emit("dialogclose");
     },
     prepareData: function() {
       this.newRec = JSON.parse(JSON.stringify(this.record));
@@ -662,8 +673,8 @@ export default {
     },
     uploadPictureSuccess: function(response, file, fileList) {
       // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '')
-      this.newRec._source.target =
-        "./public/pictures/singleimage.html?image=" + file.name;
+      this.newRec._source.target =this.$store.getters.apiurl.replace('api/v1/', '')+
+        "/public/pictures/singleimage.html?image=" + file.name;
 
       var tmp = JSON.parse(JSON.stringify(this.newRec));
       this.newRec = null;

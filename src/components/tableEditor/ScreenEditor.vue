@@ -35,19 +35,19 @@
               <el-form-item label="Name" :label-width="formLabelWidth">
                 <el-input :disabled="!isAdmin" size="mini" v-model="newRec._source.optiboard" autocomplete="off"></el-input>
               </el-form-item>
+            </el-col>            
+            <el-col :span="8" v-show="isAdmin">
+              <el-form-item label="Client" :label-width="formLabelWidth">
+                <el-input size="mini" :disabled="!isAdmin" v-model="newRec._source.client" autocomplete="off"></el-input>
+              </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="Description" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.description" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="RSS" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.rss" autocomplete="off"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="Carousel" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
@@ -65,6 +65,15 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="RSS" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.rss" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            
             <el-col :span="8">
               <el-form-item v-show="isAdmin" label="LifeSign (ms)" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.lifesigninterval" autocomplete="off"></el-input>
@@ -107,6 +116,8 @@
 
             
           </el-row>
+
+          
           <el-row v-show="isAdmin">
             <el-col :span="8">
               <el-form-item label="Primary Color" :label-width="formLabelWidth">
@@ -122,7 +133,7 @@
               <el-form-item label="Icon URL" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col>             
           </el-row>
       
         </el-card>

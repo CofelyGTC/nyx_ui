@@ -69,6 +69,7 @@
         <el-form-item label="" prop="_source.name">
           <el-input
             placeholder="carousel name"
+            :disabled="!$store.getters.creds.hasPrivilege('admin')"
             ref="carName"
             v-model="newRec._source.name"
             size="mini"
@@ -98,34 +99,30 @@
         <table class="table-carousel" v-loading="loadingViewList">
           <thead class="thead-carousel">
             <tr>
-              <th scope="col">Type</th>
-              <th style="text-align:left;" scope="col">Desc.</th>
+              <th scope="col"></th>
+              <th style="text-align:left;" scope="col">Type</th>
+              <th style="text-align:left;" scope="col">Description</th>
               <th style="text-align:left;" scope="col">Duration</th>
-              <th scope="col">Action</th>
+              <th style="text-align:left;" scope="col">Actions</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <draggable v-bind="dragOptions" v-model="viewList" tag="tbody" handle=".handle">
-            <tr v-for="(item, index) in viewList" :key="index">
-              <td scope="row">{{ item.type }}</td>
-              <td style="text-align:left;">{{ item.description }}</td>
-              <td style="text-align:left;">{{ item.duration }}</td>
-              <td style="text-align:left; width:400px;">
-                <el-button
+            <tr v-for="(item, index) in viewList" :key="index" >
+              <td scope="row"><el-button
                   size="mini"
-                  circle
+                  circle=""
                   plain
                   type="danger"
                   @click="handleDeleteView(index)"
                   icon="el-icon-close"
-                ></el-button>
+                ></el-button></td>
+              <td style="text-align:left;" scope="row">{{ item.type }}</td>
+              <td style="text-align:left;">{{ item.description }}</td>
+              <td style="text-align:left;">{{ item.duration }}</td>
+              <td style="text-align:left; width:400px;">
+                
 
-                <el-button
-                  size="mini"
-                  round
-                  @click="handlePreviewView(index)"
-                  icon="el-icon-view"
-                >Preview</el-button>
                 <el-button
                   size="mini"
                   v-if="!(item.type=='kibana' && $store.getters.creds.hasPrivilege('optiboard-nokibana') && !$store.getters.creds.hasPrivilege('admin'))"
@@ -133,6 +130,13 @@
                   @click="clickModifyView(item)"
                   icon="el-icon-setting"
                 >Modify</el-button>
+                <el-button
+                  v-show="item.type!='optiboard'"
+                  size="mini"
+                  round
+                  @click="handlePreviewView(index)"
+                  icon="el-icon-view"
+                >Preview</el-button>
                 <el-button
                   v-if="item.type=='kibana' && (!$store.getters.creds.hasPrivilege('optiboard-nokibana') || $store.getters.creds.hasPrivilege('admin'))"
                   size="mini"
@@ -247,7 +251,18 @@ export default {
   },
   methods: {
     closeDialog: function() {
-      this.$emit("dialogclose");
+      if (!(this.loading || !this.recchanged || this.newRec._source.name==''))
+      {
+        this.$confirm('There are unsaved changes. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.$emit("dialogclose");
+        })      
+      }
+      else
+        this.$emit("dialogclose");
     },
     viewListToRecord: _.debounce(function() {
       this.newRec._source.id_array = this.viewList.map(function (obj) {
