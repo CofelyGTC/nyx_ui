@@ -38,7 +38,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.17.2",
+    version: "v3.17.3",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -255,7 +255,13 @@ export default new Vuex.Store({
       
     },
     logout(state) {
-      state.wsObject.check_alive=true;
+      state.wsObject.check_alive=false;
+      if(state.wsObject.socket!=undefined)
+      {
+        console.log("Closing socket....");
+        state.wsObject.socket.close();
+      }
+
       var url =
         state.apiurl +
         "cred/logout?token=" +
