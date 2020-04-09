@@ -284,6 +284,8 @@ import Vue from "vue";
 import upload from "@/components/Upload";
 Vue.component("Upload", upload);
 
+import { extractURLParts } from "../../globalfunctions";
+
 function transformObject(obj) {
   return rison.encode(obj);
 }
@@ -673,7 +675,10 @@ export default {
     },
     uploadPictureSuccess: function(response, file, fileList) {
       // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '')
-      this.newRec._source.target =this.$store.getters.apiurl.replace('api/v1/', '')+
+      
+      var mainurl=extractURLParts(window.location.href);
+      var nurl=mainurl.protocol+"://"+mainurl.host+"";          
+      this.newRec._source.target =nurl+
         "/public/pictures/singleimage.html?image=" + file.name;
 
       var tmp = JSON.parse(JSON.stringify(this.newRec));
