@@ -677,7 +677,7 @@ export default {
       // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '')
       
       var mainurl=extractURLParts(window.location.href);
-      var nurl=mainurl.protocol+"://"+mainurl.host+"";          
+      var nurl=mainurl.protocol+"//"+mainurl.host+"";          
       this.newRec._source.target =nurl+
         "/public/pictures/singleimage.html?image=" + file.name;
 
