@@ -118,7 +118,6 @@ req.keys().forEach(filename => {
   dynamicComponents[name] = component;
 });
 
-
 export default {
   name: "FileSystem",
   components: {
