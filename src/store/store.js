@@ -32,13 +32,29 @@ function computeAutoTime(minutes) {
   else
     return "20d";
 }
+function stopSocket(wsObject)
+{
+  if(wsObject.socket!=undefined)
+  {
+    console.log("Closing socket....");
+    try{
+      wsObject.socket.close();
+    }
+    catch(err)
+    {
+      console.log("ERROR"+err);
+    }
+    
+  }
+}
+
 
 export default new Vuex.Store({
   state: {
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.17.4",
+    version: "v3.18.1",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -114,6 +130,7 @@ export default new Vuex.Store({
           {
             console.log(moment(new Date())-context.getters.wsObject.last_lifesign);
             console.log("Socket Not Responding...");
+            stopSocket(context.getters.wsObject);
             context.getters.wsObject.socket=null;
           }
         }
@@ -127,6 +144,7 @@ export default new Vuex.Store({
           var mainurl=extractURLParts(window.location.href);
           var wsurl=mainurl.protocol+"//"+mainurl.host+"/nyx_ui_websocket/"; 
                    
+          wsurl=wsurl.replace("https://","wss://").replace("http://","ws://");
           if(context.getters.apiurl.indexOf("http")>=0)
           {
             wsurl=context.getters.apiurl.replace("http://","ws://").replace("https://","wss://").replace("/api/v1","/nyx_ui_websocket/");
@@ -142,6 +160,8 @@ export default new Vuex.Store({
           // Connection opened
           socket.addEventListener('error', function (event) {
             console.log('SOCKET error');
+            stopSocket(context.getters.wsObject);
+            context.getters.wsObject.socket=null;
           });
     
           // Listen for messages
@@ -253,14 +273,10 @@ export default new Vuex.Store({
       //const socket = new WebSocket('wss://test2.nyx-ds.com/nyx_ui_websocket/');
       state.wsObject.check_alive=true;
       
-    },
+    },    
     logout(state) {
       state.wsObject.check_alive=false;
-      if(state.wsObject.socket!=undefined)
-      {
-        console.log("Closing socket....");
-        state.wsObject.socket.close();
-      }
+      stopSocket(state.wsObject);
 
       var url =
         state.apiurl +
