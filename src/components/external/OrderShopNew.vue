@@ -1,19 +1,40 @@
 <template>
   <div style="width: 100%">
+    
   <el-row class="ordershopnew-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
-        <div style="bottom: 5%;">
-        Total TTC : {{totalPrice | roundTo2 }} €
-        <el-table :data="this.records" style="width: 100%" >
+         <el-tabs v-model="selectedTab">
+          <el-tab-pane
           
-          <el-table-column prop="old_code" label="Code"></el-table-column>
-          <el-table-column prop="name" label="Nom"></el-table-column>
+          v-for="(category, index) in classement"
+          :key="'TAB-'+index"
+          :label="category"
+          :name="'TAB-'+index"
+          :lazy="true"
+        >
+        <el-tabs v-model="selectedUnderTab">
+          <el-tab-pane
+          
+          v-for="(subcategory, index1) in subCategories[category]"
+          :key="'TAB-'+index+'-'+index1"
+          :label="subcategory"
+          :name="'TAB-'+index+'-'+index1"
+          :lazy="true"
+        >
+        <div style="bottom: 5%;">
+
+            
+        Total TTC : {{totalPrice | roundTo2 }} €
+        <el-table :data="records.filter(data => data.Classement == category && data.Category == subcategory)" style="width: 100%">
+          
+          <el-table-column prop="CODE" label="Code"></el-table-column>
+          <el-table-column prop="Label" label="Nom"></el-table-column>
+          <el-table-column prop="Classement" label="Nom"></el-table-column>
           <el-table-column label="Prix TTC">
             <template slot-scope="scope">
-              {{scope.row.price_tvac | roundTo2 }} €
+              {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column prop="size" label="Size"></el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.available" v-model="scope.row.quantity"/>
@@ -26,7 +47,7 @@
           </el-table-column>
           <el-table-column label="Total">
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.price_tvac | roundTo2}} €
+              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
           <el-table-column label="Remarques">
@@ -37,11 +58,20 @@
           </el-table> 
           </div>
           <br><br>
-          <div class="footer">
+          <!--div class="footer">
           Total TTC : {{totalPrice | roundTo2}} €
           <br><br>
-          <el-button type="primary" @click="onSubmit">Commander</el-button>
-          </div>   
+          </div-->   
+          </el-tab-pane>
+
+
+
+      </el-tabs>
+                </el-tab-pane>
+
+
+
+      </el-tabs>
       </el-form> 
   </el-row>
   
@@ -62,7 +92,16 @@ export default {
       category: '',
       categoryUp: '',
       search: '',
+      classement:['Boulangerie', 'Cave', 'Pâtisserie'],
       ts: 0,
+      changed: false,
+      dialogFormVisible: false,
+      title: "Commande",
+      selectedTab: "TAB-0",
+      selectedUnderTab: "TAB-0-0",
+      subCategories: {'Boulangerie': ['Baguette', 'Pain', 'Pain de table', 'Pistolet', 'Spéciaux'],
+                      'Cave': ['Tartelette', 'Tarte', 'Petite pâtisserie', 'Gâteau', 'Bavaroise', 'Petit gâteau', 'Bûche', 'Cake', 'Coeur', 'Nids'],
+                      'Pâtisserie': ['Biscuit', 'Cake', 'Cougnou', 'Galette', 'Petit déjeuné', 'Petite pâtisserie', 'Pain brioche', 'Divers', 'Tarte', 'Tartelette']}
 
   }),
   props: {
@@ -77,9 +116,7 @@ export default {
   },
   created: function() {
     this.ts = Date.now().toString();
-    var params = JSON.parse(this.config.config.controllerparameters);
-    this.category = params.param1;
-    this.categoryUp = params.param2
+    console.log('PREPARE')
     this.prepareData();
   },
   computed: {
@@ -185,14 +222,16 @@ export default {
       }
         
       this.strPeriod = moment(this.monthSelected).startOf('Month').format('DD MMM YYYY')+' to '+moment(this.monthSelected).endOf('Month').format('DD MMM YYYY')
-      this.getData()
+      //this.getData()
+      this.createNewForm();
     },
     getData() {
       var demandor = this.$store.getters.creds.user.id          
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order?demandor="+demandor+"&category="+this.categoryUp+"&token=" +
-      this.$store.getters.creds.token;  
+      "schamps/check_order_new?demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+
+      console.log('GET NEW LIST')
 
       
         
@@ -245,19 +284,7 @@ export default {
         this.disabled = true
       }
       var query = {
-            "size":900,
-            "query": {
-              "bool": {
-                "must": [
-                  {
-                    "query_string": {
-                      
-                      "query": "categoryID: "+this.category
-                    }
-                  }
-                ]
-              }
-            }
+            "size":900
         }
        console.log(query)
 
@@ -283,6 +310,7 @@ export default {
                 var tmp = JSON.parse(JSON.stringify(this.callData))
                 this.records = null
                 this.records = JSON.parse(JSON.stringify(tmp))
+                console.log(this.records)
           }});
 
           },
