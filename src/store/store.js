@@ -54,7 +54,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.18.1",
+    version: "v3.20.0",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -192,6 +192,7 @@ export default new Vuex.Store({
     },
     filters(state, payload) {
       state.filters = payload.data;
+      //alert(JSON.stringify(state.filters));
     },
     privileges(state, payload) {
       state.privileges = payload.data;

@@ -42,7 +42,16 @@
         <BarChart :autotime="autotime" :config="config" :series="series"></BarChart>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row  v-if="rows>pagesize">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-sizes="[100, 200, 300, 400, 500]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="rows">
+      </el-pagination>
     </el-row>
     <el-row>
       <el-col :span="24">
@@ -55,6 +64,7 @@
           v-loading="!ready"
           ref="genericTable"
           fit
+          @sort-change="sortChanged"
         >
           <el-table-column
             v-for="header in config.config.headercolumns"
@@ -63,6 +73,8 @@
             :prop="header.field"
             :width="header.format=='icon'?'100px':''"
             sortable
+            show-overflow-tooltip
+            
           >
             <!-- show-overflow-tooltip -->
             <template slot-scope="scope">
@@ -98,6 +110,18 @@
                   :name="computeIcon(scope.row,header.field)"
                   scale="1.5"
                 />
+              </span>
+              <span v-else-if="header.format=='link'" class="link-cell">                
+                <el-button 
+                  v-if="scope && computeRec(scope.row,header.field)" 
+                  size="mini"
+                  :icon="header.linkbuttonicon"
+                  :circle="header.linkbuttoncircle" 
+                  :round="header.linkbuttonround" 
+                  :plain="header.linkbuttonplain" 
+                  :type="header.linkbuttontype"
+                  @click="openLink(scope.row,header.field)"
+                >{{header.linktext}}</el-button>
               </span>
               <span v-else>{{computeRec(scope.row,header.field)}}</span>
             </template>
@@ -209,6 +233,11 @@ export default {
     ...dynamicComponents
   },
   data: () => ({
+    rows:0,
+    dontrefreshMap:false,
+    currentPage:1,
+    pagesize:100,   
+    sort:{}, 
     ready: false,
     loadOnEdit: true,
     autotime: "1d",
@@ -309,6 +338,26 @@ export default {
     }
   },
   methods: {
+    sortChanged:function(e){
+      //alert(JSON.stringify(e.column));
+      
+      this.sort={}
+      this.sort[e.column.property.replace("_source.","")]={"order":e.column.order.substring(0,4).replace("asce","asc")};
+      this.dontrefreshMap=true;
+      this.refreshData();
+    },
+    handleSizeChange: function(e) {
+      console.log("Size changed.....");
+      this.pagesize=e;
+      this.currentPage=1; 
+      this.dontrefreshMap=true;
+      this.refreshData();
+    },
+    handleCurrentChange: function(e) {
+      console.log("Current changed....."); 
+      this.dontrefreshMap=true;
+      this.refreshData();     
+    },
     computeTranslatedText: function(inText, inLocale) {
       return computeTranslatedText(inText, inLocale);
     },
@@ -376,8 +425,22 @@ export default {
     },
     cutRec(aRec) {
       if (aRec == undefined) return "";
-      if (aRec.length > 40) aRec = aRec.substring(0, 50) + "...";
+      //if (aRec.length > 40) aRec = aRec.substring(0, 50) + "...";
       return aRec;
+    },
+    openLink: function(row, field) {
+      let rec = row;
+      if (field.indexOf("_source") == 0) {
+        rec = row["_source"];
+        var res = "";
+        if (field.indexOf("@") == -1)
+          res = _.get(rec, field.replace("_source.", ""));
+        else res = rec[field.replace("_source.", "")];
+        if (res == undefined) return "";
+        else 
+          window.open(this.cutRec("" + res), "_blank");
+      }
+      
     },
     computeRec: function(row, field) {
       var rec = row;
@@ -602,7 +665,7 @@ export default {
         doc_type;
 
       var query = {
-        size: download ? 10000 : 100,
+        size: download ? 10000 : this.pagesize,
         query: {
           bool: {
             must: [
@@ -693,7 +756,8 @@ export default {
 
       if (
         this.config.config.orderField != undefined &&
-        this.config.config.orderField != ""
+        this.config.config.orderField != "" &&
+        Object.keys(this.sort).length==0
       ) {
         query.sort = [];
         var order = {};
@@ -703,6 +767,13 @@ export default {
         order[this.config.config.orderField] = { order: direction };
         query.sort.push(order);
       }
+
+      if(Object.keys(this.sort).length!=0)
+      {
+        query.sort = [];
+        query.sort.push(this.sort);
+      }
+
       if (
         this.config.config.exportColumns != undefined &&
         this.config.config.exportColumns != ""
@@ -710,6 +781,15 @@ export default {
         query.extra = { exportColumns: this.config.config.exportColumns };
       }
       
+      if(query.extra == undefined)
+        query.extra={"currentpage":this.currentPage,
+            "pagesize":this.pagesize}
+      else
+      {
+        query.extra.currentpage=this.currentPage;
+        query.extra.pagesize=this.pagesize;
+      }
+
 
       axios
         .post(url, query)
@@ -798,6 +878,8 @@ export default {
               duration: 1500
             });
 
+            this.rows=response.data.total;
+
             if (this.config.config.headercolumns) {
               // console.log(this.config.config)
 
@@ -851,7 +933,7 @@ export default {
           });
         });
 
-      if (this.config.mapChecked)
+      if (this.config.mapChecked && !this.dontrefreshMap)
       {
         query2=JSON.parse(JSON.stringify(query));
         query2.size=1000;
@@ -874,6 +956,7 @@ export default {
           });            
             
       }
+      this.dontrefreshMap=false;
     },
     graphClicked() {
       var newvalue =
@@ -884,6 +967,7 @@ export default {
         console.log("MOUSE =============");
         console.log(Date(this.$refs.generic.chart.series.w.globals.maxX));
         console.log(Date(this.$refs.generic.chart.series.w.globals.minX));
+        this.currentPage=1;   
         setTimeout(this.updateTimeRange, 1000);
       }
       this.previousValue = newvalue;
@@ -891,6 +975,8 @@ export default {
     updateTimeRange() {
       const start = new Date();
       start.setTime(this.$refs.generic.chart.series.w.globals.minX);
+      this.currentPage=1;      
+
       this.$globalbus.$emit("charttimerangeupdated", [
         this.$refs.generic.chart.series.w.globals.minX,
         this.$refs.generic.chart.series.w.globals.maxX
@@ -900,11 +986,13 @@ export default {
     queryBarChanged: function(q) {
       console.log("********************************queryBarChanged");
       this.queryField = q;
+      this.currentPage=1;
       this.refreshData();
     },
     queryFilterChanged: function(q) {
       console.log("********************************queryFilterChanged");
       this.queryfilter = q;
+      this.currentPage=1;
       this.refreshData();
     },
     downloadAsked: function(format) {
@@ -922,6 +1010,7 @@ export default {
     this.$globalbus.$on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
       console.log(this.config.timeSelectorType);
+      this.currentPage=1;
       console.log(payLoad.subtype);
       if (this.config.timeSelectorType == undefined)
         this.config.timeSelectorType = "classic";

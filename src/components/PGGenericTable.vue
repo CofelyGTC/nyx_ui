@@ -21,10 +21,10 @@
         v-on:dialogclose="dialogFormVisible=false"
       ></PGGenericTableDetails>
     </span>
-
     <el-row v-if="config.queryBarChecked">
       <QueryBar @querychanged="queryBarChanged" @downloadasked="downloadAsked" :config="config"></QueryBar>
     </el-row>
+
 
     <el-row v-if="config.queryFilterChecked">
       <QueryFilter
@@ -45,6 +45,19 @@
         <BarChart :autotime="autotime" :config="config" :series="series"></BarChart>
       </el-col>
     </el-row>
+
+    <el-row>
+      <el-pagination v-show="rows>pagesize"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-sizes="[100, 200, 300, 400, 500]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="rows">
+      </el-pagination>
+    </el-row>
+
     <el-row>
       <el-col :span="24">
         <el-table
@@ -54,13 +67,15 @@
           highlight-current-row
           @current-change="handleCurrentRecordChange"
           v-loading="!ready"
+          @sort-change="sortChanged"
         >
           <el-table-column
             v-for="header in config.config.headercolumns"
             :key="header.field"
-            :label="header.title"
+            :label=computeTranslatedText(header.title,$store.getters.creds.user.language)
             :prop="header.field"
             sortable
+            show-overflow-tooltip
           >
             <template slot-scope="scope">
               <div v-if="header.type=='select'">
@@ -174,6 +189,7 @@ import map from "@/components/Map";
 import barchart from "@/components/BarChart";
 import querybar from "@/components/QueryBar";
 import _ from "lodash";
+import { computeTranslatedText } from "../globalfunctions";
 
 const req = require.context("../components/tableEditor/", true, /\.vue$/);
 
@@ -195,6 +211,9 @@ export default {
     ...dynamicComponents
   },
   data: () => ({
+    rows:0,
+    currentPage:1,
+    pagesize:100,
     ready: false,
     autotime: "1d",
     query: "",
@@ -208,6 +227,7 @@ export default {
     colnames: [],
     dialogFormVisible: false,
     editMode: null,
+    sort:{},
     options: {
       chart: {
         stacked: false,
@@ -300,6 +320,23 @@ export default {
     // }
   },
   methods: {
+    computeTranslatedText: function(inText, inLocale) {
+      return computeTranslatedText(inText, inLocale);
+    },
+    sortChanged:function(e){
+      //alert(JSON.stringify(e.column));
+      this.sort={"column":e.column.property,"order":e.column.order};
+      this.refreshData();
+    },
+    handleSizeChange: function(e) {
+      console.log("Size changed.....");
+      this.pagesize=e;
+      this.refreshData();
+    },
+    handleCurrentChange: function(e) {
+      console.log("Current changed....."); 
+      this.refreshData();     
+    },
     handleCommand: function(e) {
       console.log("Command changed.....");
       this.loadData(true, e);
@@ -450,6 +487,8 @@ export default {
       console.log("=>=>=>+>=>=>=>=> Load DATA");
       if (download == undefined) download = false;
       console.log("LOAD DATA...Download=" + download);
+      var start=(this.currentPage-1)*this.pagesize;
+      console.log("Start record:"+start);
 
       var doc_type = "";
       if (
@@ -493,9 +532,12 @@ export default {
         doc_type;
 
       var query = {
-        size: download ? 10000 : 200
+        size: download ? 10000 : this.pagesize,
+        page:this.currentPage,
+        sort:this.sort
       };
 
+      
       if (
         this.config.config.timefield != null &&
         this.config.config.timefield != ""
@@ -518,6 +560,7 @@ export default {
         query["query"] = this.queryField;
       }
 
+      
       console.log("JSON.stringify(query)");
       console.log(JSON.stringify(query));
 
@@ -566,6 +609,7 @@ export default {
             }
             this.tableData = [];
 
+
             this.$notify({
               title: this.$t("notifications.data_loaded"), //"Data loaded",
               message:
@@ -605,6 +649,7 @@ export default {
                 }
               }
             }
+            this.rows=response.data.total;
 
             this.tableData = response.data.records;
             this.tableSchema = response.data.colnames;
@@ -653,6 +698,7 @@ export default {
     updateTimeRange() {
       const start = new Date();
       start.setTime(this.$refs.generic.chart.series.w.globals.minX);
+      this.currentPage=1;
       this.$globalbus.$emit("charttimerangeupdated", [
         this.$refs.generic.chart.series.w.globals.minX,
         this.$refs.generic.chart.series.w.globals.maxX
@@ -661,10 +707,12 @@ export default {
 
     queryBarChanged: function(q) {
       this.queryField = q;
+      this.currentPage=1;
       this.refreshData();
     },
     queryFilterChanged: function(q) {
       this.queryfilter = q;
+      this.currentPage=1;
       this.refreshData();
     },
     downloadAsked: function(format) {
@@ -673,18 +721,30 @@ export default {
   },
   created: function() {
     console.log("===============  CREATED:");
-    this.loadData();
+
+    if(this.config.config.sort_column!=undefined && this.config.config.sort_column!='')
+    {
+      this.sort={"column":this.config.config.sort_column};   
+      if (this.config.config.sort_order!=undefined && this.config.config.sort_order!="")
+         this.sort["order"]=this.config.config.sort_order;
+    }
+    if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
+      this.loadData();
+    //this.loadData();
   },
   mounted: function() {
     if (this.config.graphicChecked) {
       //      this.$refs.generic.chart.addEventListener("click", this.graphClicked);
     }
 
+    
+
     console.log("===============  REGISTERING: timerangechanged");
     this.$globalbus.$on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
       console.log(this.config.timeSelectorType);
       console.log(payLoad.subtype);
+      this.currentPage=1;
       if (this.config.timeSelectorType == undefined)
         this.config.timeSelectorType = "classic";
       if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
