@@ -54,7 +54,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.20.0",
+    version: "v3.22.0",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -209,10 +209,19 @@ export default new Vuex.Store({
       state.menuOpen = true;
       state.creds = payload.data.cred;
       state.creds.hasPrivilege = function (inPrivilege) {
+
         if (_.includes(state.creds.user.privileges, "admin"))
           return true;
+
+        
+        if( Array.isArray(inPrivilege))
+        {
+          for (var i=0;i<inPrivilege.length;i++)
+            if (_.includes(state.creds.user.privileges, inPrivilege[i]))
+              return true;
+        }
         if (_.includes(state.creds.user.privileges, inPrivilege))
-          return true;
+              return true;
         return false;
       }
       state.menus = payload.data.menus;
@@ -330,6 +339,13 @@ export default new Vuex.Store({
       state.maintitle = state.currentSubCategory.loc_title;
 
       state.activeApp = app
+
+      console.log(app)
+      if(app.timeDefault != null && app.timeDefault != '') {
+        console.log('send forcetime')
+        Vue.prototype.$globalbus.$emit("forcetime",app.timeDefault);
+        console.log('send forcetime')
+      }
     },
 
     // eslint-disable-next-line

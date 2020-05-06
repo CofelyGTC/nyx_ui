@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- <div v-loading="!ready"> -->
+
     <span v-if="dialogFormVisible">
       <component
         v-if="config.config.editorComponent!=null && config.config.editorComponent!=''"
@@ -42,7 +43,7 @@
         <BarChart :autotime="autotime" :config="config" :series="series"></BarChart>
       </el-col>
     </el-row>
-    <el-row  v-if="rows>pagesize">
+    <el-row  v-if="rows>=100">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -250,7 +251,10 @@ export default {
     previousValue: "",
     currentRow: null,
     dialogFormVisible: false,
+    autoRefresh: null,
+    autoRefreshTime: null,
     editMode: null,
+    refAutoRefresh: null,
     options: {
       chart: {
         stacked: false,
@@ -340,9 +344,11 @@ export default {
   methods: {
     sortChanged:function(e){
       //alert(JSON.stringify(e.column));
+      console.log(e)
       
       this.sort={}
-      this.sort[e.column.property.replace("_source.","")]={"order":e.column.order.substring(0,4).replace("asce","asc")};
+      if(e.column.order != null)
+        this.sort[e.column.property.replace("_source.","")]={"order":e.column.order.substring(0,4).replace("asce","asc")};
       this.dontrefreshMap=true;
       this.refreshData();
     },
@@ -922,6 +928,7 @@ export default {
             this.tableData = response.data.records;
             this.$refs.genericTable.doLayout()
           }
+          this.setAutoRefresh()
         })
         .catch(error => {
           console.error(error);
@@ -931,6 +938,8 @@ export default {
             type: "error",
             position: "bottom-right"
           });
+          if(this.refAutoRefresh != null)
+            clearInterval(this.refAutoRefresh)
         });
 
       if (this.config.mapChecked && !this.dontrefreshMap)
@@ -947,7 +956,7 @@ export default {
             query2._source.push(fields[field]);
           }
         }
-//        console.log(query2._source);
+
 
         axios
           .post(url, query2)
@@ -997,12 +1006,24 @@ export default {
     },
     downloadAsked: function(format) {
       this.loadData(true, format);
-    }
+    },
+    setAutoRefresh: function() {
+      if(this.config.autoRefreshTime == null)
+        return
+
+      if(this.refAutoRefresh != null)
+        clearInterval(this.refAutoRefresh)
+
+      this.refAutoRefresh =  setInterval(() => {
+        this.refreshData()
+      }, this.config.autoRefreshTime)
+
+    },
+   
   },
   mounted: function() {
     console.log("===============  MOUNTED:");
-    // this.$globalbus.$off("timerangechanged");
-
+    
     if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
       this.loadData();
 
@@ -1021,6 +1042,10 @@ export default {
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING: timerangechanged");
     this.$globalbus.$off("timerangechanged");
+
+
+    if(this.refAutoRefresh != null)
+      clearInterval(this.refAutoRefresh)
   }
 };
 </script>

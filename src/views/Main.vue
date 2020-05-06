@@ -604,12 +604,40 @@ export default {
 
       return;
     }
+
     const end = new Date();
     const start = new Date();
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
     this.timeRangeChanged([start, end]);
   },
   mounted: function() {
+    console.log("===============  REGISTERING FORCETIME:");
+    this.$globalbus.$on("forcetime", payLoad => {
+      console.log('force time for this app')
+
+      let val = payLoad.substring(0, payLoad.length-1)
+      let unit = payLoad.substring(payLoad.length-1, payLoad.length)
+
+      this.yearPicker =  moment().add(val, unit)
+      this.monthPicker =  moment().add(val, unit)
+      this.weekPicker =  moment().add(val, unit)
+      this.dayPicker =  moment().add(val, unit)
+
+      if(this.$store.getters.activeApp.timeSelectorChecked && (this.$store.getters.activeApp.timeSelectorType=='year')) {
+        this.yearChanged(this.monthPicker.format('YYYY'))
+      }
+      else if(this.$store.getters.activeApp.timeSelectorChecked && (this.$store.getters.activeApp.timeSelectorType=='month')) {
+        this.monthChanged(this.monthPicker.format('YYYY-MM'))
+      }
+      else if(this.$store.getters.activeApp.timeSelectorChecked && (this.$store.getters.activeApp.timeSelectorType=='week')) {
+        this.weekChanged(this.monthPicker.format('YYYY-MM-DD'))
+      }
+      else if(this.$store.getters.activeApp.timeSelectorChecked && (this.$store.getters.activeApp.timeSelectorType=='day')) {
+        this.dayChanged(this.monthPicker.format('YYYY-MM-DD'))
+      }
+      
+      
+    });
     console.log("===============  REGISTERING CTRU:");
     this.$globalbus.$on("charttimerangeupdated", payLoad => {
       console.log("GLOBALBUS/CHARTTIMERANGEUPDATED/");
@@ -638,6 +666,7 @@ export default {
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING CTRU:");
     this.$globalbus.$off("charttimerangeupdated");
+    this.$globalbus.$off("forcetime");
     window.removeEventListener("resize", this.resizeListener);
   }
 };
