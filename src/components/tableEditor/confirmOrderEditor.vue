@@ -7,13 +7,12 @@
     :close-on-click-modal="false"
     class="confirm-order-editor"
   >
-  
+ 
   Total TTC : {{totalPrice | roundTo2 }} €<br>
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-row class="ordershopnew-container" style="width: 100%" >
-            {{tree}} - - - TOTO {{classement}} - {{subSubCategories}} - {{subCategories}} TOTO
-            {{this.newRec._source}}
+            
 
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
@@ -37,6 +36,7 @@
           
           
         >
+
 
  <el-row>
           <el-col v-if="subSubCategories[category][subcategory]['sortLvl3'].length> 1" :span="4">
@@ -103,8 +103,9 @@
 
             
         Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
-        <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
-        <el-table :data="records.filter(getFilter)" style="width: 100%">  
+        
+        
+        <el-table :data="newRec._source.products.filter(getFilter)" style="width: 100%">    
           <el-table-column prop="CODE" label="Code"></el-table-column>
           <el-table-column prop="Label" label="Nom"></el-table-column>
           <el-table-column label="Prix TTC">
@@ -168,7 +169,7 @@ export default {
   data: () => ({
     orgRec: null,
     newRec: null,
-    tree: {},
+    tree: {'hello': 'test'},
     strOrgRec: "",
     strNewRec: "",
     orgName: "",
@@ -177,7 +178,7 @@ export default {
     changed: false,
     dialogFormVisible: false,
     title: "Commande",
-    classement:[],
+    classement:['toto'],
     filter1: '-',
     filter2: '-',
     filter3: '-',
@@ -194,11 +195,11 @@ export default {
       totalPrice: function() {
       var price = 0
 
-      if(this.records != null)
+      if(this.newRec._source.products != null)
       {
-        for(var itemKey in Object.keys(this.records))
+        for(var itemKey in Object.keys(this.newRec._source.products))
         {
-          var item = this.records[itemKey]
+          var item = this.newRec._source.products[itemKey]
           price += (item.quantity*item.Prix_TVAC)
         }
         
@@ -206,12 +207,17 @@ export default {
       return price
     },
      
+     testClass: function() {
+
+        return 'this.classement'
+     },
+     
     totalFiltered: function(){
-      var filteredProducts = this.records
+      var filteredProducts = this.newRec._source.products
       var price = 0
-      for(var itemKey in Object.keys(this.records))
+      for(var itemKey in Object.keys(this.newRec._source.products))
       {
-        var data = this.records[itemKey]
+        var data = this.newRec._source.products[itemKey]
         var filter = data.sortLvl1 == this.selectedCategory && data.sortLvl2 == this.selectedSubCategory
         var filter1 = true
         var filter2 = true
@@ -294,26 +300,29 @@ export default {
     recordin: {
       handler: function() {
         this.prepareData();
-        this.getTree();;
+        //this.getTree();
       },
       deep: true
     }
   },
   created: function() {
     console.log("created event");
-    this.getTree();
+    
     this.prepareData();
-    this.getTree();
+  },
+  mounted: function () {
+      this.getTree();
+      console.log("Mounted")
   },
   components: {},
   methods: {
     totalCategoryQuantity: function(category) {
       var quantity = 0
-      if(this.records != null)
+      if(this.newRec._source.products != null)
       {
-        for(var itemKey in Object.keys(this.records))
+        for(var itemKey in Object.keys(this.newRec._source.products))
         {
-          var item = this.records[itemKey]
+          var item = this.newRec._source.products[itemKey]
           if(item.sortLvl1 ==category){
               quantity += (item.quantity)
           }    
@@ -328,12 +337,12 @@ export default {
     totalCategoryPrice: function(category) {
       
       var price = 0
-      if(this.records != null)
+      if(this.newRec._source.products != null)
       {
         
-        for(var itemKey in Object.keys(this.records))
+        for(var itemKey in Object.keys(this.newRec._source.products))
         {
-          var item = this.records[itemKey]
+          var item = this.newRec._source.products[itemKey]
           if(item.sortLvl1 ==category){
               price += (item.quantity*item.Prix_TVAC)
           }
@@ -348,11 +357,11 @@ export default {
     },
     totalSubCategoryQuantity: function(category, subCategory) {
       var quantity = 0
-      if(this.records != null)
+      if(this.newRec._source.products != null)
       {
-        for(var itemKey in Object.keys(this.records))
+        for(var itemKey in Object.keys(this.newRec._source.products))
         {
-          var item = this.records[itemKey]
+          var item = this.newRec._source.products[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
               quantity += (item.quantity)
           }    
@@ -367,12 +376,12 @@ export default {
     totalSubCategoryPrice: function(category, subCategory) {
       
       var price = 0
-      if(this.records != null)
+      if(this.newRec._source.products != null)
       {
         
-        for(var itemKey in Object.keys(this.records))
+        for(var itemKey in Object.keys(this.newRec._source.products))
         {
-          var item = this.records[itemKey]
+          var item = this.newRec._source.products[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
               price += (item.quantity*item.Prix_TVAC)
           }
@@ -481,20 +490,28 @@ export default {
                 console.log("Categories : "  + cats)
                 this.subCategories = subCategories
                 this.subSubCategories = tree
+                //this.classement = 'TOTO'
+                //alert(JSON.stringify(cats))
                 this.classement = cats
-                console.log(this.tree)
+                //alert(JSON.stringify(cats))
+                console.log(cats)
+                console.log(this.classement)
+                console.log(['tata', 'titi'])
+                this.tree = tree
                 
             }
         });    
     },
     prepareData: function() {
       console.log("prepare data");
-      
+      //this.tree = {'coucou': 1}
       this.dialogFormVisible = true;
       console.log(this.record)
-      this.getTree();
+      
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+      this.tree = {'coucou': 1}
+      //this.getTree()
     },
     saveRecord: function() {
 
