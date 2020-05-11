@@ -1,9 +1,9 @@
 <template>
+
   <div style="width: 100%">
-    
   <el-row class="ordershopnew-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
-         <el-tabs v-model="selectedTab">
+         <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
           
           v-for="(category, index) in classement"
@@ -11,8 +11,10 @@
           :label="category"
           :name="'TAB-'+index"
           :lazy="true"
+          
+          
         >
-        <el-tabs v-model="selectedUnderTab">
+        <el-tabs v-model="selectedUnderTab" @tab-click="subTabChanged()">
           <el-tab-pane
           
           v-for="(subcategory, index1) in subCategories[category]"
@@ -20,16 +22,79 @@
           :label="subcategory"
           :name="'TAB-'+index+'-'+index1"
           :lazy="true"
+          
+          
         >
+
+ <el-row>
+          <el-col v-if="subSubCategories[category][subcategory]['sortLvl3'].length> 1" :span="4">
+                          Type de pâte: 
+            <el-select v-model="filter1" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id1) in subSubCategories[category][subcategory]['sortLvl3']"
+                :key="id1"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl4'].length> 1" :span="4">
+               Fruits cuits/pas cuits:
+            <el-select v-model="filter2" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id2) in subSubCategories[category][subcategory]['sortLvl4']"
+                :key="id2"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl5'].length> 1" :span="4">
+             Avec/Sans Fruits
+            <el-select v-model="filter3" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id3) in subSubCategories[category][subcategory]['sortLvl5']"
+                :key="id3"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl6'].length> 1" :span="4">
+              Taille:
+            <el-select v-model="filter4" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id4) in subSubCategories[category][subcategory]['sortLvl6']"
+                :key="id4"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl7'].length> 1" :span="4">
+              Crème Fraiche:
+            <el-select v-model="filter5" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id5) in subSubCategories[category][subcategory]['sortLvl7']"
+                :key="id5"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+ 
+ </el-row>    
+
+
+
         <div style="bottom: 5%;">
 
             
-        Total TTC : {{totalPrice | roundTo2 }} €
-        <el-table :data="records.filter(data => data.Classement == category && data.Category == subcategory)" style="width: 100%">
-          
+        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
+        <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
+        <el-table :data="records.filter(getFilter)" style="width: 100%">  
           <el-table-column prop="CODE" label="Code"></el-table-column>
           <el-table-column prop="Label" label="Nom"></el-table-column>
-          <el-table-column prop="Classement" label="Nom"></el-table-column>
           <el-table-column label="Prix TTC">
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
@@ -37,12 +102,12 @@
           </el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" :disabled="!scope.row.available" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Quantité en Commande">
           <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.available" v-model="scope.row.orderquantity"/>
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Total">
@@ -62,13 +127,37 @@
           Total TTC : {{totalPrice | roundTo2}} €
           <br><br>
           </div-->   
-          </el-tab-pane>
+          
+          <!--/el-tab-pane>
 
-
+         </el-tabs-->
+                </el-tab-pane>
 
       </el-tabs>
                 </el-tab-pane>
-
+      <el-tab-pane
+          :key="'TAB-Panier'"
+          :label="'Panier'"
+          :name="'TAB-Panier'"
+          :lazy="true">
+          
+            Sous-Total :
+            <el-row 
+            v-for="(category, index) in classement" :key="index">
+            <h1>{{category}}: Quantité totale: {{totalCategoryQuantity(category) | roundTo2 }} Total TTC: {{totalCategoryPrice(category) | roundTo2}}€</h1>
+            <el-row v-for="(subCategory, index1) in subCategories[category]" :key="index1">
+                {{subCategory}}: Quantité totale: {{totalSubCategoryQuantity(category, subCategory) | roundTo2 }} Total TTC: {{totalSubCategoryPrice(category, subCategory) | roundTo2}}€
+                </el-row>
+            </el-row>
+            <el-row>
+              Total Panier: {{totalPrice | roundTo2 }}€ TTC
+              
+            </el-row>
+            <el-row>
+              <br><br>
+                   <el-button type="primary" @click="onSubmit">Commander</el-button>
+            </el-row>
+      </el-tab-pane>
 
 
       </el-tabs>
@@ -92,16 +181,20 @@ export default {
       category: '',
       categoryUp: '',
       search: '',
-      classement:['Boulangerie', 'Cave', 'Pâtisserie'],
+      classement:[],
+      filter1: '-',
+      filter2: '-',
+      filter3: '-',
+      filter4: '-',
+      filter5: '-',
       ts: 0,
       changed: false,
       dialogFormVisible: false,
       title: "Commande",
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
-      subCategories: {'Boulangerie': ['Baguette', 'Pain', 'Pain de table', 'Pistolet', 'Spéciaux'],
-                      'Cave': ['Tartelette', 'Tarte', 'Petite pâtisserie', 'Gâteau', 'Bavaroise', 'Petit gâteau', 'Bûche', 'Cake', 'Coeur', 'Nids'],
-                      'Pâtisserie': ['Biscuit', 'Cake', 'Cougnou', 'Galette', 'Petit déjeuné', 'Petite pâtisserie', 'Pain brioche', 'Divers', 'Tarte', 'Tartelette']}
+      subCategories: {},
+      subSubCategories: {}
 
   }),
   props: {
@@ -128,14 +221,205 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.quantity*item.price_tvac)
+          price += (item.quantity*item.Prix_TVAC)
         }
         
       }
       return price
+    },
+     
+    totalFiltered: function(){
+      var filteredProducts = this.records
+      var price = 0
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        var filter = data.sortLvl1 == this.selectedCategory && data.sortLvl2 == this.selectedSubCategory
+        var filter1 = true
+        var filter2 = true
+        var filter3 = true
+        var filter4 = true
+        var filter5 = true
+        
+
+        if(this.filter1 != '-')
+        {
+            filter1 = data.sortLvl3 == this.filter1
+        }
+        if(this.filter2 != '-')
+        {
+            filter2 = data.sortLvl4 == this.filter2
+        }
+        if(this.filter3 != '-')
+        {
+            filter3 = data.sortLvl5 == this.filter3
+        }
+        if(this.filter4 != '-')
+        {
+            filter4 = data.sortLvl6 == this.filter4
+        }
+        if(this.filter5 != '-')
+        {
+            filter5 = data.sortLvl7 == this.filter5
+        }
+        
+        if(filter && filter1 && filter2 && filter3 && filter4 && filter5)
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+        
+      }
+      
+      return price
+    },
+
+    
+    selectedCategory: function() {
+      var index = this.selectedTab.split('-').pop()
+      console.log(this.classement[index])
+      return this.classement[index]
+    },
+    selectedSubCategory: function() {
+      var index = this.selectedCategory
+      var index1 = this.selectedUnderTab.split('-').pop()
+      console.log('UnderTab Selected : ')
+      console.log(this.subCategories[index][index1])
+      return this.subCategories[index][index1]
     }
   },
   methods: {
+
+    totalCategoryQuantity: function(category) {
+      var quantity = 0
+      if(this.records != null)
+      {
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category){
+              quantity += (item.quantity)
+          }    
+        }
+        return quantity
+      }
+      else{
+        return 0
+      }
+      
+    },
+    totalCategoryPrice: function(category) {
+      
+      var price = 0
+      if(this.records != null)
+      {
+        
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category){
+              price += (item.quantity*item.Prix_TVAC)
+          }
+         
+        }
+        return price
+      }
+      else{
+        return 0
+      }
+      
+    },
+    totalSubCategoryQuantity: function(category, subCategory) {
+      var quantity = 0
+      if(this.records != null)
+      {
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
+              quantity += (item.quantity)
+          }    
+        }
+        return quantity
+      }
+      else{
+        return 0
+      }
+      
+    },
+    totalSubCategoryPrice: function(category, subCategory) {
+      
+      var price = 0
+      if(this.records != null)
+      {
+        
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
+              price += (item.quantity*item.Prix_TVAC)
+          }
+         
+        }
+        return price
+      }
+      else{
+        return 0
+      }
+      
+    },
+    getFilter(data){
+
+        //console.log(data)
+        //console.log(this.category)
+        var filter = data.sortLvl1 == this.selectedCategory && data.sortLvl2 == this.selectedSubCategory
+        var filter1 = true
+        var filter2 = true
+        var filter3 = true
+        var filter4 = true
+        var filter5 = true
+        
+
+        if(this.filter1 != '-')
+        {
+            filter1 = data.sortLvl3 == this.filter1
+        }
+        if(this.filter2 != '-')
+        {
+            filter2 = data.sortLvl4 == this.filter2
+        }
+        if(this.filter3 != '-')
+        {
+            filter3 = data.sortLvl5 == this.filter3
+        }
+        if(this.filter4 != '-')
+        {
+            filter4 = data.sortLvl6 == this.filter4
+        }
+        if(this.filter5 != '-')
+        {
+            filter5 = data.sortLvl7 == this.filter5
+        }
+        
+        //data.sortLvl1 == category && data.sortLvl2 == subcategory
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5
+    },
+    tabChanged(index){
+      this.selectedUnderTab = index+'-0'
+      console.log('Selected:  TAB-'+index+'-0')
+      this.filter1 = '-'
+      this.filter2 = '-'
+      this.filter3 = '-'
+      this.filter4 = '-'
+      this.filter5 = '-'
+      //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
+    },
+    subTabChanged(){
+      this.filter1 = '-'
+      this.filter2 = '-'
+      this.filter3 = '-'
+      this.filter4 = '-'
+      this.filter5 = '-'
+    },
     onSubmit(){
       var order = {};
       var products = [];
@@ -143,8 +427,8 @@ export default {
       for(var itemKey in Object.keys(this.records)) {
         var item = this.records[itemKey]
         
-        entry = {}
-        entry._id = item._id
+        entry = item
+        /*entry._id = item._id
         entry.name = item.name
         entry.category = item.categoryID
         entry.code = item.old_code
@@ -153,16 +437,14 @@ export default {
         entry.size = item.size
         entry.remarque = item.remarque
         entry.price_tvac = item.price_tvac
-        entry.available = item.available
+        entry.available = item.available*/
         products.push(entry)
       }
       order.products = products
       order.dateOrder = moment()
-      order.category = this.categoryUp
-      order.categoryID = this.category
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
-      order.newId = order.category +'_'+this.ts
+      order.newId = order.demandor +'_'+this.ts
 
       
       
@@ -209,6 +491,15 @@ export default {
       this.monthSelected = moment()
       this.dateSelected()
     },
+    changeApp: function() {
+      this.currentApps = null
+
+      this.selectedTab = "TAB-0"
+
+      this.$nextTick(() => {
+        this.currentApps = JSON.parse(JSON.stringify(this.$store.getters.currentApps))
+      });
+    },
     dateSelected() {
       
       if(this.monthSelected == null)
@@ -222,9 +513,61 @@ export default {
       }
         
       this.strPeriod = moment(this.monthSelected).startOf('Month').format('DD MMM YYYY')+' to '+moment(this.monthSelected).endOf('Month').format('DD MMM YYYY')
-      //this.getData()
-      this.createNewForm();
+      this.getTree()
+      this.getData()
+      //this.createNewForm();
     },
+    getTree() {
+      var url =
+      this.$store.getters.apiurl +
+      "schamps/get_products_tree?token=" + this.$store.getters.creds.token;  
+
+      console.log('GET PRODUCTS TREE')
+      axios
+        .get(url)
+        .then((response) => {
+            if(response.data.error!="")
+            console.log("Order Shops Calls list error...");
+            else{
+                var res = JSON.parse(response.data.data)
+                console.log("TREE : ")
+                
+                var tree = res.reccords
+                console.log(JSON.stringify(tree))
+                var cats = []
+                var subCategories = {}
+                var subSubCategories = {}
+                for(var i in tree)
+                {
+                  console.log(i)
+                  cats.push(i)
+                  var subCat = []
+                  subSubCategories[i] = {}
+                  for(var j in tree[i])
+                  {
+                    console.log(j)
+                    subCat.push(j)
+                    /*var subSubCat = []
+                    for(var k in tree[i][j])
+                    {
+                      subSubCat.push(k)
+                    }
+                    
+                    subSubCategories[i][j] = subSubCat*/
+                  }
+                  //var obj = {i : subCat}
+                  subCategories[i] = subCat
+                  console.log(subSubCategories)
+                }
+                console.log("Categories : "  + cats)
+                this.subCategories = subCategories
+                this.subSubCategories = tree
+                this.classement = cats
+                console.log(this.subSubCategories)
+            }
+        });    
+    },
+
     getData() {
       var demandor = this.$store.getters.creds.user.id          
       var url =
@@ -283,6 +626,7 @@ export default {
       else if(minutes >= 45 && hours==17){
         this.disabled = true
       }
+      this.disabled = false
       var query = {
             "size":900
         }
@@ -310,6 +654,7 @@ export default {
                 var tmp = JSON.parse(JSON.stringify(this.callData))
                 this.records = null
                 this.records = JSON.parse(JSON.stringify(tmp))
+
                 console.log(this.records)
           }});
 
