@@ -128,6 +128,7 @@ export default {
       orgConfig: {},
       dialogFormVisible: false,
       formLabelWidth: "120px",
+      formLabelWidth2: "150px",
       isAdd: false
     };
   },

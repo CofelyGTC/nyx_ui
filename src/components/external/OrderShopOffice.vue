@@ -1,8 +1,18 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="ordershopnew-container" style="width: 100%" >
+  <el-row class="ordershopoffice-container" style="width: 100%" >
+    Sélectionnez un magasin: 
+    <el-select @change="changeShop" v-model="magasin" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id) in magasins"
+                :key="id"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
       <el-form style="widht: 100%" :disabled="this.disabled">
+          
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
           
@@ -124,7 +134,7 @@
 
             
         Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
-        <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
+        
         <el-table :data="records.filter(getFilter)" style="width: 100%">  
           <el-table-column prop="CODE" label="Code"></el-table-column>
           <el-table-column prop="Label" label="Nom"></el-table-column>
@@ -156,14 +166,9 @@
           </el-table> 
           </div>
           <br><br>
-          <!--div class="footer">
-          Total TTC : {{totalPrice | roundTo2}} €
-          <br><br>
-          </div-->   
+ 
           
-          <!--/el-tab-pane>
 
-         </el-tabs-->
                 </el-tab-pane>
 
       </el-tabs>
@@ -206,7 +211,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShopNew",
+  name: "FormOrderShopOffice",
   data: () => ({
       records: null,
       oldID: null,
@@ -224,6 +229,7 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
+      magasins: [],
       ts: 0,
       changed: false,
       dialogFormVisible: false,
@@ -247,11 +253,12 @@ export default {
   mounted: function() {
     //this.getMagasin();
     //this.getTree();
-    //this.ts = Date.now().toString();
+    this.ts = Date.now().toString();
     //this.prepareData();
   },
   created: function() {
-    this.getMagasin();
+    console.log("CREATED")
+    this.getMagasins();
     this.getTree();
     //this.ts = Date.now().toString();
     console.log('PREPARE')
@@ -501,6 +508,12 @@ export default {
       this.filter7 = '-'
       this.filter8 = '-'
     },
+    changeShop(){
+      console.log("CHANGE SHOP")
+      //this.magasin = magasin
+      console.log("SHOP: " + this.magasin)
+      this.prepareData();
+    },
     onSubmit(){
       var order = {};
       var products = [];
@@ -650,24 +663,45 @@ export default {
         });    
     },
 
-    getMagasin() {
-      var demandor = this.$store.getters.creds.user.id          
+    getMagasins() {         
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_user_shop?demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+      "generic_search/shop_parameters?token=" + this.$store.getters.creds.token;  
 
-      console.log('CHECK USER SHOP')
+      console.log('CHECK SHOPS LIST')
+
+      var query = {
+        size: 2000,
+        query: {
+          bool: {
+            must: [
+              {
+                match_all: {}
+              }
+            ]
+          }
+        }
+      };
 
       axios
-        .get(url, demandor)
+        .post(url, query)
         .then((response) => {
             if(response.data.error!="")
-            console.log("User Shop Calls list error...");
+            console.log("User Shop list error...");
             else{
-                var res = JSON.parse(response.data.data)
-                console.log("MAGASIN : ")
-                //console.log(res)
-                this.magasin = res.reccords[0]._source.magasin
+                
+                var res = response.data
+                console.log("MAGASINS : ")
+                console.log(res)
+                this.magasin = res.records[0]._source['Nom magasin']
+                var magasins = []
+                for(var rec in res.records)
+                {
+                    console.log(rec)
+                    magasins.push(res.records[rec]._source['Nom magasin'])
+                }
+                this.magasins = magasins
+                console.log(this.magasins)
                 this.prepareData();
                
             }

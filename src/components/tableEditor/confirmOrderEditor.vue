@@ -94,6 +94,39 @@
               </el-option>
             </el-select>
             </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl8'].length> 1" :span="4">
+              Type de fruits:
+            <el-select v-model="filter6" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id6) in subSubCategories[category][subcategory]['sortLvl8']"
+                :key="id6"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl9'].length> 1" :span="4">
+              Crème:
+            <el-select v-model="filter7" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id7) in subSubCategories[category][subcategory]['sortLvl9']"
+                :key="id7"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl10'].length> 1" :span="4">
+              Autres:
+            <el-select v-model="filter8" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id8) in subSubCategories[category][subcategory]['sortLvl10']"
+                :key="id8"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
  
  </el-row>    
 
@@ -184,6 +217,9 @@ export default {
     filter3: '-',
     filter4: '-',
     filter5: '-',
+    filter6: '-',
+    filter7: '-',
+    filter8: '-',
     ts: 0,
     selectedTab: "TAB-0",
     selectedUnderTab: "TAB-0-0",
@@ -224,6 +260,9 @@ export default {
         var filter3 = true
         var filter4 = true
         var filter5 = true
+        var filter6 = true
+        var filter7 = true
+        var filter8 = true
         
 
         if(this.filter1 != '-')
@@ -246,8 +285,20 @@ export default {
         {
             filter5 = data.sortLvl7 == this.filter5
         }
+        if(this.filter6 != '-')
+        {
+            filter6 = data.sortLvl8 == this.filter6
+        }
+        if(this.filter7 != '-')
+        {
+            filter7 = data.sortLvl9 == this.filter7
+        }
+        if(this.filter8 != '-')
+        {
+            filter8 = data.sortLvl10 == this.filter8
+        }
         
-        if(filter && filter1 && filter2 && filter3 && filter4 && filter5)
+        if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
           price += (data.quantity*data.Prix_TVAC)
         }
@@ -404,6 +455,9 @@ export default {
         var filter3 = true
         var filter4 = true
         var filter5 = true
+        var filter6 = true
+        var filter7 = true
+        var filter8 = true
         
 
         if(this.filter1 != '-')
@@ -426,9 +480,21 @@ export default {
         {
             filter5 = data.sortLvl7 == this.filter5
         }
+        if(this.filter6 != '-')
+        {
+            filter6 = data.sortLvl8 == this.filter6
+        }
+        if(this.filter7 != '-')
+        {
+            filter7 = data.sortLvl9 == this.filter7
+        }
+        if(this.filter8 != '-')
+        {
+            filter8 = data.sortLvl10 == this.filter8
+        }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
     },
     tabChanged(index){
       this.selectedUnderTab = index+'-0'
@@ -438,6 +504,9 @@ export default {
       this.filter3 = '-'
       this.filter4 = '-'
       this.filter5 = '-'
+      this.filter6 = '-'
+      this.filter7 = '-'
+      this.filter8 = '-'
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
@@ -446,6 +515,9 @@ export default {
       this.filter3 = '-'
       this.filter4 = '-'
       this.filter5 = '-'
+      this.filter6 = '-'
+      this.filter7 = '-'
+      this.filter8 = '-'
     },
     closeDialog: function() {
       this.$emit("dialogclose");
