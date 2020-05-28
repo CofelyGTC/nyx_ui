@@ -1,32 +1,199 @@
 <template>
+
   <div style="width: 100%">
-  <el-row class="ordershop-container" style="width: 100%" >
-      <el-form style="widht: 100%" :disabled="this.disabled">
-        <el-table :data="this.records" style="width: 100%" >
-          <el-table-column prop="_id" label="id"></el-table-column>
-          <el-table-column prop="category" label="Categorie"></el-table-column>
-          <el-table-column prop="name" label="Nom"></el-table-column>
-          <el-table-column prop="old_code" label="Code"></el-table-column>
-          <el-table-column prop="price_tvac" label="Prix TTC"></el-table-column>
+  <el-row class="unsales-container" style="width: 100%" >
+      <el-form style="widht: 100%">
+        <el-row>
+
+        </el-row>
+         <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
+          <el-tab-pane
+          
+          v-for="(category, index) in classement"
+          :key="'TAB-'+index"
+          :label="category"
+          :name="'TAB-'+index"
+          :lazy="true"
+          
+          
+        >
+        <el-tabs v-model="selectedUnderTab" @tab-click="subTabChanged()">
+          <el-tab-pane
+          
+          v-for="(subcategory, index1) in subCategories[category]"
+          :key="'TAB-'+index+'-'+index1"
+          :label="subcategory"
+          :name="'TAB-'+index+'-'+index1"
+          :lazy="true"
+          
+          
+        >
+
+ <el-row>
+          <el-col v-if="subSubCategories[category][subcategory]['sortLvl3'].length> 1" :span="4">
+                          Type de pâte: 
+            <el-select v-model="filter1" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id1) in subSubCategories[category][subcategory]['sortLvl3']"
+                :key="id1"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl4'].length> 1" :span="4">
+               Fruits cuits/pas cuits:
+            <el-select v-model="filter2" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id2) in subSubCategories[category][subcategory]['sortLvl4']"
+                :key="id2"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl5'].length> 1" :span="4">
+             Avec/Sans Fruits
+            <el-select v-model="filter3" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id3) in subSubCategories[category][subcategory]['sortLvl5']"
+                :key="id3"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl6'].length> 1" :span="4">
+              Taille:
+            <el-select v-model="filter4" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id4) in subSubCategories[category][subcategory]['sortLvl6']"
+                :key="id4"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl7'].length> 1" :span="4">
+              Avec/Sans Crème Fraiche:
+            <el-select v-model="filter5" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id5) in subSubCategories[category][subcategory]['sortLvl7']"
+                :key="id5"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl8'].length> 1" :span="4">
+              Type de fruits:
+            <el-select v-model="filter6" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id6) in subSubCategories[category][subcategory]['sortLvl8']"
+                :key="id6"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl9'].length> 1" :span="4">
+              Crème:
+            <el-select v-model="filter7" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id7) in subSubCategories[category][subcategory]['sortLvl9']"
+                :key="id7"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+            <el-col v-if="subSubCategories[category][subcategory]['sortLvl10'].length> 1" :span="4">
+              Autres:
+            <el-select v-model="filter8" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id8) in subSubCategories[category][subcategory]['sortLvl10']"
+                :key="id8"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            </el-col>
+ 
+ </el-row>    
+
+
+
+        <div style="bottom: 5%;">
+
+            
+        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
+        <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
+        <el-table :data="records.filter(getFilter)" style="width: 100%">  
+          <el-table-column prop="CODE" label="Code"></el-table-column>
+          <el-table-column prop="Label" label="Nom"></el-table-column>
+          <el-table-column label="Prix TTC">
+            <template slot-scope="scope">
+              {{scope.row.Prix_TVAC | roundTo2 }} €
+            </template>
+          </el-table-column>
           <el-table-column label="Quantité">
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
+          
+          
           <el-table-column label="Remarques">
             <template slot-scope="scope">
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
-          <!--el-row v-for="item in this.records" :key="item._id" :span="24" class="row-record"-->
-
-
-          <!--/el-row-->
           </el-table> 
-          <el-button type="primary" @click="onSubmit">Commander</el-button>   
-      </el-form>    
+          </div>
+          <br><br>
+          <!--div class="footer">
+          Total TTC : {{totalPrice | roundTo2}} €
+          <br><br>
+          </div-->   
+          
+          <!--/el-tab-pane>
+
+         </el-tabs-->
+                </el-tab-pane>
+
+      </el-tabs>
+                </el-tab-pane>
+      <el-tab-pane
+          :key="'TAB-Panier'"
+          :label="'Total Invendus'"
+          :name="'TAB-Panier'"
+          :lazy="true">
+          
+            Sous-Total :
+            <el-row 
+            v-for="(category, index) in classement" :key="index">
+            <h1>{{category}}: Quantité totale: {{totalCategoryQuantity(category) | roundTo2 }} Total TTC: {{totalCategoryPrice(category) | roundTo2}}€</h1>
+            <el-row v-for="(subCategory, index1) in subCategories[category]" :key="index1">
+                {{subCategory}}: Quantité totale: {{totalSubCategoryQuantity(category, subCategory) | roundTo2 }} Total TTC: {{totalSubCategoryPrice(category, subCategory) | roundTo2}}€
+                </el-row>
+            </el-row>
+            <el-row>
+              Total Panier: {{totalPrice | roundTo2 }}€ TTC
+              
+            </el-row>
+            <el-row>
+              <br><br>
+                   <el-button type="primary" @click="onSubmit">Envoyer</el-button>
+            </el-row>
+      </el-tab-pane>
+
+
+      </el-tabs>
+      </el-form> 
   </el-row>
+  
     </div>
+    
 </template>
 <script>
 import Vue from "vue";
@@ -34,14 +201,32 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShop",
+  name: "FormUnsales",
   data: () => ({
       records: null,
       oldID: null,
       disabled: false,
       category: '',
       categoryUp: '',
+      search: '',
+      classement:[],
+      filter1: '-',
+      filter2: '-',
+      filter3: '-',
+      filter4: '-',
+      filter5: '-',
+      filter6: '-',
+      filter7: '-',
+      filter8: '-',
+      magasin: '',
       ts: 0,
+      changed: false,
+      dialogFormVisible: false,
+      title: "Commande",
+      selectedTab: "TAB-0",
+      selectedUnderTab: "TAB-0-0",
+      subCategories: {},
+      subSubCategories: {}
 
   }),
   props: {
@@ -49,50 +234,321 @@ export default {
       type: Object
     }
   },
+  filters: {
+      roundTo2: function(value){
+        return value.toFixed(2);
+      }
+  },
+  mounted: function() {
+    this.$store.getters.activeApp.timeSelectorChecked = true
+    this.$store.getters.activeApp.timeSelectorType='day'
+    this.$globalbus.$on("timerangechanged", payLoad => {
+      console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
+      console.log(this.config.timeSelectorType);
+      //this.currentPage=1;
+      console.log(payLoad.subtype);
+      this.dateSelected();
+    });
+
+    //this.getMagasin();
+    //this.getTree();
+    //this.ts = Date.now().toString();
+    //this.prepareData();
+  },
+   beforeDestroy: function() {
+    console.log("===============  UNREGISTERING: timerangechanged");
+    this.$globalbus.$off("timerangechanged");
+   },
   created: function() {
-    this.ts = Date.now().toString();
-    var params = JSON.parse(this.config.config.controllerparameters);
-    this.category = params.param1;
-    this.categoryUp = params.param2
-    this.prepareData();
+    this.getMagasin();
+    this.getTree();
+    //this.ts = Date.now().toString();
+    console.log('PREPARE')
+    //this.prepareData();
+  },
+  computed: {
+    totalPrice: function() {
+      var price = 0
+
+      if(this.records != null)
+      {
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          price += (item.quantity*item.Prix_TVAC)
+        }
+        
+      }
+      return price
+    },
+     
+    totalFiltered: function(){
+      var filteredProducts = this.records
+      var price = 0
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        var filter = data.sortLvl1 == this.selectedCategory && data.sortLvl2 == this.selectedSubCategory
+        var filter1 = true
+        var filter2 = true
+        var filter3 = true
+        var filter4 = true
+        var filter5 = true
+        var filter6 = true
+        var filter7 = true
+        var filter8 = true
+        
+
+        if(this.filter1 != '-')
+        {
+            filter1 = data.sortLvl3 == this.filter1
+        }
+        if(this.filter2 != '-')
+        {
+            filter2 = data.sortLvl4 == this.filter2
+        }
+        if(this.filter3 != '-')
+        {
+            filter3 = data.sortLvl5 == this.filter3
+        }
+        if(this.filter4 != '-')
+        {
+            filter4 = data.sortLvl6 == this.filter4
+        }
+        if(this.filter5 != '-')
+        {
+            filter5 = data.sortLvl7 == this.filter5
+        }
+        if(this.filter6 != '-')
+        {
+            filter6 = data.sortLvl8 == this.filter6
+        }
+        if(this.filter7 != '-')
+        {
+            filter7 = data.sortLvl9 == this.filter7
+        }
+        if(this.filter8 != '-')
+        {
+            filter8 = data.sortLvl10 == this.filter8
+        }
+        
+        if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+        
+      }
+      
+      return price
+    },
+
+    
+    selectedCategory: function() {
+      var index = this.selectedTab.split('-').pop()
+      console.log(this.classement[index])
+      return this.classement[index]
+    },
+    selectedSubCategory: function() {
+      var index = this.selectedCategory
+      var index1 = this.selectedUnderTab.split('-').pop()
+      console.log('UnderTab Selected : ')
+      console.log(this.subCategories[index][index1])
+      return this.subCategories[index][index1]
+    }
   },
   methods: {
+
+    totalCategoryQuantity: function(category) {
+      var quantity = 0
+      if(this.records != null)
+      {
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category){
+              quantity += (item.quantity)
+          }    
+        }
+        return quantity
+      }
+      else{
+        return 0
+      }
+      
+    },
+    totalCategoryPrice: function(category) {
+      
+      var price = 0
+      if(this.records != null)
+      {
+        
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category){
+              price += (item.quantity*item.Prix_TVAC)
+          }
+         
+        }
+        return price
+      }
+      else{
+        return 0
+      }
+      
+    },
+    totalSubCategoryQuantity: function(category, subCategory) {
+      var quantity = 0
+      if(this.records != null)
+      {
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
+              quantity += (item.quantity)
+          }    
+        }
+        return quantity
+      }
+      else{
+        return 0
+      }
+      
+    },
+    totalSubCategoryPrice: function(category, subCategory) {
+      
+      var price = 0
+      if(this.records != null)
+      {
+        
+        for(var itemKey in Object.keys(this.records))
+        {
+          var item = this.records[itemKey]
+          if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
+              price += (item.quantity*item.Prix_TVAC)
+          }
+         
+        }
+        return price
+      }
+      else{
+        return 0
+      }
+      
+    },
+    getFilter(data){
+
+        //console.log(data)
+        //console.log(this.category)
+        var filter = data.sortLvl1 == this.selectedCategory && data.sortLvl2 == this.selectedSubCategory
+        var filter1 = true
+        var filter2 = true
+        var filter3 = true
+        var filter4 = true
+        var filter5 = true
+        var filter6 = true
+        var filter7 = true
+        var filter8 = true
+        
+
+        if(this.filter1 != '-')
+        {
+            filter1 = data.sortLvl3 == this.filter1
+        }
+        if(this.filter2 != '-')
+        {
+            filter2 = data.sortLvl4 == this.filter2
+        }
+        if(this.filter3 != '-')
+        {
+            filter3 = data.sortLvl5 == this.filter3
+        }
+        if(this.filter4 != '-')
+        {
+            filter4 = data.sortLvl6 == this.filter4
+        }
+        if(this.filter5 != '-')
+        {
+            filter5 = data.sortLvl7 == this.filter5
+        }
+        if(this.filter6 != '-')
+        {
+            filter6 = data.sortLvl8 == this.filter6
+        }
+        if(this.filter7 != '-')
+        {
+            filter7 = data.sortLvl9 == this.filter7
+        }
+        if(this.filter8 != '-')
+        {
+            filter8 = data.sortLvl10 == this.filter8
+        }
+        
+        //data.sortLvl1 == category && data.sortLvl2 == subcategory
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+    },
+    tabChanged(index){
+      this.selectedUnderTab = index+'-0'
+      console.log('Selected:  TAB-'+index+'-0')
+      this.filter1 = '-'
+      this.filter2 = '-'
+      this.filter3 = '-'
+      this.filter4 = '-'
+      this.filter5 = '-'
+      this.filter6 = '-'
+      this.filter7 = '-'
+      this.filter8 = '-'
+      //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
+    },
+    subTabChanged(){
+      this.filter1 = '-'
+      this.filter2 = '-'
+      this.filter3 = '-'
+      this.filter4 = '-'
+      this.filter5 = '-'
+      this.filter6 = '-'
+      this.filter7 = '-'
+      this.filter8 = '-'
+    },
     onSubmit(){
+      var dateFormat = require('dateformat');
       var order = {};
       var products = [];
       var entry = {};
       for(var itemKey in Object.keys(this.records)) {
         var item = this.records[itemKey]
         
-        entry = {}
-        entry._id = item._id
+        entry = item
+        /*entry._id = item._id
         entry.name = item.name
         entry.category = item.categoryID
         entry.code = item.old_code
         entry.quantity = item.quantity
+        entry.orderquantity = item.orderquantity
+        entry.size = item.size
         entry.remarque = item.remarque
         entry.price_tvac = item.price_tvac
+        entry.available = item.available*/
         products.push(entry)
       }
+      order.shop = this.magasin
       order.products = products
-      order.dateOrder = moment()
-      order.category = this.categoryUp
-      order.categoryID = this.category
+      order.dateOrder = dateFormat(this.$store.getters.timeRangeDay[0], "yyyy/mm/dd")
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
-      order.newId = order.category +'_'+this.ts
+      order.newId = order.shop +'_'+order.dateOrder
 
       
       
       setTimeout(() => {
         axios.post(
-          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+          this.$store.getters.apiurl + "lambdas/2/new_unsales?apikey="+this.$store.getters.creds.token, order
           ).then((response) => {
-            if(response.data.error!="")
+            if(response.data!="OK!")
               {
                 this.$notify({ 
                 title: "Error",
-                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                message: "Envois des invendus a echoué, veuillez recharger la page et réessayer",
                 type: "error",
                 position: "bottom-right",
                 duration: 1500});
@@ -101,10 +557,10 @@ export default {
               {
                 this.$notify({ 
                 title: "Success",
-                message: "Commande en " +this.categoryUp + " envoyée !",
+                message: "Liste d'invendus envoyée !",
                 type: "success",
                 position: "bottom-right",
-                duration: 2500
+                duration: 2000
               });
               }
         })
@@ -112,7 +568,7 @@ export default {
           console.log(error);
           
         });
-      }, 3500)
+      }, 1000)
 
       console.log('Sending Command')
     },
@@ -127,6 +583,15 @@ export default {
       this.monthSelected = moment()
       this.dateSelected()
     },
+    changeApp: function() {
+      this.currentApps = null
+
+      this.selectedTab = "TAB-0"
+
+      this.$nextTick(() => {
+        this.currentApps = JSON.parse(JSON.stringify(this.$store.getters.currentApps))
+      });
+    },
     dateSelected() {
       
       if(this.monthSelected == null)
@@ -140,77 +605,149 @@ export default {
       }
         
       this.strPeriod = moment(this.monthSelected).startOf('Month').format('DD MMM YYYY')+' to '+moment(this.monthSelected).endOf('Month').format('DD MMM YYYY')
+      //this.getTree()
       this.getData()
+      //this.createNewForm();
     },
-    getData() {
-      var demandor = this.$store.getters.creds.user.id          
+    getTree() {
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order?demandor="+demandor+"&category="+this.categoryUp+"&token=" +
-      this.$store.getters.creds.token;  
+      "schamps/get_products_tree?token=" + this.$store.getters.creds.token;  
 
-      
-        
+      console.log('GET PRODUCTS TREE')
       axios
-        .get(url, demandor)
+        .get(url)
         .then((response) => {
             if(response.data.error!="")
             console.log("Order Shops Calls list error...");
             else{
                 var res = JSON.parse(response.data.data)
-                console.log(res)
+                console.log("TREE : ")
                 
-                if(res.reccords.length == 0)
+                var tree = res.reccords
+                console.log(JSON.stringify(tree))
+                var cats = []
+                var subCategories = {}
+                var subSubCategories = {}
+                for(var i in tree)
                 {
-                    console.log("No reccord")
-                    this.createNewForm();
-                }
-                else{
-                    var order = res.reccords[0]['_source']['products']
-                    console.log("list order")
-                    console.log(order)
-                    for(var itemKey in order) {
-                      console.log(order[itemKey])
-                      order[itemKey].old_code = order[itemKey].code
-                      delete order[itemKey].code
+                  console.log(i)
+                  cats.push(i)
+                  var subCat = []
+                  subSubCategories[i] = {}
+                  for(var j in tree[i])
+                  {
+                    console.log(j)
+                    subCat.push(j)
+                    /*var subSubCat = []
+                    for(var k in tree[i][j])
+                    {
+                      subSubCat.push(k)
                     }
-                    var oldId = res.reccords[0]['_id']
-                    this.oldID = oldId
-                    this.records = order
-                    this.disabled = res.reccords[0]['_source']['confirmed']  
+                    
+                    subSubCategories[i][j] = subSubCat*/
+                  }
+                  //var obj = {i : subCat}
+                  subCategories[i] = subCat
+                  console.log(subSubCategories)
                 }
+                console.log("Categories : "  + cats)
+                this.subCategories = subCategories
+                this.subSubCategories = tree
+                this.classement = cats
+                console.log(this.subSubCategories)
+            }
+        });    
+    },
+
+
+
+    getMagasin() {
+      var demandor = this.$store.getters.creds.user.id          
+      var url =
+      this.$store.getters.apiurl +
+      "schamps/check_user_shop?demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+
+      console.log('CHECK USER SHOP')
+
+      axios
+        .get(url, demandor)
+        .then((response) => {
+            if(response.data.error!="")
+            console.log("User Shop Calls list error...");
+            else{
+                var res = JSON.parse(response.data.data)
+                console.log("MAGASIN : ")
+                //console.log(res)
+                this.magasin = res.reccords[0]._source.magasin
+                this.prepareData();
+               
             }
         });  
+
+        
+
     },
+
+    getData() {
+      var dateFormat = require('dateformat');
+      var demandor = this.$store.getters.creds.user.id    
+      var magasin = this.magasin 
+      console.log("MAGASIN : " + this.magasin)     
+      var url =
+      this.$store.getters.apiurl +
+      "lambdas/2/getunsales?apikey=" + this.$store.getters.creds.token;
+      var body = {"date": dateFormat(this.$store.getters.timeRangeDay[0], "yyyy/mm/dd"), "magasin": this.magasin, "demandor": demandor}
+
+      console.log('GET NEW LIST')
+
+      
+        
+      axios
+        .post(url, body)
+        .then((response) => {
+            console.log(response)
+              
+                if(response.data == "NODATA")
+                {
+                  console.log("NODATA");
+                  this.createNewForm();
+                }
+                else{
+
+                      var order = response.data.hits.hits[0]['_source']['products']
+                      console.log("list order")
+                      for(var itemKey in order) {
+                        
+                        order[itemKey].old_code = order[itemKey].code
+                        delete order[itemKey].code
+                      }
+                      
+                      var oldId = response.data.hits.hits[0]
+                      this.oldID = oldId
+                      this.records = order
+                      //this.disabled = res.reccords[0]['_source']['confirmed']  
+                  
+                  this.$forceUpdate();
+                }  
+            
+        });  
+    },
+
+
 
     
 
       
     createNewForm(){
       console.log('Generate Empty Form')
-      var url = this.$store.getters.apiurl + "generic_search/products_parameters?token=" + this.$store.getters.creds.token;
+      var url = this.$store.getters.apiurl + "generic_search/products_parameters_new?token=" + this.$store.getters.creds.token;
       var minutes = new Date().getMinutes();
       var hours = new Date().getHours();
-      if(hours >= 18){
-        this.disabled = true
-      }
-      else if(minutes >= 45 && hours==17){
-        this.disabled = true
-      }
+
+      //this.disabled = false
       var query = {
-            "size":900,
-            "query": {
-              "bool": {
-                "must": [
-                  {
-                    "query_string": {
-                      
-                      "query": "categoryID: "+this.category
-                    }
-                  }
-                ]
-              }
-            }
+            "size":900
         }
        console.log(query)
 
@@ -226,6 +763,7 @@ export default {
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0
+              response.data.records[i]._source.orderquantity = 0
               console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
               this.callData.push(response.data.records[i]._source)
@@ -235,6 +773,9 @@ export default {
                 var tmp = JSON.parse(JSON.stringify(this.callData))
                 this.records = null
                 this.records = JSON.parse(JSON.stringify(tmp))
+
+                console.log(this.records)
+                this.$forceUpdate();
           }});
 
           },
@@ -547,6 +1088,7 @@ export default {
         }
       });
     }
+
   }
 };
 
@@ -576,5 +1118,12 @@ export default {
 
 .table-disable {
   cursor: not-allowed;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 1%;
+  width: 100%;
+  text-align: center;
 }
 </style>
