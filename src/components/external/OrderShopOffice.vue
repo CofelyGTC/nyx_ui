@@ -135,25 +135,25 @@
             
         Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
         
-        <el-table :data="records.filter(getFilter)" style="width: 100%">  
-          <el-table-column prop="CODE" label="Code"></el-table-column>
-          <el-table-column prop="Label" label="Nom"></el-table-column>
-          <el-table-column label="Prix TTC">
+        <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
+          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column prop="Label" label="Nom" sortable></el-table-column>
+          <el-table-column label="Prix TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité">
+          <el-table-column label="Quantité" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Quantité en Commande">
+          <el-table-column label="Quantité en Commande" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total">
+          <el-table-column label="Total" sortable>
             <template slot-scope="scope">
               {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
             </template>
@@ -260,7 +260,17 @@ export default {
     console.log("CREATED")
     this.getMagasins();
     this.getTree();
-    //this.ts = Date.now().toString();
+    this.ts = Date.now().toString();
+
+    this.$globalbus.$on("timerangechanged", payLoad => {
+      console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
+      console.log(this.config.timeSelectorType);
+      console.log(payLoad.subtype);
+      if (this.config.timeSelectorType == undefined)
+        this.config.timeSelectorType = "classic";
+      if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
+      else console.log("Ignoring time change.");
+    });
     console.log('PREPARE')
     //this.prepareData();
   },
@@ -374,6 +384,8 @@ export default {
       }
       
     },
+    
+    
     totalCategoryPrice: function(category) {
       
       var price = 0
@@ -595,6 +607,10 @@ export default {
         this.currentApps = JSON.parse(JSON.stringify(this.$store.getters.currentApps))
       });
     },
+    loadData(){
+        this.records = [];
+        this.getData();
+    },
     dateSelected() {
       
       if(this.monthSelected == null)
@@ -712,12 +728,14 @@ export default {
     },
 
     getData() {
-      var demandor = this.$store.getters.creds.user.id    
+      var demandor = this.$store.getters.creds.user.id  
+      var timeRange=this.$store.getters.timeRangeDay;
+      console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
 
@@ -1114,6 +1132,15 @@ export default {
           return false;
         }
       });
+    },
+    updateTimeRange() {
+      const start = new Date();
+      console.log('coucou');
+      start.setTime(this.$refs.generic.chart.series.w.globals.minX);
+      this.$globalbus.$emit("charttimerangeupdated", [
+        this.$refs.generic.chart.series.w.globals.minX,
+        this.$refs.generic.chart.series.w.globals.maxX
+      ]);
     }
 
   }
