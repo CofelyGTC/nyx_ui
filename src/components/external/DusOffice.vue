@@ -1,9 +1,10 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="ordershopoffice-container" style="width: 100%" >
+  <el-row class="dusoffice-container" style="width: 100%" >
     Sélectionnez un magasin: 
-    <el-select @change="changeShop" v-model="magasin" placeholder="Sélectionner">
+    <el-row style="width: 100%">
+        <el-select @change="changeShop" filterable v-model="magasin" placeholder="Sélectionner">
               <el-option
                 v-for="(item, id) in magasins"
                 :key="id"
@@ -11,6 +12,34 @@
                 :value="item">
               </el-option>
             </el-select>
+    </el-row>
+            <br>
+            <el-row style="width: 100%;">
+                <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="invendus" :precision="2" :step="0.1" :min="0" ></el-input-number>
+                    </template>
+                </el-col>
+                <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="remise" :precision="2" :step="0.1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+                <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="supplement" :precision="2" :step="0.1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+            </el-row>
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -143,24 +172,14 @@
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité" sortable>
+          <el-table-column label="Quantité Dus" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
-          </template>
-          </el-table-column>
-          <el-table-column label="Quantité en Commande" sortable>
-          <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Total" sortable>
             <template slot-scope="scope">
               {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
-            </template>
-          </el-table-column>
-          <el-table-column label="Remarques">
-            <template slot-scope="scope">
-              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
           </el-table> 
@@ -175,7 +194,7 @@
                 </el-tab-pane>
       <el-tab-pane
           :key="'TAB-Panier'"
-          :label="'Panier'"
+          :label="'Total'"
           :name="'TAB-Panier'"
           :lazy="true">
           
@@ -188,12 +207,12 @@
                 </el-row>
             </el-row>
             <el-row>
-              Total Panier: {{totalPrice | roundTo2 }}€ TTC
+              Total Dus: {{totalPrice | roundTo2 }}€ TTC
               
             </el-row>
             <el-row>
               <br><br>
-                   <el-button type="primary" @click="onSubmit">Commander</el-button>
+                   <el-button type="primary" @click="onSubmit">Enregistrer</el-button>
             </el-row>
       </el-tab-pane>
 
@@ -211,7 +230,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShopOffice",
+  name: "FormDusOffice",
   data: () => ({
       records: null,
       oldID: null,
@@ -237,7 +256,10 @@ export default {
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
-      subSubCategories: {}
+      subSubCategories: {},
+      invendus: 0,
+      remise: 0,
+      supplement: 0
 
   }),
   props: {
@@ -562,12 +584,15 @@ export default {
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
       order.newId = order.demandor +'_'+this.ts
+      order.remise = this.remise
+      order.invendus = this.invendus
+      order.supplement = this.supplement
 
       
       
       setTimeout(() => {
         axios.post(
-          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+          this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
           ).then((response) => {
             if(response.data.error!="")
               {
@@ -745,7 +770,7 @@ export default {
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_dus?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
 
@@ -778,6 +803,9 @@ export default {
                     this.oldID = oldId
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
+                    this.remise = res.reccords[0]['_source']['remise']
+                    this.invendus = res.reccords[0]['_source']['invendus']
+                    this.supplement = res.reccords[0]['_source']['supplement']
                 }
                 this.$forceUpdate();
             }

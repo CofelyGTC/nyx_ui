@@ -138,25 +138,25 @@
         Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
         
         
-        <el-table :data="newRec._source.products.filter(getFilter)" style="width: 100%">    
-          <el-table-column prop="CODE" label="Code"></el-table-column>
-          <el-table-column prop="Label" label="Nom"></el-table-column>
-          <el-table-column label="Prix TTC">
+        <el-table :data="newRec._source.products.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">    
+          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column prop="Label" label="Nom" sortable></el-table-column>
+          <el-table-column label="Prix TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité">
+          <el-table-column label="Quantité" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Quantité en Commande">
+          <el-table-column label="Quantité en Commande" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total">
+          <el-table-column label="Total" sortable>
             <template slot-scope="scope">
               {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
             </template>
