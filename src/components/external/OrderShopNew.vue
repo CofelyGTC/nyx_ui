@@ -257,6 +257,10 @@ export default {
     console.log('PREPARE')
     //this.prepareData();
   },
+  beforeDestroy: function(){
+      console.log('BEFORE DESTROY')
+      this.onSubmit();
+  },
   computed: {
     totalPrice: function() {
       var price = 0
@@ -476,7 +480,7 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
     },
     tabChanged(index){
       this.selectedUnderTab = index+'-0'
@@ -505,6 +509,7 @@ export default {
       var order = {};
       var products = [];
       var entry = {};
+      var timeRange=this.$store.getters.timeRangeDay;
       for(var itemKey in Object.keys(this.records)) {
         var item = this.records[itemKey]
         
@@ -523,10 +528,11 @@ export default {
       }
       order.shop = this.magasin
       order.products = products
-      order.dateOrder = moment()
+      order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
-      order.newId = order.demandor +'_'+this.ts
+      order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
+
 
       
       
@@ -680,10 +686,11 @@ export default {
     getData() {
       var demandor = this.$store.getters.creds.user.id    
       var magasin = this.magasin 
+      var timeRange=this.$store.getters.timeRangeDay;
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
 

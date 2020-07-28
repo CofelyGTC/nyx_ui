@@ -14,6 +14,9 @@
             </el-select>
     </el-row>
             <br>
+            <el-row>
+              <h2>BOULANGERIE</h2>
+            </el-row>
             <el-row style="width: 100%;">
                 <el-col :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
@@ -37,6 +40,35 @@
                 <el-col :span="4">
                     <template>
                         <el-input-number v-model="supplement" :precision="2" :step="0.1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+            </el-row>
+            <el-row>
+              <h2>PATISSERIE</h2>
+            </el-row>
+             <el-row style="width: 100%;">
+                <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="invendusPat" :precision="2" :step="0.1" :min="0" ></el-input-number>
+                    </template>
+                </el-col>
+                <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="remisePat" :precision="2" :step="0.1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+                <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="supplementPat" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
             </el-row>
@@ -259,7 +291,10 @@ export default {
       subSubCategories: {},
       invendus: 0,
       remise: 0,
-      supplement: 0
+      supplement: 0,
+      invendusPat: 0,
+      remisePat: 0,
+      supplementPat: 0
 
   }),
   props: {
@@ -276,6 +311,7 @@ export default {
     //this.getMagasin();
     //this.getTree();
     this.ts = Date.now().toString();
+    this.magasin = this.$store.getters.actualShop;
     //this.prepareData();
   },
   created: function() {
@@ -303,8 +339,13 @@ export default {
       if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
       else console.log("Ignoring time change.");
     });
+    this.magasin = this.$store.getters.actualShop;
     console.log('PREPARE')
     //this.prepareData();
+  },
+  beforeDestroy: function(){
+      console.log('BEFORE DESTROY')
+      this.onSubmit();
   },
   computed: {
     totalPrice: function() {
@@ -527,7 +568,7 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
     },
     tabChanged(index){
       this.selectedUnderTab = index+'-0'
@@ -556,11 +597,18 @@ export default {
       console.log("CHANGE SHOP")
       //this.magasin = magasin
       console.log("SHOP: " + this.magasin)
+      this.$store.commit({
+        type: "setActualShop",
+        data: this.magasin
+      });
+      console.log('TESTESTEST')
+      console.log(this.$store.getters.actualShop)
       this.prepareData();
     },
     onSubmit(){
       var order = {};
       var products = [];
+      var timeRange=this.$store.getters.timeRangeDay;
       var entry = {};
       for(var itemKey in Object.keys(this.records)) {
         var item = this.records[itemKey]
@@ -583,10 +631,13 @@ export default {
       order.dateOrder = moment()
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
-      order.newId = order.demandor +'_'+this.ts
+      order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
       order.remise = this.remise
       order.invendus = this.invendus
       order.supplement = this.supplement
+      order.remisePat = this.remisePat
+      order.invendusPat = this.invendusPat
+      order.supplementPat = this.supplementPat
 
       
       
@@ -624,6 +675,7 @@ export default {
     },
     prepareData() {
       console.log('prepare data')
+      this.magasin = this.$store.getters.actualShop;
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
         if(priv =='admin' ||  priv=='SHOP_FORM') {
@@ -723,6 +775,7 @@ export default {
 
       var query = {
         size: 2000,
+        sort:[{"Nom magasin.keyword":{"order":"asc"}}],
         query: {
           bool: {
             must: [

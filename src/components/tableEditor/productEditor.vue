@@ -44,29 +44,58 @@
         </el-col>
         </el-row>
         <el-row>
+          <el-col :span=12>
         <el-form-item label="Label" :label-width="formLabelWidth2">
           <el-input size="mini" v-model="newRec._source.Label" autocomplete="off"></el-input>
         </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="Date Création" :label-width="formLabelWidth2">
+               <el-date-picker
+                v-model="newRec._source.creationDate"
+                type="date"
+                placeholder="Choississez un jour">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span=12>
+          <el-form-item label="Lieu de Préparation" :label-width="formLabelWidth2">
+            <el-select v-model="newRec._source.lieuPreparation" filterable placeholder="Sélectionner">
+                <el-option v-for="(item, idPrepa) in lieuPrepa" :key="idPrepa" :label="item" :value="item">
+                </el-option>
+            </el-select>
+           </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="Lieu de Production" :label-width="formLabelWidth2">
+            <el-select v-model="newRec._source.lieuProduction" filterable placeholder="Sélectionner">
+                <el-option v-for="(item, idProd) in lieuProd" :key="idProd" :label="item" :value="item">
+                </el-option>
+            </el-select>
+           </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
             <el-col :span=4>
         <el-form-item label="Prix TVAC" :label-width="formLabelWidth2">
-          <el-input-number size="mini" v-model="newRec._source.Prix_TVAC" autocomplete="off"></el-input-number>
+          <el-input-number size="mini" v-model="newRec._source.Prix_TVAC" autocomplete="off" :step="0.01"></el-input-number>
         </el-form-item>
             </el-col>
             <el-col :span=4>
         <el-form-item label="TVA" :label-width="formLabelWidth2">
-          <el-input-number size="mini" v-model="newRec._source.TVA" autocomplete="off"></el-input-number>
+          {{TVA | roundTo2 }}€
         </el-form-item>
             </el-col>
             <el-col :span=4>
         <el-form-item label="HTVA" :label-width="formLabelWidth2">
-          <el-input-number size="mini" v-model="newRec._source.HTVA" autocomplete="off"></el-input-number>
+          {{HTVA | roundTo2 }}€
         </el-form-item>
             </el-col>
             <el-col :span=4>
         <el-form-item label="Taux TVA" :label-width="formLabelWidth2">
-          <el-input-number size="mini" v-model="newRec._source.Taux_TVA" autocomplete="off"></el-input-number>
+          <el-input-number size="mini" v-model="newRec._source.Taux_TVA" autocomplete="off" :step="0.01"></el-input-number>
         </el-form-item>
             </el-col>
             <el-col :span=4>
@@ -229,7 +258,9 @@ export default {
     lvl7: ['-', 'Crème fraîche', 'Nature'],
     lvl8: ['-',  'Abricot','Citron', 'Fraise', 'Framboise', 'Multi'],
     lvl9: ['-', 'Crème Pâtissière', 'Crème au beurre', 'Crème fraîche'],
-    lvl10: ['-']
+    lvl10: ['-'],
+    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Viennoiserie', 'Table'],
+    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table']
 
   }),
   computed: {
@@ -241,6 +272,12 @@ export default {
     },
     recchanged: function() {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
+    },
+    TVA: function() {
+      return this.newRec._source.Prix_TVAC - this.HTVA
+    },
+    HTVA: function() {
+      return this.newRec._source.Prix_TVAC / (1+this.newRec._source.Taux_TVA)
     }
   },
   props: {
@@ -253,6 +290,11 @@ export default {
     editMode: {
       type: String
     }
+  },
+  filters: {
+      roundTo2: function(value){
+        return value.toFixed(2);
+      }
   },
   watch: {
     recordin: {
@@ -284,6 +326,8 @@ export default {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.lastUpdate = Date.now()
+      this.newRec._source['TVA'] = this.TVA.toFixed(2)
+      this.newRec._source['HTVA'] = this.HTVA.toFixed(2)
       this.newRec._id = this.newRec._source['CODE']
       console.log(this.newRec)
       this.$store.commit({
