@@ -285,6 +285,8 @@ export default {
       else console.log("Ignoring time change.");
     });
     this.magasin = this.$store.getters.actualShop;
+    this.selectedTab = this.$store.getters.actualLvl1;
+    this.selectedUnderTab = this.$store.getters.actualLvl2;
     console.log('PREPARE')
     //this.prepareData();
   },
@@ -526,6 +528,10 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
+      this.$store.commit({
+        type: "setActualLvl1",
+        data: this.selectedTab
+      });
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
@@ -537,6 +543,10 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
+      this.$store.commit({
+        type: "setActualLvl2",
+        data: this.selectedUnderTab
+      });
     },
     changeShop(){
       console.log("CHANGE SHOP")
@@ -573,6 +583,7 @@ export default {
       }
       order.shop = this.magasin
       order.products = products
+      order.totalPrice = this.totalPrice
       order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
@@ -693,13 +704,13 @@ export default {
                     subSubCategories[i][j] = subSubCat*/
                   }
                   //var obj = {i : subCat}
-                  subCategories[i] = subCat
+                  subCategories[i] = subCat.sort();
                   console.log(subSubCategories)
                 }
                 console.log("Categories : "  + cats)
                 this.subCategories = subCategories
                 this.subSubCategories = tree
-                this.classement = cats
+                this.classement = cats.sort();
                 console.log(this.subSubCategories)
             }
         });    

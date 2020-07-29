@@ -54,7 +54,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.25.11",
+    version: "v3.25.13",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -84,6 +84,8 @@ export default new Vuex.Store({
     searchCache: {},
     wsObject:{"check_alive":false},
     actualShop: '-',
+    actualLvl1: 'TAB-0',
+    actualLvl2: 'TAB-0-0'
   },
   getters: {
     wsObject: state => state.wsObject,
@@ -120,6 +122,8 @@ export default new Vuex.Store({
     redirection: state => state.redirection,
     searchCache: state => state.searchCache,
     actualShop: state => state.actualShop,
+    actualLvl1: state => state.actualLvl1,
+    actualLvl2: state => state.actualLvl2,
 
   },
   actions: {
@@ -408,6 +412,12 @@ export default new Vuex.Store({
     },
     setActualShop(state, payload) {
       state.actualShop = payload.data;
+    },
+    setActualLvl1(state, payload) {
+      state.actualLvl1 = payload.data;
+    },
+    setActualLvl2(state, payload) {
+      state.actualLvl2 = payload.data;
     },
     setTimeRange(state, payload) {
       console.log("VUEX:Set Time Range:");

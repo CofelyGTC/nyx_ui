@@ -556,7 +556,7 @@ export default {
                   }
                   
                   
-                  subCategories[i] = subCat
+                  subCategories[i] = subCat.sort()
                   console.log(subSubCategories)
                 }
                 console.log("Categories : "  + cats)
@@ -564,7 +564,7 @@ export default {
                 this.subSubCategories = tree
                 //this.classement = 'TOTO'
                 //alert(JSON.stringify(cats))
-                this.classement = cats
+                this.classement = cats.sort()
                 //alert(JSON.stringify(cats))
                 console.log(cats)
                 console.log(this.classement)

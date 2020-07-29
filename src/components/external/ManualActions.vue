@@ -7,6 +7,7 @@
         <el-button type="primary" @click="onClose">Cloturer commandes</el-button>
         <el-button type="primary" @click="onReopen">Réouvir Commandes</el-button>
         <el-button type="primary" @click="onCompile">Compiler Production</el-button>
+        <el-button type="primary" @click="onReorder">Repasser les Commandes</el-button>
         </el-row>
     </el-row>
     </div>
@@ -63,6 +64,44 @@ export default {
         }, 1000)
 
         console.log('Confirming Commands')
+      },
+      onReorder(){
+        var body = {
+            "destination": "/topic/REORDER",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec du repassage des commandes",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commandes repassées",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
       },
       onClose(){
         var body = {

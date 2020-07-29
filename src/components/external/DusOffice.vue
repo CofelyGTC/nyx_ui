@@ -312,6 +312,8 @@ export default {
     //this.getTree();
     this.ts = Date.now().toString();
     this.magasin = this.$store.getters.actualShop;
+    this.selectedTab = this.$store.getters.actualLvl1;
+    this.selectedUnderTab = this.$store.getters.actualLvl2;
     //this.prepareData();
   },
   created: function() {
@@ -581,6 +583,10 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
+      this.$store.commit({
+        type: "setActualLvl1",
+        data: this.selectedTab
+      });
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
@@ -592,6 +598,10 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
+      this.$store.commit({
+        type: "setActualLvl2",
+        data: this.selectedUnderTab
+      });
     },
     changeShop(){
       console.log("CHANGE SHOP")
@@ -754,13 +764,13 @@ export default {
                     subSubCategories[i][j] = subSubCat*/
                   }
                   //var obj = {i : subCat}
-                  subCategories[i] = subCat
+                  subCategories[i] = subCat.sort();
                   console.log(subSubCategories)
                 }
                 console.log("Categories : "  + cats)
                 this.subCategories = subCategories
                 this.subSubCategories = tree
-                this.classement = cats
+                this.classement = cats.sort();
                 console.log(this.subSubCategories)
             }
         });    

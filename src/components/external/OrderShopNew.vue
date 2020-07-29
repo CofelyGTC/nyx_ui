@@ -527,6 +527,7 @@ export default {
         products.push(entry)
       }
       order.shop = this.magasin
+      order.totalPrice = this.totalPrice
       order.products = products
       order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
@@ -644,13 +645,13 @@ export default {
                     subSubCategories[i][j] = subSubCat*/
                   }
                   //var obj = {i : subCat}
-                  subCategories[i] = subCat
+                  subCategories[i] = subCat.sort();
                   console.log(subSubCategories)
                 }
                 console.log("Categories : "  + cats)
                 this.subCategories = subCategories
                 this.subSubCategories = tree
-                this.classement = cats
+                this.classement = cats.sort()
                 console.log(this.subSubCategories)
             }
         });    
