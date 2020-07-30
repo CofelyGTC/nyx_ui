@@ -132,15 +132,22 @@
 
         <div style="bottom: 5%;">
 
+          <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+
             
-        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
+        <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
         
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
           <el-table-column prop="CODE" label="Code" sortable></el-table-column>
           <el-table-column prop="Label" label="Nom" sortable></el-table-column>
-          <el-table-column label="Prix TTC" sortable>
+          <el-table-column label="Prix Unitaire TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
+            </template>
+          </el-table-column>
+          <el-table-column label="Conditionnement" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Conditionnement }}
             </template>
           </el-table-column>
           <el-table-column label="Quantité" sortable>
@@ -153,9 +160,14 @@
             <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total" sortable>
+          <el-table-column label="Total Unités" sortable>
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
+              {{scope.row.quantity * scope.row.conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Total TTC" sortable>
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
           <el-table-column label="Remarques">
@@ -308,6 +320,57 @@ export default {
         
       }
       return price
+    },
+
+    totalPatisserie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Pâtisserie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalBoulangerie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Boulangerie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalOther: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
     },
      
     totalFiltered: function(){
@@ -569,6 +632,7 @@ export default {
         var item = this.records[itemKey]
         
         entry = item
+        entry.totalQuantity = entry.conditionnement * entry.quantity
         /*entry._id = item._id
         entry.name = item.name
         entry.category = item.categoryID
@@ -583,7 +647,10 @@ export default {
       }
       order.shop = this.magasin
       order.products = products
-      order.totalPrice = this.totalPrice
+      order.totalPrice = this.totalPrice.toFixed(2);
+      order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+      order.totalPatisserie = this.totalPatisserie.toFixed(2)
+      order.totalOther = this.totalOther.toFixed(2)
       order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID

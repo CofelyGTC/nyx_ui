@@ -78,6 +78,18 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span=12>
+            <el-form-item label="Conditionnement" :label-width="formLabelWidth2">
+              <el-input-number size="mini" v-model="newRec._source.conditionnement" autocomplete="off" :step="1"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="Unité de vente" :label-width="formLabelWidth2">
+              <el-input placeholder="ex: vente à l'unité" size="mini" v-model="newRec._source.unite_vente" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
             <el-col :span=4>
         <el-form-item label="Prix TVAC" :label-width="formLabelWidth2">
           <el-input-number size="mini" v-model="newRec._source.Prix_TVAC" autocomplete="off" :step="0.01"></el-input-number>
@@ -162,7 +174,7 @@
             <el-col :span=12>
         <el-form-item label="Avec/Sans Fruits" :label-width="formLabelWidth2">
           <el-select v-model="newRec._source.sortLvl5" filterable placeholder="Sélectionner">
-                <el-option v-for="(item, id3) in lvl3" :key="id3" :label="item" :value="item">
+                <el-option v-for="(item, id5) in lvl5" :key="id5" :label="item" :value="item">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -260,7 +272,8 @@ export default {
     lvl9: ['-', 'Crème Pâtissière', 'Crème au beurre', 'Crème fraîche'],
     lvl10: ['-'],
     lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Viennoiserie', 'Table'],
-    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table']
+    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table'],
+    filters: null,
 
   }),
   computed: {
@@ -306,6 +319,7 @@ export default {
   },
   created: function() {
     console.log("created event");
+    this.getFilters();
     this.prepareData();
   },
   components: {},
@@ -341,7 +355,60 @@ export default {
         position: "bottom-right"
       });
       this.$emit("dialogcloseupdated");
-    }
+    },
+    getFilters(){
+        var url =
+        this.$store.getters.apiurl +
+        "generic_search/products_filters?token=" + this.$store.getters.creds.token;  
+
+        console.log('CHECK SHOPS LIST')
+
+        var query = {
+            size: 2000,
+            query: {
+            bool: {
+                must: [
+                {
+                    match_all: {}
+                }
+                ]
+            }
+            }
+        };
+        axios
+        .post(url, query)
+        .then((response) => {
+            if(response.data.error!="")
+            console.log("Products Filters list error...");
+            else{
+                
+                var res = response.data
+                console.log(res)
+                this.filters = res.records[0]._source
+                console.log(this.filters)
+
+                this.prepareFilters();
+               
+            }
+        });  
+
+      },
+      prepareFilters(){
+          this.lvl1 = this.filters['sortLvl1']
+          this.lvl2 = this.filters['sortLvl2Boul']
+          this.lvl2_pat = this.filters['sortLvl2Pat']
+          this.lvl2_others = this.filters['sortLvl2Other']
+          this.lvl3 = this.filters['sortLvl3']
+          this.lvl4 = this.filters['sortLvl4']
+          this.lvl5 = this.filters['sortLvl5']
+          this.lvl6 = this.filters['sortLvl6']
+          this.lvl7 = this.filters['sortLvl7']
+          this.lvl8 = this.filters['sortLvl8']
+          this.lvl9 = this.filters['sortLvl9']
+          this.lvl10 = this.filters['sortLvl10']
+          console.log("Data Prepared")
+
+      },
   }
 };
 </script>

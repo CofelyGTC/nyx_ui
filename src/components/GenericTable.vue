@@ -255,6 +255,7 @@ export default {
     autoRefreshTime: null,
     editMode: null,
     refAutoRefresh: null,
+    magasin: null,
     options: {
       chart: {
         stacked: false,
@@ -736,6 +737,15 @@ export default {
         if(this.config.config.hiddenQuery.includes("{{user}}")){
           this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{user}}", this.$store.getters.creds.user.id)
         }
+        if(this.config.config.hiddenQuery.includes("{{magasin}}")){
+          //var demandor = this.$store.getters.creds.user.id 
+          console.log('MAGASIN')
+          if(this.magasin != null){
+            console.log(this.magasin)
+            this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{magasin}}", this.magasin)
+          }
+          console.log("Hidden Query : " + this.config.config.hiddenQuery)
+        }
         if (curquery == "") curquery = this.config.config.hiddenQuery;
         else
           curquery =
@@ -1019,10 +1029,43 @@ export default {
       }, this.config.autoRefreshTime)
 
     },
+    getMagasin() {
+      var demandor = this.$store.getters.creds.user.id          
+      var url =
+      this.$store.getters.apiurl +
+      "schamps/check_user_shop?demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+
+      console.log('CHECK USER SHOP')
+
+      axios
+        .get(url, demandor)
+        .then((response) => {
+            if(response.data.error!="")
+            console.log("User Shop Calls list error...");
+            else{
+                var res = JSON.parse(response.data.data)
+                console.log("MAGASIN : ")
+                console.log(res)
+                var magasin = res.reccords[0]._source.magasin
+                this.magasin = magasin
+                console.log(magasin)
+                this.loadData();
+                
+                
+               
+            }
+            return null;
+        });  
+
+        
+
+    },
    
   },
   mounted: function() {
     console.log("===============  MOUNTED:");
+
+    this.getMagasin();
     
     if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
       this.loadData();
