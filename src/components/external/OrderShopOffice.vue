@@ -624,71 +624,76 @@ export default {
       this.prepareData();
     },
     onSubmit(){
-      var order = {};
-      var products = [];
-      var entry = {};
-      var timeRange=this.$store.getters.timeRangeDay;
-      for(var itemKey in Object.keys(this.records)) {
-        var item = this.records[itemKey]
-        
-        entry = item
-        entry.totalQuantity = entry.conditionnement * entry.quantity
-        /*entry._id = item._id
-        entry.name = item.name
-        entry.category = item.categoryID
-        entry.code = item.old_code
-        entry.quantity = item.quantity
-        entry.orderquantity = item.orderquantity
-        entry.size = item.size
-        entry.remarque = item.remarque
-        entry.price_tvac = item.price_tvac
-        entry.available = item.available*/
-        products.push(entry)
-      }
-      order.shop = this.magasin
-      order.products = products
-      order.totalPrice = this.totalPrice.toFixed(2);
-      order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
-      order.totalPatisserie = this.totalPatisserie.toFixed(2)
-      order.totalOther = this.totalOther.toFixed(2)
-      order.dateOrder = timeRange[0].getTime();
-      order.demandor = this.$store.getters.creds.user.id
-      order.oldId = this.oldID
-      order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
-
-      console.log(order)
-      
-      setTimeout(() => {
-        axios.post(
-          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
-          ).then((response) => {
-            if(response.data.error!="")
-              {
-                this.$notify({ 
-                title: "Error",
-                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                type: "error",
-                position: "bottom-right",
-                duration: 1500});
-                }
-            else
-              {
-                this.$notify({ 
-                title: "Success",
-                message: "Commande en " +this.categoryUp + " envoyée !",
-                type: "success",
-                position: "bottom-right",
-                duration: 2000
-              });
-              }
-        })
-        .catch((error)=> {
-          console.log(error);
+      if(this.totalPrice > 0 && this.magasin != '-'){
+        var order = {};
+        var products = [];
+        var entry = {};
+        var timeRange=this.$store.getters.timeRangeDay;
+        for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
           
-        });
-      }, 1000)
+          entry = item
+          entry.totalQuantity = entry.conditionnement * entry.quantity
+          /*entry._id = item._id
+          entry.name = item.name
+          entry.category = item.categoryID
+          entry.code = item.old_code
+          entry.quantity = item.quantity
+          entry.orderquantity = item.orderquantity
+          entry.size = item.size
+          entry.remarque = item.remarque
+          entry.price_tvac = item.price_tvac
+          entry.available = item.available*/
+          products.push(entry)
+        }
+        order.shop = this.magasin
+        order.products = products
+        order.totalPrice = this.totalPrice.toFixed(2);
+        order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+        order.totalPatisserie = this.totalPatisserie.toFixed(2)
+        order.totalOther = this.totalOther.toFixed(2)
+        order.dateOrder = timeRange[0].getTime();
+        order.demandor = this.$store.getters.creds.user.id
+        order.oldId = this.oldID
+        order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
 
-      console.log('Sending Command')
+        console.log(order)
+        
+        setTimeout(() => {
+          axios.post(
+            this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+            ).then((response) => {
+              if(response.data.error!="")
+                {
+                  this.$notify({ 
+                  title: "Error",
+                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                  type: "error",
+                  position: "bottom-right",
+                  duration: 1500});
+                  }
+              else
+                {
+                  this.$notify({ 
+                  title: "Success",
+                  message: "Commande en " +this.categoryUp + " envoyée !",
+                  type: "success",
+                  position: "bottom-right",
+                  duration: 2000
+                });
+                }
+          })
+          .catch((error)=> {
+            console.log(error);
+            
+          });
+        }, 1000)
+
+        console.log('Sending Command')
+      }
+      else{
+        console.log('Nothing order');
+      }
     },
     prepareData() {
       console.log('prepare data')

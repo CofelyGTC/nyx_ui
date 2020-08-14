@@ -638,7 +638,7 @@ export default {
       }
       order.shop = this.magasin
       order.products = products
-      order.dateOrder = moment()
+      order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
       order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
