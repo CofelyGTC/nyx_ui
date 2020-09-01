@@ -46,11 +46,20 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item v-if="newRec._source.cake.type == 'Number Cake'" label="Taille" :label-width="formLabelWidth2">
-                    <el-input-number size="mini" v-model="newRec._source.cake.size" autocomplete="off" :min="10" :step="2"/>
+                    <el-select v-model="size" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, size) in sizesNumberCake" :key="size" :label="size" :value="size">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-else-if="newRec._source.cake.type == 'Glace'" label="Taille" :label-width="formLabelWidth2">
+                    <el-select v-model="size" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, size) in sizesIce" :key="size" :label="size+' '+item.desc" :value="size">
+                            </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item v-else label="Taille" :label-width="formLabelWidth2">
-                    <el-select v-model="newRec._source.cake.size" filterable placeholder="Sélectionner">
-                            <el-option v-for="(item, size) in sizes" :key="size" :label="item" :value="item">
+                    <el-select v-model="size" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, size) in sizes" :key="size" :label="size+' '+item.desc" :value="size">
                             </el-option>
                     </el-select>
                 </el-form-item>
@@ -61,7 +70,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item v-if="newRec._source.cake.type == 'Glace'" label="Goût" :label-width="formLabelWidth2">
-                    <el-select multiple multiple-limit=2 v-model="newRec._source.cake.glaceGout" filterable placeholder="Sélectionner">
+                    <el-select multiple :multiple-limit="2" v-model="newRec._source.cake.glaceGout" filterable placeholder="Sélectionner">
                             <el-option v-for="(item, glaceGout) in glaceGouts" :key="glaceGout" :label="item" :value="item">
                             </el-option>
                     </el-select>
@@ -86,12 +95,65 @@
                         <el-input maxlength="2" minlength="1" size="mini" v-model="newRec._source.cake.numberCakeChars" autocomplete="off" placeholder="Vos caractères"></el-input>
                     </el-form-item>
                 </div>
-                <el-form-item label="Inscription :" :label-width="formLabelWidth2" >
-                    <el-input size="mini" v-model="newRec._source.cake.inscription" autocomplete="off" placeholder="Ex: Joyeux Anniversaire"></el-input>
-                </el-form-item>
+                
                 <el-form-item label="Remarques :" :label-width="formLabelWidth2" >
                     <el-input size="mini" v-model="newRec._source.cake.remarques" autocomplete="off" placeholder="Vos remarque..."></el-input>
                 </el-form-item>
+                <el-row>
+                  <el-col :span=12>
+                <el-form-item label="Envois photo par mail ?" :label-width="formLabelWidth2" > 
+                  <el-switch v-model="imageByMail">
+                  </el-switch>
+                </el-form-item>
+                  </el-col>
+                  <el-col :span=12>
+                <el-form-item v-if="imageByMail" label="Mail :" :label-width="formLabelWidth2">
+                  <el-input size="mini" v-model="mail" autocomplete="off" placeholder="Mail expéditeur de l'image"></el-input>
+                </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span=8>
+                <el-form-item label="Inscription ?" :label-width="formLabelWidth2" > 
+                  <el-switch v-model="isInscription">
+                  </el-switch>
+                </el-form-item>
+                  </el-col>
+                  <el-col :span=8>
+                <el-form-item v-if="isInscription" label="Inscription personnalisée ?" :label-width="formLabelWidth2" > 
+                  <el-switch v-model="customInscription">
+                  </el-switch>
+                </el-form-item>
+                  </el-col>
+                  <el-col :span=8>
+                <el-form-item v-if="customInscription && isInscription" label="Inscription :" :label-width="formLabelWidth2" >
+                    <el-input size="mini" v-model="inscription" autocomplete="off" placeholder="Ex: Joyeux Anniversaire"></el-input>
+                </el-form-item>
+                <el-form-item v-else-if="isInscription" label="Inscription :" :label-width="formLabelWidth2" >
+                    <el-select v-model="inscription" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, txt) in inscriptions" :key="txt" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span=12>
+                <el-form-item label="Décorations ?" :label-width="formLabelWidth2" > 
+                  <el-switch v-model="isDecoration">
+                  </el-switch>
+                </el-form-item>
+                  </el-col>
+                  <el-col :span=12>
+                <el-form-item v-if="isDecoration" label="Décorations :" :label-width="formLabelWidth2">
+                  <el-select v-model="decoration" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item1, txt1) in decorations" :key="txt1" :label="item1" :value="item1">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                  </el-col>
+                </el-row>
+                
           </el-row>
           {{totalTTC}}€
           </el-card>
@@ -126,11 +188,45 @@ export default {
     orgName: "",
     newName: "",
     formLabelWidth: "120px",
+    formLabelWidth2: "180px",
     changed: false,
     dialogFormVisible: false,
     title: "Gâteaux",
+    isDecoration: false,
+    decoration: '',
+    decorations: ['Noël', 'Pâques', 'Anniversaire'],
+    imageByMail: false,
+    mail: '',
+    isInscription: false,
+    customInscription: false,
+    inscription: '',
+    inscriptions:['Bon anniversaire', 'Heureux Anniversaire', 'Joyeuses Fêtes', 'Bonnes Fêtes', 'Félicitations !'],
     cakeTypes: ['Crème fraîche fruits', 'Spécial Patron', 'Schamp', 'Negresco', 'Chocorêve', 'Mikkado', 'Bavarois', 'Glace', 'Number Cake'],
-    sizes: ['4 à 6 P', '8 à 10 P', '12 à 15 P', '20 P'],
+    size: '4P',
+    sizes: {
+        '4P':{'desc': '9,5 x 19,5 cm', 'prix': 14.4},
+        '6P':{'desc': '14,5 x 19 cm', 'prix': 21.6},
+        '8P':{'desc': '19 x 19,5 cm', 'prix': 28.8},
+        '10P':{'desc': '19,5 x 28 cm', 'prix': 36},
+        '16P':{'desc': '19,5 x 40 cm', 'prix': 57.6},
+        '20P':{'desc': '20 x 40 cm', 'prix': 72},
+        '24P':{'desc': '26  x 40 cm', 'prix': 86.4}},
+    sizesNumberCake: {
+        '4P':{'desc': '9,5 x 19,5 cm', 'prix': 18},
+        '6P':{'desc': '14,5 x 19 cm', 'prix': 27},
+        '8P':{'desc': '19 x 19,5 cm', 'prix': 36},
+        '10P':{'desc': '19,5 x 28 cm', 'prix': 45},
+        '16P':{'desc': '19,5 x 40 cm', 'prix': 72},
+        '20P':{'desc': '20 x 40 cm', 'prix': 90},
+        '24P':{'desc': '26  x 40 cm', 'prix': 108}},    
+    sizesIce: {
+        '4P':{'desc': '9,5 x 19,5 cm', 'prix': 15.2},
+        '6P':{'desc': '14,5 x 19 cm', 'prix': 22.8},
+        '8P':{'desc': '19 x 19,5 cm', 'prix': 30.4},
+        '10P':{'desc': '19,5 x 28 cm', 'prix': 38},
+        '16P':{'desc': '19,5 x 40 cm', 'prix': 60.8},
+        '20P':{'desc': '20 x 40 cm', 'prix': 76},
+        '24P':{'desc': '26  x 40 cm', 'prix': 91.2}},    
     bavaroisTypes: ['Fruits des Bois', 'Fraise', 'Framboise', 'Bora Bora'],
     glaceGouts: ['Vanille', 'Chocolat', 'Fraise', 'Framboise', 'Pabana'],
     numberCakeTypes: ['Crème fraîche - fraise', 'Crème fraîche - framboise', 'Mousse Chocolat', 'Mousse Pabana'],
@@ -177,29 +273,95 @@ export default {
     totalTTC: function() {
         var price = 0
         if(this.newRec._source.cake.type == 'Number Cake'){
-            price = this.newRec._source.cake.size * 4.5
+            var sizes = this.sizesNumberCake
+          var size = this.size
+
+          price = sizes[size].prix
+        }
+        else if(this.newRec._source.cake.type == 'Glace'){
+
+          var sizes = this.sizesIce
+          var size = this.size
+          console.log(size)
+
+          price = sizes[size].prix
+          console.log(price)
         }
         else
         {
-            switch(this.newRec._source.cake.size)
-            {
-                case '4 à 6 P':
-                    price = 5;
-                    break;
-                
-                case '8 à 10 P':
-                    price = 10;
-                    break;
-                case '12 à 15 P':
-                    price = 15;
-                    break;
-                case '20 P':
-                    price = 20;
-                    break;
+          console.log('In else')
+          var sizes = this.sizes
+          var size = this.size
+          console.log(size)
 
-                
-            }
+          price = sizes[size].prix
+          console.log(price)
         }
+
+
+
+        if(this.isInscription && this.customInscription)
+        {
+          price += 5
+        }
+        else if(this.isInscription)
+        {
+          price += 1.5
+        }
+
+        if(this.imageByMail)
+        {
+          switch(size)
+          {
+            case '4P':
+            case '6P':
+            {
+              price+=5
+              break;
+            }
+            case '8P':
+            case '10P':  
+            {
+              price+7.5
+              break;
+            }
+            case '16P':
+            case '20P':  
+            case '24P':
+            {
+              price+=10
+              break;
+            }
+          }
+        }
+
+        if(this.isDecoration)
+        {
+          console.log('coucou')
+          switch(size)
+          {
+            case '4P':
+            case '6P':
+            case '8P':
+            {
+            price+=2.5
+            break;
+            }
+            case '10P':
+            case '16P':
+            {
+            price+5
+            break;
+            }
+            case '20P':
+            case '24P':
+            {
+            price+=7.5
+            break;
+            }
+          }
+        }
+
         return price
     }
   },
@@ -298,6 +460,17 @@ export default {
       console.log(Date.now())
       console.log(this.$store.getters.timeRangeDay[0].getTime())
 
+
+      this.newRec._source.cake.size = this.size
+      this.newRec._source.cake.isDecoration = this.isDecoration
+      this.newRec._source.cake.decoration = this.decoration
+      this.newRec._source.cake.imageByMail = this.imageByMail
+      this.newRec._source.cake.mail = this.mail
+      this.newRec._source.cake.isInscription = this.isInscription
+      this.newRec._source.cake.inscription = this.inscription
+      this.newRec._source.type = this.newRec._source.cake.type
+      this.newRec._source.price = this.totalTTC
+
       if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
       {
           this.newRec._source.magasin = this.magasin
@@ -332,4 +505,5 @@ export default {
 .bhd-tech-editor .add-view-button {
   margin-bottom: 30px;
 }
+
 </style>

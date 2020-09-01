@@ -546,6 +546,7 @@ export default {
         return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
     },
     tabChanged(index){
+      this.refillNan()
       this.selectedUnderTab = index+'-0'
       console.log('Selected:  TAB-'+index+'-0')
       this.filter1 = '-'
@@ -559,6 +560,7 @@ export default {
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
+      this.refillNan()
       this.filter1 = '-'
       this.filter2 = '-'
       this.filter3 = '-'
@@ -568,7 +570,24 @@ export default {
       this.filter7 = '-'
       this.filter8 = '-'
     },
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity)
+          {
+            item.orderquantity = 0
+          }
+      }  
+    },
+
     onSubmit(){
+        
+      this.refillNan()  
+
       var order = {};
       var products = [];
       var entry = {};

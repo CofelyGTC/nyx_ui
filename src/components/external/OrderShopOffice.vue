@@ -138,39 +138,39 @@
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
         
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
-          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
-          <el-table-column prop="Label" label="Nom" sortable></el-table-column>
-          <el-table-column label="Prix Unitaire TTC" sortable>
+          <el-table-column :span=2 prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column :span=2 prop="Label" label="Nom" sortable></el-table-column>
+          <el-table-column :span=2 label="Prix Unitaire TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Conditionnement" sortable>
+          <el-table-column :span=2 label="Conditionnement" sortable>
             <template slot-scope="scope">
               {{scope.row.Conditionnement }}
             </template>
           </el-table-column>
-          <el-table-column label="Quantité" sortable>
+          <el-table-column :span=2 label="Quantité" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
+            <el-input-number width="10px" :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Quantité en Commande" sortable>
+          <el-table-column :span=1 label="Quantité en Commande" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total Unités" sortable>
+          <el-table-column :span=1 label="Total Unités" sortable>
             <template slot-scope="scope">
               {{scope.row.quantity * scope.row.conditionnement }}
             </template>
           </el-table-column>
-          <el-table-column label="Total TTC" sortable>
+          <el-table-column :span=2 label="Total TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
-          <el-table-column label="Remarques">
+          <el-table-column :span=2 label="Remarques">
             <template slot-scope="scope">
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
@@ -581,6 +581,7 @@ export default {
         return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
     },
     tabChanged(index){
+      this.refillNan()
       this.selectedUnderTab = index+'-0'
       console.log('Selected:  TAB-'+index+'-0')
       this.filter1 = '-'
@@ -598,6 +599,7 @@ export default {
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
+      this.refillNan()
       this.filter1 = '-'
       this.filter2 = '-'
       this.filter3 = '-'
@@ -623,7 +625,23 @@ export default {
       console.log(this.$store.getters.actualShop)
       this.prepareData();
     },
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity)
+          {
+            item.orderquantity = 0
+          }
+      }  
+    },
     onSubmit(){
+
+      this.refillNan()   
+    
       if(this.totalPrice > 0 && this.magasin != '-'){
         var order = {};
         var products = [];
