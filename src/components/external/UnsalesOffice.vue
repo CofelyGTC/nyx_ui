@@ -1,67 +1,20 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="dushop-container" style="width: 100%" >
-   
+  <el-row class="unsalesoffice-container" style="width: 100%" >
+    Sélectionnez un magasin: 
+    <el-row style="width: 100%">
+        <el-select @change="changeShop" filterable v-model="magasin" placeholder="Sélectionner">
+              <el-option
+                v-for="(item, id) in magasins"
+                :key="id"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+    </el-row>
             <br>
-            <el-row>
-              <h2>BOULANGERIE</h2>
-            </el-row>
-            <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="invendus" :precision="2" :step="0.1" :min="0" ></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remise" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplement" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-            </el-row>
-            <el-row>
-              <h2>PATISSERIE</h2>
-            </el-row>
-             <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="invendusPat" :precision="2" :step="0.1" :min="0" ></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remisePat" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplementPat" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-            </el-row>
+            
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -194,7 +147,7 @@
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Dus" sortable>
+          <el-table-column label="Quantité Invendus" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
@@ -229,7 +182,7 @@
                 </el-row>
             </el-row>
             <el-row>
-              Total Dus: {{totalPrice | roundTo2 }}€ TTC
+              Total Invendus: {{totalPrice | roundTo2 }}€ TTC
               
             </el-row>
             <el-row>
@@ -252,7 +205,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormDusOffice",
+  name: "FormUnsalesOffice",
   data: () => ({
       records: null,
       oldID: null,
@@ -270,6 +223,7 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
+      magasins: [],
       ts: 0,
       changed: false,
       dialogFormVisible: false,
@@ -278,12 +232,6 @@ export default {
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
       subSubCategories: {},
-      invendus: 0,
-      remise: 0,
-      supplement: 0,
-      invendusPat: 0,
-      remisePat: 0,
-      supplementPat: 0
 
   }),
   props: {
@@ -317,7 +265,7 @@ export default {
       }
 
     console.log("CREATED")
-    this.getMagasin();
+    this.getMagasins();
     this.getTree();
     this.ts = Date.now().toString();
 
@@ -605,72 +553,96 @@ export default {
       this.prepareData();
     },
     onSubmit(){
-      var order = {};
-      var products = [];
-      var timeRange=this.$store.getters.timeRangeDay;
-      var entry = {};
-      for(var itemKey in Object.keys(this.records)) {
-        var item = this.records[itemKey]
+      if(this.magasin != '-')
+      {  
         
-        entry = item
-        /*entry._id = item._id
-        entry.name = item.name
-        entry.category = item.categoryID
-        entry.code = item.old_code
-        entry.quantity = item.quantity
-        entry.orderquantity = item.orderquantity
-        entry.size = item.size
-        entry.remarque = item.remarque
-        entry.price_tvac = item.price_tvac
-        entry.available = item.available*/
-        products.push(entry)
-      }
-      order.shop = this.magasin
-      order.products = products
-      order.dateOrder = moment()
-      order.demandor = this.$store.getters.creds.user.id
-      order.oldId = this.oldID
-      order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
-      order.remise = this.remise
-      order.invendus = this.invendus
-      order.supplement = this.supplement
-      order.remisePat = this.remisePat
-      order.invendusPat = this.invendusPat
-      order.supplementPat = this.supplementPat
-
-      
-      
-      setTimeout(() => {
-        axios.post(
-          this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
-          ).then((response) => {
-            if(response.data.error!="")
-              {
-                this.$notify({ 
-                title: "Error",
-                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                type: "error",
-                position: "bottom-right",
-                duration: 1500});
-                }
-            else
-              {
-                this.$notify({ 
-                title: "Success",
-                message: "Commande en " +this.categoryUp + " envoyée !",
-                type: "success",
-                position: "bottom-right",
-                duration: 2000
-              });
-              }
-        })
-        .catch((error)=> {
-          console.log(error);
+        var order = {};
+        var products = [];
+        var timeRange=this.$store.getters.timeRangeDay;
+        var entry = {};
+        for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
           
-        });
-      }, 1000)
+          entry = item
+          /*entry._id = item._id
+          entry.name = item.name
+          entry.category = item.categoryID
+          entry.code = item.old_code
+          entry.quantity = item.quantity
+          entry.orderquantity = item.orderquantity
+          entry.size = item.size
+          entry.remarque = item.remarque
+          entry.price_tvac = item.price_tvac
+          entry.available = item.available*/
+          //console.log(entry.CODE + '-'+entry.HTVA)
+          if(typeof entry.HTVA == "string")
+          {
+            console.log(entry.CODE)
+            console.log(entry.HTVA)
+            entry.HTVA = parseFloat(entry.HTVA)
+            console.log(entry.HTVA)
+          }
+          if(typeof entry.TVA == "string")
+          {
+            console.log(entry.CODE)
+            console.log(entry.TVA)
+            entry.TVA = parseFloat(entry.TVA)
+            console.log(entry.TVA)
+          }
+          products.push(entry)
+          
+        }
+        order.shop = this.magasin
+        order.products = products
+        order.dateOrder = timeRange[0].getTime();
+        order.demandor = this.$store.getters.creds.user.id
+        order.oldId = this.oldID
+        order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
+        order.remise = this.remise
+        //order.invendus = this.invendus
+        //order.supplement = this.supplement
+        //order.remisePat = this.remisePat
+        //order.invendusPat = this.invendusPat
+        //order.supplementPat = this.supplementPat
+        
+        
+        
+        setTimeout(() => {
+          axios.post(
+            this.$store.getters.apiurl + "schamps/new_unsales?token="+this.$store.getters.creds.token, order
+            ).then((response) => {
+              if(response.data.error!="")
+                {
+                  this.$notify({ 
+                  title: "Error",
+                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                  type: "error",
+                  position: "bottom-right",
+                  duration: 1500});
+                  }
+              else
+                {
+                  this.$notify({ 
+                  title: "Success",
+                  message: "Commande en " +this.categoryUp + " envoyée !",
+                  type: "success",
+                  position: "bottom-right",
+                  duration: 2000
+                });
+                }
+          })
+          .catch((error)=> {
+            console.log(error);
+            
+          });
+        }, 1000)
 
-      console.log('Sending Command')
+        console.log('Sending Command')
+        }
+        else
+        {
+          console.log('No data To send')
+        }
     },
     prepareData() {
       console.log('prepare data')
@@ -765,24 +737,46 @@ export default {
         });    
     },
 
-    getMagasin() {
-      var demandor = this.$store.getters.creds.user.id          
+    getMagasins() {         
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_user_shop?demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
+      "generic_search/shop_parameters?token=" + this.$store.getters.creds.token;  
 
-      console.log('CHECK USER SHOP')
+      console.log('CHECK SHOPS LIST')
+
+      var query = {
+        size: 2000,
+        sort:[{"Nom magasin.keyword":{"order":"asc"}}],
+        query: {
+          bool: {
+            must: [
+              {
+                match_all: {}
+              }
+            ]
+          }
+        }
+      };
 
       axios
-        .get(url, demandor)
+        .post(url, query)
         .then((response) => {
             if(response.data.error!="")
-            console.log("User Shop Calls list error...");
+            console.log("User Shop list error...");
             else{
-                var res = JSON.parse(response.data.data)
-                console.log("MAGASIN : ")
-                //console.log(res)
-                this.magasin = res.reccords[0]._source.magasin
+                
+                var res = response.data
+                console.log("MAGASINS : ")
+                console.log(res)
+                this.magasin = res.records[0]._source['Nom magasin']
+                var magasins = []
+                for(var rec in res.records)
+                {
+                    console.log(rec)
+                    magasins.push(res.records[rec]._source['Nom magasin'])
+                }
+                this.magasins = magasins
+                console.log(this.magasins)
                 this.prepareData();
                
             }
@@ -800,10 +794,11 @@ export default {
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_dus?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_unsales?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
-
+      //this.createNewForm();
+      //this.$forceUpdate();
         
       axios
         .get(url, demandor)
@@ -832,13 +827,13 @@ export default {
                     this.oldID = oldId
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
-                    this.remise = res.reccords[0]['_source']['remise']
-                    this.invendus = res.reccords[0]['_source']['invendus']
-                    this.supplement = res.reccords[0]['_source']['supplement']
+                    //this.remise = res.reccords[0]['_source']['remise']
+                    //this.invendus = res.reccords[0]['_source']['invendus']
+                    //this.supplement = res.reccords[0]['_source']['supplement']
                 }
                 this.$forceUpdate();
             }
-        });  
+        }); 
     },
 
 
