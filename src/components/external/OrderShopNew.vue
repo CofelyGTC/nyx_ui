@@ -3,6 +3,13 @@
   <div style="width: 100%">
   <el-row class="ordershopnew-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
+        <el-row>
+        <td>
+        Clôturer la commande : 
+        <el-switch @change="onCloseOrder()" v-model="disabled">
+        </el-switch>
+      </td>
+      </el-row> 
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
           
@@ -129,7 +136,7 @@
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
         <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
-          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column prop="CODE" label="Code"  sortable></el-table-column>
           <el-table-column prop="Label" label="Nom" sortable></el-table-column>
           <el-table-column label="Prix TTC" sortable>
             <template slot-scope="scope">
@@ -141,12 +148,12 @@
               {{scope.row.Conditionnement }}
             </template>
           </el-table-column>
-          <el-table-column label="Quantité" sortable>
+          <el-table-column label="Quantité"  width="150" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Quantité en Commande" sortable>
+          <el-table-column label="Quantité en Commande" width="150" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
@@ -161,7 +168,7 @@
               {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
-          <el-table-column label="Remarques">
+          <el-table-column label="Remarques" width="150">
             <template slot-scope="scope">
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
@@ -267,6 +274,20 @@ export default {
     this.getMagasin();
     this.getTree();
     //this.ts = Date.now().toString();
+
+    this.$globalbus.$on("timerangechanged", payLoad => {
+      console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
+      console.log(this.config.timeSelectorType);
+      console.log(payLoad.subtype);
+      if (this.config.timeSelectorType == undefined)
+        this.config.timeSelectorType = "classic";
+      if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
+      else console.log("Ignoring time change.");
+    });
+    this.magasin = this.$store.getters.actualShop;
+    this.selectedTab = this.$store.getters.actualLvl1;
+    this.selectedUnderTab = this.$store.getters.actualLvl2;
+    //this.ts = Date.now().toString();
     console.log('PREPARE')
     //this.prepareData();
   },
@@ -283,7 +304,7 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.quantity*item.Prix_TVAC)
+          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
         }
         
       }
@@ -298,7 +319,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Pâtisserie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -315,7 +336,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Boulangerie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -332,7 +353,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -392,7 +413,7 @@ export default {
         
         if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
         
       }
@@ -494,6 +515,10 @@ export default {
       }
       
     },
+    loadData(){
+        this.records = [];
+        this.getData();
+    },
     getFilter(data){
 
         //console.log(data)
@@ -543,7 +568,8 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
+        //&& data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
     },
     tabChanged(index){
       this.refillNan()
@@ -577,11 +603,16 @@ export default {
           {
             item.quantity = 0
           }
-          if(item.orderquantity)
+          if(item.orderquantity == null)
           {
             item.orderquantity = 0
           }
       }  
+    },
+
+    onCloseOrder(){
+      this.disabled = true
+      this.onSubmit();
     },
 
     onSubmit(){
@@ -618,6 +649,10 @@ export default {
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
       order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
+      order.confirmed = this.disabled
+
+      console.log('confirmed: ')
+      console.log(order.confirmed)
 
 
       

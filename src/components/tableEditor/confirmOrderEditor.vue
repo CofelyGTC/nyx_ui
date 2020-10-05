@@ -7,8 +7,10 @@
     :close-on-click-modal="false"
     class="confirm-order-editor"
   >
+
+  <el-row>Total Boulangerie TTC: {{ totalBoulangerie  | roundTo2 }}€  Total Pâtisserie TTC : {{totalPatisserie | roundTo2 }} € Total Autres TTC : {{totalOther  | roundTo2 }} €</el-row>
  
-  Total TTC : {{totalPrice | roundTo2 }} €<br>
+  <el-row>Total TTC : {{totalPrice | roundTo2 }} €<br></el-row>
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-row class="ordershopnew-container" style="width: 100%" >
@@ -139,26 +141,36 @@
         
         
         <el-table :data="newRec._source.products.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">    
-          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
+            <el-table-column prop="CODE" label="Code" sortable></el-table-column>
           <el-table-column prop="Label" label="Nom" sortable></el-table-column>
           <el-table-column label="Prix TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
+          <el-table-column label="Conditionnement" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Conditionnement }}
+            </template>
+          </el-table-column>
           <el-table-column label="Quantité" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Quantité en Commande" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total" sortable>
+          <el-table-column label="Total Unités" sortable>
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
+              {{scope.row.quantity * scope.row.conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Total TTC" sortable>
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
           <el-table-column label="Remarques">
@@ -236,7 +248,7 @@ export default {
         for(var itemKey in Object.keys(this.newRec._source.products))
         {
           var item = this.newRec._source.products[itemKey]
-          price += (item.quantity*item.Prix_TVAC)
+          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
         }
         
       }
@@ -300,12 +312,63 @@ export default {
         
         if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
         
       }
       
       return price
+    },
+
+    totalPatisserie: function(){
+
+      var price = 0
+      //var products = this.newRec._source.products
+      for(var itemKey in Object.keys(this.newRec._source.products))
+      {
+        var data = this.newRec._source.products[itemKey]
+        if(data.sortLvl1 == 'Pâtisserie')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalBoulangerie: function(){
+
+      var price = 0
+      //var products = this.newRec._source.products
+      for(var itemKey in Object.keys(this.newRec._source.products))
+      {
+        var data = this.newRec._source.products[itemKey]
+        if(data.sortLvl1 == 'Boulangerie')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalOther: function(){
+
+      var price = 0
+      //var products = this.newRec._source.products
+      for(var itemKey in Object.keys(this.newRec._source.products))
+      {
+        var data = this.newRec._source.products[itemKey]
+        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
     },
 
     
@@ -585,10 +648,16 @@ export default {
       this.tree = {'coucou': 1}
       //this.getTree()
     },
+    
     saveRecord: function() {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.orderDate = Date.now()
+
+      this.newRec._source.totalPrice = this.totalPrice.toFixed(2);
+      this.newRec._source.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+      this.newRec._source.totalPatisserie = this.totalPatisserie.toFixed(2)
+      this.newRec._source.totalOther = this.totalOther.toFixed(2)
 
       this.$store.commit({
         type: "updateRecord",

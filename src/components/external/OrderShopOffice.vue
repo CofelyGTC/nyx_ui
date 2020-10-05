@@ -2,6 +2,8 @@
 
   <div style="width: 100%">
   <el-row class="ordershopoffice-container" style="width: 100%" >
+    <el-row>
+      <td>
     Sélectionnez un magasin: 
     <el-select @change="changeShop" v-model="magasin" placeholder="Sélectionner">
               <el-option
@@ -11,6 +13,13 @@
                 :value="item">
               </el-option>
             </el-select>
+      </td>
+      <td>
+        Clôturer la commande : 
+        <el-switch @change="onCloseOrder()" v-model="disabled">
+        </el-switch>
+      </td>
+      </el-row>      
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -132,7 +141,7 @@
 
         <div style="bottom: 5%;">
 
-          <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+          <el-row>Total Boulangerie TTC: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
 
             
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
@@ -150,12 +159,12 @@
               {{scope.row.Conditionnement }}
             </template>
           </el-table-column>
-          <el-table-column :span=2 label="Quantité" sortable>
+          <el-table-column :span=2 label="Quantité" width="150" sortable>
           <template slot-scope="scope">
             <el-input-number width="10px" :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column :span=1 label="Quantité en Commande" sortable>
+          <el-table-column :span=1 label="Quantité en Commande" width="150" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
           </template>
@@ -170,7 +179,7 @@
               {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
-          <el-table-column :span=2 label="Remarques">
+          <el-table-column :span=2 width="150" label="Remarques">
             <template slot-scope="scope">
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
@@ -231,6 +240,7 @@ export default {
       category: '',
       categoryUp: '',
       search: '',
+      confirmed: false,
       classement:[],
       filter1: '-',
       filter2: '-',
@@ -315,7 +325,7 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.quantity*item.Prix_TVAC)
+          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
         }
         
       }
@@ -331,7 +341,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Pâtisserie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -348,7 +358,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Boulangerie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -365,7 +375,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -425,7 +435,7 @@ export default {
         
         if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
         
       }
@@ -578,7 +588,8 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
+        //&& data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
     },
     tabChanged(index){
       this.refillNan()
@@ -632,11 +643,16 @@ export default {
           {
             item.quantity = 0
           }
-          if(item.orderquantity)
+          if(item.orderquantity==null)
           {
             item.orderquantity = 0
           }
       }  
+    },
+
+    onCloseOrder(){
+      this.disabled = true
+      this.onSubmit();
     },
     onSubmit(){
 
@@ -674,6 +690,7 @@ export default {
         order.demandor = this.$store.getters.creds.user.id
         order.oldId = this.oldID
         order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
+        order.confirmed = this.disabled
 
         console.log(order)
         

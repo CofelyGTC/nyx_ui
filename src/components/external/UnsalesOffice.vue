@@ -147,9 +147,9 @@
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Invendus" sortable>
+          <el-table-column label="Quantité Invendus" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Total" sortable>
@@ -275,8 +275,18 @@ export default {
       console.log(payLoad.subtype);
       if (this.config.timeSelectorType == undefined)
         this.config.timeSelectorType = "classic";
-      if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
-      else console.log("Ignoring time change.");
+      if (payLoad.subtype == this.config.timeSelectorType){ 
+        console.log('timechanged')
+        this.loadData();
+        }
+      else 
+      {
+          console.log("Ignoring time change...");
+          console.log(payLoad.subtype);
+          console.log(this.config.timeSelectorType);
+          console.log('test');
+
+      }
     });
     this.magasin = this.$store.getters.actualShop;
     console.log('PREPARE')
@@ -396,7 +406,19 @@ export default {
       }
       
     },
-    
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity)
+          {
+            item.orderquantity = 0
+          }
+      }  
+    },
     
     totalCategoryPrice: function(category) {
       
@@ -507,9 +529,10 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
     },
     tabChanged(index){
+      this.refillNan()
       this.selectedUnderTab = index+'-0'
       console.log('Selected:  TAB-'+index+'-0')
       this.filter1 = '-'
@@ -527,6 +550,7 @@ export default {
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
+      this.refillNan()
       this.filter1 = '-'
       this.filter2 = '-'
       this.filter3 = '-'
@@ -555,7 +579,7 @@ export default {
     onSubmit(){
       if(this.magasin != '-')
       {  
-        
+        this.refillNan()
         var order = {};
         var products = [];
         var timeRange=this.$store.getters.timeRangeDay;
@@ -599,6 +623,10 @@ export default {
         order.oldId = this.oldID
         order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
         order.remise = this.remise
+        order.totalBoulangerie = this.totalBoulangerie().toFixed(2)
+        order.totalPatisserie = this.totalPatisserie().toFixed(2)
+        order.totalOther = this.totalOther().toFixed(2)
+        order.totalPrice = this.totalPrice.toFixed(2)
         //order.invendus = this.invendus
         //order.supplement = this.supplement
         //order.remisePat = this.remisePat
@@ -783,6 +811,56 @@ export default {
         });  
 
         
+
+    },
+    totalPatisserie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Pâtisserie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalBoulangerie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Boulangerie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalOther: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
 
     },
 

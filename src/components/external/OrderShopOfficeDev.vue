@@ -1,10 +1,11 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="dusoffice-container" style="width: 100%" >
+  <el-row class="ordershopoffice-container" style="width: 100%" >
+    <el-row>
+      <td>
     Sélectionnez un magasin: 
-    <el-row style="width: 100%">
-        <el-select @change="changeShop" filterable v-model="magasin" placeholder="Sélectionner">
+    <el-select @change="changeShop" v-model="magasin" placeholder="Sélectionner">
               <el-option
                 v-for="(item, id) in magasins"
                 :key="id"
@@ -12,67 +13,13 @@
                 :value="item">
               </el-option>
             </el-select>
-    </el-row>
-            <br>
-            <el-row>
-              <h2>BOULANGERIE</h2>
-            </el-row>
-            <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remise" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplement" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                  <label style="horizontal-align: right; vertical-align: middle;">Bons Vita+: </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="vitas"  :step="1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-
-            </el-row>
-            <el-row>
-              <h2>PATISSERIE</h2>
-            </el-row>
-             <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remisePat" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplementPat" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col v-if="sacapain == true" :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Sacs à pain: </label>
-                </el-col>
-                <el-col  v-if="sacapain == true"  :span="4">
-                    <template>
-                        <el-input-number v-model="nbreSacsAPain"  :step="1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-            </el-row>
+      </td>
+      <td>
+        Clôturer la commande : 
+        <el-switch @change="onCloseOrder()" v-model="disabled">
+        </el-switch>
+      </td>
+      </el-row>      
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -194,26 +141,47 @@
 
         <div style="bottom: 5%;">
 
+          <el-row>Total Boulangerie TTC: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+
             
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
-        <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
         
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
-          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
-          <el-table-column prop="Label" label="Nom" sortable></el-table-column>
-          <el-table-column label="Prix TTC" sortable>
+          <el-table-column :span=2 prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column :span=2 prop="Label" label="Nom" sortable></el-table-column>
+          <el-table-column :span=2 label="Prix Unitaire TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Dus" width="150" sortable>
+          <el-table-column :span=2 label="Conditionnement" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column :span=2 label="Quantité" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number width="10px" :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total" sortable>
+          <el-table-column :span=1 label="Quantité en Commande" width="150" sortable>
+          <template slot-scope="scope">
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
+          </template>
+          </el-table-column>
+          <el-table-column :span=1 label="Total Unités" sortable>
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
+              {{scope.row.quantity * scope.row.conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column :span=2 label="Total TTC" sortable>
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
+            </template>
+          </el-table-column>
+          <el-table-column :span=2 width="150" label="Remarques">
+            <template slot-scope="scope">
+              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
           </el-table> 
@@ -228,7 +196,7 @@
                 </el-tab-pane>
       <el-tab-pane
           :key="'TAB-Panier'"
-          :label="'Total'"
+          :label="'Panier'"
           :name="'TAB-Panier'"
           :lazy="true">
           
@@ -241,12 +209,12 @@
                 </el-row>
             </el-row>
             <el-row>
-              Total Dus: {{totalPrice | roundTo2 }}€ TTC
+              Total Panier: {{totalPrice | roundTo2 }}€ TTC
               
             </el-row>
             <el-row>
               <br><br>
-                   <el-button type="primary" @click="onSubmit">Enregistrer</el-button>
+                   <el-button type="primary" @click="onSubmit">Commander</el-button>
             </el-row>
       </el-tab-pane>
 
@@ -264,7 +232,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormDusOffice",
+  name: "FormOrderShopOffice",
   data: () => ({
       records: null,
       oldID: null,
@@ -272,6 +240,7 @@ export default {
       category: '',
       categoryUp: '',
       search: '',
+      confirmed: false,
       classement:[],
       filter1: '-',
       filter2: '-',
@@ -284,23 +253,13 @@ export default {
       magasin: '',
       magasins: [],
       ts: 0,
-      vitas: 0,
       changed: false,
       dialogFormVisible: false,
       title: "Commande",
-      sacapain: false,
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
-      subSubCategories: {},
-      invendus: 0,
-      remise: 0,
-      supplement: 0,
-      invendusPat: 0,
-      remisePat: 0,
-      supplementPat: 0,
-      shopSacAPain : ['Chatelineau', 'Chaussée de Châtelet','Forchies','Gerpinnes','Gosselies','Hiercheuses','Liège','Magasin','Pont-à-Celles','Thuin'],
-      nbreSacsAPain: 0
+      subSubCategories: {}
 
   }),
   props: {
@@ -318,8 +277,8 @@ export default {
     //this.getTree();
     this.ts = Date.now().toString();
     this.magasin = this.$store.getters.actualShop;
-    this.selectedTab = this.$store.getters.actualLvl1;
-    this.selectedUnderTab = this.$store.getters.actualLvl2;
+    console.log('SAVED SHOP: ')
+    console.log(this.magasin)
     //this.prepareData();
   },
   created: function() {
@@ -348,6 +307,8 @@ export default {
       else console.log("Ignoring time change.");
     });
     this.magasin = this.$store.getters.actualShop;
+    this.selectedTab = this.$store.getters.actualLvl1;
+    this.selectedUnderTab = this.$store.getters.actualLvl2;
     console.log('PREPARE')
     //this.prepareData();
   },
@@ -364,7 +325,7 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.quantity*item.Prix_TVAC)
+          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
         }
         
       }
@@ -380,7 +341,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Pâtisserie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -397,7 +358,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Boulangerie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -414,14 +375,13 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
       return price
 
     },
-
      
     totalFiltered: function(){
       var filteredProducts = this.records
@@ -475,7 +435,7 @@ export default {
         
         if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
         
       }
@@ -579,19 +539,6 @@ export default {
       }
       
     },
-
-    setSacAPain(){
-      if(this.shopSacAPain.includes(this.magasin))
-      {
-        this.sacapain = true;
-      }
-      else
-      {
-        this.sacapain = false;
-      }
-      console.log('Setting Sac A Pain')
-      console.log(this.sacapain)
-    },
     getFilter(data){
 
         //console.log(data)
@@ -641,7 +588,8 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        //&& data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
     },
     tabChanged(index){
       this.refillNan()
@@ -686,21 +634,40 @@ export default {
       });
       console.log('TESTESTEST')
       console.log(this.$store.getters.actualShop)
-      this.setSacAPain();
       this.prepareData();
     },
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity==null)
+          {
+            item.orderquantity = 0
+          }
+      }  
+    },
+
+    onCloseOrder(){
+      this.disabled = true
+      this.onSubmit();
+    },
     onSubmit(){
-      if(this.magasin != '-')
-      {  
-        this.refillNan()
+
+      this.refillNan()   
+    
+      if(this.totalPrice > 0 && this.magasin != '-'){
         var order = {};
         var products = [];
-        var timeRange=this.$store.getters.timeRangeDay;
         var entry = {};
+        var timeRange=this.$store.getters.timeRangeDay;
         for(var itemKey in Object.keys(this.records)) {
           var item = this.records[itemKey]
           
           entry = item
+          entry.totalQuantity = entry.conditionnement * entry.quantity
           /*entry._id = item._id
           entry.name = item.name
           entry.category = item.categoryID
@@ -715,27 +682,21 @@ export default {
         }
         order.shop = this.magasin
         order.products = products
+        order.totalPrice = this.totalPrice.toFixed(2);
+        order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+        order.totalPatisserie = this.totalPatisserie.toFixed(2)
+        order.totalOther = this.totalOther.toFixed(2)
         order.dateOrder = timeRange[0].getTime();
         order.demandor = this.$store.getters.creds.user.id
         order.oldId = this.oldID
         order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
-        order.remise = this.remise
-        order.invendus = this.invendus
-        order.supplement = this.supplement
-        order.remisePat = this.remisePat
-        order.invendusPat = this.invendusPat
-        order.supplementPat = this.supplementPat
-        order.vitas = this.vitas
-        order.nbreSacsAPain = this.nbreSacsAPain
-        order.dusBoul = this.totalBoulangerie.toFixed(2);
-        order.dusPat = this.totalPatisserie.toFixed(2);
-        order.dusOthers = this.totalOther.toFixed(2);
+        order.confirmed = this.disabled
 
-        
+        console.log(order)
         
         setTimeout(() => {
           axios.post(
-            this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
+            this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
             ).then((response) => {
               if(response.data.error!="")
                 {
@@ -764,11 +725,10 @@ export default {
         }, 1000)
 
         console.log('Sending Command')
-        }
-        else
-        {
-          console.log('No data To send')
-        }
+      }
+      else{
+        console.log('Nothing order');
+      }
     },
     prepareData() {
       console.log('prepare data')
@@ -793,7 +753,6 @@ export default {
     },
     loadData(){
         this.records = [];
-        this.setSacAPain();
         this.getData();
     },
     dateSelected() {
@@ -918,12 +877,11 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
-      console.log("MAGASIN : " + this.magasin)
-      this.setSacAPain();     
+      console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_dus?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
-
+      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      console.log(url)
       console.log('GET NEW LIST')
 
       
@@ -955,28 +913,6 @@ export default {
                     this.oldID = oldId
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
-                    this.remise = res.reccords[0]['_source']['remise']
-                    this.invendus = res.reccords[0]['_source']['invendus']
-                    this.supplement = res.reccords[0]['_source']['supplement']
-                    this.remisePat = res.reccords[0]['_source']['remisePat']
-                    this.invendusPat = res.reccords[0]['_source']['invendusPat']
-                    this.supplementPat = res.reccords[0]['_source']['supplementPat']
-                    if(res.reccords[0]['_source']['vitas'])
-                    {
-                        this.vitas = res.reccords[0]['_source']['vitas']
-                    }
-                    else
-                    {
-                      this.vitas = 0
-                    }
-                    if(res.reccords[0]['_source']['nbreSacsAPain'])
-                    {
-                      this.nbreSacsAPain = res.reccords[0]['_source']['nbreSacsAPain']
-                    }
-                    else
-                    {
-                      this.nbreSacsAPain = 0
-                    }
                 }
                 this.$forceUpdate();
             }
@@ -1014,15 +950,6 @@ export default {
           {
             this.callData=[]
             console.log(response)
-            this.invendus= 0
-            this.remise= 0
-            this.supplement= 0
-            this.invendusPat= 0
-            this.remisePat= 0
-            this.supplementPat= 0
-            this.nbreSacsAPain= 0
-            this.vitas=0
-
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0
@@ -1350,19 +1277,6 @@ export default {
           return false;
         }
       });
-    },
-    refillNan(){
-      for(var itemKey in Object.keys(this.records)) {
-          var item = this.records[itemKey]
-          if(item.quantity == null)
-          {
-            item.quantity = 0
-          }
-          if(item.orderquantity)
-          {
-            item.orderquantity = 0
-          }
-      }  
     },
     updateTimeRange() {
       const start = new Date();
