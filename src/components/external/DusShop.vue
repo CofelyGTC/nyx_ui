@@ -778,9 +778,7 @@ export default {
     },
     loadData(){
         this.records = [];
-        console.log('coucou1')
         this.setSacAPain();
-        console.log('coucou2')
         this.getData();
         console.log('coucou3')
         this.setSacAPain();
