@@ -161,12 +161,12 @@
           </el-table-column>
           <el-table-column :span=2 label="Quantité" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number width="10px" :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
+            <el-input-number width="10px" :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column :span=1 label="Quantité en Commande" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
           <el-table-column :span=1 label="Total Unités" sortable>
@@ -199,7 +199,6 @@
           :label="'Panier'"
           :name="'TAB-Panier'"
           :lazy="true">
-          <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
           
             Sous-Total :
             <el-row 
@@ -217,7 +216,6 @@
               <br><br>
                    <el-button type="primary" @click="onSubmit">Commander</el-button>
             </el-row>
-          </div>
       </el-tab-pane>
 
 
@@ -261,8 +259,7 @@ export default {
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
-      subSubCategories: {},
-      refAutoRefresh: null
+      subSubCategories: {}
 
   }),
   props: {
@@ -312,15 +309,12 @@ export default {
     this.magasin = this.$store.getters.actualShop;
     this.selectedTab = this.$store.getters.actualLvl1;
     this.selectedUnderTab = this.$store.getters.actualLvl2;
-    //this.setAutoRefresh();
     console.log('PREPARE')
     //this.prepareData();
   },
   beforeDestroy: function(){
       console.log('BEFORE DESTROY')
       this.onSubmit();
-      if(this.refAutoRefresh != null)
-        clearInterval(this.refAutoRefresh)
   },
   computed: {
     totalPrice: function() {
@@ -473,7 +467,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              quantity += (item.quantity*item.conditionnement)
+              quantity += (item.quantity)
           }    
         }
         return quantity
@@ -495,7 +489,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
+              price += (item.quantity*item.Prix_TVAC)
           }
          
         }
@@ -514,7 +508,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              quantity += (item.quantity*item.conditionnement)
+              quantity += (item.quantity)
           }    
         }
         return quantity
@@ -534,7 +528,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
+              price += (item.quantity*item.Prix_TVAC)
           }
          
         }
@@ -731,7 +725,6 @@ export default {
         }, 1000)
 
         console.log('Sending Command')
-        //this.setAutoRefresh();
       }
       else{
         console.log('Nothing order');
@@ -924,7 +917,6 @@ export default {
                 this.$forceUpdate();
             }
         });  
-        //this.setAutoRefresh();
     },
 
 
@@ -1013,51 +1005,6 @@ export default {
       this.dialogVisible = true
 
     },
-
-    /*refreshData(){
-
-      if(this.oldID != null)
-      {
-          var query = {"_id": this.oldID}
-          var url = this.$store.getters.apiurl + "lambdas/2/getorderstatus?apikey=" + this.$store.getters.creds.token;
-          axios
-          .post(url, query)
-          .then((response) => {
-
-            var status = false
-
-            console.log(response.data.orderstatus)
-            if(response.data.orderstatus == true)
-            {
-              status = true
-            }
-
-            /*if(this.disabled == false && status==true)
-            {
-                this.disabled = status
-                this.onSubmit();
-            }
-            console.log('Order Status GET')
-            console.log(status)
-            this.disabled = status
-            this.onSubmit();
-
-          });
-      }
-    },*/
-
-    setAutoRefresh: function() {
-      console.log('Setting Interval')
-
-      /*if(this.refAutoRefresh != null)
-        clearInterval(this.refAutoRefresh)
-
-      this.refAutoRefresh =  setInterval(() => {
-        this.refreshData()
-      }, 30000)*/
-
-    },
-
     clickDialogDelete() {
 
       this.$confirm(

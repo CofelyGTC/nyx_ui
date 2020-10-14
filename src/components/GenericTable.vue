@@ -1048,6 +1048,10 @@ export default {
                 console.log(res)
                 var magasin = res.reccords[0]._source.magasin
                 this.magasin = magasin
+                this.$store.commit({
+                  type: "setActualShop",
+                  data: this.magasin
+                });
                 console.log(magasin)
                 this.loadData();
                 

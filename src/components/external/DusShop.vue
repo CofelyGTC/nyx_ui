@@ -9,14 +9,6 @@
             </el-row>
             <el-row style="width: 100%;">
                 <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="invendus" :precision="2" :step="0.1" :min="0" ></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
                 </el-col>
                 <el-col :span="4">
@@ -32,19 +24,20 @@
                         <el-input-number v-model="supplement" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
+                <el-col :span="4">
+                  <label style="horizontal-align: right; vertical-align: middle;">Bons Vita+: </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="vitas"  :step="1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+
             </el-row>
             <el-row>
               <h2>PATISSERIE</h2>
             </el-row>
              <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Valeurs totale des invendus (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="invendusPat" :precision="2" :step="0.1" :min="0" ></el-input-number>
-                    </template>
-                </el-col>
                 <el-col :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
                 </el-col>
@@ -59,6 +52,14 @@
                 <el-col :span="4">
                     <template>
                         <el-input-number v-model="supplementPat" :precision="2" :step="0.1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+                <el-col v-if="sacapain == true" :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Sacs à pain: </label>
+                </el-col>
+                <el-col  v-if="sacapain == true"  :span="4">
+                    <template>
+                        <el-input-number v-model="nbreSacsAPain"  :step="1" :min="0"></el-input-number>
                     </template>
                 </el-col>
             </el-row>
@@ -184,7 +185,8 @@
         <div style="bottom: 5%;">
 
             
-        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
+        <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
+        <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
         
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
           <el-table-column prop="CODE" label="Code" sortable></el-table-column>
@@ -194,9 +196,9 @@
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Dus" sortable>
+          <el-table-column label="Quantité Dus" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Total" sortable>
@@ -271,9 +273,11 @@ export default {
       filter8: '-',
       magasin: '',
       ts: 0,
+      vitas: 0,
       changed: false,
       dialogFormVisible: false,
       title: "Commande",
+      sacapain: false,
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
@@ -283,7 +287,9 @@ export default {
       supplement: 0,
       invendusPat: 0,
       remisePat: 0,
-      supplementPat: 0
+      supplementPat: 0,
+      shopSacAPain : ['Chatelineau', 'Chaussée de Châtelet','Forchies','Gerpinnes','Gosselies','Hiercheuses','Liège','Magasin','Mont Sur Marchienne','Pont-à-Celles','Thuin'],
+      nbreSacsAPain: 0
 
   }),
   props: {
@@ -300,9 +306,10 @@ export default {
     //this.getMagasin();
     //this.getTree();
     this.ts = Date.now().toString();
-    this.magasin = this.$store.getters.actualShop;
+    //this.magasin = this.$store.getters.actualShop;
     this.selectedTab = this.$store.getters.actualLvl1;
     this.selectedUnderTab = this.$store.getters.actualLvl2;
+    this.setSacAPain();
     //this.prepareData();
   },
   created: function() {
@@ -330,7 +337,7 @@ export default {
       if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
       else console.log("Ignoring time change.");
     });
-    this.magasin = this.$store.getters.actualShop;
+    //this.magasin = this.$store.getters.actualShop;
     console.log('PREPARE')
     //this.prepareData();
   },
@@ -352,6 +359,57 @@ export default {
         
       }
       return price
+    },
+
+    totalPatisserie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Pâtisserie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalBoulangerie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Boulangerie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalOther: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        {
+          price += (data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
     },
      
     totalFiltered: function(){
@@ -510,6 +568,18 @@ export default {
       }
       
     },
+    setSacAPain(){
+      if(this.shopSacAPain.includes(this.magasin))
+      {
+        this.sacapain = true;
+      }
+      else
+      {
+        this.sacapain = false;
+      }
+      console.log('Setting Sac A Pain')
+      console.log(this.sacapain)
+    },
     getFilter(data){
 
         //console.log(data)
@@ -559,9 +629,10 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
     },
     tabChanged(index){
+      this.refillNan()
       this.selectedUnderTab = index+'-0'
       console.log('Selected:  TAB-'+index+'-0')
       this.filter1 = '-'
@@ -579,6 +650,7 @@ export default {
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
+      this.refillNan()
       this.filter1 = '-'
       this.filter2 = '-'
       this.filter3 = '-'
@@ -602,9 +674,11 @@ export default {
       });
       console.log('TESTESTEST')
       console.log(this.$store.getters.actualShop)
+      this.setSacAPain();
       this.prepareData();
     },
     onSubmit(){
+      this.refillNan()
       var order = {};
       var products = [];
       var timeRange=this.$store.getters.timeRangeDay;
@@ -627,7 +701,7 @@ export default {
       }
       order.shop = this.magasin
       order.products = products
-      order.dateOrder = moment()
+      order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
       order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
@@ -637,6 +711,14 @@ export default {
       order.remisePat = this.remisePat
       order.invendusPat = this.invendusPat
       order.supplementPat = this.supplementPat
+      order.vitas = this.vitas
+      order.nbreSacsAPain = this.nbreSacsAPain
+      order.dusBoul = this.totalBoulangerie.toFixed(2);
+      order.dusPat = this.totalPatisserie.toFixed(2);
+      order.dusOthers = this.totalOther.toFixed(2);
+
+      console.log('MAGASIN: ')
+      console.log(this.magasin)
 
       
       
@@ -674,7 +756,8 @@ export default {
     },
     prepareData() {
       console.log('prepare data')
-      this.magasin = this.$store.getters.actualShop;
+      this.setSacAPain();
+      //this.magasin = this.$store.getters.actualShop;
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
         if(priv =='admin' ||  priv=='SHOP_FORM') {
@@ -695,7 +778,13 @@ export default {
     },
     loadData(){
         this.records = [];
+        console.log('coucou1')
+        this.setSacAPain();
+        console.log('coucou2')
         this.getData();
+        console.log('coucou3')
+        this.setSacAPain();
+        console.log('coucou4')
     },
     dateSelected() {
       
@@ -835,6 +924,26 @@ export default {
                     this.remise = res.reccords[0]['_source']['remise']
                     this.invendus = res.reccords[0]['_source']['invendus']
                     this.supplement = res.reccords[0]['_source']['supplement']
+                    this.remisePat = res.reccords[0]['_source']['remisePat']
+                    this.invendusPat = res.reccords[0]['_source']['invendusPat']
+                    this.supplementPat = res.reccords[0]['_source']['supplementPat']
+                    if(res.reccords[0]['_source']['vitas'])
+                    {
+                        this.vitas = res.reccords[0]['_source']['vitas']
+                    }
+                    else
+                    {
+                      this.vitas = 0
+                    }
+                    if(res.reccords[0]['_source']['nbreSacsAPain'])
+                    {
+                      this.nbreSacsAPain = res.reccords[0]['_source']['nbreSacsAPain']
+                    }
+                    else
+                    {
+                      this.nbreSacsAPain = 0
+                    }
+
                 }
                 this.$forceUpdate();
             }
@@ -871,7 +980,16 @@ export default {
           else
           {
             this.callData=[]
+            this.invendus= 0
+            this.remise= 0
+            this.supplement= 0
+            this.invendusPat= 0
+            this.remisePat= 0
+            this.supplementPat= 0
+            this.nbreSacsAPain= 0
+            this.vitas = 0
             console.log(response)
+
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0
@@ -895,6 +1013,19 @@ export default {
    
    setTableCurrent(row) {
       this.$refs.callTable.setCurrentRow(row);
+    },
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity)
+          {
+            item.orderquantity = 0
+          }
+      }  
     },
     handleTableSelect(val) {
       if(this.disable)

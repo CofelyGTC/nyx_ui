@@ -271,8 +271,8 @@ export default {
     lvl8: ['-',  'Abricot','Citron', 'Fraise', 'Framboise', 'Multi'],
     lvl9: ['-', 'Crème Pâtissière', 'Crème au beurre', 'Crème fraîche'],
     lvl10: ['-'],
-    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Viennoiserie', 'Table'],
-    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table'],
+    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Table'],
+    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table', 'Viennoiserie'],
     filters: null,
 
   }),

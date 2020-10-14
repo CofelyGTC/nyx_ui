@@ -1,0 +1,60 @@
+{
+    "area": {
+"type": "keyword"
+    },
+    "area_plc": {
+"type": "keyword"
+    },
+    "items": {
+      "properties": {
+        "item": {
+          "properties": {
+            "browseName": {
+              "properties": {
+                "name": {
+                  "type": "keyword"
+                },
+                "namespaceIndex": {
+                  "type": "long"
+                }
+              }
+            },
+            "dataType": {
+"type": "keyword"
+            },
+            "displayName": {
+              "properties": {
+                "text": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "isForward": {
+              "type": "boolean"
+            },
+            "nodeClass": {
+              "type": "long"
+            },
+            "nodeId": {
+"type": "keyword"
+            },
+            "referenceTypeId": {
+"type": "keyword"
+            },
+            "typeDefinition": {
+"type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "itemsCount": {
+      "type": "long"
+    },
+    "lastUpdate": {
+      "type": "date"
+    },
+    "plc": {
+"type": "keyword"
+    }
+  }
