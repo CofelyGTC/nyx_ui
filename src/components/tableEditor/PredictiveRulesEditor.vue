@@ -96,6 +96,53 @@
           </el-row>
           <br>
           <el-row>
+          
+            <el-col :span=6>
+              <el-form-item label="City" :label-width="formLabelWidth">
+                  <el-select v-model="weatherCity">
+                      <el-option v-for="(item, id) in cities" :key="id" :label="item" :value="item"></el-option>
+                  </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span=6>
+              <el-form-item label="Table" :label-width="formLabelWidth">
+                  <el-select v-model="weatherTable">
+                      <el-option v-for="(item, id) in weatherTables" :key="id" :label="item" :value="item"></el-option>
+                  </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span=6>
+              <el-form-item label="Tag" :label-width="formLabelWidth">
+                  <el-select v-model="weatherTag">
+                      <el-option v-for="(item, id) in weatherTags" :key="id" :label="item" :value="item"></el-option>
+                  </el-select>
+                </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row>
+            <el-col :span=6>
+                <el-form-item label="Value" :label-width="formLabelWidth">
+                  <el-input-number size="mini" v-model="weatherValue"></el-input-number>
+                </el-form-item>
+              </el-col>
+            <el-col :span=6>
+              <el-form-item label="Symbol" :label-width="formLabelWidth">
+                  <el-select v-model="weatherSymbol">
+                      <el-option v-for="(item, id) in symbols" :key="id" :label="item" :value="item"></el-option>
+                  </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span=6>
+                <el-form-item label="Time (ms)" :label-width="formLabelWidth">
+                  <el-input-number size="mini" v-model="weatherTime"></el-input-number>
+                </el-form-item>
+            </el-col>
+            <el-col :span=2>
+                <el-button type="primary" @click="addWeatherCondition()" icon="el-icon-plus" circle></el-button>
+            </el-col>
+            </el-row>
+          <br>
+          <el-row>
               <el-col style="text-align:left;">
                   <label>PLCs</label>
               </el-col>
@@ -151,17 +198,27 @@
                    </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span=4>
+              <el-col :span=6>
                     <el-form-item label="Symbol" :label-width="formLabelWidth">
                         <el-select v-model="conditionPLCSymbol">
                             <el-option v-for="(item, id) in symbols" :key="id" :label="item" :value="item"></el-option>
                         </el-select>
                     </el-form-item>
               </el-col>
+          </el-row>
+          <el-row>
               <el-col :span=6>    
                 <el-form-item label="Value: " :label-width="formLabelWidth2">
                     <el-input-number size="mini" v-model="conditionPLCValue" :min="0"></el-input-number>
                 </el-form-item>
+            </el-col>
+            <el-col :span=6>    
+                <el-form-item label="Time(ms): " :label-width="formLabelWidth2">
+                    <el-input-number size="mini" v-model="conditionPLCTime" :min="0"></el-input-number>
+                </el-form-item>
+            </el-col>
+            <el-col :span=6>
+              &nbsp
             </el-col>
             <el-col :span=2>
                 <el-button type="primary" @click="addPLCCondition()" icon="el-icon-plus" circle></el-button>
@@ -242,7 +299,58 @@
             </el-col>
             
           </el-row>
-      </el-card>    
+      </el-card> 
+      <el-card v-if="building != ''" shadow="hover" :body-style="{ padding: '10px' }">
+          <h2>Next Run</h2>
+          <br>
+          <el-row style="text-align:left;">
+            <el-col :span=6>
+              <el-form-item label="Last Run: " :label-width="formLabelWidth">
+                {{lastRun}}
+              </el-form-item>
+            </el-col>
+            <el-col :span=6>
+              <el-form-item label="Next Run: " :label-width="formLabelWidth">
+                {{nextRun | formatDate}}
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row style="text-align:left;">
+            <el-col :span=6>
+              <el-form-item label="Next Run Type: " :label-width="formLabelWidth2">
+                <el-select v-model="nextRunType" filterable placeholder="Select">
+                    <el-option v-for="(item, type) in nextRunTypes" :key="type" :label="item" :value="item">
+                    </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col v-if="nextRunType=='daily'" :span=6>
+              <el-form-item label="Day interval: " :label-width="formLabelWidth2">
+                  <el-input-number size="mini" v-model="dailyDays" :min="0"></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col v-if="nextRunType=='daily'" :span=6>
+              <el-form-item label="Hour: " :label-width="formLabelWidth2">
+                  <el-time-select
+                      v-model="dailyTime"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:15',
+                        end: '23:45'
+                      }"
+                      placeholder="Pick a Time">
+                    </el-time-select>
+
+              </el-form-item>
+            </el-col>
+            <el-col v-if="nextRunType=='interval'" :span=6>
+              <el-form-item label="Time Before Reset (ms): " :label-width="formLabelWidth2">
+                  <el-input-number size="mini" v-model="interval" :min="0"></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+      </el-card>     
 
     </el-form>
 
@@ -251,7 +359,6 @@
       <el-button
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
-        :disabled="!recchanged"
         @click="saveRecord()"
       >{{this.$t("buttons.confirm")}}</el-button>
     </span>
@@ -263,6 +370,7 @@ import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";
+import moment from 'moment';
 
 export default {
   name: "PredictiveRulesEditor",
@@ -282,7 +390,7 @@ export default {
     ruleName: '',
     ruleType: '',
     rulesTypes: ['generic', 'customcode'],
-    building: '-',
+    building: '',
     actions: [],
     buildingList: [],
     actionsTypes: ['write', 'read'],
@@ -296,14 +404,34 @@ export default {
     actionValue: 0,
     conditionsWeather: [],
     conditionsPLC: [],
+    conditions: {},
     symbols: ['>', '<', '<=', '>=', '==', '!='],
     conditionPLC: '',
     conditionPLCTag: '',
     conditionPLCSymbol: '>',
     conditionPLCValue: 0,
+    conditionPLCTime: 0,
     tagsPLCCondition: [],
+    cities: [],
+    weatherTables: ['pred', 'real'],
+    weatherTags: ['temp', 'temp_max', 'temp_min', 'hum', 'ppcp', 'qpcp', 'radiance', 'wind_direction', 'wind_speed_from', 'win_speed_to'],
+    weatherCity: '',
+    weatherTable: '',
+    weatherTag: '',
+    weatherValue: 0,
+    weatherSymbol: '',
+    weatherTime: 0,
+    blocked: false,
+    lastRun: 0,
+    nextRunType: '',
+    nextRunConf: {},
+    //nextRun: 0,
+    nextRunTypes: ['daily', 'interval'],
+    dailyDays: '0',
+    dailyTime: '00:00',
+    interval: 0
 
-    
+
   }),
   computed: {
     recordin: function() {
@@ -314,7 +442,48 @@ export default {
     },
     recchanged: function() {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
+    },
+    nextRun: function() {
+        
+
+      if(this.nextRunType == 'interval')
+      {
+        return this.lastRun + this.interval
+      }
+      else{
+        
+        var daysms = this.dailyDays*86400000 
+        
+        var nextrun = new Date(this.lastRun+daysms)
+
+        console.typeof
+
+        console.log(nextrun)
+        console.log(this.dailyTime.substring(2,0))
+
+        var hours = parseInt(this.dailyTime.substring(0,2))
+        var minutes = parseInt(this.dailyTime.substring(3))
+
+        //var hours = this.dailyTime.getHours()
+        //var minutes = this.dailyTime.getMinutes()
+        console.log(typeof nextrun)
+        nextrun.setHours(hours)
+        nextrun.setMinutes(minutes)
+        nextrun.setSeconds(0)
+        
+        console.log(nextrun)
+
+        return nextrun
+
+
+
+      }
     }
+  },
+  filters: {
+      formatDate: function(value){
+        return moment(String(value)).format('DD-MM-YYYY HH:mm')
+      }
   },
   props: {
     record: {
@@ -358,8 +527,36 @@ export default {
         this.conditionsPLC = this.record._source.conditions.PLC
     }
 
+    if(this.record._source.blocked)
+    {
+      this.blocked = this.record._source.blocked
+    }
+
+    if(this.record._source.lastRun)
+    {
+      this.lastRun = this.record._source.lastRun
+    }
+
+    if(this.record._source.nextRunConf)
+    {
+      this.nextRunConf = this.record._source.nextRunConf
+    }
+
+    if(this.record._source.nextRunType)
+    {
+      this.nextRunType = this.record._source.nextRunType
+    }
+
+    if(this.record._source.nextRun)
+    {
+      this.nextRun = this.record._source.nextRun
+    }
+
+
+
     this.getBuildingsList();
     this.prepareData();
+    this.getCities();
 
     
   },
@@ -394,6 +591,38 @@ export default {
     saveRecord: function() {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
+      this.newRec._source.lastUpdate = Date.now()
+      this.newRec._source.actions = this.actions
+      this.newRec._source.blocked = this.blocked
+      this.newRec._source.building = this.building
+      this.conditions.PLC = this.conditionsPLC
+      this.conditions.weather = this.conditionsWeather
+      this.newRec._source.conditions = this.conditions
+      this.newRec._source.lastRun = this.lastRun
+      this.newRec._source.nextRunType = this.nextRunType
+
+      if(this.nextRunType == 'interval')
+      {
+        this.nextRunConf = {"interval": this.interval}
+      }
+      else
+      {
+        this.nextRunConf = {"day": this.dailyDays, "hour": this.dailyTime}
+      }
+
+
+      this.newRec._source.nextRunConf = this.nextRunConf
+      this.newRec._source.nextRun = this.nextRun
+      this.newRec._source.ruleID = this.ruleID
+      this.newRec._source.ruleName = this.ruleName
+      this.newRec._source.ruleType = this.ruleType
+
+
+      /*
+      dailyDays: '0',
+      dailyTime: 0,
+      interval: 0
+      */
 
       this.$store.commit({
         type: "updateRecord",
@@ -418,6 +647,19 @@ export default {
             this.buildingList = response.data.buildings
             this.$forceUpdate();
         });
+    },
+
+    getCities: function() {
+      var url = this.$store.getters.apiurl + "lambdas/5/get_predictive_cities?apikey=" + this.$store.getters.creds.token;
+        var body = {};
+        axios
+        .post(url, body)
+        .then((response) => {
+            console.log(response)
+            this.cities = response.data.cities
+            this.$forceUpdate();
+        });
+
     },
 
     changeBuilding: function() {
@@ -489,7 +731,20 @@ export default {
         }
 
         this.conditionsPLC.push(condition);
+    },
+    addWeatherCondition: function(){
+      var condition = {
+        "city": this.weatherCity,
+        "symbol": this.weatherSymbol,
+        "table": this.weatherTable,
+        "tag": this.weatherTag,
+        "time": this.weatherTime,
+        "value": this.weatherValue
+      }
+
+      this.conditionsWeather.push(condition)
     }
+
   }
 };
 </script>
