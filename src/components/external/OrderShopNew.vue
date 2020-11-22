@@ -245,6 +245,7 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
+      shopid: '',
       ts: 0,
       changed: false,
       dialogFormVisible: false,
@@ -648,6 +649,7 @@ export default {
         products.push(entry)
       }
       order.shop = this.magasin
+      order.shopid = this.shopid
       order.totalPrice = this.totalPrice.toFixed(2)
       order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
       order.totalPatisserie = this.totalPatisserie.toFixed(2)
@@ -662,39 +664,51 @@ export default {
       console.log('confirmed: ')
       console.log(order.confirmed)
 
+      var admin = false
 
-      
-      
-      setTimeout(() => {
-        axios.post(
-          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
-          ).then((response) => {
-            if(response.data.error!="")
-              {
-                this.$notify({ 
-                title: "Error",
-                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                type: "error",
-                position: "bottom-right",
-                duration: 1500});
+      for( var priv in this.$store.getters.creds.user.privileges)
+      {
+        if(priv == 'admin'){
+          admin = true
+        }
+      }
+
+        
+       if(!admin  && timeRange[0].getTime() < Date.now())
+       {
+          console.log("Wrong Date")
+       }
+       else{ 
+        setTimeout(() => {
+          axios.post(
+            this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+            ).then((response) => {
+              if(response.data.error!="")
+                {
+                  this.$notify({ 
+                  title: "Error",
+                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                  type: "error",
+                  position: "bottom-right",
+                  duration: 1500});
+                  }
+              else
+                {
+                  this.$notify({ 
+                  title: "Success",
+                  message: "Commande en " +this.categoryUp + " envoyée !",
+                  type: "success",
+                  position: "bottom-right",
+                  duration: 2000
+                });
                 }
-            else
-              {
-                this.$notify({ 
-                title: "Success",
-                message: "Commande en " +this.categoryUp + " envoyée !",
-                type: "success",
-                position: "bottom-right",
-                duration: 2000
-              });
-              }
-        })
-        .catch((error)=> {
-          console.log(error);
-          
-        });
-      }, 1000)
-
+          })
+          .catch((error)=> {
+            console.log(error);
+            
+          });
+        }, 1000)
+       }
       console.log('Sending Command')
       //this.setAutoRefresh();
       
@@ -807,6 +821,7 @@ export default {
                 console.log("MAGASIN : ")
                 //console.log(res)
                 this.magasin = res.reccords[0]._source.magasin
+                this.shopid = res.reccords[0]._source.shopid
                 this.prepareData();
                
             }

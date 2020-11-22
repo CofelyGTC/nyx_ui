@@ -1,13 +1,14 @@
-_id: Fritapapa_1600812000000
-_index: schamps_orders
+_id: 1600812000000.0_Forchies
+_index: schamps_confirmed_orders
 _primary_term: 1
-_seq_no: 39713
+_seq_no: 31879
 _source:
   confirmed: false
   dateOrder: 1600812000000
-  demandor: pierred2505@gmail.com
-  newId: Fritapapa_1600812000000
-  oldId: Fritapapa_1600466400000
+  demandor: maite.dicara@hotmail.be
+  demandorId: maitedicarahotmailbe
+  newId: Forchies_1600812000000
+  oldId: Forchies_1600812000000
   products:
     - Available: true
       Availbility: Toujours disponible
@@ -20,11 +21,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Tarte biscuit framboise
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -46,7 +47,7 @@ _source:
       sortLvl7: '-'
       sortLvl8: Framboise
       sortLvl9: '-'
-    - Available: true
+    - Available: false
       Availbility: Toujours disponible
       CODE: B0123
       Category: Pain
@@ -57,11 +58,11 @@ _source:
       Format: Longue
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.55
+      HTVA: 2.547169811320755
       Label: Pain Mexicano
       Nbre_personne: Undefined
       Prix_TVAC: 2.7
-      TVA: 0.15
+      TVA: 0.15283018867924536
       Taux_TVA: 0.06
       Type: Gris
       Weight: 400
@@ -94,11 +95,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.3
+      HTVA: 3.30188679245283
       Label: Merveilleux nature
       Nbre_personne: Undefined
       Prix_TVAC: 3.5
-      TVA: 0.2
+      TVA: 0.19811320754716988
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -110,7 +111,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -132,11 +133,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.3
+      HTVA: 3.30188679245283
       Label: Merveilleux chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 3.5
-      TVA: 0.2
+      TVA: 0.19811320754716988
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -148,7 +149,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -170,11 +171,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.3
+      HTVA: 3.30188679245283
       Label: Religieuse
       Nbre_personne: Undefined
       Prix_TVAC: 3.5
-      TVA: 0.2
+      TVA: 0.19811320754716988
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -186,7 +187,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -208,11 +209,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Négresco
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -246,11 +247,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 13.21
+      HTVA: 13.20754716981132
       Label: Tarte feuilletée framboise
       Nbre_personne: Undefined
       Prix_TVAC: 14
-      TVA: 0.79
+      TVA: 0.7924528301886795
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -262,7 +263,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -284,11 +285,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 8.584905660377357
       Label: Pommes coupées
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -322,11 +323,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Pommes coupées
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -360,11 +361,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.77
+      HTVA: 8.773584905660378
       Label: Riz
       Nbre_personne: Undefined
       Prix_TVAC: 9.3
-      TVA: 0.53
+      TVA: 0.5264150943396224
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -398,11 +399,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 10.09
+      HTVA: 10.094339622641508
       Label: Sucre cassonade
       Nbre_personne: Undefined
       Prix_TVAC: 10.7
-      TVA: 0.61
+      TVA: 0.6056603773584914
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -436,11 +437,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.42
+      HTVA: 6.415094339622641
       Label: Sucre cassonade
       Nbre_personne: Undefined
       Prix_TVAC: 6.8
-      TVA: 0.38
+      TVA: 0.38490566037735885
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -474,11 +475,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.51
+      HTVA: 6.509433962264151
       Label: Riz
       Nbre_personne: Undefined
       Prix_TVAC: 6.9
-      TVA: 0.39
+      TVA: 0.39056603773584975
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -512,11 +513,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Pain au chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -550,11 +551,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Pain au chocolat nature
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -588,11 +589,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.46
+      HTVA: 1.4622641509433962
       Label: 'Côte d''or noir pré-cuit '
       Nbre_personne: Undefined
       Prix_TVAC: 1.55
-      TVA: 0.09
+      TVA: 0.08773584905660381
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -600,14 +601,14 @@ _source:
       conditionnement: 60
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126542150
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -626,11 +627,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Tortillon nature pré-cuit
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -638,14 +639,14 @@ _source:
       conditionnement: 30
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126532579
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -664,11 +665,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.13
+      HTVA: 1.1320754716981132
       Label: Croissant sirop pré-cuit
       Nbre_personne: Undefined
       Prix_TVAC: 1.2
-      TVA: 0.07
+      TVA: 0.06792452830188678
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -676,14 +677,14 @@ _source:
       conditionnement: 125
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126513127
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -702,11 +703,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Pain au chocolat pré-cuit
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -714,14 +715,14 @@ _source:
       conditionnement: 125
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126503367
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -740,11 +741,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.46
+      HTVA: 1.4622641509433962
       Label: 'Côte d''or pré-cuit '
       Nbre_personne: Undefined
       Prix_TVAC: 1.55
-      TVA: 0.09
+      TVA: 0.08773584905660381
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -752,14 +753,14 @@ _source:
       conditionnement: 60
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126495999
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -778,11 +779,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.37
+      HTVA: 1.3679245283018866
       Label: Feuilletée raisin pré-cuit
       Nbre_personne: Undefined
       Prix_TVAC: 1.45
-      TVA: 0.08
+      TVA: 0.08207547169811336
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -790,14 +791,14 @@ _source:
       conditionnement: 30
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126488264
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -816,11 +817,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Abricots trillés
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -854,11 +855,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 7.0754716981132075
       Label: Cerises
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.42452830188679247
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -892,11 +893,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 9.90566037735849
       Label: Cerise
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5943396226415096
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -930,11 +931,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 8.584905660377357
       Label: Abricot fantaisie
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -968,11 +969,11 @@ _source:
       Format: tartelette
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.49
+      HTVA: 3.490566037735849
       Label: Flan
       Nbre_personne: Undefined
       Prix_TVAC: 3.7
-      TVA: 0.21
+      TVA: 0.20943396226415123
       Taux_TVA: 0.06
       Type: '-'
       Weight: 0
@@ -1006,11 +1007,11 @@ _source:
       Format: moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 12.08
+      HTVA: 12.075471698113208
       Label: Flan
       Nbre_personne: Undefined
       Prix_TVAC: 12.8
-      TVA: 0.72
+      TVA: 0.7245283018867923
       Taux_TVA: 0.06
       Type: sans fruit
       Weight: 0
@@ -1044,11 +1045,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.56
+      HTVA: 1.5566037735849054
       Label: Baguette ancienne pré-cuite
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: 0.09
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -1063,7 +1064,7 @@ _source:
       quantity: 0
       sortLvl1: Boulangerie
       sortLvl10: '-'
-      sortLvl2: Baguette et Pistolet
+      sortLvl2: Pré-cuits
       sortLvl3: '-'
       sortLvl4: '-'
       sortLvl5: '-'
@@ -1082,11 +1083,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.22
+      HTVA: 2.2169811320754715
       Label: Baguette racine pré-cuite
       Nbre_personne: Undefined
       Prix_TVAC: 2.35
-      TVA: 0.13
+      TVA: 0.13301886792452855
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -1101,7 +1102,7 @@ _source:
       quantity: 0
       sortLvl1: Boulangerie
       sortLvl10: '-'
-      sortLvl2: Baguette et Pistolet
+      sortLvl2: Pré-cuits
       sortLvl3: '-'
       sortLvl4: '-'
       sortLvl5: '-'
@@ -1120,11 +1121,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.27
+      HTVA: 1.2735849056603774
       Label: Baguette
       Nbre_personne: Undefined
       Prix_TVAC: 1.35
-      TVA: 0.08
+      TVA: 0.07641509433962268
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -1136,7 +1137,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 25
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -1158,11 +1159,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.28
+      HTVA: 0.2830188679245283
       Label: Baguette Fritapapa
       Nbre_personne: Undefined
       Prix_TVAC: 0.3
-      TVA: 0.02
+      TVA: 0.016981132075471694
       Taux_TVA: 0.06
       Type: Baguette
       _id: B0140
@@ -1173,7 +1174,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 40
+      quantity: 0
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -1195,11 +1196,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.79
+      HTVA: 1.792452830188679
       Label: Baguette poivre et sel
       Nbre_personne: Undefined
       Prix_TVAC: 1.9
-      TVA: 0.11
+      TVA: 0.10754716981132084
       Taux_TVA: 0.06
       Type: Blanc
       _id: B0122
@@ -1210,7 +1211,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 5
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -1232,11 +1233,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.93
+      HTVA: 6.933962264150943
       Label: Borwich pommes
       Nbre_personne: Undefined
       Prix_TVAC: 7.35
-      TVA: 0.42
+      TVA: 0.41603773584905657
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -1270,11 +1271,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 5.8
+      HTVA: 5.80188679245283
       Label: Borwich nature
       Nbre_personne: Undefined
       Prix_TVAC: 6.15
-      TVA: 0.35
+      TVA: 0.34811320754717023
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -1308,11 +1309,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.51
+      HTVA: 1.509433962264151
       Label: Donuts noisette
       Nbre_personne: Undefined
       Prix_TVAC: 1.6
-      TVA: 0.09
+      TVA: 0.09056603773584904
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -1346,11 +1347,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.51
+      HTVA: 1.509433962264151
       Label: Donuts color
       Nbre_personne: Undefined
       Prix_TVAC: 1.6
-      TVA: 0.09
+      TVA: 0.09056603773584904
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -1362,7 +1363,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Divers
@@ -1384,11 +1385,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Mini raisin
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -1400,7 +1401,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -1422,11 +1423,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Mini choc
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -1438,7 +1439,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -1460,11 +1461,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Mini craquelin
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -1498,11 +1499,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Abricot fantaisie
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -1535,11 +1536,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.64
+      HTVA: 2.641509433962264
       Label: Probody 400gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.8
-      TVA: 0.16
+      TVA: 0.1584905660377358
       Taux_TVA: 0.06
       Type: Gris
       Weight: 400
@@ -1573,11 +1574,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.98
+      HTVA: 1.9811320754716981
       Label: 'Carré blanc 800 gr '
       Nbre_personne: Undefined
       Prix_TVAC: 2.1
-      TVA: 0.12
+      TVA: 0.11886792452830197
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -1589,7 +1590,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 20
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1611,11 +1612,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.41
+      HTVA: 2.4056603773584904
       Label: Pain complet 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: 0.14
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: Gris
       Weight: 800
@@ -1627,7 +1628,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Gris
@@ -1649,11 +1650,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.18
+      HTVA: 1.1792452830188678
       Label: 'Carré blanc 400 gr '
       Nbre_personne: Undefined
       Prix_TVAC: 1.25
-      TVA: 0.07
+      TVA: 0.07075471698113223
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 400
@@ -1665,7 +1666,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1687,11 +1688,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.98
+      HTVA: 1.9811320754716981
       Label: Pain Français 800gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.1
-      TVA: 0.12
+      TVA: 0.11886792452830197
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -1703,7 +1704,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1725,11 +1726,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.18
+      HTVA: 1.1792452830188678
       Label: Pain Français 400gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.25
-      TVA: 0.07
+      TVA: 0.07075471698113223
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 400
@@ -1741,7 +1742,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1763,11 +1764,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.31
+      HTVA: 2.311320754716981
       Label: Ardennais 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.45
-      TVA: 0.14
+      TVA: 0.138679245283019
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -1779,7 +1780,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 15
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1801,11 +1802,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.46
+      HTVA: 1.4622641509433962
       Label: Ardennais 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.55
-      TVA: 0.09
+      TVA: 0.08773584905660381
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 400
@@ -1817,7 +1818,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1843,7 +1844,7 @@ _source:
       Label: Epeautre  800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.65
-      TVA: 0.15
+      TVA: 0.1499999999999999
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -1855,7 +1856,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -1877,11 +1878,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.41
+      HTVA: 2.4056603773584904
       Label: Abbaye 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: 0.14
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 800
@@ -1893,7 +1894,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Demi gris
@@ -1915,11 +1916,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.56
+      HTVA: 1.5566037735849054
       Label: Pain complet 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: 0.09
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Gris
       Weight: 400
@@ -1931,7 +1932,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Gris
@@ -1953,11 +1954,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.6
+      HTVA: 1.6037735849056602
       Label: Tresse
       Nbre_personne: Undefined
       Prix_TVAC: 1.7
-      TVA: 0.1
+      TVA: 0.09622641509433971
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -1969,7 +1970,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -1991,11 +1992,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.47
+      HTVA: 0.4716981132075471
       Label: Pistolet
       Nbre_personne: Undefined
       Prix_TVAC: 0.5
-      TVA: 0.03
+      TVA: 0.02830188679245288
       Taux_TVA: 0.06
       Type: pistolet
       Weight: 0
@@ -2007,7 +2008,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 15
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -2029,11 +2030,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.52
+      HTVA: 0.5188679245283019
       Label: Pain de table
       Nbre_personne: Undefined
       Prix_TVAC: 0.55
-      TVA: 0.03
+      TVA: 0.031132075471698162
       Taux_TVA: 0.06
       Type: Pistolet
       Weight: 0
@@ -2045,7 +2046,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 15
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -2067,11 +2068,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.41
+      HTVA: 2.4056603773584904
       Label: Pain 7 cereales 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: 0.14
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 800
@@ -2083,7 +2084,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Demi gris
@@ -2105,11 +2106,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.56
+      HTVA: 1.5566037735849054
       Label: Pain 7 cereales 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: 0.09
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 400
@@ -2121,7 +2122,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Demi gris
@@ -2147,7 +2148,7 @@ _source:
       Label: Pain des Aieux blanc 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.65
-      TVA: 0.15
+      TVA: 0.1499999999999999
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -2159,7 +2160,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 8
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -2181,11 +2182,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.56
+      HTVA: 1.5566037735849054
       Label: Pain des Aieux blanc 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: 0.09
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 400
@@ -2197,7 +2198,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -2223,7 +2224,7 @@ _source:
       Label: Lait Battu 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.65
-      TVA: 0.15
+      TVA: 0.1499999999999999
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -2235,7 +2236,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 8
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -2257,11 +2258,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.6
+      HTVA: 1.6037735849056602
       Label: Lait Battu 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.7
-      TVA: 0.1
+      TVA: 0.09622641509433971
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 400
@@ -2273,7 +2274,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Blanc
@@ -2299,7 +2300,7 @@ _source:
       Label: Maison rond 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.65
-      TVA: 0.15
+      TVA: 0.1499999999999999
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 800
@@ -2311,7 +2312,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Demi gris
@@ -2333,11 +2334,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.56
+      HTVA: 1.5566037735849054
       Label: Maison rond 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: 0.09
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 400
@@ -2349,7 +2350,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Demi gris
@@ -2371,11 +2372,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.55
+      HTVA: 2.547169811320755
       Label: 13 Céréales 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.7
-      TVA: 0.15
+      TVA: 0.15283018867924536
       Taux_TVA: 0.06
       Type: Gris
       Weight: 800
@@ -2387,7 +2388,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Gris
@@ -2409,11 +2410,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.6
+      HTVA: 1.6037735849056602
       Label: 13 Céréales 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.7
-      TVA: 0.1
+      TVA: 0.09622641509433971
       Taux_TVA: 0.06
       Type: Gris
       Weight: 400
@@ -2425,7 +2426,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Gris
@@ -2447,11 +2448,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.52
+      HTVA: 0.5188679245283019
       Label: Pistolets montagnard
       Nbre_personne: Undefined
       Prix_TVAC: 0.55
-      TVA: 0.03
+      TVA: 0.031132075471698162
       Taux_TVA: 0.06
       Type: Pistolet
       Weight: 0
@@ -2463,48 +2464,10 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 8
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
-      sortLvl3: '-'
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: B0077
-      Category: Pain
-      Cereal: Demi gris
-      Classement: Boulangerie
-      Conditionnement: Unique
-      Filter_unsale: Boulangerie
-      Format: Classique
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 1.56
-      Label: Abbaye 400gr
-      Nbre_personne: Undefined
-      Prix_TVAC: 1.65
-      TVA: 0.09
-      Taux_TVA: 0.06
-      Type: Demi gris
-      Weight: 400
-      _id: B0077
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1594821921802
-      lieuPreparation: Boulangerie
-      lieuProduction: Boulangerie
-      modifyBy: pierred2505@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Boulangerie
-      sortLvl10: '-'
-      sortLvl2: Demi gris
       sortLvl3: '-'
       sortLvl4: '-'
       sortLvl5: '-'
@@ -2523,11 +2486,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.22
+      HTVA: 2.2169811320754715
       Label: Baguette racine
       Nbre_personne: Undefined
       Prix_TVAC: 2.35
-      TVA: 0.13
+      TVA: 0.13301886792452855
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -2539,48 +2502,10 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
-      sortLvl3: '-'
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: B0102
-      Category: Pain
-      Cereal: Blanc
-      Classement: Boulangerie
-      Conditionnement: Unique
-      Filter_unsale: Boulangerie
-      Format: Classique
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 1.56
-      Label: Epeautre 400 gr
-      Nbre_personne: Undefined
-      Prix_TVAC: 1.65
-      TVA: 0.09
-      Taux_TVA: 0.06
-      Type: Blanc
-      Weight: 400
-      _id: B0102
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1594821921802
-      lieuPreparation: Boulangerie
-      lieuProduction: Boulangerie
-      modifyBy: pierred2505@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Boulangerie
-      sortLvl10: '-'
-      sortLvl2: Blanc
       sortLvl3: '-'
       sortLvl4: '-'
       sortLvl5: '-'
@@ -2599,11 +2524,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.56
+      HTVA: 1.5566037735849054
       Label: Baguette ancienne
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: 0.09
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -2615,7 +2540,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 8
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Baguette et Pistolet
@@ -2637,11 +2562,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.12
+      HTVA: 2.1226415094339623
       Label: Carré blanc 800 gr recuit
       Nbre_personne: Undefined
       Prix_TVAC: 2.25
-      TVA: 0.13
+      TVA: 0.12735849056603765
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -2675,11 +2600,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.55
+      HTVA: 2.547169811320755
       Label: Epeautre 800 gr recuit
       Nbre_personne: Undefined
       Prix_TVAC: 2.7
-      TVA: 0.15
+      TVA: 0.15283018867924536
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -2713,11 +2638,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.74
+      HTVA: 2.735849056603773
       Label: Pain au Chia
       Nbre_personne: Undefined
       Prix_TVAC: 2.9
-      TVA: 0.16
+      TVA: 0.1641509433962267
       Taux_TVA: 0.06
       Type: Gris
       Weight: 400
@@ -2729,7 +2654,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Spéciaux
@@ -2751,11 +2676,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.89
+      HTVA: 1.8867924528301885
       Label: Ciabatta nature
       Nbre_personne: Undefined
       Prix_TVAC: 2
-      TVA: 0.11
+      TVA: 0.11320754716981152
       Taux_TVA: 0.06
       Type: Blanc
       _id: B0120
@@ -2788,11 +2713,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.98
+      HTVA: 1.9811320754716981
       Label: Ciabatta olives
       Nbre_personne: Undefined
       Prix_TVAC: 2.1
-      TVA: 0.12
+      TVA: 0.11886792452830197
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -2826,11 +2751,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.55
+      HTVA: 2.547169811320755
       Label: Pains maison rond 800 gr recuit
       Nbre_personne: Undefined
       Prix_TVAC: 2.7
-      TVA: 0.15
+      TVA: 0.15283018867924536
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 800
@@ -2864,11 +2789,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.36
+      HTVA: 2.3584905660377355
       Label: Pains ardennais 800 gr recuit
       Nbre_personne: Undefined
       Prix_TVAC: 2.5
-      TVA: 0.14
+      TVA: 0.14150943396226445
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -2902,11 +2827,11 @@ _source:
       Format: Longue
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.41
+      HTVA: 2.4056603773584904
       Label: Pain racine
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: 0.14
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: Gris
       Weight: 600
@@ -2918,7 +2843,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Spéciaux
@@ -2940,11 +2865,11 @@ _source:
       Format: Longue
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.74
+      HTVA: 2.735849056603773
       Label: Pain du Nord
       Nbre_personne: Undefined
       Prix_TVAC: 2.9
-      TVA: 0.16
+      TVA: 0.1641509433962267
       Taux_TVA: 0.06
       Type: Gris
       Weight: 600
@@ -2956,7 +2881,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Spéciaux
@@ -2978,11 +2903,11 @@ _source:
       Format: Longue
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.74
+      HTVA: 2.735849056603773
       Label: Pain Vita Plus Avoine 600 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.9
-      TVA: 0.16
+      TVA: 0.1641509433962267
       Taux_TVA: 0.06
       Type: Gris
       Weight: 600
@@ -2994,7 +2919,7 @@ _source:
       lieuProduction: Boulangerie
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 20
       sortLvl1: Boulangerie
       sortLvl10: '-'
       sortLvl2: Spéciaux
@@ -3016,11 +2941,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.49
+      HTVA: 8.49056603773585
       Label: Tarte feuilletée framboise
       Nbre_personne: Undefined
       Prix_TVAC: 9
-      TVA: 0.51
+      TVA: 0.5094339622641506
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -3032,7 +2957,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -3054,11 +2979,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 15.94
+      HTVA: 15.943396226415093
       Label: Tarte biscuit framboise
       Nbre_personne: Undefined
       Prix_TVAC: 16.9
-      TVA: 0.96
+      TVA: 0.9566037735849058
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -3092,11 +3017,11 @@ _source:
       Format: petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 7.92
+      HTVA: 7.9245283018867925
       Label: Flan
       Nbre_personne: Undefined
       Prix_TVAC: 8.4
-      TVA: 0.48
+      TVA: 0.4754716981132079
       Taux_TVA: 0.06
       Type: sans fruit
       Weight: 0
@@ -3130,11 +3055,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Eclair
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3146,7 +3071,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 10
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -3168,11 +3093,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Eclair moka
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3206,11 +3131,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Eclair banane
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3244,11 +3169,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Eclair chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3260,7 +3185,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 3
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -3282,11 +3207,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Boule de Berlin
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3298,7 +3223,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 4
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -3319,11 +3244,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Bavaroise framboise
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3335,7 +3260,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 4
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -3357,11 +3282,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Mikkado
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3395,11 +3320,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Schamp
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3433,11 +3358,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Chocorêve
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3449,7 +3374,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -3471,11 +3396,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Moka
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3509,11 +3434,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Javanais
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3525,7 +3450,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 5
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petite Pâtisserie
@@ -3547,11 +3472,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.51
+      HTVA: 1.509433962264151
       Label: Donuts nature
       Nbre_personne: Undefined
       Prix_TVAC: 1.6
-      TVA: 0.09
+      TVA: 0.09056603773584904
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3563,7 +3488,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 5
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Divers
@@ -3585,11 +3510,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.51
+      HTVA: 1.509433962264151
       Label: Donuts chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 1.6
-      TVA: 0.09
+      TVA: 0.09056603773584904
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3623,11 +3548,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Pavlova
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3660,11 +3585,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.3
+      HTVA: 3.30188679245283
       Label: Verrine choc côte d'or
       Nbre_personne: Undefined
       Prix_TVAC: 3.5
-      TVA: 0.2
+      TVA: 0.19811320754716988
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3698,11 +3623,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.33
+      HTVA: 0.330188679245283
       Label: Beignet nature
       Nbre_personne: Undefined
       Prix_TVAC: 0.35
-      TVA: 0.02
+      TVA: 0.019811320754716977
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3736,11 +3661,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.52
+      HTVA: 0.5188679245283019
       Label: Beignet chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 0.55
-      TVA: 0.03
+      TVA: 0.031132075471698162
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -3774,11 +3699,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.61
+      HTVA: 0.6132075471698113
       Label: Ordinaire
       Nbre_personne: Undefined
       Prix_TVAC: 0.65
-      TVA: 0.04
+      TVA: 0.03679245283018873
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -3787,10 +3712,10 @@ _source:
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1594821921802
       lieuPreparation: Table
-      lieuProduction: Viennoiserie
+      lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 36
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -3812,11 +3737,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.32
+      HTVA: 1.320754716981132
       Label: Suisses
       Nbre_personne: Undefined
       Prix_TVAC: 1.4
-      TVA: 0.08
+      TVA: 0.0792452830188679
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -3825,10 +3750,10 @@ _source:
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1594821921802
       lieuPreparation: Table
-      lieuProduction: Viennoiserie
+      lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 4
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -3850,11 +3775,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.3
+      HTVA: 3.30188679245283
       Label: Craquelin
       Nbre_personne: Undefined
       Prix_TVAC: 3.5
-      TVA: 0.2
+      TVA: 0.19811320754716988
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 400
@@ -3863,7 +3788,7 @@ _source:
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1594821921802
       lieuPreparation: Table
-      lieuProduction: Viennoiserie
+      lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
       quantity: 0
@@ -3888,11 +3813,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.07
+      HTVA: 3.0660377358490565
       Label: Cramique
       Nbre_personne: Undefined
       Prix_TVAC: 3.25
-      TVA: 0.18
+      TVA: 0.18396226415094352
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 400
@@ -3901,10 +3826,10 @@ _source:
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1594821921802
       lieuPreparation: Table
-      lieuProduction: Viennoiserie
+      lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -3926,11 +3851,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.52
+      HTVA: 0.5188679245283019
       Label: Sandwiche
       Nbre_personne: Undefined
       Prix_TVAC: 0.55
-      TVA: 0.03
+      TVA: 0.031132075471698162
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -3939,10 +3864,10 @@ _source:
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1594821921802
       lieuPreparation: Table
-      lieuProduction: Viennoiserie
+      lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 40
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -3964,11 +3889,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.13
+      HTVA: 1.1320754716981132
       Label: Croissant nature
       Nbre_personne: Undefined
       Prix_TVAC: 1.2
-      TVA: 0.07
+      TVA: 0.06792452830188678
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4002,11 +3927,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.13
+      HTVA: 1.1320754716981132
       Label: Croissant sirop
       Nbre_personne: Undefined
       Prix_TVAC: 1.2
-      TVA: 0.07
+      TVA: 0.06792452830188678
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4040,11 +3965,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.46
+      HTVA: 1.4622641509433962
       Label: Cote d'Or
       Nbre_personne: Undefined
       Prix_TVAC: 1.55
-      TVA: 0.09
+      TVA: 0.08773584905660381
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4078,11 +4003,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.79
+      HTVA: 6.7924528301886795
       Label: Riz macaron
       Nbre_personne: Undefined
       Prix_TVAC: 7.2
-      TVA: 0.41
+      TVA: 0.40754716981132066
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -4094,7 +4019,7 @@ _source:
       lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -4116,11 +4041,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 11.27
+      HTVA: 11.273584905660377
       Label: Riz macaron
       Nbre_personne: Undefined
       Prix_TVAC: 11.95
-      TVA: 0.68
+      TVA: 0.6764150943396228
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -4154,11 +4079,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Fruits
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -4192,11 +4117,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Biscotin
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -4230,11 +4155,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 8.584905660377357
       Label: Fruits
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -4268,11 +4193,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 8.584905660377357
       Label: Abricots trillés
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -4306,11 +4231,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 8.584905660377357
       Label: Biscotin
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -4343,11 +4268,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Verrine tiramisu fraise
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -4359,7 +4284,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 4
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Verrine
@@ -4381,11 +4306,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.42
+      HTVA: 1.4150943396226414
       Label: Feuilletée créme créme
       Nbre_personne: Undefined
       Prix_TVAC: 1.5
-      TVA: 0.08
+      TVA: 0.08490566037735858
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4393,14 +4318,14 @@ _source:
       conditionnement: 30
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1598975781823
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -4419,11 +4344,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.46
+      HTVA: 1.4622641509433962
       Label: Tortillon chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 1.55
-      TVA: 0.09
+      TVA: 0.08773584905660381
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4431,14 +4356,14 @@ _source:
       conditionnement: 30
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1598975841996
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -4457,11 +4382,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.23
+      HTVA: 1.2264150943396226
       Label: Feuilletée créme/s/créme
       Nbre_personne: Undefined
       Prix_TVAC: 1.3
-      TVA: 0.07
+      TVA: 0.07358490566037745
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4469,14 +4394,14 @@ _source:
       conditionnement: 30
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1598975899197
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -4495,11 +4420,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '1.42'
+      HTVA: 1.4150943396226414
       Label: Cornue pomme
       Nbre_personne: Undefined
       Prix_TVAC: 1.5
-      TVA: '0.08'
+      TVA: 0.08490566037735858
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -4511,7 +4436,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -4519,44 +4444,6 @@ _source:
       sortLvl4: Cuit
       sortLvl5: Avec fruit
       sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: Pomme
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: C050
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Moyenne
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '11.79'
-      Label: Pâte d'amandes pomme
-      Nbre_personne: Undefined
-      Prix_TVAC: 12.5
-      TVA: '0.71'
-      Taux_TVA: 0.06
-      Type: ''
-      Weight: 0
-      _id: C050
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599597970400
-      lieuPreparation: Table
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte d'amandes
-      sortLvl4: Cuit
-      sortLvl5: Avec fruit
-      sortLvl6: Moyenne
       sortLvl7: '-'
       sortLvl8: Pomme
       sortLvl9: '-'
@@ -4571,11 +4458,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '1.56'
+      HTVA: 1.5566037735849054
       Label: Sans sel froment carré 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: '0.09'
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 400
@@ -4609,11 +4496,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '2.41'
+      HTVA: 2.4056603773584904
       Label: Sans sel froment carré 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: '0.14'
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: Demi gris
       Weight: 800
@@ -4647,11 +4534,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.49'
+      HTVA: 3.490566037735849
       Label: Tresse 50cm
       Nbre_personne: Undefined
       Prix_TVAC: 3.7
-      TVA: '0.21'
+      TVA: 0.20943396226415123
       Taux_TVA: 0.06
       Type: Baguette
       Weight: 0
@@ -4685,11 +4572,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '2.22'
+      HTVA: 2.2169811320754715
       Label: 'Sans sel blanc 800 gr '
       Nbre_personne: Undefined
       Prix_TVAC: 2.35
-      TVA: '0.13'
+      TVA: 0.13301886792452855
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -4723,11 +4610,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '1.56'
+      HTVA: 1.5566037735849054
       Label: Sans sel gris 400 gr
       Nbre_personne: Undefined
       Prix_TVAC: 1.65
-      TVA: '0.09'
+      TVA: 0.09339622641509449
       Taux_TVA: 0.06
       Type: Gris
       Weight: 400
@@ -4761,11 +4648,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '2.41'
+      HTVA: 2.4056603773584904
       Label: Sans sel gris 800 gr
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: '0.14'
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: Gris
       Weight: 800
@@ -4799,11 +4686,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '8.21'
+      HTVA: 8.20754716981132
       Label: Borwich chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 8.7
-      TVA: '0.49'
+      TVA: 0.4924528301886788
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -4837,11 +4724,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '2.41'
+      HTVA: 2.4056603773584904
       Label: Tartelette normande
       Nbre_personne: Undefined
       Prix_TVAC: 2.55
-      TVA: '0.14'
+      TVA: 0.14433962264150946
       Taux_TVA: 0.06
       Type: ''
       Weight: 0
@@ -4875,11 +4762,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '9.91'
+      HTVA: 9.90566037735849
       Label: 'Normande '
       Nbre_personne: Undefined
       Prix_TVAC: 10.5
-      TVA: '0.59'
+      TVA: 0.5943396226415096
       Taux_TVA: 0.06
       Type: ''
       Weight: 0
@@ -4891,7 +4778,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -4901,82 +4788,6 @@ _source:
       sortLvl6: Moyenne
       sortLvl7: '-'
       sortLvl8: Pomme
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: C052
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Moyenne
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '11.79'
-      Label: Pâte d'amandes abricot
-      Nbre_personne: Undefined
-      Prix_TVAC: 12.5
-      TVA: '0.71'
-      Taux_TVA: 0.06
-      Type: ''
-      Weight: 0
-      _id: C052
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599598023191
-      lieuPreparation: Table
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte d'amandes
-      sortLvl4: Cuit
-      sortLvl5: Avec fruit
-      sortLvl6: Moyenne
-      sortLvl7: '-'
-      sortLvl8: Abricot
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: C051
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Moyenne
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '11.79'
-      Label: Pâte d'amandes poire
-      Nbre_personne: Undefined
-      Prix_TVAC: 12.5
-      TVA: '0.71'
-      Taux_TVA: 0.06
-      Type: ''
-      Weight: 0
-      _id: C051
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599597998406
-      lieuPreparation: Table
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte d'amandes
-      sortLvl4: Cuit
-      sortLvl5: Avec fruit
-      sortLvl6: Moyenne
-      sortLvl7: '-'
-      sortLvl8: Poire
       sortLvl9: '-'
     - Available: false
       Availbility: Toujours disponible
@@ -4989,11 +4800,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Tartelette biscuit fraise
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -5016,44 +4827,6 @@ _source:
       sortLvl7: '-'
       sortLvl8: Fraise
       sortLvl9: '-'
-    - Available: false
-      Availbility: Toujours disponible
-      CODE: C597
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 13.68
-      Label: Tarte framb. chocolat 5 pers
-      Nbre_personne: Undefined
-      Prix_TVAC: 14.5
-      TVA: 0.82
-      Taux_TVA: 0.06
-      Type: Framboise
-      Weight: 0
-      _id: C597
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1598626319293
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: ''
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte biscuit
-      sortLvl4: Pas Cuit
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: Framboise
-      sortLvl9: '-'
     - Available: true
       Availbility: Toujours disponible
       CODE: B0040
@@ -5065,11 +4838,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '1.42'
+      HTVA: 1.4150943396226414
       Label: 'Sans sel blanc 400 gr '
       Nbre_personne: Undefined
       Prix_TVAC: 1.5
-      TVA: '0.08'
+      TVA: 0.08490566037735858
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 400
@@ -5103,11 +4876,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 13.58
+      HTVA: 13.584905660377359
       Label: Tarte Mojito 5 pers
       Nbre_personne: Undefined
       Prix_TVAC: 14.4
-      TVA: 0.82
+      TVA: 0.8150943396226413
       Taux_TVA: 0.06
       Weight: 0
       _id: C466
@@ -5140,11 +4913,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 12.74
+      HTVA: 12.735849056603772
       Label: Tarte banane chocolat 5 pers
       Nbre_personne: Undefined
       Prix_TVAC: 13.5
-      TVA: 0.76
+      TVA: 0.7641509433962277
       Taux_TVA: 0.06
       Type: Framboise
       Weight: 0
@@ -5176,11 +4949,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Verrine Mojito
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5214,11 +4987,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Feuilletine poire
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -5252,11 +5025,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: 'Tatelette framb. chocolat '
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Framboise
       Weight: 0
@@ -5290,11 +5063,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.54
+      HTVA: 3.5377358490566038
       Label: Tartelette melon
       Nbre_personne: Undefined
       Prix_TVAC: 3.75
-      TVA: 0.21
+      TVA: 0.21226415094339623
       Taux_TVA: 0.06
       Type: Melon
       Weight: 0
@@ -5327,11 +5100,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Tatelette Mojito
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: 'Citron meringué '
       Weight: 0
@@ -5364,11 +5137,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.58
+      HTVA: 8.584905660377357
       Label: Tarte melon
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: 0.52
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Melon
       Weight: 0
@@ -5402,11 +5175,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Feuilletine pomme
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -5440,11 +5213,11 @@ _source:
       Format: tartelette
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Flan framboise
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: sans fruit
       Weight: 0
@@ -5478,11 +5251,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 13.3
+      HTVA: 13.301886792452828
       Label: Tarte melon
       Nbre_personne: Undefined
       Prix_TVAC: 14.1
-      TVA: 0.8
+      TVA: 0.7981132075471713
       Taux_TVA: 0.06
       Type: Melon
       Weight: 0
@@ -5516,11 +5289,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Biscuit maison 100gr
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 100
@@ -5553,11 +5326,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Verrine ananas
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5591,11 +5364,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 14.06
+      HTVA: 14.056603773584905
       Label: Tarte biscuit fraise
       Nbre_personne: Undefined
       Prix_TVAC: 14.9
-      TVA: 0.84
+      TVA: 0.8433962264150949
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -5629,11 +5402,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 8.02
+      HTVA: 8.018867924528301
       Label: Tarte feuilletée fraise
       Nbre_personne: Undefined
       Prix_TVAC: 8.5
-      TVA: 0.48
+      TVA: 0.4811320754716988
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -5667,11 +5440,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Merveilleux fraise
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5705,11 +5478,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Merveilleux coco
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5743,11 +5516,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.75'
+      HTVA: 11.745283018867923
       Label: Schamp
       Nbre_personne: Undefined
       Prix_TVAC: 12.45
-      TVA: '0.70'
+      TVA: 0.7047169811320764
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -5780,11 +5553,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.4
+      HTVA: 3.3962264150943398
       Label: Galette roulée
       Nbre_personne: Undefined
       Prix_TVAC: 3.6
-      TVA: 0.2
+      TVA: 0.20377358490566033
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5817,11 +5590,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Verrine tiramisu mangue
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5854,11 +5627,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Verrine Bora Bora
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -5892,11 +5665,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.75'
+      HTVA: 11.745283018867923
       Label: Négresco
       Nbre_personne: Undefined
       Prix_TVAC: 12.45
-      TVA: '0.70'
+      TVA: 0.7047169811320764
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -5930,11 +5703,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '14.25'
+      HTVA: 14.245283018867923
       Label: Négresco
       Nbre_personne: Undefined
       Prix_TVAC: 15.1
-      TVA: '0.85'
+      TVA: 0.8547169811320767
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -5968,11 +5741,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.75'
+      HTVA: 11.745283018867923
       Label: Chocorêve
       Nbre_personne: Undefined
       Prix_TVAC: 12.45
-      TVA: '0.70'
+      TVA: 0.7047169811320764
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6006,11 +5779,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '18.87'
+      HTVA: 18.867924528301884
       Label: Chocorêve
       Nbre_personne: Undefined
       Prix_TVAC: 20
-      TVA: '1.13'
+      TVA: 1.1320754716981156
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6044,11 +5817,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.75'
+      HTVA: 11.745283018867923
       Label: Mikkado
       Nbre_personne: Undefined
       Prix_TVAC: 12.45
-      TVA: '0.70'
+      TVA: 0.7047169811320764
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6082,11 +5855,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '18.87'
+      HTVA: 18.867924528301884
       Label: Mikkado
       Nbre_personne: Undefined
       Prix_TVAC: 20
-      TVA: '1.13'
+      TVA: 1.1320754716981156
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6120,11 +5893,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '18.87'
+      HTVA: 18.867924528301884
       Label: Schamp
       Nbre_personne: Undefined
       Prix_TVAC: 20
-      TVA: '1.13'
+      TVA: 1.1320754716981156
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6157,11 +5930,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '18.87'
+      HTVA: 18.867924528301884
       Label: Javanais
       Nbre_personne: Undefined
       Prix_TVAC: 20
-      TVA: '1.13'
+      TVA: 1.1320754716981156
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6194,11 +5967,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.75'
+      HTVA: 11.745283018867923
       Label: Bavaroise framboise
       Nbre_personne: Undefined
       Prix_TVAC: 12.45
-      TVA: '0.70'
+      TVA: 0.7047169811320764
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -6232,11 +6005,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.75'
+      HTVA: 11.745283018867923
       Label: Javanais
       Nbre_personne: Undefined
       Prix_TVAC: 12.45
-      TVA: '0.70'
+      TVA: 0.7047169811320764
       Taux_TVA: 0.06
       Type: Gâteaux
       Weight: 0
@@ -6269,11 +6042,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '13.68'
+      HTVA: 13.679245283018867
       Label: 'Charlotte fraise '
       Nbre_personne: Undefined
       Prix_TVAC: 14.5
-      TVA: '0.82'
+      TVA: 0.8207547169811331
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -6306,11 +6079,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '17.45'
+      HTVA: 17.452830188679243
       Label: 'Charlotte fraise '
       Nbre_personne: Undefined
       Prix_TVAC: 18.5
-      TVA: '1.05'
+      TVA: 1.0471698113207566
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -6343,11 +6116,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '13.68'
+      HTVA: 13.679245283018867
       Label: Charlotte chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 14.5
-      TVA: '0.82'
+      TVA: 0.8207547169811331
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -6380,11 +6153,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '17.45'
+      HTVA: 17.452830188679243
       Label: Charlotte chocolat
       Nbre_personne: Undefined
       Prix_TVAC: 18.5
-      TVA: '1.05'
+      TVA: 1.0471698113207566
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -6418,11 +6191,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.54'
+      HTVA: 3.5377358490566038
       Label: Tartelette Fraise nat
       Nbre_personne: Undefined
       Prix_TVAC: 3.75
-      TVA: '0.21'
+      TVA: 0.21226415094339623
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -6456,11 +6229,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '10.99'
+      HTVA: 10.99056603773585
       Label: Abricot cf
       Nbre_personne: Undefined
       Prix_TVAC: 11.65
-      TVA: '0.66'
+      TVA: 0.659433962264151
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6494,11 +6267,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '8.58'
+      HTVA: 8.584905660377357
       Label: Tarte fraise cf
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: '0.52'
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -6532,11 +6305,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '13.30'
+      HTVA: 13.301886792452828
       Label: Tarte fraise cf
       Nbre_personne: Undefined
       Prix_TVAC: 14.1
-      TVA: '0.80'
+      TVA: 0.7981132075471713
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -6570,11 +6343,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '6.75'
+      HTVA: 6.745283018867925
       Label: Abricot cf
       Nbre_personne: Undefined
       Prix_TVAC: 7.15
-      TVA: '0.40'
+      TVA: 0.40471698113207566
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6608,11 +6381,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '13.30'
+      HTVA: 13.301886792452828
       Label: Tarte fraise nat
       Nbre_personne: Undefined
       Prix_TVAC: 14.1
-      TVA: '0.80'
+      TVA: 0.7981132075471713
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -6646,11 +6419,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '8.58'
+      HTVA: 8.584905660377357
       Label: Tarte fraise nat
       Nbre_personne: Undefined
       Prix_TVAC: 9.1
-      TVA: '0.52'
+      TVA: 0.5150943396226424
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -6684,11 +6457,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.49'
+      HTVA: 3.490566037735849
       Label: Tartelette fruits nat
       Nbre_personne: Undefined
       Prix_TVAC: 3.7
-      TVA: '0.21'
+      TVA: 0.20943396226415123
       Taux_TVA: 0.06
       Type: ''
       Weight: 0
@@ -6713,44 +6486,6 @@ _source:
       sortLvl9: '-'
     - Available: false
       Availbility: Toujours disponible
-      CODE: C334
-      Category: Tarte
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '3.68'
-      Label: Tarte biscuit framb-pistache
-      Nbre_personne: Undefined
-      Prix_TVAC: 3.9
-      TVA: '0.22'
-      Taux_TVA: 0.06
-      Type: Avec fruit
-      Weight: 0
-      _id: C334
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599661017571
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte biscuit
-      sortLvl4: '-'
-      sortLvl5: Avec fruit
-      sortLvl6: Tartelette
-      sortLvl7: '-'
-      sortLvl8: Framboise
-      sortLvl9: '-'
-    - Available: false
-      Availbility: Toujours disponible
       CODE: C028
       Category: Petite Pâtisserie
       Cereal: '-'
@@ -6760,11 +6495,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.54'
+      HTVA: 3.5377358490566038
       Label: Tartelette Fraise cf
       Nbre_personne: Undefined
       Prix_TVAC: 3.75
-      TVA: '0.21'
+      TVA: 0.21226415094339623
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -6798,11 +6533,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '12.17'
+      HTVA: 12.169811320754716
       Label: Tarte fruits frais nat
       Nbre_personne: Undefined
       Prix_TVAC: 12.9
-      TVA: '0.73'
+      TVA: 0.7301886792452841
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6836,11 +6571,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '8.40'
+      HTVA: 8.39622641509434
       Label: Tarte fruits frais nat
       Nbre_personne: Undefined
       Prix_TVAC: 8.9
-      TVA: '0.50'
+      TVA: 0.5037735849056606
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6852,7 +6587,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -6874,11 +6609,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '10.99'
+      HTVA: 10.99056603773585
       Label: Tarte abricot nat
       Nbre_personne: Undefined
       Prix_TVAC: 11.65
-      TVA: '0.66'
+      TVA: 0.659433962264151
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6912,11 +6647,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '12.17'
+      HTVA: 12.169811320754716
       Label: Fruits cf
       Nbre_personne: Undefined
       Prix_TVAC: 12.9
-      TVA: '0.73'
+      TVA: 0.7301886792452841
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6950,11 +6685,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '6.75'
+      HTVA: 6.745283018867925
       Label: Tarte abricot nat
       Nbre_personne: Undefined
       Prix_TVAC: 7.15
-      TVA: '0.40'
+      TVA: 0.40471698113207566
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -6966,7 +6701,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -6988,11 +6723,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '8.40'
+      HTVA: 8.39622641509434
       Label: Fruits cf
       Nbre_personne: Undefined
       Prix_TVAC: 8.9
-      TVA: '0.50'
+      TVA: 0.5037735849056606
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -7026,11 +6761,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.49'
+      HTVA: 3.490566037735849
       Label: Tartelette fruits cf
       Nbre_personne: Undefined
       Prix_TVAC: 3.7
-      TVA: '0.21'
+      TVA: 0.20943396226415123
       Taux_TVA: 0.06
       Type: ''
       Weight: 0
@@ -7064,11 +6799,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '7.92'
+      HTVA: 9.90566037735849
       Label: Tropézienne nature
       Nbre_personne: Undefined
       Prix_TVAC: 8.4
-      TVA: '0.48'
+      TVA: 0.5943396226415096
       Taux_TVA: 0.06
       Type: Nature
       Weight: 0
@@ -7080,7 +6815,7 @@ _source:
       lieuProduction: Cave
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tropézienne
@@ -7102,11 +6837,11 @@ _source:
       Format: Grande
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 12.74
+      HTVA: 12.735849056603772
       Label: Tarte feuilletée fraise
       Nbre_personne: Undefined
       Prix_TVAC: 13.5
-      TVA: 0.76
+      TVA: 0.7641509433962277
       Taux_TVA: 0.06
       Type: Avec fruit
       Weight: 0
@@ -7140,11 +6875,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.3
+      HTVA: 3.30188679245283
       Label: Eclair cf fraise
       Nbre_personne: Undefined
       Prix_TVAC: 3.5
-      TVA: 0.2
+      TVA: 0.19811320754716988
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -7178,11 +6913,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 9.2
+      HTVA: 11.79245283018868
       Label: Tropézienne fraise
       Nbre_personne: Undefined
-      Prix_TVAC: 9.75
-      TVA: 0.55
+      Prix_TVAC: 12.5
+      TVA: 0.7075471698113205
       Taux_TVA: 0.06
       Type: Fraise
       Weight: 0
@@ -7216,11 +6951,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 2.26
+      HTVA: 2.2641509433962264
       Label: carton de 6 oeufs
       Nbre_personne: Undefined
       Prix_TVAC: 2.4
-      TVA: 0.14
+      TVA: 0.13584905660377355
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -7245,44 +6980,6 @@ _source:
       sortLvl9: '-'
     - Available: true
       Availbility: Toujours disponible
-      CODE: C379
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 16.56
-      Label: Tarte framboise meringué 5 pers
-      Nbre_personne: Undefined
-      Prix_TVAC: 17.55
-      TVA: 0.99
-      Taux_TVA: 0.06
-      Type: Framboise
-      Weight: 0
-      _id: C379
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1598626394723
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: ''
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte biscuit
-      sortLvl4: Pas Cuit
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: Framboise
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
       CODE: C564
       Category: Petite Pâtisserie
       Cereal: '-'
@@ -7292,11 +6989,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.68
+      HTVA: 3.6792452830188678
       Label: Tatelette citron meringué
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: 0.22
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: 'Citron meringué '
       Weight: 0
@@ -7307,7 +7004,7 @@ _source:
       lieuPreparation: Cave
       lieuProduction: Cave
       orderquantity: 0
-      quantity: 0
+      quantity: 5
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -7328,11 +7025,11 @@ _source:
       Format: moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '13.44'
+      HTVA: 16.037735849056602
       Label: Tropézienne fraise
       Nbre_personne: Undefined
-      Prix_TVAC: 14.25
-      TVA: '0.81'
+      Prix_TVAC: 17
+      TVA: 0.9622641509433976
       Taux_TVA: 0.06
       Type: fraise
       Weight: 0
@@ -7365,11 +7062,11 @@ _source:
       Format: moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '12.74'
+      HTVA: 15.094339622641508
       Label: Tropézienne nature
       Nbre_personne: Undefined
       Prix_TVAC: 13.5
-      TVA: '0.76'
+      TVA: 0.9056603773584921
       Taux_TVA: 0.06
       Type: Nature
       Weight: 0
@@ -7381,7 +7078,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tropézienne
@@ -7403,11 +7100,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '1.42'
+      HTVA: 1.4150943396226414
       Label: Cornue abricot
       Nbre_personne: Undefined
       Prix_TVAC: 1.5
-      TVA: '0.08'
+      TVA: 0.08490566037735858
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -7419,7 +7116,7 @@ _source:
       lieuProduction: Table
       modifyBy: pierred2505@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 6
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -7441,11 +7138,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '12.97'
+      HTVA: 12.971698113207546
       Label: Riz
       Nbre_personne: Undefined
       Prix_TVAC: 13.75
-      TVA: '0.78'
+      TVA: 0.7783018867924536
       Taux_TVA: 0.06
       Type: Sans fruit
       Weight: 0
@@ -7468,83 +7165,7 @@ _source:
       sortLvl7: Nature
       sortLvl8: '-'
       sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: P161
-      Category: Tarte
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 9.34
-      Label: Bruxelloise moyenne
-      Nbre_personne: Undefined
-      Prix_TVAC: 9.9
-      TVA: 0.56
-      Taux_TVA: 0.06
-      Type: Sans fruit
-      Weight: 0
-      _id: P161
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1596126860668
-      lieuPreparation: Table
-      lieuProduction: Table
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte levée
-      sortLvl4: '-'
-      sortLvl5: Sans fruit
-      sortLvl6: Moyenne
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: P160
-      Category: Tarte
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '6.51'
-      Label: Bruxelloise petite
-      Nbre_personne: Undefined
-      Prix_TVAC: 6.9
-      TVA: '0.39'
-      Taux_TVA: 0.06
-      Type: Sans fruit
-      Weight: 0
-      _id: P160
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599660880627
-      lieuPreparation: Table
-      lieuProduction: Table
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte levée
-      sortLvl4: '-'
-      sortLvl5: Sans fruit
-      sortLvl6: Petite
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
+    - Available: false
       Availbility: Toujours disponible
       CODE: C532
       Category: Petite Pâtisserie
@@ -7555,11 +7176,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.68'
+      HTVA: 3.6792452830188678
       Label: 'Tatelette orange chocolat '
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: '0.22'
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: ''
       Weight: 0
@@ -7567,44 +7188,6 @@ _source:
       conditionnement: 1
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1599822646382
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte biscuit
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: Tartelette
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: C534
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '3.68'
-      Label: Tatelette ferrero nutella
-      Nbre_personne: Undefined
-      Prix_TVAC: 3.9
-      TVA: '0.22'
-      Taux_TVA: 0.06
-      Type: '-'
-      Weight: 0
-      _id: C534
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599822771250
       lieuPreparation: Cave
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
@@ -7631,11 +7214,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '2.55'
+      HTVA: 2.547169811320755
       Label: Pain des Aieux blanc 800 gr recuit
       Nbre_personne: Undefined
       Prix_TVAC: 2.7
-      TVA: '0.15'
+      TVA: 0.15283018867924536
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 800
@@ -7669,11 +7252,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '3.68'
+      HTVA: 3.6792452830188678
       Label: Tatelette snickers
       Nbre_personne: Undefined
       Prix_TVAC: 3.9
-      TVA: '0.22'
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
       Type: '-'
       Weight: 0
@@ -7696,7 +7279,7 @@ _source:
       sortLvl7: '-'
       sortLvl8: '-'
       sortLvl9: '-'
-    - Available: false
+    - Available: true
       Availbility: Toujours disponible
       CODE: C420
       Category: Petite Pâtisserie
@@ -7707,11 +7290,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Feuilletée crème
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -7734,45 +7317,7 @@ _source:
       sortLvl7: '-'
       sortLvl8: '-'
       sortLvl9: Crème Pâtissière
-    - Available: false
-      Availbility: Toujours disponible
-      CODE: P206
-      Category: Petit déjeuner
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: Boîte de 60 pièces
-      Filter_unsale: Pâtisserie
-      Format: Classique
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 1.46
-      Label: Côte d'or blanc pré-cuit
-      Nbre_personne: Undefined
-      Prix_TVAC: 1.55
-      TVA: 0.09
-      Taux_TVA: 0.06
-      Type: Petit déjeuner
-      Weight: 0
-      _id: P206
-      conditionnement: 60
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1596126548724
-      lieuPreparation: Table
-      lieuProduction: Viennoiserie
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Petit déjeuner
-      sortLvl3: Pâte feuilletée
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: false
+    - Available: true
       Availbility: Toujours disponible
       CODE: P200
       Category: Petit déjeuner
@@ -7783,11 +7328,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.37
+      HTVA: 1.3679245283018866
       Label: Croissant amande pré-cuit
       Nbre_personne: Undefined
       Prix_TVAC: 1.45
-      TVA: 0.08
+      TVA: 0.08207547169811336
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -7795,14 +7340,14 @@ _source:
       conditionnement: 30
       creationDate: '2020-07-28T11:35:09.017703'
       lastUpdate: 1596126521029
-      lieuPreparation: Table
+      lieuPreparation: Boulangerie
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
       quantity: 0
       sortLvl1: Pâtisserie
       sortLvl10: '-'
-      sortLvl2: Petit déjeuner
+      sortLvl2: Pré-cuits
       sortLvl3: Pâte feuilletée
       sortLvl4: '-'
       sortLvl5: '-'
@@ -7821,11 +7366,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.71
+      HTVA: 0.7075471698113207
       Label: Baiser de Malmedy
       Nbre_personne: Undefined
       Prix_TVAC: 0.75
-      TVA: 0.04
+      TVA: 0.04245283018867929
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -7859,11 +7404,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 0.71
+      HTVA: 0.7075471698113207
       Label: Baiser du chef
       Nbre_personne: Undefined
       Prix_TVAC: 0.75
-      TVA: 0.04
+      TVA: 0.04245283018867929
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -7897,11 +7442,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Galette sucre perlé 400gr
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 400
@@ -7935,11 +7480,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 3.77
+      HTVA: 3.773584905660377
       Label: Galette sans sucre 200gr
       Nbre_personne: Undefined
       Prix_TVAC: 4
-      TVA: 0.23
+      TVA: 0.22641509433962304
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 200
@@ -7973,11 +7518,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '4.25'
+      HTVA: 4.245283018867925
       Label: Galette chocolat 300gr
       Nbre_personne: Undefined
       Prix_TVAC: 4.5
-      TVA: '0.25'
+      TVA: 0.2547169811320753
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 300
@@ -8011,11 +7556,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 4.25
+      HTVA: 4.245283018867925
       Label: Galette coeur 300gr
       Nbre_personne: Undefined
       Prix_TVAC: 4.5
-      TVA: 0.25
+      TVA: 0.2547169811320753
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 300
@@ -8049,11 +7594,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.37
+      HTVA: 1.3679245283018866
       Label: Croissant amande
       Nbre_personne: Undefined
       Prix_TVAC: 1.45
-      TVA: 0.08
+      TVA: 0.08207547169811336
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -8065,7 +7610,7 @@ _source:
       lieuProduction: Viennoiserie
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 10
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -8087,11 +7632,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.84
+      HTVA: 1.8396226415094339
       Label: Glacé
       Nbre_personne: Undefined
       Prix_TVAC: 1.95
-      TVA: 0.11
+      TVA: 0.11037735849056607
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 0
@@ -8116,44 +7661,6 @@ _source:
       sortLvl9: Crème Pâtissière
     - Available: true
       Availbility: Toujours disponible
-      CODE: C406
-      Category: Tarte
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Moyenne
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '11.27'
-      Label: Tarte snickers 5 pers
-      Nbre_personne: Undefined
-      Prix_TVAC: 11.95
-      TVA: '0.68'
-      Taux_TVA: 0.06
-      Type: '-'
-      Weight: 0
-      _id: C406
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599660835067
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte biscuit
-      sortLvl4: Pas Cuit
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
       CODE: P222
       Category: Divers
       Cereal: '-'
@@ -8163,11 +7670,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Galette pure beurre 400gr
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 400
@@ -8201,11 +7708,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Galette 4 heures 600 gr
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 600
@@ -8239,11 +7746,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 6.13
+      HTVA: 6.132075471698113
       Label: Galette fine 400gr
       Nbre_personne: Undefined
       Prix_TVAC: 6.5
-      TVA: 0.37
+      TVA: 0.36792452830188704
       Taux_TVA: 0.06
       Type: Petite Pâtisserie
       Weight: 400
@@ -8277,11 +7784,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.46
+      HTVA: 1.4622641509433962
       Label: Cote d'Or blanc
       Nbre_personne: Undefined
       Prix_TVAC: 1.55
-      TVA: 0.09
+      TVA: 0.08773584905660381
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -8306,43 +7813,6 @@ _source:
       sortLvl9: '-'
     - Available: true
       Availbility: Toujours disponible
-      CODE: C378
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: Petite
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 3.68
-      Label: Tatelette framboise meringué
-      Nbre_personne: Undefined
-      Prix_TVAC: 3.9
-      TVA: 0.22
-      Taux_TVA: 0.06
-      Type: Framboise
-      Weight: 0
-      _id: C378
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1598624788586
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Tarte
-      sortLvl3: Pâte biscuit
-      sortLvl4: Pas Cuit
-      sortLvl5: '-'
-      sortLvl6: Tartelette
-      sortLvl7: '-'
-      sortLvl8: Framboise
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
       CODE: P013
       Category: Petit déjeuner
       Cereal: '-'
@@ -8352,11 +7822,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.6
+      HTVA: 1.6037735849056602
       Label: Cornue feuilletée pomme
       Nbre_personne: Undefined
       Prix_TVAC: 1.7
-      TVA: 0.1
+      TVA: 0.09622641509433971
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -8368,7 +7838,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -8390,11 +7860,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.6
+      HTVA: 1.6037735849056602
       Label: Feuilletée cerise
       Nbre_personne: Undefined
       Prix_TVAC: 1.7
-      TVA: 0.1
+      TVA: 0.09622641509433971
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -8406,7 +7876,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -8428,11 +7898,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: 1.6
+      HTVA: 1.6037735849056602
       Label: Coin confiture
       Nbre_personne: Undefined
       Prix_TVAC: 1.7
-      TVA: 0.1
+      TVA: 0.09622641509433971
       Taux_TVA: 0.06
       Type: Petit déjeuner
       Weight: 0
@@ -8444,7 +7914,7 @@ _source:
       lieuProduction: Table
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 2
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Petit déjeuner
@@ -8466,11 +7936,11 @@ _source:
       Format: Moyenne
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '16.56'
+      HTVA: 16.556603773584907
       Label: Tarte citron meringué 5 pers
       Nbre_personne: Undefined
       Prix_TVAC: 17.55
-      TVA: '0.99'
+      TVA: 0.9933962264150935
       Taux_TVA: 0.06
       Type: citron meringué
       Weight: 0
@@ -8482,7 +7952,7 @@ _source:
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
       orderquantity: 0
-      quantity: 0
+      quantity: 1
       sortLvl1: Pâtisserie
       sortLvl10: '-'
       sortLvl2: Tarte
@@ -8493,7 +7963,7 @@ _source:
       sortLvl7: '-'
       sortLvl8: Citron
       sortLvl9: '-'
-    - Available: true
+    - Available: false
       Availbility: Toujours disponible
       CODE: C533
       Category: Petite Pâtisserie
@@ -8504,11 +7974,11 @@ _source:
       Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '13.68'
+      HTVA: 13.679245283018867
       Label: Tarte orange chocolat 5 pers
       Nbre_personne: Undefined
       Prix_TVAC: 14.5
-      TVA: '0.82'
+      TVA: 0.8207547169811331
       Taux_TVA: 0.06
       Type: ''
       Weight: 0
@@ -8531,29 +8001,29 @@ _source:
       sortLvl7: '-'
       sortLvl8: '-'
       sortLvl9: '-'
-    - Available: true
+    - Available: false
       Availbility: Toujours disponible
-      CODE: C535
+      CODE: C334
       Category: Tarte
       Cereal: '-'
       Classement: Pâtisserie
       Conditionnement: A définir
       Filter_unsale: Pâtisserie
-      Format: Moyenne
+      Format: Petite
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '11.79'
-      Label: Tarte ferrero nutella 5 pers
+      HTVA: 3.6792452830188678
+      Label: Tarte biscuit framb-pistache
       Nbre_personne: Undefined
-      Prix_TVAC: 12.5
-      TVA: '0.71'
+      Prix_TVAC: 3.9
+      TVA: 0.22075471698113214
       Taux_TVA: 0.06
-      Type: '-'
+      Type: Avec fruit
       Weight: 0
-      _id: C535
+      _id: C334
       conditionnement: 1
       creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1599822823414
+      lastUpdate: 1599661017571
       lieuPreparation: Cave
       lieuProduction: Cave
       modifyBy: franketbeatrice@gmail.com
@@ -8564,124 +8034,10 @@ _source:
       sortLvl2: Tarte
       sortLvl3: Pâte biscuit
       sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: '-'
+      sortLvl5: Avec fruit
+      sortLvl6: Tartelette
       sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: P036
-      Category: Petite Pâtisserie
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: Unique
-      Filter_unsale: Pâtisserie
-      Format: Classique
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: 2.12
-      Label: Maton
-      Nbre_personne: Undefined
-      Prix_TVAC: 2.25
-      TVA: 0.13
-      Taux_TVA: 0.06
-      Type: Petite Pâtisserie
-      Weight: 0
-      _id: P036
-      conditionnement: 1
-      creationDate: '2020-07-28T11:35:09.017703'
-      lastUpdate: 1594821921802
-      lieuPreparation: Table
-      lieuProduction: Table
-      modifyBy: pierred2505@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Petite Pâtisserie
-      sortLvl3: '-'
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: '-'
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: C339
-      Category: Gâteaux
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: ''
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '8.02'
-      Label: Cheesecake 4 pers
-      Nbre_personne: Undefined
-      Prix_TVAC: 8.5
-      TVA: '0.48'
-      Taux_TVA: 0.06
-      Type: Gâteaux
-      Weight: 0
-      _id: C339
-      conditionnement: 1
-      creationDate: '2020-09-17T22:00:00.000Z'
-      lastUpdate: 1600416788196
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Gâteaux
-      sortLvl3: '-'
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: 4 PERS
-      sortLvl7: '-'
-      sortLvl8: '-'
-      sortLvl9: '-'
-    - Available: true
-      Availbility: Toujours disponible
-      CODE: C340
-      Category: Gâteaux
-      Cereal: '-'
-      Classement: Pâtisserie
-      Conditionnement: A définir
-      Filter_unsale: Pâtisserie
-      Format: ''
-      Goût 1: Undefined
-      Goûts 2: Undefined
-      HTVA: '11.32'
-      Label: Cheesecake 6 pers
-      Nbre_personne: Undefined
-      Prix_TVAC: 12
-      TVA: '0.68'
-      Taux_TVA: 0.06
-      Type: Gâteaux
-      Weight: 0
-      _id: C340
-      conditionnement: 1
-      creationDate: '2020-09-17T22:00:00.000Z'
-      lastUpdate: 1600417069860
-      lieuPreparation: Cave
-      lieuProduction: Cave
-      modifyBy: franketbeatrice@gmail.com
-      orderquantity: 0
-      quantity: 0
-      sortLvl1: Pâtisserie
-      sortLvl10: '-'
-      sortLvl2: Gâteaux
-      sortLvl3: '-'
-      sortLvl4: '-'
-      sortLvl5: '-'
-      sortLvl6: 6 PERS
-      sortLvl7: '-'
-      sortLvl8: '-'
+      sortLvl8: Framboise
       sortLvl9: '-'
     - Available: true
       Availbility: Toujours disponible
@@ -8694,11 +8050,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '6.65'
+      HTVA: 6.650943396226414
       Label: Roue blanche 2k400
       Nbre_personne: Undefined
       Prix_TVAC: 7.05
-      TVA: '0.40'
+      TVA: 0.39905660377358565
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 2.4
@@ -8732,11 +8088,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '4.43'
+      HTVA: 4.433962264150943
       Label: Roue blanche 1k600
       Nbre_personne: Undefined
       Prix_TVAC: 4.7
-      TVA: '0.27'
+      TVA: 0.2660377358490571
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 1.6
@@ -8770,11 +8126,11 @@ _source:
       Format: Classique
       Goût 1: Undefined
       Goûts 2: Undefined
-      HTVA: '8.87'
+      HTVA: 8.867924528301886
       Label: Roue blanche 3k200
       Nbre_personne: Undefined
       Prix_TVAC: 9.4
-      TVA: '0.53'
+      TVA: 0.5320754716981142
       Taux_TVA: 0.06
       Type: Blanc
       Weight: 3.2
@@ -8797,11 +8153,466 @@ _source:
       sortLvl7: '-'
       sortLvl8: '-'
       sortLvl9: '-'
-  shop: Fritapapa
-  totalBoulangerie: '12.00'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: C378
+      Category: Petite Pâtisserie
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Petite
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 3.6792452830188678
+      Label: Tatelette framboise meringué
+      Nbre_personne: Undefined
+      Prix_TVAC: 3.9
+      TVA: 0.22075471698113214
+      Taux_TVA: 0.06
+      Type: Framboise
+      Weight: 0
+      _id: C378
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1598624788586
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte biscuit
+      sortLvl4: Pas Cuit
+      sortLvl5: '-'
+      sortLvl6: Tartelette
+      sortLvl7: '-'
+      sortLvl8: Framboise
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: P206
+      Category: Petit déjeuner
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: Boîte de 60 pièces
+      Filter_unsale: Pâtisserie
+      Format: Classique
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 1.4622641509433962
+      Label: Côte d'or blanc pré-cuit
+      Nbre_personne: Undefined
+      Prix_TVAC: 1.55
+      TVA: 0.08773584905660381
+      Taux_TVA: 0.06
+      Type: Petit déjeuner
+      Weight: 0
+      _id: P206
+      conditionnement: 60
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1596126548724
+      lieuPreparation: Boulangerie
+      lieuProduction: Viennoiserie
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Pré-cuits
+      sortLvl3: Pâte feuilletée
+      sortLvl4: '-'
+      sortLvl5: '-'
+      sortLvl6: '-'
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: P161
+      Category: Tarte
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Petite
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 9.339622641509434
+      Label: Bruxelloise moyenne
+      Nbre_personne: Undefined
+      Prix_TVAC: 9.9
+      TVA: 0.560377358490566
+      Taux_TVA: 0.06
+      Type: Sans fruit
+      Weight: 0
+      _id: P161
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1596126860668
+      lieuPreparation: Table
+      lieuProduction: Table
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte levée
+      sortLvl4: '-'
+      sortLvl5: Sans fruit
+      sortLvl6: Moyenne
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: P160
+      Category: Tarte
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Petite
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 6.509433962264151
+      Label: Bruxelloise petite
+      Nbre_personne: Undefined
+      Prix_TVAC: 6.9
+      TVA: 0.39056603773584975
+      Taux_TVA: 0.06
+      Type: Sans fruit
+      Weight: 0
+      _id: P160
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1599660880627
+      lieuPreparation: Table
+      lieuProduction: Table
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte levée
+      sortLvl4: '-'
+      sortLvl5: Sans fruit
+      sortLvl6: Petite
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: C534
+      Category: Petite Pâtisserie
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Petite
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 3.6792452830188678
+      Label: Tatelette ferrero nutella
+      Nbre_personne: Undefined
+      Prix_TVAC: 3.9
+      TVA: 0.22075471698113214
+      Taux_TVA: 0.06
+      Type: '-'
+      Weight: 0
+      _id: C534
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1599822771250
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 5
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte biscuit
+      sortLvl4: '-'
+      sortLvl5: '-'
+      sortLvl6: Tartelette
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: C406
+      Category: Tarte
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Moyenne
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 11.273584905660377
+      Label: Tarte snickers 5 pers
+      Nbre_personne: Undefined
+      Prix_TVAC: 11.95
+      TVA: 0.6764150943396228
+      Taux_TVA: 0.06
+      Type: '-'
+      Weight: 0
+      _id: C406
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1599660835067
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 2
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte biscuit
+      sortLvl4: Pas Cuit
+      sortLvl5: '-'
+      sortLvl6: '-'
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: C535
+      Category: Tarte
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Moyenne
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 11.79245283018868
+      Label: Tarte ferrero nutella 5 pers
+      Nbre_personne: Undefined
+      Prix_TVAC: 12.5
+      TVA: 0.7075471698113205
+      Taux_TVA: 0.06
+      Type: '-'
+      Weight: 0
+      _id: C535
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1599822823414
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 1
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte biscuit
+      sortLvl4: '-'
+      sortLvl5: '-'
+      sortLvl6: '-'
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: P036
+      Category: Petite Pâtisserie
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: Unique
+      Filter_unsale: Pâtisserie
+      Format: Classique
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 2.1226415094339623
+      Label: Maton
+      Nbre_personne: Undefined
+      Prix_TVAC: 2.25
+      TVA: 0.12735849056603765
+      Taux_TVA: 0.06
+      Type: Petite Pâtisserie
+      Weight: 0
+      _id: P036
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1594821921802
+      lieuPreparation: Table
+      lieuProduction: Table
+      modifyBy: pierred2505@gmail.com
+      orderquantity: 0
+      quantity: 10
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Petite Pâtisserie
+      sortLvl3: '-'
+      sortLvl4: '-'
+      sortLvl5: '-'
+      sortLvl6: '-'
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: false
+      Availbility: Toujours disponible
+      CODE: C340
+      Category: Gâteaux
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: ''
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 11.320754716981131
+      Label: Cheesecake 6 pers
+      Nbre_personne: Undefined
+      Prix_TVAC: 12
+      TVA: 0.6792452830188687
+      Taux_TVA: 0.06
+      Type: Gâteaux
+      Weight: 0
+      _id: C340
+      conditionnement: 1
+      creationDate: '2020-09-17T22:00:00.000Z'
+      lastUpdate: 1600417069860
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Gâteaux
+      sortLvl3: '-'
+      sortLvl4: '-'
+      sortLvl5: '-'
+      sortLvl6: 6 PERS
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: false
+      Availbility: Toujours disponible
+      CODE: C339
+      Category: Gâteaux
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: ''
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 8.018867924528301
+      Label: Cheesecake 4 pers
+      Nbre_personne: Undefined
+      Prix_TVAC: 8.5
+      TVA: 0.4811320754716988
+      Taux_TVA: 0.06
+      Type: Gâteaux
+      Weight: 0
+      _id: C339
+      conditionnement: 1
+      creationDate: '2020-09-17T22:00:00.000Z'
+      lastUpdate: 1600416788196
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: franketbeatrice@gmail.com
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Gâteaux
+      sortLvl3: '-'
+      sortLvl4: '-'
+      sortLvl5: '-'
+      sortLvl6: 4 PERS
+      sortLvl7: '-'
+      sortLvl8: '-'
+      sortLvl9: '-'
+    - Available: true
+      Availbility: Toujours disponible
+      CODE: C379
+      Category: Petite Pâtisserie
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Petite
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 16.556603773584907
+      Label: Tarte framboise meringué 5 pers
+      Nbre_personne: Undefined
+      Prix_TVAC: 17.55
+      TVA: 0.9933962264150935
+      Taux_TVA: 0.06
+      Type: Framboise
+      Weight: 0
+      _id: C379
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1598626394723
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: ''
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte biscuit
+      sortLvl4: Pas Cuit
+      sortLvl5: '-'
+      sortLvl6: '-'
+      sortLvl7: '-'
+      sortLvl8: Framboise
+      sortLvl9: '-'
+    - Available: false
+      Availbility: Toujours disponible
+      CODE: C597
+      Category: Petite Pâtisserie
+      Cereal: '-'
+      Classement: Pâtisserie
+      Conditionnement: A définir
+      Filter_unsale: Pâtisserie
+      Format: Petite
+      Goût 1: Undefined
+      Goûts 2: Undefined
+      HTVA: 13.679245283018867
+      Label: Tarte framb. chocolat 5 pers
+      Nbre_personne: Undefined
+      Prix_TVAC: 14.5
+      TVA: 0.8207547169811331
+      Taux_TVA: 0.06
+      Type: Framboise
+      Weight: 0
+      _id: C597
+      conditionnement: 1
+      creationDate: '2020-07-28T11:35:09.017703'
+      lastUpdate: 1598626319293
+      lieuPreparation: Cave
+      lieuProduction: Cave
+      modifyBy: ''
+      orderquantity: 0
+      quantity: 0
+      sortLvl1: Pâtisserie
+      sortLvl10: '-'
+      sortLvl2: Tarte
+      sortLvl3: Pâte biscuit
+      sortLvl4: Pas Cuit
+      sortLvl5: '-'
+      sortLvl6: '-'
+      sortLvl7: '-'
+      sortLvl8: Framboise
+      sortLvl9: '-'
+  shop: Forchies
+  totalBoulangerie: '431.20'
   totalOther: '0.00'
-  totalPatisserie: '0.00'
-  totalPrice: '12.00'
+  totalPatisserie: '625.05'
+  totalPrice: 880.45
 _type: _doc
-_version: 2
+_version: 11
 found: true

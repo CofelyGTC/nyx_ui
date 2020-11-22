@@ -1,22 +1,15 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="unsalesoffice-container" style="width: 100%" >
-    Sélectionnez un magasin: 
-    <el-row style="width: 100%">
-        <el-select @change="changeShop" filterable v-model="magasin" placeholder="Sélectionner">
-              <el-option
-                v-for="(item, id) in magasins"
-                :key="id"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-    </el-row>
-            <br>
-            
+  <el-row class="ordershopdemo-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
-          
+        <el-row>
+        <td>
+        Clôturer la commande : 
+        <el-switch @change="onCloseOrder()" v-model="disabled">
+        </el-switch>
+      </td>
+      </el-row> 
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
           
@@ -137,42 +130,70 @@
         <div style="bottom: 5%;">
 
             
-        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
-        
+        <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+
+            
+        <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
+        <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
-          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column prop="CODE" label="Code"  sortable></el-table-column>
           <el-table-column prop="Label" label="Nom" sortable></el-table-column>
           <el-table-column label="Prix TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Invendus" width="150" sortable>
+          <el-table-column label="Conditionnement" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Quantité"  width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total" sortable>
+          <el-table-column label="Quantité en Commande" width="150" sortable>
+          <template slot-scope="scope">
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
+          </template>
+          </el-table-column>
+          <el-table-column label="Total Unités" sortable>
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
+              {{scope.row.quantity * scope.row.conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Total TTC" sortable>
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
+            </template>
+          </el-table-column>
+          <el-table-column label="Remarques" width="150">
+            <template slot-scope="scope">
+              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
           </el-table> 
           </div>
           <br><br>
- 
+          <!--div class="footer">
+          Total TTC : {{totalPrice | roundTo2}} €
+          <br><br>
+          </div-->   
           
+          <!--/el-tab-pane>
 
+         </el-tabs-->
                 </el-tab-pane>
 
       </el-tabs>
                 </el-tab-pane>
       <el-tab-pane
           :key="'TAB-Panier'"
-          :label="'Total'"
+          :label="'Panier'"
           :name="'TAB-Panier'"
           :lazy="true">
-          
+          <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
             Sous-Total :
             <el-row 
             v-for="(category, index) in classement" :key="index">
@@ -182,13 +203,14 @@
                 </el-row>
             </el-row>
             <el-row>
-              Total Invendus: {{totalPrice | roundTo2 }}€ TTC
+              Total Panier: {{totalPrice | roundTo2 }}€ TTC
               
             </el-row>
             <el-row>
               <br><br>
-                   <el-button type="primary" @click="onSubmit">Enregistrer</el-button>
+                   <el-button type="primary" @click="onSubmit">Commander</el-button>
             </el-row>
+            </div>
       </el-tab-pane>
 
 
@@ -205,7 +227,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormUnsalesOffice",
+  name: "FormOrderShopDemo",
   data: () => ({
       records: null,
       oldID: null,
@@ -223,7 +245,6 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
-      magasins: [],
       ts: 0,
       changed: false,
       dialogFormVisible: false,
@@ -232,6 +253,7 @@ export default {
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
       subSubCategories: {},
+      refAutoRefresh: null
 
   }),
   props: {
@@ -247,27 +269,13 @@ export default {
   mounted: function() {
     //this.getMagasin();
     //this.getTree();
-    this.ts = Date.now().toString();
-    this.magasin = this.$store.getters.actualShop;
-    this.selectedTab = this.$store.getters.actualLvl1;
-    this.selectedUnderTab = this.$store.getters.actualLvl2;
+    //this.ts = Date.now().toString();
     //this.prepareData();
   },
   created: function() {
-
-    document.onkeydown=function(e){
-      var key=window.event.keyCode;
-      console.log('Key released : ' + key.toString())
-      }
-    document.onkeyup=function(e){
-        var key=window.event.keyCode;
-        console.log('Key Up: ' + key.toString())
-      }
-
-    console.log("CREATED")
-    this.getMagasins();
+    this.getMagasin();
     this.getTree();
-    this.ts = Date.now().toString();
+    //this.ts = Date.now().toString();
 
     this.$globalbus.$on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
@@ -275,26 +283,24 @@ export default {
       console.log(payLoad.subtype);
       if (this.config.timeSelectorType == undefined)
         this.config.timeSelectorType = "classic";
-      if (payLoad.subtype == this.config.timeSelectorType){ 
-        console.log('timechanged')
-        this.loadData();
-        }
-      else 
-      {
-          console.log("Ignoring time change...");
-          console.log(payLoad.subtype);
-          console.log(this.config.timeSelectorType);
-          console.log('test');
-
-      }
+      if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
+      else console.log("Ignoring time change.");
     });
     this.magasin = this.$store.getters.actualShop;
-    console.log('PREPARE')
+    this.selectedTab = this.$store.getters.actualLvl1;
+    this.selectedUnderTab = this.$store.getters.actualLvl2;
+    console.log('Before Setting Autorefresh');
+    //this.setAutoRefresh();
+    //console.log('After Setting Autorefresh');
+    //this.ts = Date.now().toString();
+    //console.log('PREPARE')
     //this.prepareData();
   },
   beforeDestroy: function(){
       console.log('BEFORE DESTROY')
       this.onSubmit();
+      if(this.refAutoRefresh != null)
+        clearInterval(this.refAutoRefresh)
   },
   computed: {
     totalPrice: function() {
@@ -305,11 +311,61 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.quantity*item.Prix_TVAC)
+          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
         }
         
       }
       return price
+    },
+    totalPatisserie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Pâtisserie')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalBoulangerie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Boulangerie')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalOther: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
     },
      
     totalFiltered: function(){
@@ -364,7 +420,7 @@ export default {
         
         if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
         
       }
@@ -396,7 +452,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              quantity += (item.quantity)
+              quantity += (item.quantity*item.conditionnement)
           }    
         }
         return quantity
@@ -406,20 +462,6 @@ export default {
       }
       
     },
-    refillNan(){
-      for(var itemKey in Object.keys(this.records)) {
-          var item = this.records[itemKey]
-          if(item.quantity == null)
-          {
-            item.quantity = 0
-          }
-          if(item.orderquantity)
-          {
-            item.orderquantity = 0
-          }
-      }  
-    },
-    
     totalCategoryPrice: function(category) {
       
       var price = 0
@@ -430,7 +472,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              price += (item.quantity*item.Prix_TVAC)
+              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
           }
          
         }
@@ -449,7 +491,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              quantity += (item.quantity)
+              quantity += (item.quantity*item.conditionnement)
           }    
         }
         return quantity
@@ -469,7 +511,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              price += (item.quantity*item.Prix_TVAC)
+              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
           }
          
         }
@@ -479,6 +521,11 @@ export default {
         return 0
       }
       
+    },
+    loadData(){
+        this.records = [];
+        this.getData();
+        
     },
     getFilter(data){
 
@@ -529,7 +576,8 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        //&& data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
     },
     tabChanged(index){
       this.refillNan()
@@ -543,10 +591,6 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
-      this.$store.commit({
-        type: "setActualLvl1",
-        data: this.selectedTab
-      });
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
@@ -559,124 +603,104 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
-      this.$store.commit({
-        type: "setActualLvl2",
-        data: this.selectedUnderTab
-      });
     },
-    changeShop(){
-      console.log("CHANGE SHOP")
-      //this.magasin = magasin
-      console.log("SHOP: " + this.magasin)
-      this.$store.commit({
-        type: "setActualShop",
-        data: this.magasin
-      });
-      console.log('TESTESTEST')
-      console.log(this.$store.getters.actualShop)
-      this.prepareData();
-    },
-    onSubmit(){
-      if(this.magasin != '-')
-      {  
-        this.refillNan()
-        var order = {};
-        var products = [];
-        var timeRange=this.$store.getters.timeRangeDay;
-        var entry = {};
-        for(var itemKey in Object.keys(this.records)) {
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
           var item = this.records[itemKey]
-          
-          entry = item
-          /*entry._id = item._id
-          entry.name = item.name
-          entry.category = item.categoryID
-          entry.code = item.old_code
-          entry.quantity = item.quantity
-          entry.orderquantity = item.orderquantity
-          entry.size = item.size
-          entry.remarque = item.remarque
-          entry.price_tvac = item.price_tvac
-          entry.available = item.available*/
-          //console.log(entry.CODE + '-'+entry.HTVA)
-          if(typeof entry.HTVA == "string")
+          if(item.quantity == null)
           {
-            console.log(entry.CODE)
-            console.log(entry.HTVA)
-            entry.HTVA = parseFloat(entry.HTVA)
-            console.log(entry.HTVA)
+            item.quantity = 0
           }
-          if(typeof entry.TVA == "string")
+          if(item.orderquantity == null)
           {
-            console.log(entry.CODE)
-            console.log(entry.TVA)
-            entry.TVA = parseFloat(entry.TVA)
-            console.log(entry.TVA)
+            item.orderquantity = 0
           }
-          products.push(entry)
-          
-        }
-        order.shop = this.magasin
-        order.products = products
-        order.dateOrder = timeRange[0].getTime();
-        order.demandor = this.$store.getters.creds.user.id
-        order.oldId = this.oldID
-        order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
-        order.remise = this.remise
-        order.totalBoulangerie = this.totalBoulangerie().toFixed(2)
-        order.totalPatisserie = this.totalPatisserie().toFixed(2)
-        order.totalOther = this.totalOther().toFixed(2)
-        order.totalPrice = this.totalPrice.toFixed(2)
-        order.confirmed = this.disabled
-        //order.invendus = this.invendus
-        //order.supplement = this.supplement
-        //order.remisePat = this.remisePat
-        //order.invendusPat = this.invendusPat
-        //order.supplementPat = this.supplementPat
-        
-        
-        if(!this.disabled)
-        {
-          setTimeout(() => {
-            axios.post(
-              this.$store.getters.apiurl + "schamps/new_unsales?token="+this.$store.getters.creds.token, order
-              ).then((response) => {
-                if(response.data.error!="")
-                  {
-                    this.$notify({ 
-                    title: "Error",
-                    message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                    type: "error",
-                    position: "bottom-right",
-                    duration: 1500});
-                    }
-                else
-                  {
-                    this.$notify({ 
-                    title: "Success",
-                    message: "Commande en " +this.categoryUp + " envoyée !",
-                    type: "success",
-                    position: "bottom-right",
-                    duration: 2000
-                  });
-                  }
-            })
-            .catch((error)=> {
-              console.log(error);
-              
-            });
-          }, 1000)
+      }  
+    },
 
-          console.log('Sending Command')}
-        }
-        else
-        {
-          console.log('No data To send')
-        }
+    onCloseOrder(){
+      this.disabled = true
+      this.onSubmit();
+    },
+
+    onSubmit(){
+        
+      this.refillNan()  
+
+      var order = {};
+      var products = [];
+      var entry = {};
+      var timeRange=this.$store.getters.timeRangeDay;
+      for(var itemKey in Object.keys(this.records)) {
+        var item = this.records[itemKey]
+        
+        entry = item
+        /*entry._id = item._id
+        entry.name = item.name
+        entry.category = item.categoryID
+        entry.code = item.old_code
+        entry.quantity = item.quantity
+        entry.orderquantity = item.orderquantity
+        entry.size = item.size
+        entry.remarque = item.remarque
+        entry.price_tvac = item.price_tvac
+        entry.available = item.available*/
+        products.push(entry)
+      }
+      order.shop = this.magasin
+      order.totalPrice = this.totalPrice.toFixed(2)
+      order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+      order.totalPatisserie = this.totalPatisserie.toFixed(2)
+      order.totalOther = this.totalOther.toFixed(2)
+      order.products = products
+      order.dateOrder = timeRange[0].getTime();
+      order.demandor = this.$store.getters.creds.user.id
+      order.oldId = this.oldID
+      order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
+      order.confirmed = this.disabled
+
+      console.log('confirmed: ')
+      console.log(order.confirmed)
+
+
+      
+      
+      /*setTimeout(() => {
+        axios.post(
+          this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+          ).then((response) => {
+            if(response.data.error!="")
+              {
+                this.$notify({ 
+                title: "Error",
+                message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                type: "error",
+                position: "bottom-right",
+                duration: 1500});
+                }
+            else
+              {
+                this.$notify({ 
+                title: "Success",
+                message: "Commande en " +this.categoryUp + " envoyée !",
+                type: "success",
+                position: "bottom-right",
+                duration: 2000
+              });
+              }
+        })
+        .catch((error)=> {
+          console.log(error);
+          
+        });
+      }, 1000)*/
+
+      console.log('Sending Command')
+      //this.setAutoRefresh();
+      
     },
     prepareData() {
       console.log('prepare data')
-      this.magasin = this.$store.getters.actualShop;
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
         if(priv =='admin' ||  priv=='SHOP_FORM') {
@@ -694,10 +718,6 @@ export default {
       this.$nextTick(() => {
         this.currentApps = JSON.parse(JSON.stringify(this.$store.getters.currentApps))
       });
-    },
-    loadData(){
-        this.records = [];
-        this.getData();
     },
     dateSelected() {
       
@@ -761,124 +781,54 @@ export default {
                 console.log("Categories : "  + cats)
                 this.subCategories = subCategories
                 this.subSubCategories = tree
-                this.classement = cats.sort();
+                this.classement = cats.sort()
                 console.log(this.subSubCategories)
             }
         });    
     },
 
-    getMagasins() {         
-      var url =
+    
+
+    getMagasin() {
+      var demandor = this.$store.getters.creds.user.id          
+      /*var url =
       this.$store.getters.apiurl +
-      "generic_search/shop_parameters?token=" + this.$store.getters.creds.token;  
+      "schamps/check_user_shop?demandor="+demandor+"&token=" + this.$store.getters.creds.token;  
 
-      console.log('CHECK SHOPS LIST')
-
-      var query = {
-        size: 2000,
-        sort:[{"Nom magasin.keyword":{"order":"asc"}}],
-        query: {
-          bool: {
-            must: [
-              {
-                match_all: {}
-              }
-            ]
-          }
-        }
-      };
+      console.log('CHECK USER SHOP')
 
       axios
-        .post(url, query)
+        .get(url, demandor)
         .then((response) => {
             if(response.data.error!="")
-            console.log("User Shop list error...");
+            console.log("User Shop Calls list error...");
             else{
-                
-                var res = response.data
-                console.log("MAGASINS : ")
-                console.log(res)
-                this.magasin = res.records[0]._source['Nom magasin']
-                var magasins = []
-                for(var rec in res.records)
-                {
-                    console.log(rec)
-                    magasins.push(res.records[rec]._source['Nom magasin'])
-                }
-                this.magasins = magasins
-                console.log(this.magasins)
+                var res = JSON.parse(response.data.data)
+                console.log("MAGASIN : ")
+                //console.log(res)
+                this.magasin = res.reccords[0]._source.magasin
                 this.prepareData();
                
             }
-        });  
-
+        }); */ 
+        this.prepareData();
+        this.magasin = 'DEMO'
         
-
-    },
-    totalPatisserie: function(){
-
-      var price = 0
-      var products = this.records
-      for(var itemKey in Object.keys(this.records))
-      {
-        var data = this.records[itemKey]
-        if(data.sortLvl1 == 'Pâtisserie')
-        {
-          price += (data.quantity*data.Prix_TVAC)
-        }
-      }
-
-      return price
-
-    },
-
-    totalBoulangerie: function(){
-
-      var price = 0
-      var products = this.records
-      for(var itemKey in Object.keys(this.records))
-      {
-        var data = this.records[itemKey]
-        if(data.sortLvl1 == 'Boulangerie')
-        {
-          price += (data.quantity*data.Prix_TVAC)
-        }
-      }
-
-      return price
-
-    },
-
-    totalOther: function(){
-
-      var price = 0
-      var products = this.records
-      for(var itemKey in Object.keys(this.records))
-      {
-        var data = this.records[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
-        {
-          price += (data.quantity*data.Prix_TVAC)
-        }
-      }
-
-      return price
 
     },
 
     getData() {
-      var demandor = this.$store.getters.creds.user.id  
-      var timeRange=this.$store.getters.timeRangeDay;
-      console.log(this.$store.getters.timeRangeDay)
+      var demandor = this.$store.getters.creds.user.id    
       var magasin = this.magasin 
+      var timeRange=this.$store.getters.timeRangeDay;
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_unsales?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
-      //this.createNewForm();
-      //this.$forceUpdate();
+
+      
         
       axios
         .get(url, demandor)
@@ -907,13 +857,11 @@ export default {
                     this.oldID = oldId
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
-                    //this.remise = res.reccords[0]['_source']['remise']
-                    //this.invendus = res.reccords[0]['_source']['invendus']
-                    //this.supplement = res.reccords[0]['_source']['supplement']
                 }
                 this.$forceUpdate();
             }
-        }); 
+        });  
+        this.setAutoRefresh();
     },
 
 
@@ -1002,6 +950,51 @@ export default {
       this.dialogVisible = true
 
     },
+
+    /*refreshData(){
+
+      if(this.oldID != null)
+      {
+          var query = {"_id": this.oldID}
+          var url = this.$store.getters.apiurl + "lambdas/2/getorderstatus?apikey=" + this.$store.getters.creds.token;
+          axios
+          .post(url, query)
+          .then((response) => {
+
+            var status = false
+
+            console.log(response.data.orderstatus)
+            if(response.data.orderstatus == true)
+            {
+              status = true
+            }
+
+            if(this.disabled == false && status==true)
+            {
+                this.disabled = status
+                this.onSubmit();
+            }
+            console.log('Order Status GET')
+            console.log(status)
+            this.disabled = status
+            //this.onSubmit();
+
+          });
+      }
+    },*/
+
+    setAutoRefresh: function() {
+      console.log('Setting Interval')
+
+      /*if(this.refAutoRefresh != null)
+        clearInterval(this.refAutoRefresh)
+
+      this.refAutoRefresh =  setInterval(() => {
+        this.refreshData()
+      }, 30000)*/
+
+    },
+
     clickDialogDelete() {
 
       this.$confirm(
@@ -1274,15 +1267,6 @@ export default {
           return false;
         }
       });
-    },
-    updateTimeRange() {
-      const start = new Date();
-      console.log('coucou');
-      start.setTime(this.$refs.generic.chart.series.w.globals.minX);
-      this.$globalbus.$emit("charttimerangeupdated", [
-        this.$refs.generic.chart.series.w.globals.minX,
-        this.$refs.generic.chart.series.w.globals.maxX
-      ]);
     }
 
   }

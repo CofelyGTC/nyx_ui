@@ -21,28 +21,21 @@
       </td>
       </el-row>      
       <el-form style="widht: 100%" :disabled="this.disabled">
-          
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
-          
           v-for="(category, index) in classement"
           :key="'TAB-'+index"
           :label="category"
           :name="'TAB-'+index"
           :lazy="true"
-          
-          
         >
         <el-tabs v-model="selectedUnderTab" @tab-click="subTabChanged()">
           <el-tab-pane
-          
           v-for="(subcategory, index1) in subCategories[category]"
           :key="'TAB-'+index+'-'+index1"
           :label="subcategory"
           :name="'TAB-'+index+'-'+index1"
           :lazy="true"
-          
-          
         >
 
  <el-row>
@@ -595,7 +588,7 @@ export default {
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
         //&& data.Available
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8  && data.display
     },
     tabChanged(index){
       this.refillNan()
@@ -699,39 +692,55 @@ export default {
         order.confirmed = this.disabled
 
         console.log(order)
-        
-        setTimeout(() => {
-          axios.post(
-            this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
-            ).then((response) => {
-              if(response.data.error!="")
-                {
-                  this.$notify({ 
-                  title: "Error",
-                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                  type: "error",
-                  position: "bottom-right",
-                  duration: 1500});
-                  }
-              else
-                {
-                  this.$notify({ 
-                  title: "Success",
-                  message: "Commande en " +this.categoryUp + " envoyée !",
-                  type: "success",
-                  position: "bottom-right",
-                  duration: 2000
-                });
-                }
-          })
-          .catch((error)=> {
-            console.log(error);
-            
-          });
-        }, 1000)
 
-        console.log('Sending Command')
-        //this.setAutoRefresh();
+        var admin = false
+
+        for( var priv in this.$store.getters.creds.user.privileges)
+        {
+          if(priv == 'admin'){
+            admin = true
+          }
+        }
+
+          
+        if(!admin  && timeRange[0].getTime() < Date.now())
+        {
+            console.log("Wrong Date")
+        }
+        else{
+          setTimeout(() => {
+            axios.post(
+              this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+              ).then((response) => {
+                if(response.data.error!="")
+                  {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                  {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commande en " +this.categoryUp + " envoyée !",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                  });
+                  }
+            })
+            .catch((error)=> {
+              console.log(error);
+              
+            });
+          }, 1000)
+
+          console.log('Sending Command')
+          //this.setAutoRefresh();
+        }
       }
       else{
         console.log('Nothing order');

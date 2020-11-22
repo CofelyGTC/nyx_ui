@@ -63,19 +63,19 @@
                             </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="newRec._source.cake.type == 'Bavarois'" label="Goût" :label-width="formLabelWidth2">
+                <el-form-item v-if="newRec._source.cake.type == 'Bavarois'" label="Goût" :label-width="formLabelWidth2" prop="taste">
                     <el-select v-model="newRec._source.cake.bavaroisType" filterable placeholder="Sélectionner">
                             <el-option v-for="(item, bavaroisType) in bavaroisTypes" :key="bavaroisType" :label="item" :value="item">
                             </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="newRec._source.cake.type == 'Glace'" label="Goût" :label-width="formLabelWidth2">
+                <el-form-item v-if="newRec._source.cake.type == 'Glace'" label="Goût" :label-width="formLabelWidth2" prop="taste">
                     <el-select multiple :multiple-limit="2" v-model="newRec._source.cake.glaceGout" filterable placeholder="Sélectionner">
                             <el-option v-for="(item, glaceGout) in glaceGouts" :key="glaceGout" :label="item" :value="item">
                             </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="newRec._source.cake.type == 'Number Cake'" label="Saveur" :label-width="formLabelWidth2">
+                <el-form-item v-if="newRec._source.cake.type == 'Number Cake'" label="Saveur" :label-width="formLabelWidth2" prop="taste">
                     <el-select v-model="newRec._source.cake.numberCakeType" filterable placeholder="Sélectionner">
                             <el-option v-for="(item, numberCakeType) in numberCakeTypes" :key="numberCakeType" :label="item" :value="item">
                             </el-option>
@@ -91,8 +91,8 @@
                     <el-form-item v-if="newRec._source.cake.numberCakeGender == 'Fille' || newRec._source.cake.numberCakeGender == 'Garçon'" label="Âge" :label-width="formLabelWidth2">
                         <el-input-number size="mini" v-model="newRec._source.age" autocomplete="off" :min="0" :step="1"/>
                     </el-form-item>
-                    <el-form-item label="Caractères :" :label-width="formLabelWidth2" >
-                        <el-input :maxlength="maxLenNC" minlength="1" size="mini" v-model="newRec._source.cake.numberCakeChars" autocomplete="off" placeholder="Vos caractères"></el-input>
+                    <el-form-item label="Caractères :" :label-width="formLabelWidth2" prop="caract">
+                        <el-input :maxlength="maxLenNC" minlength="1" size="mini" v-model="newRec._source.cake.numberCakeChars" autocomplete="off" placeholder="Vos caractères" ></el-input>
                     </el-form-item>
                 </div>
                 
@@ -238,7 +238,9 @@ export default {
     magasins: [],
     rules: {
           cake: {type: [{ required: true, message: 'Veuillez sélectionner un type de gâteaux', trigger: 'blur' }]},
-          magasin: [{ required: true, message: 'Veuillez sélectionner un magasin', trigger: 'blur' }]
+          taste: [{ required: true, message: 'Veuillez sélectionner un goût', trigger: 'blur' }],
+          magasin: [{ required: true, message: 'Veuillez sélectionner un magasin', trigger: 'blur' }],
+          caract: [{ required: true, message: 'Veuillez entrer les caractères du gâteau', trigger: 'blur' }]
     }
     
 
@@ -307,6 +309,9 @@ export default {
             magasin = this.$store.getters.activeApp.config.hiddenQuery.substring(9)
 
             magasin = magasin.replace('"', '')
+         
+            
+        
             //magasin = this.$store.getters.actualShop
             
         }
@@ -363,6 +368,7 @@ export default {
             }
             case '8P':
             case '10P':  
+            case '12P':
             {
               price+=7.5
               break;
@@ -390,6 +396,7 @@ export default {
             break;
             }
             case '10P':
+            case '12P':  
             case '16P':
             {
             price+=5
@@ -449,17 +456,23 @@ export default {
     },
 
     submitForm(formName) {
+
+        var validate = false
         this.$refs[formName].validate((valid) => {
           console.log('coucou1')
           if (valid) {
-            alert('submit!');
-            saveRecord();
+            //alert('submit!');
+            //saveRecord();
+            console.log('Rules OK')
+            validate = true;
             
           } else {
             console.log('error submit!!');
-            return false;
+            validate = false;
           }
         });
+
+        //return validate;
         /*this.$refs[formName].validate((valid) => {
           console.log('coucou1')
           console.log(valid)
@@ -531,16 +544,39 @@ export default {
       }
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+      if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
+      {
+          this.newRec._source.magasin = this.magasin
+      }
     },
     saveRecord: function() {
 
       console.log(this.newRec._source.cake.type)
-      if(this.newRec._source.cake.type == null || this.newRec._source.magasin == null)
+      if(this.newRec._source.cake.type == null || this.newRec._source.magasin == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null)))
+      {
+          console.log('In if')
+          this.submitForm('ruleForm')
+          console.log(this.newRec._source.cake.glaceGout)
+          
+      }
+      /*else if(this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGouts == [])
+      {
+          this.submitForm('ruleForm')
+      }
+      else if(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeTypes == null || this.newRec._source.cake.numberCakeChars == null))
       {
           this.submitForm('ruleForm')
       }
 
+      if(!this.submitForm('ruleForm'))
+      {
+        console.log('Rules unsuceed')
+      }*/
+
+
       else{
+        console.log(this.newRec._source.cake.glaceGout)
+        console.log('in else')
         this.newRec._source.modifyBy = this.$store.getters.creds.user.login
         this.newRec._source.dateOrder = Date.now()
         this.newRec._source.dateDelivery = this.$store.getters.timeRangeDay[0].getTime()

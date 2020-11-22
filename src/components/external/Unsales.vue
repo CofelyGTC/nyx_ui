@@ -635,45 +635,48 @@ export default {
         order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
         order.totalPatisserie = this.totalPatisserie.toFixed(2)
         order.totalOther = this.totalOther.toFixed(2)
+        order.confirmed = this.disabled
         //order.invendus = this.invendus
         //order.supplement = this.supplement
         //order.remisePat = this.remisePat
         //order.invendusPat = this.invendusPat
         //order.supplementPat = this.supplementPat
         
-        
-        
-        setTimeout(() => {
-          axios.post(
-            this.$store.getters.apiurl + "schamps/new_unsales?token="+this.$store.getters.creds.token, order
-            ).then((response) => {
-              if(response.data.error!="")
-                {
-                  this.$notify({ 
-                  title: "Error",
-                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                  type: "error",
-                  position: "bottom-right",
-                  duration: 1500});
+        console.log(this.disabled)
+        if(!this.disabled)
+        {
+          setTimeout(() => {
+            axios.post(
+              this.$store.getters.apiurl + "schamps/new_unsales?token="+this.$store.getters.creds.token, order
+              ).then((response) => {
+                if(response.data.error!="")
+                  {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                  {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commande en " +this.categoryUp + " envoyée !",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                  });
                   }
-              else
-                {
-                  this.$notify({ 
-                  title: "Success",
-                  message: "Commande en " +this.categoryUp + " envoyée !",
-                  type: "success",
-                  position: "bottom-right",
-                  duration: 2000
-                });
-                }
-          })
-          .catch((error)=> {
-            console.log(error);
-            
-          });
-        }, 1000)
+            })
+            .catch((error)=> {
+              console.log(error);
+              
+            });
+          }, 1000)
 
-        console.log('Sending Command')
+          console.log('Sending Command')
+          }
         }
         else
         {

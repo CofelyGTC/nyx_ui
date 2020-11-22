@@ -23,7 +23,7 @@
                 </el-col>
                 <el-col :span="4">
                     <template>
-                        <el-input-number v-model="remise" :precision="2" :step="0.1" :min="0"></el-input-number>
+                        <el-input-number v-model="remise" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
                 <el-col :span="4">
@@ -31,7 +31,7 @@
                 </el-col>
                 <el-col :span="4">
                     <template>
-                        <el-input-number v-model="supplement" :precision="2" :step="0.1" :min="0"></el-input-number>
+                        <el-input-number v-model="supplement" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
                 <el-col :span="4">
@@ -39,7 +39,7 @@
                 </el-col>
                 <el-col :span="4">
                     <template>
-                        <el-input-number v-model="vitas"  :step="1" :min="0"></el-input-number>
+                        <el-input-number v-model="vitas" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
                     </template>
                 </el-col>
 
@@ -53,7 +53,7 @@
                 </el-col>
                 <el-col :span="4">
                     <template>
-                        <el-input-number v-model="remisePat" :precision="2" :step="0.1" :min="0"></el-input-number>
+                        <el-input-number v-model="remisePat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
                 <el-col :span="4">
@@ -61,7 +61,7 @@
                 </el-col>
                 <el-col :span="4">
                     <template>
-                        <el-input-number v-model="supplementPat" :precision="2" :step="0.1" :min="0"></el-input-number>
+                        <el-input-number v-model="supplementPat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
                 <el-col v-if="sacapain == true" :span="4">
@@ -69,7 +69,7 @@
                 </el-col>
                 <el-col  v-if="sacapain == true"  :span="4">
                     <template>
-                        <el-input-number v-model="nbreSacsAPain"  :step="1" :min="0"></el-input-number>
+                        <el-input-number v-model="nbreSacsAPain" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
                     </template>
                 </el-col>
             </el-row>
@@ -730,40 +730,42 @@ export default {
         order.dusBoul = this.totalBoulangerie.toFixed(2);
         order.dusPat = this.totalPatisserie.toFixed(2);
         order.dusOthers = this.totalOther.toFixed(2);
+        order.confirmed = this.disabled
 
         
-        
-        setTimeout(() => {
-          axios.post(
-            this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
-            ).then((response) => {
-              if(response.data.error!="")
-                {
-                  this.$notify({ 
-                  title: "Error",
-                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                  type: "error",
-                  position: "bottom-right",
-                  duration: 1500});
+        if(!this.disabled)
+        {
+          setTimeout(() => {
+            axios.post(
+              this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
+              ).then((response) => {
+                if(response.data.error!="")
+                  {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                  {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commande en " +this.categoryUp + " envoyée !",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                  });
                   }
-              else
-                {
-                  this.$notify({ 
-                  title: "Success",
-                  message: "Commande en " +this.categoryUp + " envoyée !",
-                  type: "success",
-                  position: "bottom-right",
-                  duration: 2000
-                });
-                }
-          })
-          .catch((error)=> {
-            console.log(error);
-            
-          });
-        }, 1000)
+            })
+            .catch((error)=> {
+              console.log(error);
+              
+            });
+          }, 1000)
 
-        console.log('Sending Command')
+          console.log('Sending Command')}
         }
         else
         {
@@ -1362,6 +1364,30 @@ export default {
           {
             item.orderquantity = 0
           }
+      }
+      if(this.supplement == null)
+      {
+        this.supplement = 0
+      }
+      if(this.supplementPat == null)
+      {
+        this.supplementPat = 0
+      }
+      if(this.remise == null)
+      {
+        this.remise = 0
+      }
+      if(this.remisePat == null)
+      {
+        this.remisePat = 0
+      }
+      if(this.vitas == null)
+      {
+        this.vitas = 0
+      }
+      if(this.sacapain == null)
+      {
+        this.sacapain = 0
       }  
     },
     updateTimeRange() {

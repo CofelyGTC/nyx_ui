@@ -14,8 +14,22 @@
         <el-button type="primary" @click="onGenerateLivraisonDetails">Générer détails préparation</el-button>
         <el-button type="primary" @click="onGenerateComission">Générer notes de livraisons</el-button>
         </el-row>
+        
         <el-row>
-          <el-button type="primary" @click="test">TEST</el-button>
+          <el-date-picker
+            v-model="dateToConfirm"
+            type="date"
+            placeholder="Choississez un jour">
+          </el-date-picker>
+          <el-button type="primary" @click="onDateConfirmOrders">Confirmer Orders à la Date</el-button>
+        </el-row>
+        <el-row>
+          <el-date-picker
+            v-model="dateToFacturation"
+            type="date"
+            placeholder="Choississez un jour">
+          </el-date-picker>
+          <el-button type="primary" @click="onDateFacturation">Recalculer la Facturation à la date</el-button>
         </el-row>
     </el-row>
     </div>
@@ -26,7 +40,10 @@ import axios from "axios";
 
 export default {
   name: "ManualActions",
-  data: () => ({}),
+  data: () => ({
+    dateToConfirm: null,
+    dateToFacturation: null,
+  }),
   props: {
     config: {
       type: Object
@@ -376,6 +393,80 @@ export default {
         }, 1000)
 
         console.log('Confirming Reorder')
+      },
+      onDateConfirmOrders: function()
+      {
+          var body = {
+            "destination": "/topic/ONDATE_CONFIRM_ORDERS",
+            "body": '{"message":"stop", "date": "'+this.dateToConfirm.getTime().toString()+'"}'
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec du repassage des commandes",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commandes repassées",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+      },
+      onDateFacturation: function()
+      {
+          var body = {
+            "destination": "/topic/ONDATE_FACTURATION",
+            "body": '{"message":"stop", "date": "'+this.dateToFacturation.getTime().toString()+'"}'
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Recalcul Facturation",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Facturation Recalculée",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
       }
 
   }

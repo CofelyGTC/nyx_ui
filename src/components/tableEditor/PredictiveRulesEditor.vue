@@ -69,11 +69,6 @@
                            </el-form-item>
                         </el-col>
                         <el-col :span=4>
-                           <el-form-item label="Value" :label-width="formLabelWidth">
-                              <el-input-number size="mini" v-model="condition.value" :min="0"></el-input-number>
-                           </el-form-item>
-                        </el-col>
-                        <el-col :span=4>
                            <el-form-item label="Symbol" :label-width="formLabelWidth">
                              <el-select v-model="condition.symbol">
                                  <el-option v-for="(item, id) in symbols" :key="id" :label="item" :value="item"></el-option>
@@ -81,7 +76,13 @@
                            </el-form-item>
                         </el-col>
                         <el-col :span=4>
-                           <el-form-item label="Time (ms)" :label-width="formLabelWidth">
+                           <el-form-item label="Value" :label-width="formLabelWidth">
+                              <el-input-number size="mini" v-model="condition.value" :min="0"></el-input-number>
+                           </el-form-item>
+                        </el-col>
+                        
+                        <el-col :span=4>
+                           <el-form-item label="Time (h)" :label-width="formLabelWidth">
                               {{condition.time}}
                            </el-form-item>
                         </el-col>
@@ -112,19 +113,19 @@
                 </el-form-item>
             </el-col>
             <el-col :span=6>
+                <el-form-item label="Time (h)" :label-width="formLabelWidth">
+                  <el-input-number size="mini" v-model="weatherTime"></el-input-number>
+                </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row>
+            <el-col :span=6>
               <el-form-item label="Tag" :label-width="formLabelWidth">
                   <el-select v-model="weatherTag">
                       <el-option v-for="(item, id) in weatherTags" :key="id" :label="item" :value="item"></el-option>
                   </el-select>
                 </el-form-item>
             </el-col>
-            </el-row>
-            <el-row>
-            <el-col :span=6>
-                <el-form-item label="Value" :label-width="formLabelWidth">
-                  <el-input-number size="mini" v-model="weatherValue"></el-input-number>
-                </el-form-item>
-              </el-col>
             <el-col :span=6>
               <el-form-item label="Symbol" :label-width="formLabelWidth">
                   <el-select v-model="weatherSymbol">
@@ -133,10 +134,12 @@
                 </el-form-item>
             </el-col>
             <el-col :span=6>
-                <el-form-item label="Time (ms)" :label-width="formLabelWidth">
-                  <el-input-number size="mini" v-model="weatherTime"></el-input-number>
+                <el-form-item label="Value" :label-width="formLabelWidth">
+                  <el-input-number size="mini" v-model="weatherValue"></el-input-number>
                 </el-form-item>
-            </el-col>
+              </el-col>
+            
+
             <el-col :span=2>
                 <el-button type="primary" @click="addWeatherCondition()" icon="el-icon-plus" circle></el-button>
             </el-col>
@@ -158,16 +161,17 @@
                               {{condition.tag}}
                            </el-form-item>
                         </el-col>
-                        <el-col :span=4>
-                           <el-form-item label="Value" :label-width="formLabelWidth">
-                              <el-input-number size="mini" v-model="condition.value" :min="0"></el-input-number>
-                           </el-form-item>
-                        </el-col>
+                        
                         <el-col :span=4>
                            <el-form-item label="Symbol" :label-width="formLabelWidth">
                              <el-select v-model="condition.symbol">
                                  <el-option v-for="(item, id) in symbols" :key="id" :label="item" :value="item"></el-option>
                              </el-select>
+                           </el-form-item>
+                        </el-col>
+                        <el-col :span=4>
+                           <el-form-item label="Value" :label-width="formLabelWidth">
+                              <el-input-number size="mini" v-model="condition.value" :min="0"></el-input-number>
                            </el-form-item>
                         </el-col>
                         <el-col :span=4>
@@ -198,6 +202,8 @@
                    </el-select>
                 </el-form-item>
               </el-col>
+              </el-row>
+              <el-row>
               <el-col :span=6>
                     <el-form-item label="Symbol" :label-width="formLabelWidth">
                         <el-select v-model="conditionPLCSymbol">
@@ -205,20 +211,14 @@
                         </el-select>
                     </el-form-item>
               </el-col>
-          </el-row>
-          <el-row>
+          
               <el-col :span=6>    
                 <el-form-item label="Value: " :label-width="formLabelWidth2">
                     <el-input-number size="mini" v-model="conditionPLCValue" :min="0"></el-input-number>
                 </el-form-item>
             </el-col>
-            <el-col :span=6>    
-                <el-form-item label="Time(ms): " :label-width="formLabelWidth2">
-                    <el-input-number size="mini" v-model="conditionPLCTime" :min="0"></el-input-number>
-                </el-form-item>
-            </el-col>
             <el-col :span=6>
-              &nbsp
+              <p> &nbsp;</p>
             </el-col>
             <el-col :span=2>
                 <el-button type="primary" @click="addPLCCondition()" icon="el-icon-plus" circle></el-button>
@@ -233,7 +233,7 @@
           <el-row style="text-align:left;">
            <el-col v-for="(action, index) in this.actions" :key="index">
                 <el-row style="text-align:left;">
-                       <el-col :span=4>
+                       <el-col :span=3>
                            <el-form-item label="PLC" :label-width="formLabelWidth">
                               {{action.PLC}}
                            </el-form-item>
@@ -243,14 +243,16 @@
                               {{action.tag}}
                            </el-form-item>
                         </el-col>
-                        <el-col :span=4>
+                        <el-col :span=3>
                            <el-form-item label="Type" :label-width="formLabelWidth">
                               {{action.action}}
                            </el-form-item>
                         </el-col>
-                        <el-col :span=4 style="text-align:left;">    
+                        <el-col :span=6 style="text-align:left;">    
                            <el-form-item label="Value: ">
-                               <el-input-number size="mini" v-model="action.value" :min="0"></el-input-number>
+                               <el-select size="mini" v-model="action.value">
+                                  <el-option v-for="item in writeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                              </el-select>
                            </el-form-item>
                        </el-col>
                        <el-col :span=4>
@@ -291,7 +293,9 @@
               </el-col>
               <el-col :span=6>    
                 <el-form-item label="Value: " :label-width="formLabelWidth2">
-                    <el-input-number size="mini" v-model="actionValue" :min="0"></el-input-number>
+                    <el-select size="mini" v-model="actionValue">
+                        <el-option v-for="item in writeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </el-form-item>
             </el-col>
             <el-col :span=2>
@@ -300,18 +304,19 @@
             
           </el-row>
       </el-card> 
+      <br>
       <el-card v-if="building != ''" shadow="hover" :body-style="{ padding: '10px' }">
           <h2>Next Run</h2>
           <br>
           <el-row style="text-align:left;">
             <el-col :span=6>
               <el-form-item label="Last Run: " :label-width="formLabelWidth">
-                {{lastRun}}
+                {{lastRun | formatDate}}
               </el-form-item>
             </el-col>
             <el-col :span=6>
               <el-form-item label="Next Run: " :label-width="formLabelWidth">
-                {{nextRun | formatDate}}
+                {{nextRun| formatDate}}
               </el-form-item>
             </el-col>
           </el-row>
@@ -344,11 +349,74 @@
               </el-form-item>
             </el-col>
             <el-col v-if="nextRunType=='interval'" :span=6>
-              <el-form-item label="Time Before Reset (ms): " :label-width="formLabelWidth2">
+              <el-form-item label="Time Before Reset (h): " :label-width="formLabelWidth2">
                   <el-input-number size="mini" v-model="interval" :min="0"></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
+          <br>
+          <h2>Execution Interval</h2>
+          <br>
+          <el-row style="text-align:left;">
+            <el-col v-for="(interval, index) in this.executionIntervals" :key="index">
+              <el-row style="text-align:left;">
+                  <el-col :span=6>
+                      <el-form-item label="Start" :label-width="formLabelWidth">
+                        {{interval.start}}
+                      </el-form-item>
+                  </el-col>
+                  <el-col :span=6>
+                      <el-form-item label="Stop" :label-width="formLabelWidth">
+                        {{interval.stop}}
+                      </el-form-item>
+                  </el-col>
+                  <el-col :span=6>
+                      <center>
+                        <el-button @click="removeExecutionInterval(index)" type="danger" icon="el-icon-delete" circle>
+                        </el-button>
+                      </center>
+                  </el-col>
+              </el-row>
+            </el-col>
+
+          </el-row>
+          <el-row style="text-align:left;">
+            <el-col :span=6>
+              <el-form-item label="Start: " :label-width="formLabelWidth2">
+                  <el-time-select
+                      v-model="executionIntervalStart"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:15',
+                        end: '23:45'
+                      }"
+                      placeholder="Pick a Time">
+                    </el-time-select>
+
+              </el-form-item>
+            </el-col>
+            <el-col :span=6>
+              <el-form-item label="Stop: " :label-width="formLabelWidth2">
+                  <el-time-select
+                      v-model="executionIntervalStop"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:15',
+                        end: '23:45'
+                      }"
+                      :min="executionIntervalStart"
+                      placeholder="Pick a Time">
+                    </el-time-select>
+
+              </el-form-item>
+            </el-col>
+            <el-col :span=4 style="text-align:right;">
+                <el-button type="primary" @click="addInterval()" icon="el-icon-plus" circle></el-button>
+            </el-col>
+
+          </el-row>
+
+
 
       </el-card>     
 
@@ -392,6 +460,7 @@ export default {
     rulesTypes: ['generic', 'customcode'],
     building: '',
     actions: [],
+    executionIntervals: [],
     buildingList: [],
     actionsTypes: ['write', 'read'],
     actionType: '',
@@ -422,14 +491,17 @@ export default {
     weatherSymbol: '',
     weatherTime: 0,
     blocked: false,
-    lastRun: 0,
+    lastRun: new Date(),
     nextRunType: '',
     nextRunConf: {},
-    //nextRun: 0,
+    writeOptions: [{value: 0, label: 'Auto'},{value: 1, label: 'Marche'},{value: 2, label: 'Arret'}],
+    //nextRun: ,
     nextRunTypes: ['daily', 'interval'],
     dailyDays: '0',
     dailyTime: '00:00',
-    interval: 0
+    interval: 0,
+    executionIntervalStart: '00:00',
+    executionIntervalStop: '00:00',
 
 
   }),
@@ -445,20 +517,22 @@ export default {
     },
     nextRun: function() {
         
+        
 
       if(this.nextRunType == 'interval')
       {
-        return this.lastRun + this.interval
+        var nextRun = new Date(this.lastRun.getTime() + (this.interval*1000*60*60))
+        return nextRun
       }
       else{
         
         var daysms = this.dailyDays*86400000 
         
-        var nextrun = new Date(this.lastRun+daysms)
+        var nextRun = new Date(this.lastRun.getTime()+daysms)
 
-        console.typeof
+        //console.typeof
 
-        console.log(nextrun)
+        console.log(nextRun)
         console.log(this.dailyTime.substring(2,0))
 
         var hours = parseInt(this.dailyTime.substring(0,2))
@@ -466,14 +540,14 @@ export default {
 
         //var hours = this.dailyTime.getHours()
         //var minutes = this.dailyTime.getMinutes()
-        console.log(typeof nextrun)
-        nextrun.setHours(hours)
-        nextrun.setMinutes(minutes)
-        nextrun.setSeconds(0)
+        console.log(typeof nextRun)
+        nextRun.setHours(hours)
+        nextRun.setMinutes(minutes)
+        nextRun.setSeconds(0)
         
-        console.log(nextrun)
+        console.log(nextRun)
 
-        return nextrun
+        return nextRun
 
 
 
@@ -525,6 +599,13 @@ export default {
         console.log("CONDITION")
         this.conditionsWeather = this.record._source.conditions.weather
         this.conditionsPLC = this.record._source.conditions.PLC
+        console.log(this.conditionsWeather)
+        console.log()
+    }
+
+    if(this.record._source.executionIntervals)
+    {
+      this.executionIntervals = this.record._source.executionIntervals
     }
 
     if(this.record._source.blocked)
@@ -534,7 +615,7 @@ export default {
 
     if(this.record._source.lastRun)
     {
-      this.lastRun = this.record._source.lastRun
+      this.lastRun = new Date(this.record._source.lastRun)
     }
 
     if(this.record._source.nextRunConf)
@@ -545,7 +626,17 @@ export default {
     if(this.record._source.nextRunType)
     {
       this.nextRunType = this.record._source.nextRunType
+      if(this.nextRunType=='interval')
+      {
+        this.interval = this.nextRunConf.interval
+      }
+      else
+      {
+        this.dailyDays = this.nextRunConf.day
+        this.dailyTime = this.nextRunConf.hour
+      }
     }
+    
 
     if(this.record._source.nextRun)
     {
@@ -574,7 +665,7 @@ export default {
 
     removeAction: function(index){
     console.log("coucou")
-    console.log(this.newRec._source.actions[index])
+    //console.log(this.newRec._source.actions[index])
     //delete this.newRec._source.ingredients[index]
     this.actions.splice(index, 1)
     
@@ -586,6 +677,10 @@ export default {
 
     removePLCCondition: function(index){
         this.conditionsPLC.splice(index, 1);
+    },
+
+    removeExecutionInterval: function(index){
+        this.executionIntervals.splice(index, 1);
     },
 
     saveRecord: function() {
@@ -609,20 +704,16 @@ export default {
       {
         this.nextRunConf = {"day": this.dailyDays, "hour": this.dailyTime}
       }
-
+      this.newRec._source.executionIntervals = this.executionIntervals
 
       this.newRec._source.nextRunConf = this.nextRunConf
       this.newRec._source.nextRun = this.nextRun
+      console.log(this.nextRun)
       this.newRec._source.ruleID = this.ruleID
       this.newRec._source.ruleName = this.ruleName
       this.newRec._source.ruleType = this.ruleType
 
 
-      /*
-      dailyDays: '0',
-      dailyTime: 0,
-      interval: 0
-      */
 
       this.$store.commit({
         type: "updateRecord",
@@ -706,6 +797,17 @@ export default {
             this.tagsPLCCondition = response.data.tags
             this.$forceUpdate();
         });
+
+    },
+
+    addInterval: function(){
+
+      var interval = {
+        "start": this.executionIntervalStart,
+        "stop": this.executionIntervalStop
+      }
+
+      this.executionIntervals.push(interval);
 
     },
 
