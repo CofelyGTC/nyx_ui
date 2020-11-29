@@ -225,6 +225,76 @@
         </el-col>
         </el-row>
       </el-card>
+      <br>
+      <el-card>
+        <el-row>
+          <h2>Disponibilité</h2>
+        </el-row>
+        <el-row>
+          <el-form-item label="Type de Disponibilité" :label-width="formLabelWidth">
+          <el-select v-model="availabilityType" filterable placeholder="Sélectionner" @change="changeAvailType()">
+                <el-option key=0 label="Toujours Disponible" value="always"></el-option>
+                <el-option key=1 label="Jours de la semaine" value="days"></el-option>
+                <el-option key=2 label="Période" value="period"></el-option>
+            </el-select>
+        </el-form-item>
+        <div v-if="availabilityType == 'days'">
+          
+          <el-row>
+            <el-col :span=3>
+              <el-form-item label="Lundi:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.monday"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=3>
+              <el-form-item label="Mardi:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.tuesday"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=3>
+              <el-form-item label="Mercredi:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.wednesday"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=3>
+              <el-form-item label="Jeudi:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.thursday"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=3>
+              <el-form-item label="Vendredi:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.friday"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=3>
+              <el-form-item label="Samedi:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.saturday"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=3>
+              <el-form-item label="Dimanche:" :label-width="formLabelWidth2">
+                <el-switch v-model="availabilityConf.sunday"></el-switch>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          </div>
+          
+          <div v-else-if="availabilityType == 'period'">
+          
+          <el-row>
+            <el-col :span=6>
+              <label>Définissez la période: </label>
+            </el-col>
+            <el-col :span=12>
+              <el-form-item label="De:" :label-width="formLabelWidth2">
+                <el-date-picker v-model="availabilityConf.period" type="daterange" range-separator="à" start-placeholder="Date de début" end-placeholder="Date de fin"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            
+          </el-row>
+          </div>
+        </el-row>
+      </el-card>
     </el-form>
 
     <span slot="footer" class="dialog-footer">
@@ -259,6 +329,9 @@ export default {
     dialogFormVisible: false,
     title: "Produit",
     availability: ["Toujours Disponible", "Sur Commande Client", "Mercredi et Vendredi"],
+    availabilityTypes:["always", "period", "days"],
+    availabilityType: '',
+    availabilityConf: {},
     lvl1: ['Boulangerie', 'Pâtisserie', 'Confiserie', 'Salés', 'Boissons', 'Divers'],
     lvl2: ['Gris', 'Demi gris', 'Blanc', 'Spéciaux', 'Baguette et Pistolet'],
     lvl2_pat: ['Petit déjeuner', 'Petite Pâtisserie', 'Tarte', 'Gâteaux', 'Divers', 'Tropézienne', 'Verrine'],
@@ -332,9 +405,38 @@ export default {
       this.dialogFormVisible = true;
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+      this.availabilityType = this.newRec._source.avail
+      this.availabilityConf  = this.newRec._source.availabilityConf
     },
     lvl1Change: function(){
         this.newRec._source.sortLvl2 = '-';
+    },
+    changeAvailType: function()
+    {
+      if(this.availabilityType == 'always')
+      {
+        this.availabilityConf = {"always": "always"}
+      }
+      else if(this.availabilityType == 'days')
+      {
+        this.availabilityConf = {
+          "monday": true,
+          "tuesday": true,
+          "wednesday": true,
+          "thursday": true,
+          "friday": true,
+          "saturday": true,
+          "sunday": true,
+        }
+        
+      }
+      else
+      {
+        this.availabilityConf = {
+          "period": Date.now(),
+          
+        }
+      }
     },
     saveRecord: function() {
 
@@ -343,6 +445,8 @@ export default {
       this.newRec._source['TVA'] = this.TVA.toFixed(2)
       this.newRec._source['HTVA'] = this.HTVA.toFixed(2)
       this.newRec._id = this.newRec._source['CODE']
+      this.newRec._source.avail = this.availabilityType
+      this.newRec._source.availabilityConf = JSON.stringify(this.availabilityConf)
       console.log(this.newRec)
       this.$store.commit({
         type: "updateRecord",

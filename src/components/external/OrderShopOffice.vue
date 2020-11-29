@@ -695,8 +695,11 @@ export default {
 
         var admin = false
 
-        for( var priv in this.$store.getters.creds.user.privileges)
+        for( var i in this.$store.getters.creds.user.privileges)
         {
+          var priv = this.$store.getters.creds.user.privileges[i]
+          console.log("Privilège : ")
+          console.log(priv)
           if(priv == 'admin'){
             admin = true
           }

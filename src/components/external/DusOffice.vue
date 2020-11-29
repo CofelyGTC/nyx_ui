@@ -318,6 +318,7 @@ export default {
     //this.getTree();
     this.ts = Date.now().toString();
     this.magasin = this.$store.getters.actualShop;
+    this.shopID = this.$store.getters.actualShopID;
     this.selectedTab = this.$store.getters.actualLvl1;
     this.selectedUnderTab = this.$store.getters.actualLvl2;
     //this.prepareData();
@@ -348,6 +349,7 @@ export default {
       else console.log("Ignoring time change.");
     });
     this.magasin = this.$store.getters.actualShop;
+    this.shopID = this.$store.getters.actualShopID;
     console.log('PREPARE')
     //this.prepareData();
   },
@@ -680,9 +682,14 @@ export default {
       console.log("CHANGE SHOP")
       //this.magasin = magasin
       console.log("SHOP: " + this.magasin)
+      
       this.$store.commit({
         type: "setActualShop",
         data: this.magasin
+      });
+      this.$store.commit({
+        type: "setActualShopID",
+        data: this.shopID
       });
       console.log('TESTESTEST')
       console.log(this.$store.getters.actualShop)
@@ -775,6 +782,7 @@ export default {
     prepareData() {
       console.log('prepare data')
       this.magasin = this.$store.getters.actualShop;
+      this.shopID  = this.$store.getters.actualShopID
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
         if(priv =='admin' ||  priv=='SHOP_FORM') {

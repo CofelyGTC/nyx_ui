@@ -44,6 +44,7 @@
           </el-row>
       </el-card>
       <br>
+      <div v-if="ruleType=='generic'">
       <el-card v-if="building != ''" shadow="hover" :body-style="{ padding: '10px' }">
           <h2>Conditions</h2>
           <br>
@@ -305,6 +306,20 @@
           </el-row>
       </el-card> 
       <br>
+      </div>
+      <div v-else>
+        <el-card v-if="building != ''" shadow="hover" :body-style="{ padding: '10px' }">
+          <h2>Custom Code Location</h2>
+          <el-row>
+            <el-form-item label="Lambda Queue : " :label-width="formLabelWidth2">
+              <el-input size="mini" v-model="customRuleQueue" autocomplete="off" placeholder="/QUEUE/NAME_OF_LAMBDA...."></el-input>
+            </el-form-item>
+          </el-row>
+        </el-card>
+      </div>
+
+      <br>
+      <div>
       <el-card v-if="building != ''" shadow="hover" :body-style="{ padding: '10px' }">
           <h2>Next Run</h2>
           <br>
@@ -419,6 +434,8 @@
 
 
       </el-card>     
+      </div>
+      
 
     </el-form>
 
@@ -502,6 +519,7 @@ export default {
     interval: 0,
     executionIntervalStart: '00:00',
     executionIntervalStop: '00:00',
+    customRuleQueue: '',
 
 
   }),
@@ -643,6 +661,11 @@ export default {
       this.nextRun = this.record._source.nextRun
     }
 
+    if(this.record._source.customRuleQueue)
+    {
+      this.customRuleQueue = this.record._source.customRuleQueue
+    }
+
 
 
     this.getBuildingsList();
@@ -695,6 +718,7 @@ export default {
       this.newRec._source.conditions = this.conditions
       this.newRec._source.lastRun = this.lastRun
       this.newRec._source.nextRunType = this.nextRunType
+      this.newRec._source.customRuleQueue = this.customRuleQueue
 
       if(this.nextRunType == 'interval')
       {

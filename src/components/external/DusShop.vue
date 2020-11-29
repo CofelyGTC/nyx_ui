@@ -272,6 +272,7 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
+      shopid: '',
       ts: 0,
       vitas: 0,
       changed: false,
@@ -700,6 +701,7 @@ export default {
         products.push(entry)
       }
       order.shop = this.magasin
+      order.shopid = this.shopid
       order.products = products
       order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
@@ -872,6 +874,7 @@ export default {
                 console.log("MAGASIN : ")
                 //console.log(res)
                 this.magasin = res.reccords[0]._source.magasin
+                this.shopid = res.reccords[0]._source.shopid
                 this.prepareData();
                
             }

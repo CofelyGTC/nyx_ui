@@ -915,7 +915,80 @@ export default {
               response.data.records[i]._source.orderquantity = 0
               console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
-              this.callData.push(response.data.records[i]._source)
+              if(response.data.records[i]._source.avail == 'always')
+              {
+                this.callData.push(response.data.records[i]._source)
+              }
+              else if(response.data.records[i]._source.avail == 'period')
+              {
+                var period = JSON.parse(response.data.records[i]._source.availabilityConf)
+                var start = period["period"][0]
+                var stop = period["period"][1]
+
+                if(timeRange[0].getTime() > start && timeRange[0].getTime()<stop)
+                {
+                  this.callData.push(response.data.records[i]._source)
+                }
+
+              }
+              else
+              {
+                var days =  JSON.parse(response.data.records[i]._source.availabilityConf)
+                var dayOfWeek  = timeRange[0].getTime().getDay()
+                var apply = false
+                switch(dayOfWeek)
+                {
+                  case 1:{
+                    if(days['monday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 2:{
+                    if(days['tuesday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 3:{
+                    if(days['wednesday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 4:{
+                    if(days['thursday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 5:{
+                    if(days['friday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 6:{
+                    if(days['saturday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 7:{
+                    if(days['sunday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                }
+              }
             }
 
             

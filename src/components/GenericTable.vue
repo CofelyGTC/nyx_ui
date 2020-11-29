@@ -256,6 +256,7 @@ export default {
     editMode: null,
     refAutoRefresh: null,
     magasin: null,
+    shopID: null,
     options: {
       chart: {
         stacked: false,
@@ -1047,10 +1048,16 @@ export default {
                 console.log("MAGASIN : ")
                 console.log(res)
                 var magasin = res.reccords[0]._source.magasin
+                var shopID = res.reccords[0]._source.shopid
                 this.magasin = magasin
+                this.shopID = shopID
                 this.$store.commit({
                   type: "setActualShop",
                   data: this.magasin
+                });
+                this.$store.commit({
+                  type: "setActualShopID",
+                  data: this.shopID
                 });
                 console.log(magasin)
                 this.loadData();

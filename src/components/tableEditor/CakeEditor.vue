@@ -82,7 +82,7 @@
                     </el-select>
                 </el-form-item>
                 <div v-if="newRec._source.cake.type == 'Number Cake'">
-                    <el-form-item label="Déco" :label-width="formLabelWidth2">
+                    <el-form-item label="Déco" :label-width="formLabelWidth2" prop="numberDeco">
                         <el-select v-model="newRec._source.cake.numberCakeGender" filterable placeholder="Sélectionner">
                                 <el-option v-for="(item, numberCakeGender) in numberCakeGenders" :key="numberCakeGender" :label="item" :value="item">
                                 </el-option>
@@ -240,7 +240,8 @@ export default {
           cake: {type: [{ required: true, message: 'Veuillez sélectionner un type de gâteaux', trigger: 'blur' }]},
           taste: [{ required: true, message: 'Veuillez sélectionner un goût', trigger: 'blur' }],
           magasin: [{ required: true, message: 'Veuillez sélectionner un magasin', trigger: 'blur' }],
-          caract: [{ required: true, message: 'Veuillez entrer les caractères du gâteau', trigger: 'blur' }]
+          caract: [{ required: true, message: 'Veuillez entrer les caractères du gâteau', trigger: 'blur' }],
+          numberDeco: [{required: true, message: 'Veuillez choisir une décoration', trigger: 'blur'}]
     }
     
 
@@ -552,7 +553,7 @@ export default {
     saveRecord: function() {
 
       console.log(this.newRec._source.cake.type)
-      if(this.newRec._source.cake.type == null || this.newRec._source.magasin == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null)))
+      if(this.newRec._source.cake.type == null || this.newRec._source.magasin == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null || this.newRec._source.cake.numberCakeGender == null)))
       {
           console.log('In if')
           this.submitForm('ruleForm')
@@ -594,6 +595,11 @@ export default {
         this.newRec._source.cake.customInscription = this.customInscription
         this.newRec._source.type = this.newRec._source.cake.type
         this.newRec._source.price = this.totalTTC
+
+        if(this.newRec._source.type == 'Number Cake' && this.newRec._source.age == null)
+        {
+          this.newRec._source.age = 0
+        }
 
         if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
         {

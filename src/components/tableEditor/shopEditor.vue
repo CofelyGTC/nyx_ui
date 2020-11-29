@@ -67,7 +67,7 @@
                         </el-form-item>
                     </el-row>
                     </div>
-                    <div v-else>
+                    <div v-else-if="commissionType == 'Intervalles'">
                     <el-row>
                         <el-form-item  label="Commission Minimum: " :label-width="formLabelWidth2">
                             <el-input-number size="mini" v-model="commissionIntervalMin" autocomplete="off" :min="0" :step="1"/>
@@ -163,7 +163,29 @@
                         </el-col>
                     </el-row>
                     </div>
+
+                    
                 </el-card>
+                <br>
+                <el-card>
+                    <el-row>
+                        <h2>Données Facturations/Comissions</h2>
+                    </el-row>
+                    <el-row>
+                      <el-form-item  label="Nom entête: " :label-width="formLabelWidth">
+                            <el-input  size="mini" v-model="factName" autocomplete="off" placeholder="Monsieur/Madame ...."></el-input>
+                        </el-form-item>
+                        <el-form-item  label="Adresse: " :label-width="formLabelWidth">
+                            <el-input  size="mini" v-model="factAddr" autocomplete="off" placeholder="Rue ...."></el-input>
+                        </el-form-item>
+                        <el-form-item  label="Numéro de TVA: " :label-width="formLabelWidth">
+                            <el-input  size="mini" v-model="factTVA" autocomplete="off" placeholder="BE0 ...."></el-input>
+                        </el-form-item>
+                    </el-row>
+                </el-card>
+                
+
+               
             
             </el-row>
       
@@ -208,7 +230,7 @@ export default {
     company: '',
     companyLabel: '',
     shopID: '',
-    commissionTypes: ['Pourcentage', 'Intervalles'],
+    commissionTypes: ['Pourcentage', 'Intervalles', 'Facturation', 'Néant'],
     commissionType: '',
     commissionIntervals: [],
     commissionPercent: 0,
@@ -219,6 +241,9 @@ export default {
     newIntervalPercent: 0,
     newIntervalForfait: 0,
     newIntervalForfaitEtudiant: 0,
+    factAddr: '',
+    factName: '',
+    factTVA: ''
   }),
   computed: {
     recordin: function() {
@@ -283,6 +308,19 @@ export default {
       this.commissionIntervalMin=this.newRec._source.commissionIntervalMin
       }
 
+
+      if(this.newRec._source.factAddr){
+        this.factAddr = this.newRec._source.factAddr
+      }
+
+      if(this.newRec._source.factName){
+        this.factName = this.newRec._source.factName
+      }
+
+      if(this.newRec._source.factTVA){
+        this.factTVA = this.newRec._source.factTVA
+      }
+
     },
 
     addIntervalle: function(){
@@ -319,6 +357,11 @@ export default {
       this.newRec._source.commissionPercent = this.commissionPercent
       this.newRec._source.commissionIntervalMin = this.commissionIntervalMin
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
+
+      this.newRec._source.factAddr = this.factAddr
+      this.newRec._source.factName = this.factName
+      this.newRec._source.factTVA = this.factTVA
+
       this.newRec._source['@timestamp'] = Date.now()
 
       this.$store.commit({
