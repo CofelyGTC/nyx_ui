@@ -35,7 +35,7 @@
 
  <el-row>
           <el-col v-if="subSubCategories[category][subcategory]['sortLvl3'].length> 1" :span="4">
-                          Type de pâte: 
+            Type de pâte: 
             <el-select v-model="filter1" placeholder="Sélectionner">
               <el-option
                 v-for="(item, id1) in subSubCategories[category][subcategory]['sortLvl3']"
@@ -818,10 +818,11 @@ export default {
             console.log("User Shop Calls list error...");
             else{
                 var res = JSON.parse(response.data.data)
-                console.log("MAGASIN : ")
-                //console.log(res)
+                console.log("MAGASIN COUCOU: ")
+                console.log(res)
                 this.magasin = res.reccords[0]._source.magasin
                 this.shopid = res.reccords[0]._source.shopid
+                console.log(this.shopid)
                 this.prepareData();
                
             }
@@ -888,6 +889,7 @@ export default {
       var url = this.$store.getters.apiurl + "generic_search/products_parameters_new?token=" + this.$store.getters.creds.token;
       var minutes = new Date().getMinutes();
       var hours = new Date().getHours();
+      var timeRange=this.$store.getters.timeRangeDay;
       if(hours >= 18){
         this.disabled = true
       }
