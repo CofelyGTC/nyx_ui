@@ -236,6 +236,7 @@
                 <el-option key=0 label="Toujours Disponible" value="always"></el-option>
                 <el-option key=1 label="Jours de la semaine" value="days"></el-option>
                 <el-option key=2 label="Période" value="period"></el-option>
+                <el-option key=3 label="Toujours Disponible Sauf" value="except"></el-option>
             </el-select>
         </el-form-item>
         <div v-if="availabilityType == 'days'">
@@ -293,6 +294,20 @@
             
           </el-row>
           </div>
+          <div v-else-if="availabilityType == 'except'">
+          
+          <el-row>
+            <el-col :span=6>
+              <label>Définissez la période: </label>
+            </el-col>
+            <el-col :span=12>
+              <el-form-item label="De:" :label-width="formLabelWidth2">
+                <el-date-picker v-model="availabilityConf.except" type="daterange" range-separator="à" start-placeholder="Date de début" end-placeholder="Date de fin"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            
+          </el-row>
+          </div>
         </el-row>
       </el-card>
     </el-form>
@@ -302,7 +317,6 @@
       <el-button
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
-        :disabled="!recchanged"
         @click="saveRecord()"
       >{{this.$t("buttons.confirm")}}</el-button>
     </span>
@@ -406,7 +420,10 @@ export default {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
       this.availabilityType = this.newRec._source.avail
-      this.availabilityConf  = this.newRec._source.availabilityConf
+      
+      this.availabilityConf  = JSON.parse(this.newRec._source.availabilityConf)
+      console.log(this.availabilityConf)
+      console.log(this.availabilityConf.period)
     },
     lvl1Change: function(){
         this.newRec._source.sortLvl2 = '-';

@@ -645,6 +645,7 @@ export default {
         //order.supplementPat = this.supplementPat
         
         console.log(this.disabled)
+        console.log(order.shopid)
         if(!this.disabled)
         {
           setTimeout(() => {

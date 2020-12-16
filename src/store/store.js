@@ -54,7 +54,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.25.79",
+    version: "v3.25.90",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -84,6 +84,7 @@ export default new Vuex.Store({
     searchCache: {},
     wsObject:{"check_alive":false},
     actualShop: '-',
+    actualShopID: '-',
     actualLvl1: 'TAB-0',
     actualLvl2: 'TAB-0-0'
   },
@@ -122,6 +123,7 @@ export default new Vuex.Store({
     redirection: state => state.redirection,
     searchCache: state => state.searchCache,
     actualShop: state => state.actualShop,
+    actualShopID: state => state.actualShopID,
     actualLvl1: state => state.actualLvl1,
     actualLvl2: state => state.actualLvl2,
 
@@ -412,6 +414,9 @@ export default new Vuex.Store({
     },
     setActualShop(state, payload) {
       state.actualShop = payload.data;
+    },
+    setActualShopID(state, payload) {
+      state.actualShopID = payload.data;
     },
     setActualLvl1(state, payload) {
       state.actualLvl1 = payload.data;

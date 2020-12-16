@@ -4,12 +4,12 @@
   <el-row class="unsalesoffice-container" style="width: 100%" >
     Sélectionnez un magasin: 
     <el-row style="width: 100%">
-        <el-select @change="changeShop" filterable v-model="magasin" placeholder="Sélectionner">
+        <el-select @change="changeShop" filterable v-model="selectedShop" placeholder="Sélectionner">
               <el-option
                 v-for="(item, id) in magasins"
                 :key="id"
-                :label="item"
-                :value="item">
+                :label="item.shop + ' ('+ item.shopid+')'"
+                :value="[item.shop, item.shopid]">
               </el-option>
             </el-select>
     </el-row>
@@ -223,6 +223,8 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
+      shopid: '',
+      selectedShop: [],
       magasins: [],
       ts: 0,
       changed: false,
@@ -567,10 +569,17 @@ export default {
     changeShop(){
       console.log("CHANGE SHOP")
       //this.magasin = magasin
+      this.magasin = this.selectedShop[0]
+      this.shopid = this.selectedShop[1]
+      this.selectedShop = [this.magasin, this.shopid]
       console.log("SHOP: " + this.magasin)
       this.$store.commit({
         type: "setActualShop",
         data: this.magasin
+      });
+      this.$store.commit({
+        type: "setActualShopID",
+        data: this.shopid
       });
       console.log('TESTESTEST')
       console.log(this.$store.getters.actualShop)
@@ -617,6 +626,7 @@ export default {
           
         }
         order.shop = this.magasin
+        order.shopid = this.shopid
         order.products = products
         order.dateOrder = timeRange[0].getTime();
         order.demandor = this.$store.getters.creds.user.id
@@ -799,11 +809,13 @@ export default {
                 console.log("MAGASINS : ")
                 console.log(res)
                 this.magasin = res.records[0]._source['Nom magasin']
+                this.shopid = res.records[0]._source['shopid']
                 var magasins = []
                 for(var rec in res.records)
                 {
                     console.log(rec)
-                    magasins.push(res.records[rec]._source['Nom magasin'])
+                    var shop = {"shop": res.records[rec]._source['Nom magasin'], "shopid": res.records[rec]._source['shopid']}
+                    magasins.push(shop)
                 }
                 this.magasins = magasins
                 console.log(this.magasins)

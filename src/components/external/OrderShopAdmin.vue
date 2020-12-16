@@ -1,7 +1,7 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="ordershopoffice-container" style="width: 100%" >
+  <el-row class="ordershopadmin-container" style="width: 100%" >
     <el-row>
       <td>
     Sélectionnez un magasin: 
@@ -172,6 +172,11 @@
               {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
+          <el-table-column :span=2 label="Modifiable ?" sortable>
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.Available"></el-switch>
+            </template>
+          </el-table-column>
           <el-table-column :span=2 width="150" label="Remarques">
             <template slot-scope="scope">
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
@@ -212,6 +217,28 @@
             </el-row>
           </div>
       </el-tab-pane>
+      <el-tab-pane
+        :key="'TAB_AddProduct'"
+        :label="'Ajouter Produit'"
+        :name="'TAB_AddProduct'"
+        :lazy="true">
+        <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
+          <el-row>Ajouter: 
+            <el-select v-model="productToAdd" placeholder="Sélectionner">
+              <el-option
+                v-for="(prod, idProd) in othersProducts"
+                :key="idProd"
+                :label="prod.CODE+ ' ('+prod.label+')'"
+                :value="prod['_id']">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="addProduct">Ajouter</el-button>
+
+
+          </el-row>
+          <el-row>{{productToAdd}}</el-row>
+        </div>
+      </el-tab-pane>
 
 
       </el-tabs>
@@ -227,7 +254,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormOrderShopOffice",
+  name: "FormOrderShopAdmin",
   data: () => ({
       records: null,
       oldID: null,
@@ -257,7 +284,10 @@ export default {
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
       subSubCategories: {},
-      refAutoRefresh: null
+      refAutoRefresh: null,
+      othersProducts: [],
+      productToAdd: '',
+      
 
   }),
   props: {
@@ -334,6 +364,16 @@ export default {
         
       }
       return price
+    },
+
+    productsList: function(){
+        var list = []
+
+        for(var product in Object.keys(this.records))
+        {
+          list.push(this.records[product]['CODE'])
+        }
+        return list;
     },
 
     totalPatisserie: function(){
@@ -950,6 +990,7 @@ export default {
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
                 }
+                this.getOthersProducts();
                 this.$forceUpdate();
             }
         });  
@@ -1012,23 +1053,18 @@ export default {
               }
               else if(response.data.records[i]._source.avail == 'except')
               {
-
                
-
-                console.log(timeRange[0].getTime())
-
                 var period = JSON.parse(response.data.records[i]._source.availabilityConf)
                 var start = Date.parse(period["except"][0])
                 var stop = Date.parse(period["except"][1])
                
 
-                if(timeRange[0].getTime() < start || timeRange[0].getTime()>stop)
+                if(timeRange[0].getTime() <= start || timeRange[0].getTime()>=stop)
                 {
                   this.callData.push(response.data.records[i]._source)
                 }
 
               }
-
               else
               {
                 var days =  JSON.parse(response.data.records[i]._source.availabilityConf)
@@ -1101,15 +1137,57 @@ export default {
                 this.records = JSON.parse(JSON.stringify(tmp))
 
                 console.log(this.records)
+                this.getOthersProducts();
                 this.$forceUpdate();
           }});
 
           },
 
    
-   setTableCurrent(row) {
+    setTableCurrent(row) {
       this.$refs.callTable.setCurrentRow(row);
     },
+    getOthersProducts: function(){
+      var query = {"codes": this.productsList}
+      var url = this.$store.getters.apiurl + "lambdas/2/getOthersProducts?apikey=" + this.$store.getters.creds.token;
+      axios
+      .post(url, query)
+      .then((response) => {
+
+        //var status = false
+
+        console.log(response.data.orderstatus)
+        this.othersProducts = response.data
+
+
+
+      });
+
+    },
+
+    addProduct: function(){
+        var _id = this.productToAdd
+
+        var query = {"code": _id}
+
+        var url = this.$store.getters.apiurl + "lambdas/2/getProductByCode?apikey=" + this.$store.getters.creds.token;
+        axios
+        .post(url, query)
+        .then((response) => {
+
+          //var status = false
+
+          console.log(response.data.orderstatus)
+          this.records.push(response.data)
+          this.getOthersProducts();
+
+
+
+      });
+
+
+    },
+
     handleTableSelect(val) {
       if(this.disable)
         return

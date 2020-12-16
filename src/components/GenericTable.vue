@@ -747,6 +747,15 @@ export default {
           }
           console.log("Hidden Query : " + this.config.config.hiddenQuery)
         }
+        if(this.config.config.hiddenQuery.includes("{{shopid}}")){
+          //var demandor = this.$store.getters.creds.user.id 
+          console.log('SHOPID')
+          if(this.shopID != null){
+            console.log(this.shopID)
+            this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{shopid}}", this.shopID)
+          }
+          console.log("Hidden Query : " + this.config.config.hiddenQuery)
+        }
         if (curquery == "") curquery = this.config.config.hiddenQuery;
         else
           curquery =
@@ -759,6 +768,8 @@ export default {
       }
 
       this.query = curquery;
+       
+       console.log('HIDDEN QUERY: ' + this.query)
       
 
       if (curquery != "") {

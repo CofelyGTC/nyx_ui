@@ -663,6 +663,7 @@ export default {
 
       console.log('confirmed: ')
       console.log(order.confirmed)
+      console.log(order.shopid)
 
       var admin = false
 
@@ -677,6 +678,8 @@ export default {
        if(!admin  && timeRange[0].getTime() < Date.now())
        {
           console.log("Wrong Date")
+          console.log(timeRange[0].getTime())
+          console.log(Date.now())
        }
        else{ 
         setTimeout(() => {
@@ -923,11 +926,36 @@ export default {
               }
               else if(response.data.records[i]._source.avail == 'period')
               {
+                
                 var period = JSON.parse(response.data.records[i]._source.availabilityConf)
-                var start = period["period"][0]
-                var stop = period["period"][1]
 
-                if(timeRange[0].getTime() > start && timeRange[0].getTime()<stop)
+                
+                var start = Date.parse(period["period"][0])
+                console.log('DATE!!!!!!')
+                console.log(start)
+                var stop = Date.parse(period["period"][1])
+
+                
+
+                if(timeRange[0].getTime() >= start && timeRange[0].getTime()<=stop)
+                {
+                  this.callData.push(response.data.records[i]._source)
+                }
+                else
+                {
+                  console.log('Not in period')
+                }
+
+              }
+              else if(response.data.records[i]._source.avail == 'except')
+              {
+               
+                var period = JSON.parse(response.data.records[i]._source.availabilityConf)
+                var start = Date.parse(period["except"][0])
+                var stop = Date.parse(period["except"][1])
+               
+
+                if(timeRange[0].getTime() <= start || timeRange[0].getTime()>=stop)
                 {
                   this.callData.push(response.data.records[i]._source)
                 }
@@ -936,7 +964,9 @@ export default {
               else
               {
                 var days =  JSON.parse(response.data.records[i]._source.availabilityConf)
-                var dayOfWeek  = timeRange[0].getTime().getDay()
+                var dayOfWeek  = timeRange[0].getDay();
+                console.log("Day:" + dayOfWeek.toString())
+                console.log(days)
                 var apply = false
                 switch(dayOfWeek)
                 {
@@ -982,13 +1012,17 @@ export default {
                     }
                     break;
                   }
-                  case 7:{
+                  case 0:{
                     if(days['sunday'])
                     {
                       apply = true;
                     }
                     break;
                   }
+                }
+                if(apply)
+                {
+                  this.callData.push(response.data.records[i]._source)
                 }
               }
             }

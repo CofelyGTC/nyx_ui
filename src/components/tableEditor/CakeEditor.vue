@@ -10,11 +10,15 @@
     <el-form v-model="newRec._source" :model="newRec._source" :rules="rules" ref="ruleForm">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-form-item v-if="editableMagasin" label="Magasin" :label-width="formLabelWidth">
-            <el-input :disabled="editableMagasin" size="mini" v-model="magasin" autocomplete="off"></el-input>
+            <el-input :disabled="editableMagasin" size="mini" v-model="magasinStr" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item v-else label="Magasin" :label-width="formLabelWidth2" prop="magasin">
-            <el-select v-model="newRec._source.magasin" filterable placeholder="Sélectionner">
-                    <el-option v-for="(item, magasin) in magasins" :key="magasin" :label="item" :value="item">
+            <el-select v-model="selectedShop" filterable placeholder="Sélectionner" @change="changeShop">
+                    <el-option
+                      v-for="(item, id) in magasins"
+                      :key="id"
+                      :label="item.shop + ' ('+ item.shopid+')'"
+                      :value="[item.shop, item.shopid]">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -204,6 +208,9 @@ export default {
     mail: '',
     isInscription: false,
     customInscription: false,
+    shop: '',
+    shopid: '',
+    selectedShop: '',
     inscription: '',
     inscriptions:['Bon anniversaire', 'Heureux Anniversaire', 'Joyeuses Fêtes', 'Bonnes Fêtes', 'Félicitations !'],
     cakeTypes: ['Crème fraîche fruits', 'Spécial Patron', 'Schamp', 'Crème au Beurre Moka', 'Chocorêve', 'Mikkado', 'Bavarois', 'Glace', 'Number Cake'],
@@ -297,7 +304,7 @@ export default {
       }
       return maxLen
     },
-    magasin: function()
+    /*magasin: function()
     {
         var magasin = 'TEST'
         if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
@@ -317,6 +324,30 @@ export default {
             
         }
         return magasin.replace('"', '')
+    },*/
+    magasinStr: function()
+    {
+      var magasin = 'TEST'
+        if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
+        {
+            console.log('coucou1')
+            console.log(this.$store.getters.activeApp.config.hiddenQuery.substring(9))
+            console.log('coucou2')
+            console.log(this.$store.getters.actualShop)
+            console.log('coucou3')
+            //magasin = this.$store.getters.activeApp.config.hiddenQuery.substring(9)
+
+            //magasin = magasin.replace('"', '')
+            var magasin = this.$store.getters.actualShop+' ('+this.$store.getters.actualShopID+')'
+
+         
+            
+        
+            //magasin = this.$store.getters.actualShop
+            
+        }
+        return magasin.replace('"', '')
+
     },
     totalTTC: function() {
         var price = 0
@@ -520,11 +551,13 @@ export default {
                 console.log("MAGASINS : ")
                 console.log(res)
                 this.magasin = res.records[0]._source['Nom magasin']
+                this.shopid = res.records[0]._source['shopid']
                 var magasins = []
                 for(var rec in res.records)
                 {
                     console.log(rec)
-                    magasins.push(res.records[rec]._source['Nom magasin'])
+                    var shop = {"shop": res.records[rec]._source['Nom magasin'], "shopid": res.records[rec]._source['shopid']}
+                    magasins.push(shop)
                 }
                 this.magasins = magasins
                 console.log(this.magasins)
@@ -535,6 +568,29 @@ export default {
 
         
 
+    },
+    changeShop(){
+      console.log("CHANGE SHOP")
+      console.log(this.selectedShop)
+      //console.log(item)
+      //this.magasin = magasin
+      this.shop = this.selectedShop[0]
+      this.shopid = this.selectedShop[1]
+      console.log("SHOP: " + this.shop)
+      console.log("SHOPID: " + this.shopid)
+      this.newRec._source.magasin = this.shop
+      console.log(this.newRec._source.magasin)
+      this.$store.commit({
+        type: "setActualShop",
+        data: this.shop
+      });
+      this.$store.commit({
+        type: "setActualShopID",
+        data: this.shopid
+      });
+      console.log('TESTESTEST')
+      console.log(this.$store.getters.actualShop)
+      this.prepareData();
     },
     prepareData: function() {
       console.log("prepare data");
@@ -548,17 +604,20 @@ export default {
       if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
       {
           this.newRec._source.magasin = this.magasin
+          this.selectedShop = this.magasin
       }
     },
     saveRecord: function() {
 
       console.log(this.newRec._source.cake.type)
-      if(this.newRec._source.cake.type == null || this.newRec._source.magasin == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null || this.newRec._source.cake.numberCakeGender == null)))
+      if(this.newRec._source.cake.type == null || this.selectedShop == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null || this.newRec._source.cake.numberCakeGender == null)))
       {
           console.log('In if')
+          console.log(this.newRec._source.magasin)
+          console.log(this.selectedShop)
+
           this.submitForm('ruleForm')
-          console.log(this.newRec._source.cake.glaceGout)
-          
+          console.log(this.newRec._source.cake.glaceGout)   
       }
       /*else if(this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGouts == [])
       {
@@ -583,8 +642,15 @@ export default {
         this.newRec._source.dateDelivery = this.$store.getters.timeRangeDay[0].getTime()
         console.log(Date.now())
         console.log(this.$store.getters.timeRangeDay[0].getTime())
-
-
+        
+        if(this.editableMagasin)
+        {
+          this.shop = this.$store.getters.actualShop
+          this.shopid = this.$store.getters.actualShopID
+        }
+        
+        this.newRec._source.magasin = this.shop
+        this.newRec._source.shopid = this.shopid
         this.newRec._source.cake.size = this.size
         this.newRec._source.cake.isDecoration = this.isDecoration
         this.newRec._source.cake.decoration = this.decoration
@@ -601,10 +667,10 @@ export default {
           this.newRec._source.age = 0
         }
 
-        if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
+        /*if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
         {
             this.newRec._source.magasin = this.magasin
-        }
+        }*/
 
         console.log(this.newRec)
 
