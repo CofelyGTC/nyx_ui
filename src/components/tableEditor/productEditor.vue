@@ -310,6 +310,33 @@
           </div>
         </el-row>
       </el-card>
+      <br>
+      <el-card>
+        <h2>Quotas</h2>
+        <el-row>
+          <el-col :span=6>
+            <br>
+          </el-col>
+          <el-col :span=6>
+            <el-form-item label="Applicable ?" :label-width="formLabelWidth2">
+              <el-switch v-model="newRec._source.quota_enable">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span=6>
+            <div v-if="newRec._source.quota_enable">
+            <el-form-item  label="Quantité : " :label-width="formLabelWidth2">
+              <el-input-number v-model="newRec._source.quota" :step=1 :min=0>
+              </el-input-number>
+            </el-form-item>
+            </div>
+          </el-col>
+          
+          <el-col :span=6>
+            <br>
+          </el-col>
+        </el-row>
+      </el-card>
     </el-form>
 
     <span slot="footer" class="dialog-footer">
