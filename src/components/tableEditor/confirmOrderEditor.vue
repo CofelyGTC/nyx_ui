@@ -178,6 +178,14 @@
               <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
+          <el-table-column :span=2 label="Supprimer">
+            <template slot-scope="scope">
+              <el-button @click="removeProduct(scope.$index, scope)" type="danger" icon="el-icon-delete" circle>
+
+              </el-button>
+            </template>
+          </el-table-column>
+          
           </el-table> 
           </div>
           <br><br>
@@ -185,6 +193,28 @@
 
       </el-tabs>
                 </el-tab-pane>
+                <el-tab-pane
+        :key="'TAB_AddProduct'"
+        :label="'Ajouter Produit'"
+        :name="'TAB_AddProduct'"
+        :lazy="true">
+        <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
+          <el-row>Ajouter: 
+            <el-select v-model="productToAdd" placeholder="Sélectionner">
+              <el-option
+                v-for="(prod, idProd) in othersProducts"
+                :key="idProd"
+                :label="prod.CODE+ ' ('+prod.label+')'"
+                :value="prod['_id']">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="addProduct">Ajouter</el-button>
+
+
+          </el-row>
+          <el-row>{{productToAdd}}</el-row>
+        </div>
+      </el-tab-pane>
           </el-tabs>
           </el-row>
       </el-card>
@@ -236,10 +266,26 @@ export default {
     selectedTab: "TAB-0",
     selectedUnderTab: "TAB-0-0",
     subCategories: {},
-    subSubCategories: {}
+    subSubCategories: {},
+    othersProducts: [],
+    productToAdd: '',
 
   }),
   computed: {
+
+      productsList: function(){
+        var list = []
+
+        console.log('ProductList')
+        console.log(this.newRec._source.products)
+
+        for(var product in Object.keys(this.newRec._source.products))
+        {
+          list.push(this.newRec._source.products[product]['CODE'])
+        }
+        return list;
+    },
+
       totalPrice: function() {
       var price = 0
 
@@ -585,6 +631,68 @@ export default {
     closeDialog: function() {
       this.$emit("dialogclose");
     },
+    getOthersProducts: function(){
+      var query = {"codes": this.productsList}
+      var url = this.$store.getters.apiurl + "lambdas/2/getOthersProducts?apikey=" + this.$store.getters.creds.token;
+      axios
+      .post(url, query)
+      .then((response) => {
+
+        //var status = false
+
+        console.log(response.data.orderstatus)
+        this.othersProducts = response.data
+
+
+
+      });
+
+    },
+    addProduct: function(){
+        var _id = this.productToAdd
+
+        var query = {"code": _id}
+
+        var url = this.$store.getters.apiurl + "lambdas/2/getProductByCode?apikey=" + this.$store.getters.creds.token;
+        axios
+        .post(url, query)
+        .then((response) => {
+
+          //var status = false
+
+          console.log(response.data.orderstatus)
+          this.newRec._source.products.push(response.data)
+          this.getOthersProducts();
+
+
+
+      });
+
+
+    },
+
+    removeProduct: function(index, scope){
+        console.log(scope)
+        console.log(index)
+        //console.log(rows)
+        //rows.splice(index, 1)
+        console.log('delete')
+        var code = scope.row['CODE']
+        var toDelete = 0
+
+        for(var itemKey in Object.keys(this.newRec._source.products)) {
+          var item = this.newRec._source.products[itemKey]
+          if(item['CODE'] == code)
+          {
+            toDelete = itemKey
+          }
+        }
+
+        this.newRec._source.products.splice(toDelete, 1)
+        this.getOthersProducts();
+
+    },
+    
     getTree: function() {
       var url =
       this.$store.getters.apiurl +
@@ -646,8 +754,11 @@ export default {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
       this.tree = {'coucou': 1}
+      this.getOthersProducts();
       //this.getTree()
     },
+
+    
     
     saveRecord: function() {
 

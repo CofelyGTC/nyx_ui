@@ -1,6 +1,14 @@
 <template>
 
   <div style="width: 100%">
+    <span v-if="dialogFormVisible">
+      <ProductAdminEditor
+        :record="currentRecord"
+        :config="config"
+        v-on:dialogcloseupdated="recordUpdated()"
+        v-on:dialogclose="dialogFormVisible=false"
+      ></ProductAdminEditor>
+    </span>
   <el-row class="ordershopadmin-container" style="width: 100%" >
     <el-row>
       <td>
@@ -159,7 +167,7 @@
           </el-table-column>
           <el-table-column :span=1 label="Quantité en Commande" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
           <el-table-column :span=1 label="Total Unités" sortable>
@@ -179,9 +187,18 @@
           </el-table-column>
           <el-table-column :span=2 width="150" label="Remarques">
             <template slot-scope="scope">
-              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
+              <el-button
+                size="mini"
+                plain
+                icon="el-icon-setting"
+                @click="handleView(scope.$index, scope.row)"
+              ></el-button>
+              <el-button @click="removeProduct(scope.$index, scope)" type="danger" icon="el-icon-delete" circle>
+
+              </el-button>
             </template>
           </el-table-column>
+         
           </el-table> 
           </div>
           <br><br>
@@ -252,6 +269,10 @@
 import Vue from "vue";
 import moment,{ months } from "moment";
 import axios from "axios";
+import productadmineditor from "@/components/external/ProductAdminEditor";
+
+
+Vue.component("ProductAdminEditor", productadmineditor);
 
 export default {
   name: "FormOrderShopAdmin",
@@ -287,6 +308,9 @@ export default {
       refAutoRefresh: null,
       othersProducts: [],
       productToAdd: '',
+      dialogFormVisible: false,
+      currentRecord: {},
+
       
 
   }),
@@ -304,9 +328,9 @@ export default {
     //this.getMagasin();
     //this.getTree();
     this.ts = Date.now().toString();
-    this.magasin = this.$store.getters.actualShop;
-    this.shopid = this.$store.getters.actualShopID;
-    this.selectedShop = [this.magasin, this.shopid]
+    //this.magasin = this.$store.getters.actualShop;
+    //this.shopid = this.$store.getters.actualShopID;
+    //this.selectedShop = [this.magasin, this.shopid]
     console.log('SAVED SHOP: ')
     console.log(this.magasin)
     //this.prepareData();
@@ -336,8 +360,8 @@ export default {
       if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
       else console.log("Ignoring time change.");
     });
-    this.magasin = this.$store.getters.actualShop;
-    this.shopid = this.$store.getters.actualShopID;
+    //this.magasin = this.$store.getters.actualShop;
+    //this.shopid = this.$store.getters.actualShopID;
     this.selectedTab = this.$store.getters.actualLvl1;
     this.selectedUnderTab = this.$store.getters.actualLvl2;
     //this.setAutoRefresh();
@@ -503,6 +527,9 @@ export default {
   },
   methods: {
 
+    recordUpdated: function() {
+        this.dialogFormVisible = false;
+    },
     totalCategoryQuantity: function(category) {
       var quantity = 0
       if(this.records != null)
@@ -701,6 +728,43 @@ export default {
             item.orderquantity = 0
           }
       }  
+    },
+
+    removeProduct: function(index, scope){
+        console.log(scope)
+        console.log(index)
+        //console.log(rows)
+        //rows.splice(index, 1)
+        console.log('delete')
+        var code = scope.row['CODE']
+        var toDelete = 0
+
+        for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item['CODE'] == code)
+          {
+            toDelete = itemKey
+          }
+        }
+
+        this.records.splice(toDelete, 1)
+        this.getOthersProducts();
+
+    },
+
+    handleView(index, row) {
+      console.log(row)
+      //this.currentRecord = ; // required by the detail watcher
+      //this.editMode = "edit";
+
+      
+      this.currentRecord = row;
+      this.dialogFormVisible = true;
+      
+    },
+
+    recordUpdated: function() {
+      this.dialogFormVisible = false;
     },
 
     onCloseOrder(){

@@ -155,7 +155,7 @@
           </el-table-column>
           <el-table-column label="Quantité en Commande" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" :disabled="!scope.row.Available" v-model="scope.row.orderquantity"/>
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
           <el-table-column label="Total Unités" sortable>

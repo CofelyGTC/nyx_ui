@@ -31,6 +31,44 @@
           </el-date-picker>
           <el-button type="primary" @click="onDateFacturation">Recalculer la Facturation à la date</el-button>
         </el-row>
+        <el-row>
+          <el-date-picker
+            v-model="periodDisable"
+            type="daterange" range-separator="à" 
+            start-placeholder="Date de début" 
+            end-placeholder="Date de fin">
+          </el-date-picker>
+          
+            <el-select v-model="productToDisable" placeholder="Sélectionner">
+              <el-option
+                v-for="(prod, idProd) in othersProducts"
+                :key="idProd"
+                :label="prod.CODE+ ' ('+prod.label+')'"
+                :value="prod['_id']">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="disableProduct">Désactiver le Produit</el-button>
+          
+        </el-row>
+        <el-row>
+          <el-date-picker
+            v-model="periodEnable"
+            type="daterange" range-separator="à" 
+            start-placeholder="Date de début" 
+            end-placeholder="Date de fin">
+          </el-date-picker>
+          
+            <el-select v-model="productToEnable" placeholder="Sélectionner">
+              <el-option
+                v-for="(prod, idProd) in othersProducts"
+                :key="idProd"
+                :label="prod.CODE+ ' ('+prod.label+')'"
+                :value="prod['_id']">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="enableProduct">Réactiver le Produit</el-button>
+          
+        </el-row>
     </el-row>
     </div>
 </template>
@@ -43,6 +81,11 @@ export default {
   data: () => ({
     dateToConfirm: null,
     dateToFacturation: null,
+    othersProducts: [],
+    productToDisable: '',
+    productToEnable: '',
+    periodDisable: [],
+    periodEnable: [],
   }),
   props: {
     config: {
@@ -50,6 +93,7 @@ export default {
     }
   },
   created: function() {
+    this.getOthersProducts();
   },
   methods: {
       onConfirm(){
@@ -467,7 +511,99 @@ export default {
             
             });
         }, 1000)
-      }
+      },
+      getOthersProducts: function(){
+        console.log('GET PRODUCTS')
+      var query = {"codes": []}
+      var url = this.$store.getters.apiurl + "lambdas/2/getOthersProducts?apikey=" + this.$store.getters.creds.token;
+      axios
+      .post(url, query)
+      .then((response) => {
+
+        //var status = false
+        
+        console.log(response.data)
+        this.othersProducts = response.data
+
+
+
+      });
+
+    },
+
+    enableProduct: function(){
+      var body = {
+            "destination": "/topic/CHANGE_PRODUCT_PERIOD",
+            "body": '{"message":"enable", "start": "'+this.periodEnable[0].getTime().toString()+'", "stop": "'+this.periodEnable[1].getTime().toString()+'", "CODE": "'+this.productToEnable+'"}'
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Réactivation Produit",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Réactivation du produit démarrée",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+    },
+    disableProduct: function(){
+      var body = {
+            "destination": "/topic/CHANGE_PRODUCT_PERIOD",
+            "body": '{"message":"disable", "start": "'+this.periodDisable[0].getTime().toString()+'", "stop": "'+this.periodDisable[1].getTime().toString()+'", "CODE": "'+this.productToDisable+'"}'
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Désactivation Produit",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Désactivation du produit démarrée",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+    }
 
   }
 };
