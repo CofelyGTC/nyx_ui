@@ -313,6 +313,7 @@ export default {
     //this.setAutoRefresh();
     console.log('PREPARE')
     //this.prepareData();
+    this.$forceUpdate();
   },
   beforeDestroy: function(){
       console.log('BEFORE DESTROY')

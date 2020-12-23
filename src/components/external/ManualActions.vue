@@ -9,7 +9,7 @@
         <el-button type="primary" @click="onCompile">Compiler Production</el-button>
         </el-row>
         <el-row>
-        <el-button type="primary" @click="onReorder">Repasser les Commandes</el-button>
+        <el-button type="primary" @click="onGenerateStocks">Générer Bons de Stocks</el-button>
         <el-button type="primary" @click="onGenerateLivraison">Générer Bons de livraison</el-button>
         <el-button type="primary" @click="onGenerateLivraisonDetails">Générer détails préparation</el-button>
         <el-button type="primary" @click="onGenerateComission">Générer notes de livraisons</el-button>
@@ -348,6 +348,44 @@ export default {
                     this.$notify({ 
                     title: "Success",
                     message: "Bons de livraison finaux OK",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+      onGenerateStocks(){
+        var body = {
+            "destination": "/topic/GENERATE_STOCKS_REPORT",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec du calcul des bons de stocks",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Rapports de Stocks Générés",
                     type: "success",
                     position: "bottom-right",
                     duration: 2000

@@ -7,6 +7,7 @@
     :close-on-click-modal="false"
     class="order-editor"
   >
+
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
         <el-form-item label="Nom" :label-width="formLabelWidth">

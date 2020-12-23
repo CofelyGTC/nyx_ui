@@ -7,6 +7,7 @@
     :close-on-click-modal="false"
     class="confirm-order-editor"
   >
+    <el-row><h1>{{newRec._source.shop}}</h1></el-row>
 
   <el-row>Total Boulangerie TTC: {{ totalBoulangerie  | roundTo2 }}€  Total Pâtisserie TTC : {{totalPatisserie | roundTo2 }} € Total Autres TTC : {{totalOther  | roundTo2 }} €</el-row>
  
