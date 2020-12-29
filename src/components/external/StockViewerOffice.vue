@@ -261,6 +261,7 @@
                   </el-form-item>
               </el-col>
           </el-row><br>
+          
           <div>
             <el-row>
                 <el-button type="primary" @click="onSubmit">Enregistrer</el-button>
@@ -309,6 +310,7 @@ export default {
   },
   methods: {
     onSubmit(){
+        this.refillNan();
         this.ts = Date.now();
         this.record._source.lastUpdate = this.ts;
         this.record._source.modifiedBy = this.$store.getters.creds.user.id 
@@ -353,6 +355,22 @@ export default {
             
       this.getProductsLabels();      
       this.getData();      
+
+    },
+
+    refillNan(){
+      
+      
+      for(var index in this.record._source)
+      {
+        
+        if(this.record._source[index] == null)
+        {
+          this.record._source[index] = 0
+          console.log(index.toString()+' '+this.record._source[index].toString());
+        }
+      }
+      
 
     },
 
