@@ -5,7 +5,7 @@
     :visible.sync="dialogFormVisible"
     :before-close="closeDialog"
     :close-on-click-modal="false"
-    class="confirm-order-editor"
+    class="unsales-editor"
   >
     <el-row><h1>{{newRec._source.shop}}</h1></el-row>
 
@@ -14,7 +14,7 @@
   <el-row>Total TTC : {{totalPrice | roundTo2 }} €<br></el-row>
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
-          <el-row class="ordershopnew-container" style="width: 100%" >
+          <el-row class="unsaleseditor-container" style="width: 100%" >
             
 
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -28,7 +28,7 @@
           
           
         >
-        <el-tabs v-model="selectedUnderTab" @tab-click="subTabChanged()">
+        <!--el-tabs v-model="selectedUnderTab" @tab-click="subTabChanged()">
           <el-tab-pane
           
           v-for="(subcategory, index1) in subCategories[category]"
@@ -131,14 +131,23 @@
             </el-select>
             </el-col>
  
- </el-row>    
+ </el-row-->    
 
 
 
         <div style="bottom: 5%;">
 
             
-        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
+        Total Panier TTC : {{totalPrice | roundTo2 }} €
+
+        <br>
+        <el-row>
+            <el-col :span="4">
+                <el-form-item label="Clôturé ? : ">
+                    <el-switch v-model="newRec._source.confirmed"></el-switch>
+                </el-form-item>
+            </el-col>
+        </el-row>
         
         
         <el-table :data="newRec._source.products.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">    
@@ -149,50 +158,28 @@
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Conditionnement" sortable>
-            <template slot-scope="scope">
-              {{scope.row.Conditionnement }}
-            </template>
-          </el-table-column>
           <el-table-column label="Quantité" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" v-model="scope.row.quantity" :disabled="scope.row.checked || newRec._source.confirmed"/>
           </template>
-          </el-table-column>
-          <el-table-column label="Quantité en Commande" sortable>
-          <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
-          </template>
-          </el-table-column>
-          <el-table-column label="Total Unités" sortable>
-            <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.conditionnement }}
-            </template>
           </el-table-column>
           <el-table-column label="Total TTC" sortable>
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
+              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
             </template>
           </el-table-column>
-          <el-table-column label="Remarques">
-            <template slot-scope="scope">
-              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column :span=2 label="Supprimer">
-            <template slot-scope="scope">
-              <el-button @click="removeProduct(scope.$index, scope)" type="danger" icon="el-icon-delete" circle>
-
-              </el-button>
-            </template>
+          <el-table-column :span=2 label="Check">
+              <template slot-scope="scope">
+              <el-switch v-model="scope.row.checked"></el-switch>
+              </template>
           </el-table-column>
           
           </el-table> 
           </div>
           <br><br>
-                </el-tab-pane>
+                <!--/el-tab-pane>
 
-      </el-tabs>
+      </el-tabs-->
                 </el-tab-pane>
                 <el-tab-pane
         :key="'TAB_AddProduct'"
@@ -239,10 +226,9 @@ import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";
-//import JSON;
 
 export default {
-  name: "orderEditor",
+  name: "unsalesEditor",
   data: () => ({
     orgRec: null,
     newRec: null,
@@ -308,7 +294,7 @@ export default {
         return 'this.classement'
      },
      
-    totalFiltered: function(){
+    /*totalFiltered: function(){
       var filteredProducts = this.newRec._source.products
       var price = 0
       for(var itemKey in Object.keys(this.newRec._source.products))
@@ -366,7 +352,7 @@ export default {
       }
       
       return price
-    },
+    },*/
 
     totalPatisserie: function(){
 
@@ -425,13 +411,13 @@ export default {
       console.log(this.classement[index])
       return this.classement[index]
     },
-    selectedSubCategory: function() {
+    /*selectedSubCategory: function() {
       var index = this.selectedCategory
       var index1 = this.selectedUnderTab.split('-').pop()
       console.log('UnderTab Selected : ')
       console.log(this.subCategories[index][index1])
       return this.subCategories[index][index1]
-    },
+    },*/
     recordin: function() {
       return this.record;
     },
@@ -560,7 +546,8 @@ export default {
 
         //console.log(data)
         //console.log(this.category)
-        var filter = data.sortLvl1 == this.selectedCategory && data.sortLvl2 == this.selectedSubCategory
+        var filter = data.sortLvl1 == this.selectedCategory 
+        //&& data.sortLvl2 == this.selectedSubCategory
         var filter1 = true
         var filter2 = true
         var filter3 = true
@@ -605,7 +592,8 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        //&& filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        return filter 
     },
     tabChanged(index){
       this.selectedUnderTab = index+'-0'
@@ -696,7 +684,7 @@ export default {
     },
     
     getTree: function() {
-      var url =
+      /*var url =
       this.$store.getters.apiurl +
       "schamps/get_products_tree?token=" + this.$store.getters.creds.token;  
 
@@ -718,13 +706,13 @@ export default {
                 var subSubCategories = {}
                 for(var i in tree)
                 {
-                  //console.log(i)
+                  console.log(i)
                   cats.push(i)
                   var subCat = []
                   subSubCategories[i] = {}
                   for(var j in tree[i])
                   {
-                    //console.log(j)
+                    console.log(j)
                     subCat.push(j)
                   }
                   
@@ -733,117 +721,32 @@ export default {
                   console.log(subSubCategories)
                 }
                 console.log("Categories : "  + cats)
-                //this.subCategories = subCategories
+                this.subCategories = subCategories
                 this.subSubCategories = tree
                 //this.classement = 'TOTO'
                 //alert(JSON.stringify(cats))
-                //this.classement = cats.sort()
+                this.classement = cats.sort()
                 //alert(JSON.stringify(cats))
                 console.log(cats)
                 console.log(this.classement)
-                console.log(subCategories)
-                console.log("HERE I AM")
-                
+                console.log(['tata', 'titi'])
                 this.tree = tree
-                var cats = []
-                var subCategories ={}
-                
-                for( var index in this.newRec._source.products)
-                {
-                    //console.log(prod)
-                    if(this.newRec._source.products[index]['display'] == true)
-                    {
-                      cats.push(this.newRec._source.products[index]['sortLvl1'])
-                    }
-                    
-                }
-
-
-
-                var classement = cats.filter(this.onlyUnique)
-
-                console.log(classement)
-                var cats2 = []
-                for(var index2 in classement){
-                  var cat = classement[index2]
-                  console.log(cat)
-                  var cats2 = []
-                  for( var index in this.newRec._source.products)
-                  {
-                      //console.log(prod)
-                      //console.log(this.newRec._source.products[index]['sortLvl1'])
-                      
-                      if(this.newRec._source.products[index]['sortLvl1'] == cat && this.newRec._source.products[index]['display'] == true){
-                        
-                        cats2.push(this.newRec._source.products[index]['sortLvl2'])
-                      }
-                      
-                      
-                  }
-                  console.log(cats2)
-
-                  subCategories[cat] = cats2.filter(this.onlyUnique).sort()
-
-                }  
-                 
-                console.log('DISPLAY TREE') 
-                /*for(var index in tree)
-                {
-                  console.log(index)
-                  if(!classement.includes(index))
-                  {
-                    tree.splice(index)
-                  }
-                }*/
-                console.log(tree.keys)
-                for(var index in classement)
-                {
-                  //console.log(classement[index])
-                  if(classement[index] in tree)
-                  {
-                    //test
-                    
-                  }
-                  else{
-                    tree[classement[index]] = {}
-                    for(var sub in subCategories[classement[index]])
-                    {
-                      //console.log(sub)
-                      tree[classement[index]][subCategories[classement[index]][sub]]= {"sortLvl3":["-"],"sortLvl4":["-"],"sortLvl5":["-"],"sortLvl6":["-"],"sortLvl7":["-"],"sortLvl8":["-"],"sortLvl9":["-"],"sortLvl10":["-"]}
-                    }
-                  }
-
-                  for(var index2 in subCategories[classement[index]])
-                  {
-                    if(subCategories[classement[index]] in tree[classement[index]])
-                    {
-                      //test
-                    }
-                    else
-                    {
-                      tree[classement[index]][subCategories[classement[index]][index2]]= {"sortLvl3":["-"],"sortLvl4":["-"],"sortLvl5":["-"],"sortLvl6":["-"],"sortLvl7":["-"],"sortLvl8":["-"],"sortLvl9":["-"],"sortLvl10":["-"]}
-                    }
-
-                  }
-
-                }
-
-                //tree = {}
-
-                //cats2.push(this.newRec._source.products[index]['sortLvl2'])
-                
-                
-
-                this.classement = classement.sort()   
-                this.subCategories = subCategories
-                this.tree = tree
-                console.log(JSON.stringify(tree))
-                console.log(JSON.stringify(subCategories))
-                console.log('END TREE')
                 
             }
-        });
-        
+        });    */
+        var cats = []
+        for( var index in this.newRec._source.products)
+        {
+            //console.log(prod)
+            if(this.newRec._source.products[index]['display'] == true)
+            {
+                cats.push(this.newRec._source.products[index]['sortLvl1'])
+            }
+            
+        }
+        var classement = cats.filter(this.onlyUnique)
+
+        this.classement = classement.sort()
     },
 
     onlyUnique: function(value, index, self) {

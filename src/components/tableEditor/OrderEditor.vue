@@ -47,7 +47,7 @@ import YAML from "js-yaml";
 import axios from "axios";
 
 export default {
-  name: "orderEditor",
+  name: "unsalesEditor",
   data: () => ({
     orgRec: null,
     newRec: null,
@@ -58,7 +58,7 @@ export default {
     formLabelWidth: "120px",
     changed: false,
     dialogFormVisible: false,
-    title: "Commande"
+    title: "Invendus"
   }),
   computed: {
     recordin: function() {

@@ -64,14 +64,14 @@
                         <el-input-number v-model="supplementPat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
-                <el-col v-if="sacapain == true" :span="4">
+                <!--el-col v-if="sacapain == true" :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Sacs à pain: </label>
                 </el-col>
                 <el-col  v-if="sacapain == true"  :span="4">
                     <template>
                         <el-input-number v-model="nbreSacsAPain" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
                     </template>
-                </el-col>
+                </el-col-->
             </el-row>
       <el-form style="widht: 100%" :disabled="this.disabled">
           
@@ -302,6 +302,7 @@ export default {
       remisePat: 0,
       supplementPat: 0,
       shopSacAPain : ['Chatelineau', 'Chaussée de Châtelet','Forchies','Gerpinnes','Gosselies','Hiercheuses','Liège','Magasin','Mont Sur Marchienne','Pont-à-Celles','Thuin'],
+      shopSacAPainID: ['MS435'],
       nbreSacsAPain: 0
 
   }),
@@ -586,7 +587,7 @@ export default {
     },
 
     setSacAPain(){
-      if(this.shopSacAPain.includes(this.magasin))
+      if(this.shopSacAPain.includes(this.magasin) || this.shopSacAPainID.includes(this.shopid))
       {
         this.sacapain = true;
       }
@@ -694,7 +695,7 @@ export default {
       });
       this.$store.commit({
         type: "setActualShopID",
-        data: this.shopID
+        data: this.shopid
       });
       console.log('TESTESTEST')
       console.log(this.$store.getters.actualShop)
@@ -936,6 +937,7 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
+      this.shopid = this.$store.getters.actualShopID
       console.log("MAGASIN : " + this.magasin)
       this.setSacAPain();     
       var url =

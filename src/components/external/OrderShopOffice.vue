@@ -19,6 +19,9 @@
         <el-switch @change="onCloseOrder()" v-model="disabled">
         </el-switch>
       </td>
+      <td>
+        {{shopid}}
+      </td>
       </el-row>      
       <el-form style="widht: 100%" :disabled="this.disabled">
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -279,6 +282,7 @@ export default {
     this.selectedShop = [this.magasin, this.shopid]
     console.log('SAVED SHOP: ')
     console.log(this.magasin)
+    console.log(this.shopid)
     //this.prepareData();
   },
   created: function() {
@@ -312,6 +316,7 @@ export default {
     this.selectedUnderTab = this.$store.getters.actualLvl2;
     //this.setAutoRefresh();
     console.log('PREPARE')
+    console.log(this.shopid)
     //this.prepareData();
     this.$forceUpdate();
   },
@@ -914,7 +919,10 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
+      this.shopid = this.$store.getters.actualShopID
       console.log("MAGASIN : " + this.magasin)     
+      console.log("SHOPID : " + this.shopid)     
+
       var url =
       this.$store.getters.apiurl +
       "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
@@ -988,12 +996,12 @@ export default {
           else
           {
             this.callData=[]
-            console.log(response)
+            //console.log(response)
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0
               response.data.records[i]._source.orderquantity = 0
-              console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
+              //console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
               if(response.data.records[i]._source.avail == 'always')
               {
@@ -1034,8 +1042,8 @@ export default {
               {
                 var days =  JSON.parse(response.data.records[i]._source.availabilityConf)
                 var dayOfWeek  = timeRange[0].getDay();
-                console.log("Day:" + dayOfWeek.toString())
-                console.log(days)
+                //console.log("Day:" + dayOfWeek.toString())
+                //console.log(days)
                 var apply = false
                 switch(dayOfWeek)
                 {

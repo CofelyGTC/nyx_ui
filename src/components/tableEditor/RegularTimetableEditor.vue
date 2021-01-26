@@ -278,7 +278,6 @@
           <el-time-select v-model="newRec._source.sundayOFF2" :picker-options="{start: '00:00', end:'23:45', step: '00:15'}" placeholder="Choisissez un horaire"></el-time-select>
         </el-col>
       </el-row>
-      {{circuits}}
     </el-form>
   </div>
   <span slot="footer" class="dialog-footer">
@@ -355,10 +354,58 @@ export default {
       this.getCircuits();
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+     
+      this.DB = this.newRec._source.DB 
+      this.selectedCircuit = this.newRec._source['circuit']
+      this.weekStart1 = this.newRec._source.mondayON1 
+      this.weekStart1 = this.newRec._source.tuesdayON1
+      this.weekStart1 = this.newRec._source.wednesdayON1
+      this.weekStart1 = this.newRec._source.thursdayON1
+      this.weekStart1 = this.newRec._source.fridayON1
+      this.weekStart1 = this.newRec._source.saturdayON1 
+      this.weekStart1 = this.newRec._source.sundayON1
+       
+      this.weekStart2 = this.newRec._source.mondayON2
+      this.weekStart2 = this.newRec._source.tuesdayON2
+      this.weekStart2 = this.newRec._source.wednesdayON2 
+      this.weekStart2 = this.newRec._source.thursdayON2
+      this.weekStart2 = this.newRec._source.fridayON2
+      this.weekStart2 = this.newRec._source.saturdayON2
+      this.weekStart2 = this.newRec._source.sundayON2
+
+      this.weekEnd1 = this.newRec._source.mondayOFF1
+      this.weekEnd1 = this.newRec._source.tuesdayOFF1
+      this.weekEnd1 = this.newRec._source.wednesdayOFF1
+      this.weekEnd1 = this.newRec._source.thursdayOFF1
+      this.weekEnd1 = this.newRec._source.fridayOFF1
+      this.weekEnd1 = this.newRec._source.saturdayOFF1
+      this.weekEnd1 = this.newRec._source.sundayOFF1
+
+      this.weekEnd2 = this.newRec._source.mondayOFF2
+      this.weekEnd2 = this.newRec._source.tuesdayOFF2
+      this.weekEnd2 = this.newRec._source.wednesdayOFF2
+      this.weekEnd2 = this.newRec._source.thursdayOFF2
+      this.weekEnd2 = this.newRec._source.fridayOFF2
+      this.weekEnd2 = this.newRec._source.saturdayOFF2
+      this.weekEnd2 = this.newRec._source.sundayOFF2
+
+
+      this.saturdayStart1 = this.newRec._source.saturdayON1
+      this.sundayStart1 = this.newRec._source.sundayON1
+
+      this.saturdayStart2 = this.newRec._source.saturdayON2
+      this.sundayStart2 = this.newRec._source.sundayON2
+
+      this.saturdayEnd1 = this.newRec._source.saturdayOFF1
+      this.sundayEnd1 = this.newRec._source.sundayOFF1
+
+      this.saturdayEnd2 = this.newRec._source.saturdayOFF2
+      this.sundayEnd2 = this.newRec._source.sundayOFF2
       
     },
     saveRecord: function() {
 
+      this.applyChange();
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.lastUpdate = Date.now()
       console.log(this.newRec)

@@ -8,6 +8,8 @@
     class="product-editor"
   >
     <el-form v-model="newRec._source">
+      <el-collapse v-model="activeNames">
+        <el-collapse-item title="Informations générales" name="1">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
         <el-row>
             <el-col :span=8>  
@@ -225,6 +227,8 @@
         </el-col>
         </el-row>
       </el-card>
+        </el-collapse-item>
+        <el-collapse-item title="Disponibilité" name="2">
       <br>
       <el-card>
         <el-row>
@@ -310,6 +314,8 @@
           </div>
         </el-row>
       </el-card>
+        </el-collapse-item>
+        <el-collapse-item title="Quotas" name="3">
       <br>
       <el-card>
         <h2>Quotas</h2>
@@ -337,6 +343,46 @@
           </el-col>
         </el-row>
       </el-card>
+        </el-collapse-item>
+        <el-collapse-item title="Facturation" name="4">
+      <br>
+      <el-card>
+        <h2>Facturation</h2>
+        <el-row>
+          
+            <el-form-item label="Catégorie" :label-width="formLabelWidth2">
+              <el-select v-model="newRec._source.factCategory" filterable placeholder="Sélectionner">
+                  <el-option v-for="(item, idFact) in factCategories" :key="idFact" :label="item" :value="item">
+                  </el-option>
+              </el-select>
+        </el-form-item>
+          
+        </el-row>
+      </el-card>
+        </el-collapse-item>
+        <el-collapse-item title="Informations Fournisseur" name="5">
+      <br>
+      <el-card>
+        <h2>Infos  Fournisseurs</h2>
+        <el-row>
+          <el-form-item label="CODE : " :label-width="formLabelWidth2">
+          <el-input size="mini" v-model="newRec._source.fournisseur_code" autocomplete="off"></el-input>
+         </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Nom fournisseur : " :label-width="formLabelWidth2">
+          <el-input size="mini" v-model="newRec._source.fournisseur" autocomplete="off"></el-input>
+         </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Numéro fournisseur : " :label-width="formLabelWidth2">
+          <el-input size="mini" v-model="newRec._source.fournisseur_num" autocomplete="off"></el-input>
+         </el-form-item>
+        </el-row>
+      </el-card>
+        </el-collapse-item>
+      </el-collapse>
+
     </el-form>
 
     <span slot="footer" class="dialog-footer">
@@ -365,7 +411,7 @@ export default {
     strNewRec: "",
     orgName: "",
     newName: "",
-    formLabelWidth2: "120px",
+    formLabelWidth2: "180px",
     changed: false,
     dialogFormVisible: false,
     title: "Produit",
@@ -388,6 +434,8 @@ export default {
     lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Table'],
     lieuProd: ['-', 'Cave', 'Boulangerie', 'Table', 'Viennoiserie'],
     filters: null,
+    factCategories: ['Boulangerie', 'Pâtisserie', 'Confiserie', 'Boissons', 'Sandwiches', 'Matériel', 'Salés'],
+    activeNames: ['1', '2']
 
   }),
   computed: {

@@ -10,8 +10,12 @@
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-row>
+            <el-collapse v-model="activeNames">
+            <el-collapse-item title="Informations générales" name="1">
               <el-card shadow="hover" :body-style="{ padding: '10px' }">
-                <h2>Infomrations Générales:</h2>
+                <h2>Informations Générales:</h2>
+                
+                 
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="Nom Magasin" :label-width="formLabelWidth">
@@ -46,12 +50,17 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                 
+               
                 </el-card>
+                </el-collapse-item>
+                <el-collapse-item  title="Comission" name="2">
                 <br>
                 <el-card>
                     <el-row>
                         <h2>Commission</h2>
                     </el-row>
+                    
                     <el-row>
                         <el-form-item label="Type de Commission" :label-width="formLabelWidth2">
                             <el-select v-model="commissionType" placeholder="Sélectionner" @change="commissionChange(commissionType)"> 
@@ -162,10 +171,13 @@
                             <el-button type="primary" @click="addIntervalle()" icon="el-icon-plus" circle></el-button>
                         </el-col>
                     </el-row>
+                    
                     </div>
 
                     
                 </el-card>
+                </el-collapse-item>
+                <el-collapse-item title="Facturation" name="3">
                 <br>
                 <el-card>
                     <el-row>
@@ -181,8 +193,55 @@
                         <el-form-item  label="Numéro de TVA: " :label-width="formLabelWidth">
                             <el-input  size="mini" v-model="factTVA" autocomplete="off" placeholder="BE0 ...."></el-input>
                         </el-form-item>
+                        <el-form-item  label="Mail de Facturation: " :label-width="formLabelWidth2">
+                            <el-input  size="mini" v-model="mailFact" autocomplete="off" placeholder="Entrez une adresse email valide..."></el-input>
+                        </el-form-item>
+                        <el-form-item  label="Catégorie de Facturation: " :label-width="formLabelWidth2">
+                            <el-select  placeholder="Sélectionner" v-model="categoryFact">
+                              <el-option key="1" label="1" value="1"></el-option>
+                              <el-option key="2" label="2" value="2"></el-option>
+                              <el-option key="3" label="3" value="3"></el-option>
+                              <el-option key="4" label="4" value="4"></el-option>
+                              <el-option key="5" label="5" value="5"></el-option>
+                            </el-select>
+                        </el-form-item >
+
+                          
+                        <el-form-item label="N° Carte de dépôt: " :label-width="formLabelWidth2">
+                            <el-input  size="mini" v-model="newRec._source.bankcard" autocomplete="off" placeholder="...."></el-input>
+                        </el-form-item>
                     </el-row>
                 </el-card>
+                </el-collapse-item>
+                <el-collapse-item title="Personnel" name="4">
+                <br>
+                <el-card>
+                    <el-row>
+                        <h2>Personnel</h2>
+                    </el-row>
+                    <el-row>
+                      <el-form-item  label="Vendeuses: " :label-width="formLabelWidth2">
+                            <el-select v-model="commissionType" placeholder="Sélectionner" @change="commissionChange(commissionType)"> 
+                                <el-option v-for="(item, id2) in horrairesTypes" :key="id2" :label="item" :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <!--
+                          Possibilité de plusieurs vendeuses + type d'horraire (à l'heure, temps plein, mi-temps, 3/4 temps)
+                          -->
+                    </el-row>
+                    <el-row>
+                      <el-form-item  label="Etudiants (nombre d'heures): " :label-width="formLabelWidth2">
+                            <el-input-number size="mini" v-model="studentHour" autocomplete="off" :min="0" :step="1"/>
+                        </el-form-item>
+                        <!--
+                          Possibilité de plusieurs étudiants + heures par étudiants
+                          -->
+                    </el-row>
+                    
+                </el-card>
+                </el-collapse-item>
+            </el-collapse>
                 
 
                
@@ -221,6 +280,7 @@ export default {
     orgName: "",
     newName: "",
     formLabelWidth: "120px",
+    formLabelWidth2: "150px",
     changed: false,
     dialogFormVisible: false,
     title: "Shop Editor",
@@ -243,7 +303,12 @@ export default {
     newIntervalForfaitEtudiant: 0,
     factAddr: '',
     factName: '',
-    factTVA: ''
+    factTVA: '',
+    studentHour: 0,
+    horrairesTypes: ['Temps plein', 'Mi-Temps'],
+    activeNames: ['1', '2'],
+    mailFact: '',
+    categoryFact: 0
   }),
   computed: {
     recordin: function() {
@@ -321,6 +386,9 @@ export default {
         this.factTVA = this.newRec._source.factTVA
       }
 
+      this.mailFact = this.newRec._source.mailFact
+      this.categoryFact = this.newRec._source.codeFact
+
     },
 
     addIntervalle: function(){
@@ -361,6 +429,9 @@ export default {
       this.newRec._source.factAddr = this.factAddr
       this.newRec._source.factName = this.factName
       this.newRec._source.factTVA = this.factTVA
+
+      this.newRec._source.mailFact = this.mailFact
+      this.newRec._source.codeFact = this.categoryFact
 
       this.newRec._source['@timestamp'] = Date.now()
 

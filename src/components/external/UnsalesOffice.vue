@@ -883,6 +883,7 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
+      this.shopid = this.$store.getters.actualShopID
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
