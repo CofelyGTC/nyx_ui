@@ -431,7 +431,7 @@ export default {
     lvl8: ['-',  'Abricot','Citron', 'Fraise', 'Framboise', 'Multi'],
     lvl9: ['-', 'Crème Pâtissière', 'Crème au beurre', 'Crème fraîche'],
     lvl10: ['-'],
-    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Table'],
+    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Table', 'Flexis'],
     lieuProd: ['-', 'Cave', 'Boulangerie', 'Table', 'Viennoiserie'],
     filters: null,
     factCategories: ['Boulangerie', 'Pâtisserie', 'Confiserie', 'Boissons', 'Sandwiches', 'Matériel', 'Salés'],
