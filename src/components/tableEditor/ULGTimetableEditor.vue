@@ -68,10 +68,6 @@
             </el-col>
           </el-row>
           <el-row>
-
-              {{newRec._source}}<br>
-              {{selectedRoomID}}<br>
-              {{selectedRoom}}<br>
               
               
 
