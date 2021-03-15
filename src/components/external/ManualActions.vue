@@ -14,6 +14,10 @@
         <el-button type="primary" @click="onGenerateLivraisonDetails">Générer détails préparation</el-button>
         <el-button type="primary" @click="onGenerateComission">Générer notes de livraisons</el-button>
         </el-row>
+        <el-row>
+        <el-button type="primary" @click="onGeneratePredictive">Générer Production Provisoire</el-button>
+        <el-button type="primary" @click="onGenerateFinale">Générer Production Finale</el-button>
+        </el-row>
         
         <el-row>
           <el-date-picker
@@ -88,6 +92,9 @@
             <el-button type="primary" @click="addProduct">Ajouter le Produit</el-button>
           
         </el-row>
+        <el-row>
+          <el-button type="primary" @click="logoutAll">Déconnecter tout le monde</el-button>
+        </el-row>
     </el-row>
     </div>
 </template>
@@ -154,6 +161,34 @@ export default {
         }, 1000)
 
         console.log('Confirming Commands')
+      },
+      logoutAll(){
+
+        setTimeout(() => {axios.get(
+            this.$store.getters.apiurl + "logoutall?token="+this.$store.getters.creds.token).then((response) => {
+              if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Déconnexion Globale",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Autres Users Déconnectés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            }
+        );
+        }, 1000)
+
       },
       onReorder(){
         var body = {
@@ -407,6 +442,82 @@ export default {
                     this.$notify({ 
                     title: "Success",
                     message: "Rapports de Stocks Générés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+      onGeneratePredictive(){
+        var body = {
+            "destination": "/queue/COMPILE_PREDICTIVE_PRODUCTION",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec génération production provisoire",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Production Provisoire Générée",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+      onGenerateFinale(){
+        var body = {
+            "destination": "/topic/GENERATE_FINALE_PRODUCTION",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec génération production finale",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Production Finale Générée",
                     type: "success",
                     position: "bottom-right",
                     duration: 2000

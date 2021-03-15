@@ -183,7 +183,29 @@ export default {
         console.log(e);
       }
     },
+    async verifyVersion(version) {
+
+      const resVersion = await axios.get(this.$store.getters.apiurl + "getLastVersion");
+
+      var curVer = resVersion.data.uiversion
+
+      console.log(version)
+      console.log(curVer)
+
+      if(version != curVer)
+      {
+        console.log("Must be reload")
+        window.location.reload()
+      }
+      else{
+        console.log("Good Version")
+      }
+
+
+    },
     authenticate(response) {
+
+      this.verifyVersion(this.$store.getters.version);
       
       console.log('LOGIN -- authenticate')
 

@@ -2,7 +2,7 @@
 
   <div style="width: 100%">
   <el-row class="ordershopnew-container" style="width: 100%" >
-      <el-form style="widht: 100%" :disabled="this.disabled">
+      <el-form style="widht: 100%" :disabled="this.disabled || this.isCloture">
         <el-row>
         <td>
         Clôturer la commande : 
@@ -254,7 +254,8 @@ export default {
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
       subSubCategories: {},
-      refAutoRefresh: null
+      refAutoRefresh: null,
+      isCloture: false,
 
   }),
   props: {
@@ -1074,6 +1075,39 @@ export default {
 
     },
 
+    getCloture(){
+
+      var query = {'mes': 'coucou', 'date': this.$store.getters.timeRangeDay[0].getTime()}
+      var url = this.$store.getters.apiurl + "lambdas/8/get_cloture?apikey=" + this.$store.getters.creds.token;
+      axios
+          .post(url, query)
+          .then((response) => {
+
+            var status = false
+
+            console.log(response.data)
+            if(response.data.cloture == true && this.disabled==false)
+            {
+              status = true
+              this.disabled = true
+              
+              this.onSubmit();
+            }
+            else if(response.data.cloture == true)
+            {
+                status = true
+            }
+
+            
+            console.log('Cloture Status GET')
+            console.log(status)
+            this.isCloture = status
+            //this.onSubmit();
+
+          });
+
+    },
+
     /*refreshData(){
 
       if(this.oldID != null)
@@ -1109,12 +1143,14 @@ export default {
     setAutoRefresh: function() {
       console.log('Setting Interval')
 
-      /*if(this.refAutoRefresh != null)
+      if(this.refAutoRefresh != null)
         clearInterval(this.refAutoRefresh)
 
       this.refAutoRefresh =  setInterval(() => {
-        this.refreshData()
-      }, 30000)*/
+        //this.refreshData()
+        this.getCloture();
+      }, 10000)
+
 
     },
 

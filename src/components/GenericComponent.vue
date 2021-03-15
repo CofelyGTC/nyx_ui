@@ -10,6 +10,9 @@
         <div v-if="$store.getters.currentSubCategory.apps[0].type=='generic-table'">
           <GenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
         </div>
+        <div v-if="$store.getters.currentSubCategory.apps[0].type=='lazy-generic-table'">
+          <LazyGenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
+        </div>
         <div v-else-if="$store.getters.currentSubCategory.apps[0].type=='external'">
           <External :config="$store.getters.currentSubCategory.apps[0]"></External>          
         </div>
@@ -77,6 +80,7 @@
 <script>
 
 import generictable from "@/components/GenericTable";
+import lazygenerictable from "@/components/LazyGenericTable";
 import pggenerictable from "@/components/PGGenericTable";
 import kibana from "@/components/Kibana";
 import external from "@/components/External";
@@ -111,6 +115,7 @@ req.keys().forEach(filename => {
 })
 
 Vue.component("GenericTable", generictable);
+Vue.component("LazyGenericTable", lazygenerictable);
 Vue.component("PGGenericTable", pggenerictable);
 Vue.component("Kibana", kibana);
 Vue.component("External", external);

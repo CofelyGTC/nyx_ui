@@ -54,7 +54,7 @@ export default new Vuex.Store({
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.25.117",
+    version: "v3.25.124",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -455,6 +455,19 @@ export default new Vuex.Store({
 
           startTimeAsUtc = moment(state.timeRangeDay[0]).utc();
           endTimeAsUtc = moment(state.timeRangeDay[1]).utc();
+          //__________________
+          state.timeRange = payload.data.range;
+          startTime = moment(state.timeRange[0]);
+          endTime = moment(state.timeRange[1]);
+
+          state.autoTime = "1h";
+          minutes = moment.duration(endTime.diff(startTime)).asMinutes();
+
+          state.autoTime = computeAutoTime(minutes);
+
+          startTimeAsUtc = moment(state.timeRange[0]).utc();
+          endTimeAsUtc = moment(state.timeRange[1]).utc();
+          //__________________
 
           break;
         case "week":
@@ -538,8 +551,7 @@ export default new Vuex.Store({
           }
           break;
       }
-    }
-    ,
+    },
     updateRecord(state, payload) {
       var url =
         state.apiurl +
@@ -558,8 +570,30 @@ export default new Vuex.Store({
         .catch(error => {
           console.log(error);
         });
-    }
-    ,
+    },
+    onlyUpdateRecord(state, payload) {
+      var url =
+        state.apiurl +
+        "generic/" + payload.data._index + "/" + payload.data._id + "?token=" +
+        state.creds.token;
+
+      var body = {"update": true, "data": {"doc": payload.data._source}}  
+
+      console.log(body)
+
+      axios
+        .post(url, body)
+        .then(response => {
+          if (response.data.error != "")
+            console.log("Save object error...");
+          else {
+            console.log("Save object success...");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     deleteRecord(state, payload) {
       console.log('deleteRecord')
       console.log(payload)

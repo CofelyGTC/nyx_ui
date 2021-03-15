@@ -55,6 +55,7 @@
                     style="width:100%"
                   >
                     <el-option label="ES Table" value="generic-table"></el-option>
+                    <el-option label="Lazy ES Table" value="lazy-generic-table"></el-option>
                     <el-option label="PGSQL Table" value="pgsql-generic-table"></el-option>
                     <el-option label="Kibana" value="kibana"></el-option>
                     <el-option label="External" value="external"></el-option>
@@ -102,7 +103,7 @@
               </el-card>
             </el-row>
 
-            <el-row v-if="curConfig.type === 'generic-table'" class="transition-box" style="text-align:left;">     
+            <el-row v-if="curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
                 <v-icon name="table" scale="2.2" />
@@ -421,7 +422,7 @@
                   <el-form-item
                     label="Doc Type"
                     :label-width="formLabelWidth"
-                    v-if="(curConfig.type === 'generic-table')"
+                    v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
                   >
                     <el-input size="mini" v-model="curConfig.config.doc_type" autocomplete="off"></el-input>
                   </el-form-item>
@@ -484,7 +485,7 @@
                   <el-form-item
                     label="Default Order"
                     :label-width="formLabelWidth"
-                    v-if="(curConfig.type === 'generic-table')"
+                    v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
                   >
                     <el-input size="mini" v-model="curConfig.config.orderField" autocomplete="off"></el-input>
                   </el-form-item>
@@ -493,7 +494,7 @@
                   <el-form-item
                     label
                     :label-width="formLabelWidth"
-                    v-if="(curConfig.type === 'generic-table')"
+                    v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
                   >
                     <el-checkbox v-model="curConfig.config.orderDirection">Descending</el-checkbox>
                   </el-form-item>
@@ -652,7 +653,7 @@
           label="Table"
           name="table"
           key="table"
-          v-if="(curConfig.type === 'generic-table')"
+          v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
         >
           <ESTableEditor
             :allPrivileges="allPrivileges"
@@ -729,7 +730,7 @@
           label="Query-Filter"
           key="queryfilter"
           name="queryfilter"
-          v-if="((curConfig.type === 'kibana')||(curConfig.type === 'generic-table')) && (curConfig.queryFilterChecked)"
+          v-if="((curConfig.type === 'kibana')||(curConfig.type === 'generic-table') || (curConfig.type === 'lazy-generic-table')) && (curConfig.queryFilterChecked)"
         >
           <el-card>
             <div>
@@ -1007,7 +1008,10 @@ export default {
         this.curConfig.config.controller = "PGGenericTable";
       } else if (e == "generic-table") {
         console.log("generic-table chosen");
+      } else if (e=="lazy-generic-table") {
+        console.log("lazy-generic-table chosen")
       }
+      
     },
 
     freeTextChanged(newvalue) {
