@@ -1,85 +1,9 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="dushop-container" style="width: 100%" >
-   
-            <br>
-            <el-row>
-              <h2>BOULANGERIE</h2>
-            </el-row>
-            <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remise" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplement" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                  <label style="horizontal-align: right; vertical-align: middle;">Bons Vita+: </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="vitas" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-
-            </el-row>
-            <el-row>
-              <h2>PATISSERIE</h2>
-            </el-row>
-             <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remisePat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplementPat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <!--el-col v-if="sacapain == true" :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Sacs à pain: </label>
-                </el-col>
-                <el-col  v-if="sacapain == true"  :span="4">
-                    <template>
-                        <el-input-number v-model="nbreSacsAPain" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
-                    </template>
-                </el-col-->
-            </el-row>
-            <el-row>
-              <h2>
-                SALES
-              </h2>
-            </el-row>
-            <el-row>
-
-            <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplementSales" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
+  <el-row class="supplement-container" style="width: 100%" >
+           
             
-            </el-row>
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -201,11 +125,8 @@
 
         <div style="bottom: 5%;">
 
-        <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € </el-row>
-        <el-row> Total Salés TTC : {{totalSales| roundTo2 }} €  Autres TTC : {{totalOther| roundTo2 }} €</el-row>
-              
-        <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
-        
+            
+        Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €
         
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
           <el-table-column prop="CODE" label="Code" sortable></el-table-column>
@@ -215,7 +136,7 @@
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Dus" width="150" sortable>
+          <el-table-column label="Quantité Invendus" width="150" sortable>
           <template slot-scope="scope">
             <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
           </template>
@@ -250,7 +171,7 @@
                 </el-row>
             </el-row>
             <el-row>
-              Total Dus: {{totalPrice | roundTo2 }}€ TTC
+              Total Invendus: {{totalPrice | roundTo2 }}€ TTC
               
             </el-row>
             <el-row>
@@ -273,7 +194,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormDusOffice",
+  name: "FormSupplements",
   data: () => ({
       records: null,
       oldID: null,
@@ -292,26 +213,15 @@ export default {
       filter8: '-',
       magasin: '',
       shopid: '',
+      magasins: [],
       ts: 0,
-      vitas: 0,
       changed: false,
       dialogFormVisible: false,
-      title: "Commande",
-      sacapain: false,
+      title: "Supplements",
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
       subSubCategories: {},
-      invendus: 0,
-      remise: 0,
-      supplement: 0,
-      invendusPat: 0,
-      remisePat: 0,
-      supplementPat: 0,
-      supplementSales: 0,
-      shopSacAPain : ['Chatelineau', 'Chaussée de Châtelet','Forchies','Gerpinnes','Gosselies','Hiercheuses','Liège','Magasin','Mont Sur Marchienne','Pont-à-Celles','Thuin'],
-      shopSacAPainID: ['MS435'],
-      nbreSacsAPain: 0
 
   }),
   props: {
@@ -325,13 +235,12 @@ export default {
       }
   },
   mounted: function() {
-    //this.getMagasin();
+    this.getMagasin();
     //this.getTree();
     this.ts = Date.now().toString();
     //this.magasin = this.$store.getters.actualShop;
     this.selectedTab = this.$store.getters.actualLvl1;
     this.selectedUnderTab = this.$store.getters.actualLvl2;
-    this.setSacAPain();
     //this.prepareData();
   },
   created: function() {
@@ -382,7 +291,6 @@ export default {
       }
       return price
     },
-
     totalPatisserie: function(){
 
       var price = 0
@@ -607,18 +515,6 @@ export default {
       }
       
     },
-    setSacAPain(){
-      if(this.shopSacAPain.includes(this.magasin) || this.shopSacAPainID.includes(this.shopid))
-      {
-        this.sacapain = true;
-      }
-      else
-      {
-        this.sacapain = false;
-      }
-      console.log('Setting Sac A Pain')
-      console.log(this.sacapain)
-    },
     getFilter(data){
 
         //console.log(data)
@@ -703,104 +599,112 @@ export default {
         data: this.selectedUnderTab
       });
     },
-    changeShop(){
-      console.log("CHANGE SHOP")
-      //this.magasin = magasin
-      console.log("SHOP: " + this.magasin)
-      this.$store.commit({
-        type: "setActualShop",
-        data: this.magasin
-      });
-      console.log('TESTESTEST')
-      console.log(this.$store.getters.actualShop)
-      this.setSacAPain();
-      this.prepareData();
-    },
     onSubmit(){
       this.refillNan()
-      var order = {};
-      var products = [];
-      var timeRange=this.$store.getters.timeRangeDay;
-      var entry = {};
-      for(var itemKey in Object.keys(this.records)) {
-        var item = this.records[itemKey]
-        
-        entry = item
-        /*entry._id = item._id
-        entry.name = item.name
-        entry.category = item.categoryID
-        entry.code = item.old_code
-        entry.quantity = item.quantity
-        entry.orderquantity = item.orderquantity
-        entry.size = item.size
-        entry.remarque = item.remarque
-        entry.price_tvac = item.price_tvac
-        entry.available = item.available*/
-        products.push(entry)
-      }
-      order.shop = this.magasin
-      order.shopid = this.shopid
-      order.products = products
-      order.dateOrder = timeRange[0].getTime();
-      order.demandor = this.$store.getters.creds.user.id
-      order.oldId = this.oldID
-      order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
-      order.remise = this.remise
-      order.invendus = this.invendus
-      order.supplement = this.supplement
-      order.remisePat = this.remisePat
-      order.invendusPat = this.invendusPat
-      order.supplementPat = this.supplementPat
-      order.supplementSales = this.supplementSales
-      order.vitas = this.vitas
-      order.nbreSacsAPain = this.nbreSacsAPain
-      order.dusBoul = this.totalBoulangerie.toFixed(2);
-      order.dusPat = this.totalPatisserie.toFixed(2);
-      order.dusOthers = this.totalOther.toFixed(2);
-      order.dusSales = this.totalSales.toFixed(2)
-      order.confirmed = this.disabled
-
-      console.log('MAGASIN: ')
+      console.log(this.$store.getters.actualShop)
       console.log(this.magasin)
-
-      
-      if(!this.disabled)
-      {
-        setTimeout(() => {
-          axios.post(
-            this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
-            ).then((response) => {
-              if(response.data.error!="")
-                {
-                  this.$notify({ 
-                  title: "Error",
-                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                  type: "error",
-                  position: "bottom-right",
-                  duration: 1500});
+      if(this.magasin != '-')
+      {  
+        console.log(this.magasin)
+        var order = {};
+        var products = [];
+        var timeRange=this.$store.getters.timeRangeDay;
+        var entry = {};
+        for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          
+          entry = item
+          /*entry._id = item._id
+          entry.name = item.name
+          entry.category = item.categoryID
+          entry.code = item.old_code
+          entry.quantity = item.quantity
+          entry.orderquantity = item.orderquantity
+          entry.size = item.size
+          entry.remarque = item.remarque
+          entry.price_tvac = item.price_tvac
+          entry.available = item.available*/
+          //console.log(entry.CODE + '-'+entry.HTVA)
+          if(typeof entry.HTVA == "string")
+          {
+            console.log(entry.CODE)
+            console.log(entry.HTVA)
+            entry.HTVA = parseFloat(entry.HTVA)
+            console.log(entry.HTVA)
+          }
+          if(typeof entry.TVA == "string")
+          {
+            console.log(entry.CODE)
+            console.log(entry.TVA)
+            entry.TVA = parseFloat(entry.TVA)
+            console.log(entry.TVA)
+          }
+          products.push(entry)
+          
+        }
+        order.shop = this.magasin
+        order.shopid = this.shopid
+        order.products = products
+        order.dateOrder = timeRange[0].getTime();
+        order.demandor = this.$store.getters.creds.user.id
+        order.oldId = this.oldID
+        order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
+        order.totalPrice = this.totalPrice.toFixed(2)
+        order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+        order.totalPatisserie = this.totalPatisserie.toFixed(2)
+        order.totalSales = this.totalSales.toFixed(2)
+        order.totalOther = this.totalOther.toFixed(2)
+        order.confirmed = this.disabled
+        //order.invendus = this.invendus
+        //order.supplement = this.supplement
+        //order.remisePat = this.remisePat
+        //order.invendusPat = this.invendusPat
+        //order.supplementPat = this.supplementPat
+        
+        console.log(this.disabled)
+        console.log(order.shopid)
+        if(!this.disabled)
+        {
+          setTimeout(() => {
+            axios.post(
+              this.$store.getters.apiurl + "schamps/new_supplements?token="+this.$store.getters.creds.token, order
+              ).then((response) => {
+                if(response.data.error!="")
+                  {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                  {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commande en " +this.categoryUp + " envoyée !",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                  });
                   }
-              else
-                {
-                  this.$notify({ 
-                  title: "Success",
-                  message: "Commande en " +this.categoryUp + " envoyée !",
-                  type: "success",
-                  position: "bottom-right",
-                  duration: 2000
-                });
-                }
-          })
-          .catch((error)=> {
-            console.log(error);
-            
-          });
-        }, 1000)}
+            })
+            .catch((error)=> {
+              console.log(error);
+              
+            });
+          }, 1000)
 
-      console.log('Sending Command')
+          console.log('Sending Command')
+          }
+        }
+        else
+        {
+          console.log('No data To send')
+        }
     },
     prepareData() {
       console.log('prepare data')
-      this.setSacAPain();
       //this.magasin = this.$store.getters.actualShop;
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
@@ -822,11 +726,7 @@ export default {
     },
     loadData(){
         this.records = [];
-        this.setSacAPain();
         this.getData();
-        console.log('coucou3')
-        this.setSacAPain();
-        console.log('coucou4')
     },
     dateSelected() {
       
@@ -896,6 +796,20 @@ export default {
         });    
     },
 
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity)
+          {
+            item.orderquantity = 0
+          }
+      }  
+    },
+
     getMagasin() {
       var demandor = this.$store.getters.creds.user.id          
       var url =
@@ -912,7 +826,7 @@ export default {
             else{
                 var res = JSON.parse(response.data.data)
                 console.log("MAGASIN : ")
-                //console.log(res)
+                console.log(res)
                 this.magasin = res.reccords[0]._source.magasin
                 this.shopid = res.reccords[0]._source.shopid
                 this.prepareData();
@@ -932,10 +846,11 @@ export default {
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_dus?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_supplements?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
-
+      //this.createNewForm();
+      //this.$forceUpdate();
         
       axios
         .get(url, demandor)
@@ -964,34 +879,13 @@ export default {
                     this.oldID = oldId
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
-                    this.remise = res.reccords[0]['_source']['remise']
-                    this.invendus = res.reccords[0]['_source']['invendus']
-                    this.supplement = res.reccords[0]['_source']['supplement']
-                    this.remisePat = res.reccords[0]['_source']['remisePat']
-                    this.invendusPat = res.reccords[0]['_source']['invendusPat']
-                    this.supplementPat = res.reccords[0]['_source']['supplementPat']
-                    this.supplementSales = res.reccords[0]['_source']['supplementSales']
-                    if(res.reccords[0]['_source']['vitas'])
-                    {
-                        this.vitas = res.reccords[0]['_source']['vitas']
-                    }
-                    else
-                    {
-                      this.vitas = 0
-                    }
-                    if(res.reccords[0]['_source']['nbreSacsAPain'])
-                    {
-                      this.nbreSacsAPain = res.reccords[0]['_source']['nbreSacsAPain']
-                    }
-                    else
-                    {
-                      this.nbreSacsAPain = 0
-                    }
-
+                    //this.remise = res.reccords[0]['_source']['remise']
+                    //this.invendus = res.reccords[0]['_source']['invendus']
+                    //this.supplement = res.reccords[0]['_source']['supplement']
                 }
                 this.$forceUpdate();
             }
-        });  
+        }); 
     },
 
 
@@ -1024,18 +918,7 @@ export default {
           else
           {
             this.callData=[]
-            this.invendus= 0
-            this.remise= 0
-            this.supplement= 0
-            this.invendusPat= 0
-            this.remisePat= 0
-            this.supplementPat= 0
-            this.supplementSales= 0
-
-            this.nbreSacsAPain= 0
-            this.vitas = 0
             console.log(response)
-
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0
@@ -1059,51 +942,6 @@ export default {
    
    setTableCurrent(row) {
       this.$refs.callTable.setCurrentRow(row);
-    },
-    refillNan(){
-      console.log('coucou')
-      for(var itemKey in Object.keys(this.records)) {
-          var item = this.records[itemKey]
-          if(item.quantity == null)
-          {
-            item.quantity = 0
-          }
-          if(item.orderquantity)
-          {
-            item.orderquantity = 0
-          }
-      }
-      console.log("Refill NAN")
-      if(this.supplement == null)
-      {
-        this.supplement = 0
-      }
-      if(this.supplementPat == null)
-      {
-        this.supplementPat = 0
-      }
-      if(this.supplementSales == null)
-      {
-        this.supplementSales = 0
-      }
-      if(this.remise == null)
-      {
-        this.remise = 0
-      }
-      if(this.remisePat == null)
-      {
-        this.remisePat = 0
-      }
-      if(this.vitas == null)
-      {
-        this.vitas = 0
-      }
-      if(this.sacapain == null)
-      {
-        this.sacapain = 0
-      }
-      
-      
     },
     handleTableSelect(val) {
       if(this.disable)

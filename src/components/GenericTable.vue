@@ -15,6 +15,7 @@
       <GenericTableDetails
         v-else
         :record="currentRecord.original"
+        :editMode="editMode"
         :config="config"
         v-on:dialogcloseupdated="recordUpdated()"
         v-on:dialogclose="dialogFormVisible=false"

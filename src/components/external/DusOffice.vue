@@ -73,6 +73,23 @@
                     </template>
                 </el-col-->
             </el-row>
+            <el-row>
+              <h2>
+                SALES
+              </h2>
+            </el-row>
+            <el-row>
+
+            <el-col :span="4">
+                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
+                </el-col>
+                <el-col :span="4">
+                    <template>
+                        <el-input-number v-model="supplementSales" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
+                    </template>
+                </el-col>
+            
+            </el-row>
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -195,8 +212,11 @@
         <div style="bottom: 5%;">
 
             
+        <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € </el-row>
+        <el-row> Total Salés TTC : {{totalSales| roundTo2 }} €  Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+             
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
-        <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+        
         
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
           <el-table-column prop="CODE" label="Code" sortable></el-table-column>
@@ -301,6 +321,7 @@ export default {
       invendusPat: 0,
       remisePat: 0,
       supplementPat: 0,
+      supplementSales: 0,
       shopSacAPain : ['Chatelineau', 'Chaussée de Châtelet','Forchies','Gerpinnes','Gosselies','Hiercheuses','Liège','Magasin','Mont Sur Marchienne','Pont-à-Celles','Thuin'],
       shopSacAPainID: ['MS435'],
       nbreSacsAPain: 0
@@ -411,6 +432,23 @@ export default {
 
     },
 
+    totalSales: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
     totalOther: function(){
 
       var price = 0
@@ -418,9 +456,9 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -739,11 +777,13 @@ export default {
         order.remisePat = this.remisePat
         order.invendusPat = this.invendusPat
         order.supplementPat = this.supplementPat
+        order.supplementSales = this.supplementSales
         order.vitas = this.vitas
         order.nbreSacsAPain = this.nbreSacsAPain
         order.dusBoul = this.totalBoulangerie.toFixed(2);
         order.dusPat = this.totalPatisserie.toFixed(2);
         order.dusOthers = this.totalOther.toFixed(2);
+        order.dusSales = this.totalSales.toFixed(2)
         order.confirmed = this.disabled
 
         
@@ -938,11 +978,12 @@ export default {
       console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
       this.shopid = this.$store.getters.actualShopID
+      var shopid = this.shopid
       console.log("MAGASIN : " + this.magasin)
       this.setSacAPain();     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_dus?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_dus?shop="+shopid+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
 
@@ -981,6 +1022,7 @@ export default {
                     this.remisePat = res.reccords[0]['_source']['remisePat']
                     this.invendusPat = res.reccords[0]['_source']['invendusPat']
                     this.supplementPat = res.reccords[0]['_source']['supplementPat']
+                    this.supplementSales = res.reccords[0]['_source']['supplementSales']
                     if(res.reccords[0]['_source']['vitas'])
                     {
                         this.vitas = res.reccords[0]['_source']['vitas']
@@ -1040,6 +1082,7 @@ export default {
             this.invendusPat= 0
             this.remisePat= 0
             this.supplementPat= 0
+            this.supplementSales= 0
             this.nbreSacsAPain= 0
             this.vitas=0
 
@@ -1390,6 +1433,10 @@ export default {
       if(this.supplementPat == null)
       {
         this.supplementPat = 0
+      }
+      if(this.supplementSales == null)
+      {
+        this.supplementSales = 0
       }
       if(this.remise == null)
       {

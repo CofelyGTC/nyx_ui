@@ -635,6 +635,7 @@ export default {
         order.remise = this.remise
         order.totalBoulangerie = this.totalBoulangerie().toFixed(2)
         order.totalPatisserie = this.totalPatisserie().toFixed(2)
+        order.totalSales = this.totalSales.toFixed(2)
         order.totalOther = this.totalOther().toFixed(2)
         order.totalPrice = this.totalPrice.toFixed(2)
         order.confirmed = this.disabled
@@ -861,6 +862,23 @@ export default {
 
     },
 
+    totalSales: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
     totalOther: function(){
 
       var price = 0
@@ -868,9 +886,9 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -883,11 +901,13 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
       var magasin = this.magasin 
+      
       this.shopid = this.$store.getters.actualShopID
-      console.log("MAGASIN : " + this.magasin)     
+      var shopid = this.shopid
+      console.log("MAGASIN : " + this.magasin + ' shopid: ' + shopid)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_unsales?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_unsales?shop="+shopid+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
       //this.createNewForm();

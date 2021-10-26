@@ -9,8 +9,9 @@
   >
     <el-row><h1>{{newRec._source.shop}}</h1></el-row>
 
-  <el-row>Total Boulangerie TTC: {{ totalBoulangerie  | roundTo2 }}€  Total Pâtisserie TTC : {{totalPatisserie | roundTo2 }} € Total Autres TTC : {{totalOther  | roundTo2 }} €</el-row>
- 
+  <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € </el-row>
+  <el-row> Total Salés TTC : {{totalSales| roundTo2 }} €  Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+        
   <el-row>Total TTC : {{totalPrice | roundTo2 }} €<br></el-row>
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
@@ -282,7 +283,7 @@ export default {
         for(var itemKey in Object.keys(this.newRec._source.products))
         {
           var item = this.newRec._source.products[itemKey]
-          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
+          price += (item.quantity*item.Prix_TVAC)
         }
         
       }
@@ -388,6 +389,23 @@ export default {
 
     },
 
+    totalSales: function(){
+
+      var price = 0
+      
+      for(var itemKey in Object.keys(this.newRec._source.products))
+      {
+        var data = this.newRec._source.products[itemKey]
+        if(data.sortLvl1 == 'Sales' && data.sortLvl2 != 'Quiches')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
     totalOther: function(){
 
       var price = 0
@@ -395,7 +413,7 @@ export default {
       for(var itemKey in Object.keys(this.newRec._source.products))
       {
         var data = this.newRec._source.products[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Sales'))
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -776,6 +794,7 @@ export default {
       this.newRec._source.totalPrice = this.totalPrice.toFixed(2);
       this.newRec._source.totalBoulangerie = this.totalBoulangerie.toFixed(2)
       this.newRec._source.totalPatisserie = this.totalPatisserie.toFixed(2)
+      this.newRec._source.totalSales = this.totalSales.toFixed(2)
       this.newRec._source.totalOther = this.totalOther.toFixed(2)
 
       this.$store.commit({

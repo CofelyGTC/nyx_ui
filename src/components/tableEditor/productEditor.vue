@@ -365,21 +365,81 @@
       <el-card>
         <h2>Infos  Fournisseurs</h2>
         <el-row>
-          <el-form-item label="CODE : " :label-width="formLabelWidth2">
+        </el-row>
+        <el-row>
+          <el-form-item label="CODE Produit: " :label-width="formLabelWidth2">
           <el-input size="mini" v-model="newRec._source.fournisseur_code" autocomplete="off"></el-input>
          </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="Nom fournisseur : " :label-width="formLabelWidth2">
+          <el-form-item label="Prix Fournisseur (HTVA): " :label-width="formLabelWidth2">
+          <el-input-number size="mini" v-model="newRec._source.fournisseur_prix" :step=0.01 :min=0></el-input-number>
+         </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Fournisseur : " :label-width="formLabelWidth2">
+           <el-select v-model="selectedfournisseur" filterable placeholder="Sélectionner" @change="changeFournisseur">
+                <el-option v-for="(item, id) in fournisseurs" :key="id" :label="item['name']" :value="item['CODE']">
+                </el-option>
+            </el-select>
+          
+          <!--el-form-item label="Nom fournisseur : " :label-width="formLabelWidth2">
           <el-input size="mini" v-model="newRec._source.fournisseur" autocomplete="off"></el-input>
          </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="Numéro fournisseur : " :label-width="formLabelWidth2">
-          <el-input size="mini" v-model="newRec._source.fournisseur_num" autocomplete="off"></el-input>
+          <el-input size="mini" v-model="newRec._source.fournisseur_num" autocomplete="off"></el-input-->
          </el-form-item>
+
+
         </el-row>
       </el-card>
+        </el-collapse-item>
+        <el-collapse-item title="Conventions Produits" name="6">
+          <el-card>
+            <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;">
+            <el-row>
+                <el-table
+                  class="table-logs"
+                  size="mini"
+                  :data="conventions"
+                  style="width: 100%"
+                >
+                  <el-table-column
+                    width="180"
+                    label="Convention"
+                    sortable
+                  >
+                    <template slot-scope="scope">
+                      {{scope.row.CODE }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="180"
+                    label="Description"
+                    sortable
+                  >
+                    <template slot-scope="scope">
+                      {{scope.row.description }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="180"
+                    label="Inclus ?"
+                    sortable
+                  >
+                    <template slot-scope="scope">
+                      <el-checkbox v-model="scope.row.included" @change="changeConvention(scope.row.CODE, scope.row.included)"></el-checkbox>
+                      
+                    </template>
+                  </el-table-column>
+                </el-table>
+            </el-row>
+            </div>
+            {{conventions}}
+          </el-card>
+          
         </el-collapse-item>
       </el-collapse>
 
@@ -412,6 +472,7 @@ export default {
     orgName: "",
     newName: "",
     formLabelWidth2: "180px",
+    formLabelWidth: "120px",
     changed: false,
     dialogFormVisible: false,
     title: "Produit",
@@ -431,11 +492,14 @@ export default {
     lvl8: ['-',  'Abricot','Citron', 'Fraise', 'Framboise', 'Multi'],
     lvl9: ['-', 'Crème Pâtissière', 'Crème au beurre', 'Crème fraîche'],
     lvl10: ['-'],
-    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Table', 'Flexis'],
-    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table', 'Viennoiserie'],
+    lieuPrepa: ['-', 'Cave', 'Boulangerie', 'Table', 'Flexis', 'Fournitures', 'Salé', 'Fournisseur'],
+    lieuProd: ['-', 'Cave', 'Boulangerie', 'Table', 'Viennoiserie', 'Fournitures', 'Salé', 'Fournisseur'],
     filters: null,
-    factCategories: ['Boulangerie', 'Pâtisserie', 'Confiserie', 'Boissons', 'Sandwiches', 'Matériel', 'Salés'],
-    activeNames: ['1', '2']
+    factCategories: ['Boulangerie', 'Pâtisserie', 'Confiserie', 'Boissons', 'Sandwiches', 'Matériel', 'Salés', 'Fournisseur'],
+    activeNames: ['1', '2'],
+    conventions: {},
+    fournisseurs: {},
+    selectedfournisseur: {},
 
   }),
   computed: {
@@ -489,16 +553,32 @@ export default {
     closeDialog: function() {
       this.$emit("dialogclose");
     },
+    getFournisseurs: function(){
+        console.log("Get Fournisseurs")
+        var url = this.$store.getters.apiurl + "lambdas/2/get_fournisseurs?apikey=" + this.$store.getters.creds.token;
+        var body = {};
+        axios
+        .post(url, body)
+        .then((response) => {
+            console.log(response)
+            this.fournisseurs = response.data
+            this.$forceUpdate();
+        });
+    },
     prepareData: function() {
       console.log("prepare data");
       this.dialogFormVisible = true;
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+      this.selectedfournisseur['CODE'] = this.newRec._source['fournisseur_num']
+      this.selectedfournisseur['name'] = this.newRec._source['fournisseur']
       this.availabilityType = this.newRec._source.avail
       
       this.availabilityConf  = JSON.parse(this.newRec._source.availabilityConf)
       console.log(this.availabilityConf)
       console.log(this.availabilityConf.period)
+      this.getConventions();
+      this.getFournisseurs();
     },
     lvl1Change: function(){
         this.newRec._source.sortLvl2 = '-';
@@ -587,6 +667,58 @@ export default {
                
             }
         });  
+
+      },
+      getConventions(){
+          var url = this.$store.getters.apiurl +"lambdas/8/get_conventions_by_product?apikey=" + this.$store.getters.creds.token;
+          var query = {"_id": this.newRec._source['CODE']}
+          axios
+            .post(url, query)
+            .then((response) => {
+
+              //var status = false
+
+              console.log(response.data)
+              this.conventions = response.data
+
+
+
+      });
+      },
+      changeFournisseur(item)
+      {
+        console.log("Change Fournisseur")
+
+        for(var four in this.fournisseurs)
+        {
+          console.log(four)
+          if(this.fournisseurs[four]['CODE'] == item)
+          {
+
+            this.newRec._source.fournisseur = this.fournisseurs[four]['name']
+          }
+        }
+        this.newRec._source.fournisseur_num = item
+
+      },
+      changeConvention(CODE, included)
+      {
+        console.log("Change Convention")
+        console.log(CODE)
+        console.log(included)
+        var url = this.$store.getters.apiurl +"lambdas/8/set_conventions_by_product?apikey=" + this.$store.getters.creds.token;
+        var query = {"_id": this.newRec._source['CODE'], "convention": CODE, "included": included}
+          axios
+            .post(url, query)
+            .then((response) => {
+
+              //var status = false
+
+              console.log(response.data)
+
+
+
+      });
 
       },
       prepareFilters(){

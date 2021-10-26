@@ -325,6 +325,23 @@ export default {
 
     },
 
+    totalSales: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
     totalOther: function(){
 
       var price = 0
@@ -332,9 +349,9 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -636,6 +653,7 @@ export default {
         order.totalPrice = this.totalPrice.toFixed(2)
         order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
         order.totalPatisserie = this.totalPatisserie.toFixed(2)
+        order.totalSales = this.totalSales.toFixed(2)
         order.totalOther = this.totalOther.toFixed(2)
         order.confirmed = this.disabled
         //order.invendus = this.invendus
@@ -825,7 +843,7 @@ export default {
       var demandor = this.$store.getters.creds.user.id  
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
-      var magasin = this.magasin 
+      var magasin = this.shopid
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +

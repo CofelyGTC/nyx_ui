@@ -5,12 +5,12 @@
     <el-row>
       <td>
     Sélectionnez un magasin: 
-    <el-select @change="changeShop" v-model="magasin" placeholder="Sélectionner">
+    <el-select @change="changeShop" v-model="selectedShop" placeholder="Sélectionner">
               <el-option
                 v-for="(item, id) in magasins"
                 :key="id"
-                :label="item"
-                :value="item">
+                :label="item.shop + ' ('+ item.shopid+')'"
+                :value="[item.shop, item.shopid]">
               </el-option>
             </el-select>
       </td>
@@ -19,30 +19,26 @@
         <el-switch @change="onCloseOrder()" v-model="disabled">
         </el-switch>
       </td>
+      <td>
+        {{shopid}}
+      </td>
       </el-row>      
       <el-form style="widht: 100%" :disabled="this.disabled">
-          
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
-          
           v-for="(category, index) in classement"
           :key="'TAB-'+index"
           :label="category"
           :name="'TAB-'+index"
           :lazy="true"
-          
-          
         >
         <el-tabs v-model="selectedUnderTab" @tab-click="subTabChanged()">
           <el-tab-pane
-          
           v-for="(subcategory, index1) in subCategories[category]"
           :key="'TAB-'+index+'-'+index1"
           :label="subcategory"
           :name="'TAB-'+index+'-'+index1"
           :lazy="true"
-          
-          
         >
 
  <el-row>
@@ -141,8 +137,8 @@
 
         <div style="bottom: 5%;">
 
-          <el-row>Total Boulangerie TTC: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € Total Autres TTC : {{totalOther| roundTo2 }} €</el-row>
-
+          <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € </el-row>
+        <el-row> Total Salés TTC : {{totalSales| roundTo2 }} €  Autres TTC : {{totalOther| roundTo2 }} €</el-row>
             
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
         
@@ -161,12 +157,12 @@
           </el-table-column>
           <el-table-column :span=2 label="Quantité" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number width="10px" :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number width="10px" :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
           <el-table-column :span=1 label="Quantité en Commande" width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini"  v-model="scope.row.orderquantity"/>
           </template>
           </el-table-column>
           <el-table-column :span=1 label="Total Unités" sortable>
@@ -199,6 +195,7 @@
           :label="'Panier'"
           :name="'TAB-Panier'"
           :lazy="true">
+          <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
           
             Sous-Total :
             <el-row 
@@ -216,6 +213,7 @@
               <br><br>
                    <el-button type="primary" @click="onSubmit">Commander</el-button>
             </el-row>
+          </div>
       </el-tab-pane>
 
 
@@ -251,6 +249,8 @@ export default {
       filter7: '-',
       filter8: '-',
       magasin: '',
+      shopid: '',
+      selectedShop: [],
       magasins: [],
       ts: 0,
       changed: false,
@@ -259,7 +259,8 @@ export default {
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
-      subSubCategories: {}
+      subSubCategories: {},
+      refAutoRefresh: null
 
   }),
   props: {
@@ -277,8 +278,11 @@ export default {
     //this.getTree();
     this.ts = Date.now().toString();
     this.magasin = this.$store.getters.actualShop;
+    this.shopid = this.$store.getters.actualShopID;
+    this.selectedShop = [this.magasin, this.shopid]
     console.log('SAVED SHOP: ')
     console.log(this.magasin)
+    console.log(this.shopid)
     //this.prepareData();
   },
   created: function() {
@@ -307,14 +311,20 @@ export default {
       else console.log("Ignoring time change.");
     });
     this.magasin = this.$store.getters.actualShop;
+    this.shopid = this.$store.getters.actualShopID;
     this.selectedTab = this.$store.getters.actualLvl1;
     this.selectedUnderTab = this.$store.getters.actualLvl2;
+    //this.setAutoRefresh();
     console.log('PREPARE')
+    console.log(this.shopid)
     //this.prepareData();
+    this.$forceUpdate();
   },
   beforeDestroy: function(){
       console.log('BEFORE DESTROY')
       this.onSubmit();
+      if(this.refAutoRefresh != null)
+        clearInterval(this.refAutoRefresh)
   },
   computed: {
     totalPrice: function() {
@@ -366,14 +376,14 @@ export default {
 
     },
 
-    totalOther: function(){
+    totalSales: function(){
 
       var price = 0
       var products = this.records
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -382,6 +392,24 @@ export default {
       return price
 
     },
+
+    totalOther: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+     
      
     totalFiltered: function(){
       var filteredProducts = this.records
@@ -467,7 +495,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              quantity += (item.quantity)
+              quantity += (item.quantity*item.conditionnement)
           }    
         }
         return quantity
@@ -489,7 +517,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              price += (item.quantity*item.Prix_TVAC)
+              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
           }
          
         }
@@ -508,7 +536,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              quantity += (item.quantity)
+              quantity += (item.quantity*item.conditionnement)
           }    
         }
         return quantity
@@ -528,7 +556,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              price += (item.quantity*item.Prix_TVAC)
+              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
           }
          
         }
@@ -589,7 +617,7 @@ export default {
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
         //&& data.Available
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8  && data.display
     },
     tabChanged(index){
       this.refillNan()
@@ -626,16 +654,38 @@ export default {
     },
     changeShop(){
       console.log("CHANGE SHOP")
+      console.log(this.selectedShop)
+      //console.log(item)
       //this.magasin = magasin
+      this.magasin = this.selectedShop[0]
+      this.shopid = this.selectedShop[1]
       console.log("SHOP: " + this.magasin)
+      console.log("SHOPID: " + this.shopid)
       this.$store.commit({
         type: "setActualShop",
         data: this.magasin
+      });
+      this.$store.commit({
+        type: "setActualShopID",
+        data: this.shopid
       });
       console.log('TESTESTEST')
       console.log(this.$store.getters.actualShop)
       this.prepareData();
     },
+    
+    addLog(order){
+
+      console.log(Object.keys(order))
+      if(!Object.keys(order).includes('orderLogs'))
+      {
+        console.log('Adding Orderlogs')
+        order.orderLogs = []
+      }
+      var newLog = {'ts': Date.now(), 'user': this.$store.getters.creds.user.login, 'boulangerie': this.totalBoulangerie, 'patisserie': this.totalPatisserie, 'sales': this.totalSales , 'other': this.totalOther }
+      order.orderLogs.push(newLog)
+    },
+
     refillNan(){
       for(var itemKey in Object.keys(this.records)) {
           var item = this.records[itemKey]
@@ -681,10 +731,12 @@ export default {
           products.push(entry)
         }
         order.shop = this.magasin
+        order.shopid = this.shopid
         order.products = products
         order.totalPrice = this.totalPrice.toFixed(2);
         order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
         order.totalPatisserie = this.totalPatisserie.toFixed(2)
+        order.totalSales = this.totalSales.toFixed(2)
         order.totalOther = this.totalOther.toFixed(2)
         order.dateOrder = timeRange[0].getTime();
         order.demandor = this.$store.getters.creds.user.id
@@ -693,38 +745,60 @@ export default {
         order.confirmed = this.disabled
 
         console.log(order)
-        
-        setTimeout(() => {
-          axios.post(
-            this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
-            ).then((response) => {
-              if(response.data.error!="")
-                {
-                  this.$notify({ 
-                  title: "Error",
-                  message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
-                  type: "error",
-                  position: "bottom-right",
-                  duration: 1500});
-                  }
-              else
-                {
-                  this.$notify({ 
-                  title: "Success",
-                  message: "Commande en " +this.categoryUp + " envoyée !",
-                  type: "success",
-                  position: "bottom-right",
-                  duration: 2000
-                });
-                }
-          })
-          .catch((error)=> {
-            console.log(error);
-            
-          });
-        }, 1000)
 
-        console.log('Sending Command')
+        this.addLog(order);
+
+        var admin = false
+
+        for( var i in this.$store.getters.creds.user.privileges)
+        {
+          var priv = this.$store.getters.creds.user.privileges[i]
+          console.log("Privilège : ")
+          console.log(priv)
+          if(priv == 'admin'){
+            admin = true
+          }
+        }
+
+          
+        if(!admin  && timeRange[0].getTime() < Date.now())
+        {
+            console.log("Wrong Date")
+        }
+        else{
+          setTimeout(() => {
+            axios.post(
+              this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
+              ).then((response) => {
+                if(response.data.error!="")
+                  {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Commande en " +this.categoryUp + " a echoué, veuillez recharger la page et réessayer",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                  {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Commande en " +this.categoryUp + " envoyée !",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                  });
+                  }
+            })
+            .catch((error)=> {
+              console.log(error);
+              
+            });
+          }, 1000)
+
+          console.log('Sending Command')
+          //this.setAutoRefresh();
+        }
       }
       else{
         console.log('Nothing order');
@@ -855,11 +929,13 @@ export default {
                 console.log("MAGASINS : ")
                 console.log(res)
                 this.magasin = res.records[0]._source['Nom magasin']
+                this.shopid = res.records[0]._source['shopid']
                 var magasins = []
                 for(var rec in res.records)
                 {
                     console.log(rec)
-                    magasins.push(res.records[rec]._source['Nom magasin'])
+                    var shop = {"shop": res.records[rec]._source['Nom magasin'], "shopid": res.records[rec]._source['shopid']}
+                    magasins.push(shop)
                 }
                 this.magasins = magasins
                 console.log(this.magasins)
@@ -876,8 +952,11 @@ export default {
       var demandor = this.$store.getters.creds.user.id  
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
-      var magasin = this.magasin 
+      var magasin = this.shopid
+      this.shopid = this.$store.getters.actualShopID
       console.log("MAGASIN : " + this.magasin)     
+      console.log("SHOPID : " + this.shopid)     
+
       var url =
       this.$store.getters.apiurl +
       "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
@@ -917,6 +996,7 @@ export default {
                 this.$forceUpdate();
             }
         });  
+        //this.setAutoRefresh();
     },
 
 
@@ -926,9 +1006,10 @@ export default {
       
     createNewForm(){
       console.log('Generate Empty Form')
-      var url = this.$store.getters.apiurl + "generic_search/products_parameters_new?token=" + this.$store.getters.creds.token;
+      var url = this.$store.getters.apiurl + "lambdas/8/get_products_list_by_shop?apikey=" + this.$store.getters.creds.token;
       var minutes = new Date().getMinutes();
       var hours = new Date().getHours();
+      var timeRange=this.$store.getters.timeRangeDay;
       if(hours >= 18){
         this.disabled = true
       }
@@ -937,26 +1018,132 @@ export default {
       }
       this.disabled = false
       var query = {
-            "size":900
+            "shopid": this.shopid
         }
        console.log(query)
 
       axios
         .post(url, query)
         .then((response) => {
-          if(response.data.error!="")
+          if(response.data.error!=""){
             console.log("Order Shops Calls list error...");
+            console.log(response);
+          }
           else
           {
             this.callData=[]
             console.log(response)
-            for(var i in response.data.records) {
-              response.data.records[i]._source._id = response.data.records[i]._id 
-              response.data.records[i]._source.quantity = 0
-              response.data.records[i]._source.orderquantity = 0
+            for(var i in response.data.products) {
+              response.data.products[i]._source._id = response.data.products[i]._id 
+              response.data.products[i]._source.quantity = 0
+              response.data.products[i]._source.orderquantity = 0
               console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
-              this.callData.push(response.data.records[i]._source)
+              if(response.data.products[i]._source.avail == 'always')
+              {
+                this.callData.push(response.data.products[i]._source)
+              }
+              else if(response.data.products[i]._source.avail == 'period')
+              {
+                
+                var period = JSON.parse(response.data.products[i]._source.availabilityConf)
+
+                
+                var start = Date.parse(period["period"][0])
+                console.log('DATE!!!!!!')
+                console.log(start)
+                var stop = Date.parse(period["period"][1])
+
+                
+
+                if(timeRange[0].getTime() >= start && timeRange[0].getTime()<=stop)
+                {
+                  this.callData.push(response.data.products[i]._source)
+                }
+                else
+                {
+                  console.log('Not in period')
+                }
+
+              }
+              else if(response.data.products[i]._source.avail == 'except')
+              {
+               
+                var period = JSON.parse(response.data.products[i]._source.availabilityConf)
+                var start = Date.parse(period["except"][0])
+                var stop = Date.parse(period["except"][1])
+               
+
+                if(timeRange[0].getTime() <= start || timeRange[0].getTime()>=stop)
+                {
+                  this.callData.push(response.data.products[i]._source)
+                }
+
+              }
+              else
+              {
+                var days =  JSON.parse(response.data.products[i]._source.availabilityConf)
+                var dayOfWeek  = timeRange[0].getDay();
+                console.log("Day:" + dayOfWeek.toString())
+                console.log(days)
+                var apply = false
+                switch(dayOfWeek)
+                {
+                  case 1:{
+                    if(days['monday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 2:{
+                    if(days['tuesday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 3:{
+                    if(days['wednesday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 4:{
+                    if(days['thursday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 5:{
+                    if(days['friday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 6:{
+                    if(days['saturday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 0:{
+                    if(days['sunday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                }
+                if(apply)
+                {
+                  this.callData.push(response.data.products[i]._source)
+                }
+              }
             }
 
             
@@ -1005,6 +1192,51 @@ export default {
       this.dialogVisible = true
 
     },
+
+    /*refreshData(){
+
+      if(this.oldID != null)
+      {
+          var query = {"_id": this.oldID}
+          var url = this.$store.getters.apiurl + "lambdas/2/getorderstatus?apikey=" + this.$store.getters.creds.token;
+          axios
+          .post(url, query)
+          .then((response) => {
+
+            var status = false
+
+            console.log(response.data.orderstatus)
+            if(response.data.orderstatus == true)
+            {
+              status = true
+            }
+
+            /*if(this.disabled == false && status==true)
+            {
+                this.disabled = status
+                this.onSubmit();
+            }
+            console.log('Order Status GET')
+            console.log(status)
+            this.disabled = status
+            this.onSubmit();
+
+          });
+      }
+    },*/
+
+    setAutoRefresh: function() {
+      console.log('Setting Interval')
+
+      /*if(this.refAutoRefresh != null)
+        clearInterval(this.refAutoRefresh)
+
+      this.refAutoRefresh =  setInterval(() => {
+        this.refreshData()
+      }, 30000)*/
+
+    },
+
     clickDialogDelete() {
 
       this.$confirm(

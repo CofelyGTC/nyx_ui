@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     class="cake-editor"
   >
-    <el-form v-model="newRec._source" :model="newRec._source" :rules="rules" ref="ruleForm">
+    <el-form v-model="newRec._source" :model="newRec._source" :rules="rules" ref="ruleForm" :disabled="disabled">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
           <el-form-item v-if="editableMagasin" label="Magasin" :label-width="formLabelWidth">
             <el-input :disabled="editableMagasin" size="mini" v-model="magasinStr" autocomplete="off"></el-input>
@@ -212,8 +212,9 @@ export default {
     shopid: '',
     selectedShop: '',
     inscription: '',
+    isAdmin: false,
     inscriptions:['Bon anniversaire', 'Heureux Anniversaire', 'Joyeuses Fêtes', 'Bonnes Fêtes', 'Félicitations !'],
-    cakeTypes: ['Crème fraîche fruits', 'Spécial Patron', 'Schamp', 'Crème au Beurre Moka', 'Chocorêve', 'Mikkado', 'Bavarois', 'Glace', 'Number Cake'],
+    cakeTypes: ['Crème fraîche fruits', 'Nutella', 'Spécial Patron', 'Schamp', 'Crème au Beurre Moka', 'Chocorêve', 'Mikkado', 'Bavarois', 'Glace', 'Number Cake'],
     size: '4P',
     sizes: {
         '4P':{'desc': '9,5 x 19,5 cm', 'prix': 14.4},
@@ -239,9 +240,9 @@ export default {
         '20P':{'desc': '20 x 40 cm', 'prix': 76},
         '24P':{'desc': '26  x 40 cm', 'prix': 91.2}},    
     //bavaroisTypes: ['Fruits des Bois', 'Fraise', 'Framboise', 'Bora Bora'],
-    bavaroisTypes: ['Framboise'],
+    bavaroisTypes: ['Framboise', 'Fraises'],
     glaceGouts: ['Vanille', 'Chocolat', 'Fraise', 'Framboise', 'Pabana'],
-    numberCakeTypes: ['Crème fraîche - fraise', 'Crème fraîche - framboise', 'Mousse Chocolat', 'Mousse Pabana'],
+    numberCakeTypes: ['Crème fraîche - fraise', 'Crème fraîche - framboise', 'Mousse Chocolat'],
     numberCakeGenders: ['Homme', 'Femme', 'Fille', 'Garçon', 'Autre'],
     magasins: [],
     rules: {
@@ -264,6 +265,16 @@ export default {
     },
     recchanged: function() {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
+    },
+    disabled: function() {
+      if(this.$store.getters.timeRangeDay[0].getTime() < Date.now()+172800000 && !this.isAdmin )
+      {
+        return true
+      }
+      else
+      {
+        return false
+      }
     },
     editableMagasin: function() {
         console.log('Active APP:')
@@ -331,6 +342,7 @@ export default {
       var magasin = 'TEST'
         if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')
         {
+            
             console.log('coucou1')
             console.log(this.$store.getters.activeApp.config.hiddenQuery.substring(9))
             console.log('coucou2')
@@ -480,6 +492,7 @@ export default {
     this.totalTTC = this.record._source.price
     this.customInscription = this.record._source.cake.customInscription
     //this.getMagasins();
+    
     this.prepareData();
   },
   components: {},
@@ -526,6 +539,21 @@ export default {
       "generic_search/shop_parameters?token=" + this.$store.getters.creds.token;  
 
       console.log('CHECK SHOPS LIST')
+
+      console.log("PRIVILEGES")
+      console.log(this.$store.getters.privileges)
+      console.log("PRIVILEGES")
+      
+      for(var priv in this.$store.getters.privileges)
+      {
+        console.log(this.$store.getters.privileges[priv]["_source"]["value"])
+        if(this.$store.getters.privileges[priv]["_source"]["value"] == "admin")
+        {
+          this.isAdmin = true;
+          console.log("THIS IS ADMIN")
+        }
+              
+      }
 
       var query = {
         size: 2000,

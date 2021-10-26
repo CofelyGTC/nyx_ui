@@ -133,6 +133,7 @@
            </el-button>
          </el-col>
        </el-row>
+       {{newRec}}
       <h1 style="text-align:center;">Grille Horaire</h1>
       <el-row>
         <el-col :span=4>
@@ -288,6 +289,7 @@
       >{{this.$t("buttons.confirm")}}</el-button>
       <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
   </span>
+  {{newRec._source}}
   </el-dialog>
 </template>
 
@@ -341,6 +343,9 @@ export default {
     },
     config: {
       type: Object
+    },
+    editMode: {
+      type: String
     }
   },
   components: {},
@@ -354,7 +359,13 @@ export default {
       this.getCircuits();
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
-     
+      
+      if(this.editMode == 'create')
+      {
+        this.initializeHours();
+      }
+
+
       this.DB = this.newRec._source.DB 
       this.selectedCircuit = this.newRec._source['circuit']
       this.weekStart1 = this.newRec._source.mondayON1 
@@ -405,7 +416,9 @@ export default {
     },
     saveRecord: function() {
 
-      this.applyChange();
+      //this.applyChange();
+      this.newRec._source.circuit = this.selectedCircuit
+      this.newRec._source.DB = this.DB
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.lastUpdate = Date.now()
       console.log(this.newRec)
@@ -435,7 +448,59 @@ export default {
 
     },
 
+    initializeHours: function(){
+      console.log('INITIALIZE')
+      this.newRec._source.mondayON1 = "00:00"
+      this.newRec._source.tuesdayON1= "00:00"
+      this.newRec._source.wednesdayON1= "00:00"
+      this.newRec._source.thursdayON1= "00:00"
+      this.newRec._source.fridayON1= "00:00"
+      this.newRec._source.saturdayON1= "00:00"
+      this.newRec._source.sundayON1= "00:00"
+
+      this.newRec._source.mondayON2 = "00:00"
+      this.newRec._source.tuesdayON2= "00:00"
+      this.newRec._source.wednesdayON2= "00:00"
+      this.newRec._source.thursdayON2= "00:00"
+      this.newRec._source.fridayON2= "00:00"
+      this.newRec._source.saturdayON2= "00:00"
+      this.newRec._source.sundayON2= "00:00"
+
+      this.newRec._source.mondayOFF1 = "00:00"
+      this.newRec._source.tuesdayOFF1= "00:00"
+      this.newRec._source.wednesdayOFF1= "00:00"
+      this.newRec._source.thursdayOFF1= "00:00"
+      this.newRec._source.fridayOFF1= "00:00"
+      this.newRec._source.saturdayOFF1= "00:00"
+      this.newRec._source.sundayOFF1= "00:00"
+
+      this.newRec._source.mondayOFF2 = "00:00"
+      this.newRec._source.tuesdayOFF2= "00:00"
+      this.newRec._source.wednesdayOFF2= "00:00"
+      this.newRec._source.thursdayOFF2= "00:00"
+      this.newRec._source.fridayOFF2= "00:00"
+      this.newRec._source.saturdayOFF2= "00:00"
+      this.newRec._source.sundayOFF2= "00:00"
+
+
+      this.newRec._source.saturdayON1 = "00:00"
+      this.newRec._source.sundayON1 = "00:00"
+
+      this.newRec._source.saturdayON2 = "00:00"
+      this.newRec._source.sundayON2 = "00:00"
+
+      this.newRec._source.saturdayOFF1 = "00:00"
+      this.newRec._source.sundayOFF1 = "00:00"
+
+      this.newRec._source.saturdayOFF2 = "00:00"
+      this.newRec._source.sundayOFF2 = "00:00"
+
+    },
+
     applyChange: function(){
+      console.log('APPLY')
+      console.log(this.weekStart1)
+      console.log(this.weekEnd1)
       this.newRec._source.mondayON1 = this.weekStart1
       this.newRec._source.tuesdayON1= this.weekStart1
       this.newRec._source.wednesdayON1= this.weekStart1
@@ -483,6 +548,8 @@ export default {
 
       this.newRec._source.circuit = this.selectedCircuit
       this.newRec._source.DB = this.DB
+
+      console.log(JSON.stringify(this.newRec._source))
     }
       
     

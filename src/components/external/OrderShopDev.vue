@@ -1,87 +1,15 @@
 <template>
 
   <div style="width: 100%">
-  <el-row class="dushop-container" style="width: 100%" >
-   
-            <br>
-            <el-row>
-              <h2>BOULANGERIE</h2>
-            </el-row>
-            <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remise" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplement" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                  <label style="horizontal-align: right; vertical-align: middle;">Bons Vita+: </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="vitas" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-
-            </el-row>
-            <el-row>
-              <h2>PATISSERIE</h2>
-            </el-row>
-             <el-row style="width: 100%;">
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Remise Totale (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="remisePat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplementPat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-                <!--el-col v-if="sacapain == true" :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Sacs à pain: </label>
-                </el-col>
-                <el-col  v-if="sacapain == true"  :span="4">
-                    <template>
-                        <el-input-number v-model="nbreSacsAPain" :disabled="this.disabled"  :step="1" :min="0"></el-input-number>
-                    </template>
-                </el-col-->
-            </el-row>
-            <el-row>
-              <h2>
-                SALES
-              </h2>
-            </el-row>
-            <el-row>
-
-            <el-col :span="4">
-                    <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
-                </el-col>
-                <el-col :span="4">
-                    <template>
-                        <el-input-number v-model="supplementSales" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
-                    </template>
-                </el-col>
-            
-            </el-row>
-      <el-form style="widht: 100%" :disabled="this.disabled">
-          
+  <el-row class="ordershopdev-container" style="width: 100%" >
+      <el-form style="widht: 100%" :disabled="this.disabled || this.isCloture">
+        <el-row>
+        <td>
+        Clôturer la commande : 
+        <el-switch @change="onCloseOrder()" v-model="disabled">
+        </el-switch>
+      </td>
+      </el-row> 
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
           <el-tab-pane
           
@@ -107,7 +35,7 @@
 
  <el-row>
           <el-col v-if="subSubCategories[category][subcategory]['sortLvl3'].length> 1" :span="4">
-                          Type de pâte: 
+            Type de pâte: 
             <el-select v-model="filter1" placeholder="Sélectionner">
               <el-option
                 v-for="(item, id1) in subSubCategories[category][subcategory]['sortLvl3']"
@@ -201,46 +129,72 @@
 
         <div style="bottom: 5%;">
 
+            
         <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € </el-row>
         <el-row> Total Salés TTC : {{totalSales| roundTo2 }} €  Autres TTC : {{totalOther| roundTo2 }} €</el-row>
-              
+
+            
         <el-row>Total Sélection: {{ totalFiltered | roundTo2}}€  Total Panier TTC : {{totalPrice | roundTo2 }} €</el-row>
-        
-        
+        <!--el-table :data="records.filter(data => data.sortLvl1 == category && data.sortLvl2 == subcategory && data.sortLvl3 == filter1)" style="width: 100%"-->
         <el-table :data="records.filter(getFilter)" style="width: 100%;height: calc(100vh - 225px); overflow: auto;" :default-sort = "{prop: 'CODE', order: 'ascending'}" height="750">  
-          <el-table-column prop="CODE" label="Code" sortable></el-table-column>
+          <el-table-column prop="CODE" label="Code"  sortable></el-table-column>
           <el-table-column prop="Label" label="Nom" sortable></el-table-column>
           <el-table-column label="Prix TTC" sortable>
             <template slot-scope="scope">
               {{scope.row.Prix_TVAC | roundTo2 }} €
             </template>
           </el-table-column>
-          <el-table-column label="Quantité Dus" width="150" sortable>
+          <el-table-column label="Conditionnement" sortable>
+            <template slot-scope="scope">
+              {{scope.row.Conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Quantité"  width="150" sortable>
           <template slot-scope="scope">
-            <el-input-number :min="0" size="mini" v-model="scope.row.quantity"/>
+            <el-input-number :min="0" size="mini" :disabled="!scope.row.Available" v-model="scope.row.quantity"/>
           </template>
           </el-table-column>
-          <el-table-column label="Total" sortable>
+          <el-table-column label="Quantité en Commande" width="150" sortable>
+          <template slot-scope="scope">
+            <el-input-number :min="0" :max="scope.row.quantity" size="mini" v-model="scope.row.orderquantity"/>
+          </template>
+          </el-table-column>
+          <el-table-column label="Total Unités" sortable>
             <template slot-scope="scope">
-              {{scope.row.quantity * scope.row.Prix_TVAC | roundTo2}} €
+              {{scope.row.quantity * scope.row.conditionnement }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Total TTC" sortable>
+            <template slot-scope="scope">
+              {{scope.row.quantity * scope.row.conditionnement * scope.row.Prix_TVAC | roundTo2}} €
+            </template>
+          </el-table-column>
+          <el-table-column label="Remarques" width="150">
+            <template slot-scope="scope">
+              <el-input type="textarea" v-model="scope.row.remarque"></el-input>
             </template>
           </el-table-column>
           </el-table> 
           </div>
           <br><br>
- 
+          <!--div class="footer">
+          Total TTC : {{totalPrice | roundTo2}} €
+          <br><br>
+          </div-->   
           
+          <!--/el-tab-pane>
 
+         </el-tabs-->
                 </el-tab-pane>
 
       </el-tabs>
                 </el-tab-pane>
       <el-tab-pane
           :key="'TAB-Panier'"
-          :label="'Total'"
+          :label="'Panier'"
           :name="'TAB-Panier'"
           :lazy="true">
-          
+          <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
             Sous-Total :
             <el-row 
             v-for="(category, index) in classement" :key="index">
@@ -250,20 +204,20 @@
                 </el-row>
             </el-row>
             <el-row>
-              Total Dus: {{totalPrice | roundTo2 }}€ TTC
+              Total Panier: {{totalPrice | roundTo2 }}€ TTC
               
             </el-row>
             <el-row>
               <br><br>
-                   <el-button type="primary" @click="onSubmit">Enregistrer</el-button>
+                   <el-button type="primary" @click="onSubmit">Commander</el-button>
             </el-row>
+            </div>
       </el-tab-pane>
 
 
       </el-tabs>
       </el-form> 
-  </el-row>
-  
+  </el-row>  
     </div>
     
 </template>
@@ -273,7 +227,7 @@ import moment,{ months } from "moment";
 import axios from "axios";
 
 export default {
-  name: "FormDusOffice",
+  name: "FormOrderShopDev",
   data: () => ({
       records: null,
       oldID: null,
@@ -293,25 +247,15 @@ export default {
       magasin: '',
       shopid: '',
       ts: 0,
-      vitas: 0,
       changed: false,
       dialogFormVisible: false,
       title: "Commande",
-      sacapain: false,
       selectedTab: "TAB-0",
       selectedUnderTab: "TAB-0-0",
       subCategories: {},
       subSubCategories: {},
-      invendus: 0,
-      remise: 0,
-      supplement: 0,
-      invendusPat: 0,
-      remisePat: 0,
-      supplementPat: 0,
-      supplementSales: 0,
-      shopSacAPain : ['Chatelineau', 'Chaussée de Châtelet','Forchies','Gerpinnes','Gosselies','Hiercheuses','Liège','Magasin','Mont Sur Marchienne','Pont-à-Celles','Thuin'],
-      shopSacAPainID: ['MS435'],
-      nbreSacsAPain: 0
+      refAutoRefresh: null,
+      isCloture: false,
 
   }),
   props: {
@@ -327,28 +271,13 @@ export default {
   mounted: function() {
     //this.getMagasin();
     //this.getTree();
-    this.ts = Date.now().toString();
-    //this.magasin = this.$store.getters.actualShop;
-    this.selectedTab = this.$store.getters.actualLvl1;
-    this.selectedUnderTab = this.$store.getters.actualLvl2;
-    this.setSacAPain();
+    //this.ts = Date.now().toString();
     //this.prepareData();
   },
   created: function() {
-
-    document.onkeydown=function(e){
-      var key=window.event.keyCode;
-      console.log('Key released : ' + key.toString())
-      }
-    document.onkeyup=function(e){
-        var key=window.event.keyCode;
-        console.log('Key Up: ' + key.toString())
-      }
-
-    console.log("CREATED")
     this.getMagasin();
     this.getTree();
-    this.ts = Date.now().toString();
+    //this.ts = Date.now().toString();
 
     this.$globalbus.$on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/GENERICTABLE/TIMERANGECHANGED");
@@ -359,13 +288,26 @@ export default {
       if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
       else console.log("Ignoring time change.");
     });
-    //this.magasin = this.$store.getters.actualShop;
-    console.log('PREPARE')
+    this.magasin = this.$store.getters.actualShop;
+    this.selectedTab = this.$store.getters.actualLvl1;
+    this.selectedUnderTab = this.$store.getters.actualLvl2;
+    console.log('Before Setting Autorefresh');
+    //this.setAutoRefresh();
+    //console.log('After Setting Autorefresh');
+    //this.ts = Date.now().toString();
+    //console.log('PREPARE')
     //this.prepareData();
   },
   beforeDestroy: function(){
       console.log('BEFORE DESTROY')
-      this.onSubmit();
+      if(!this.isCloture && !this.disabled)
+      {
+        this.onSubmit();
+      }
+      //if(this.refAutoRefresh != null)
+      //{
+      clearInterval(this.refAutoRefresh)
+      //}
   },
   computed: {
     totalPrice: function() {
@@ -376,13 +318,12 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.quantity*item.Prix_TVAC)
+          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
         }
         
       }
       return price
     },
-
     totalPatisserie: function(){
 
       var price = 0
@@ -392,24 +333,7 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Pâtisserie')
         {
-          price += (data.quantity*data.Prix_TVAC)
-        }
-      }
-
-      return price
-
-    },
-
-    totalBoulangerie: function(){
-
-      var price = 0
-      var products = this.records
-      for(var itemKey in Object.keys(this.records))
-      {
-        var data = this.records[itemKey]
-        if(data.sortLvl1 == 'Boulangerie')
-        {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
       }
 
@@ -425,6 +349,23 @@ export default {
       {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
+    totalBoulangerie: function(){
+
+      var price = 0
+      var products = this.records
+      for(var itemKey in Object.keys(this.records))
+      {
+        var data = this.records[itemKey]
+        if(data.sortLvl1 == 'Boulangerie')
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -503,7 +444,7 @@ export default {
         
         if(filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8)
         {
-          price += (data.quantity*data.Prix_TVAC)
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
         
       }
@@ -535,7 +476,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              quantity += (item.quantity)
+              quantity += (item.quantity*item.conditionnement)
           }    
         }
         return quantity
@@ -545,8 +486,6 @@ export default {
       }
       
     },
-    
-    
     totalCategoryPrice: function(category) {
       
       var price = 0
@@ -557,7 +496,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category){
-              price += (item.quantity*item.Prix_TVAC)
+              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
           }
          
         }
@@ -576,7 +515,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              quantity += (item.quantity)
+              quantity += (item.quantity*item.conditionnement)
           }    
         }
         return quantity
@@ -596,7 +535,7 @@ export default {
         {
           var item = this.records[itemKey]
           if(item.sortLvl1 ==category && item.sortLvl2 == subCategory){
-              price += (item.quantity*item.Prix_TVAC)
+              price += (item.quantity*item.Prix_TVAC*item.conditionnement)
           }
          
         }
@@ -607,17 +546,10 @@ export default {
       }
       
     },
-    setSacAPain(){
-      if(this.shopSacAPain.includes(this.magasin) || this.shopSacAPainID.includes(this.shopid))
-      {
-        this.sacapain = true;
-      }
-      else
-      {
-        this.sacapain = false;
-      }
-      console.log('Setting Sac A Pain')
-      console.log(this.sacapain)
+    loadData(){
+        this.records = [];
+        this.getData();
+        
     },
     getFilter(data){
 
@@ -668,7 +600,8 @@ export default {
         }
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
+        //&& data.Available
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.display
     },
     tabChanged(index){
       this.refillNan()
@@ -682,10 +615,6 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
-      this.$store.commit({
-        type: "setActualLvl1",
-        data: this.selectedTab
-      });
       //this.selectedUnderUnderTab = 'TAB-'+index+'-0-0'
     },
     subTabChanged(){
@@ -698,30 +627,49 @@ export default {
       this.filter6 = '-'
       this.filter7 = '-'
       this.filter8 = '-'
-      this.$store.commit({
-        type: "setActualLvl2",
-        data: this.selectedUnderTab
-      });
     },
-    changeShop(){
-      console.log("CHANGE SHOP")
-      //this.magasin = magasin
-      console.log("SHOP: " + this.magasin)
-      this.$store.commit({
-        type: "setActualShop",
-        data: this.magasin
-      });
-      console.log('TESTESTEST')
-      console.log(this.$store.getters.actualShop)
-      this.setSacAPain();
-      this.prepareData();
+
+    addLog(order){
+
+      console.log(Object.keys(order))
+      if(!Object.keys(order).includes('orderLogs'))
+      {
+        console.log('Adding Orderlogs')
+        order.orderLogs = []
+      }
+      var newLog = {'ts': Date.now(), 'user': this.$store.getters.creds.user.login, 'boulangerie': this.totalBoulangerie, 'patisserie': this.totalPatisserie, 'sales': this.totalSales, 'other': this.totalOther }
+      order.orderLogs.push(newLog)
     },
+
+    refillNan(){
+      for(var itemKey in Object.keys(this.records)) {
+          var item = this.records[itemKey]
+          if(item.quantity == null)
+          {
+            item.quantity = 0
+          }
+          if(item.orderquantity == null)
+          {
+            item.orderquantity = 0
+          }
+      }  
+    },
+
+    onCloseOrder(){
+      this.disabled = true
+      this.onSubmit();
+    },
+
     onSubmit(){
-      this.refillNan()
+        
+
+      this.refillNan()  
+
+
       var order = {};
       var products = [];
-      var timeRange=this.$store.getters.timeRangeDay;
       var entry = {};
+      var timeRange=this.$store.getters.timeRangeDay;
       for(var itemKey in Object.keys(this.records)) {
         var item = this.records[itemKey]
         
@@ -740,35 +688,44 @@ export default {
       }
       order.shop = this.magasin
       order.shopid = this.shopid
+      order.totalPrice = this.totalPrice.toFixed(2)
+      order.totalBoulangerie = this.totalBoulangerie.toFixed(2)
+      order.totalPatisserie = this.totalPatisserie.toFixed(2)
+      order.totalSales = this.totalSales.toFixed(2)
+      order.totalOther = this.totalOther.toFixed(2)
       order.products = products
       order.dateOrder = timeRange[0].getTime();
       order.demandor = this.$store.getters.creds.user.id
       order.oldId = this.oldID
       order.newId = this.magasin +'_'+timeRange[0].getTime().toString();
-      order.remise = this.remise
-      order.invendus = this.invendus
-      order.supplement = this.supplement
-      order.remisePat = this.remisePat
-      order.invendusPat = this.invendusPat
-      order.supplementPat = this.supplementPat
-      order.supplementSales = this.supplementSales
-      order.vitas = this.vitas
-      order.nbreSacsAPain = this.nbreSacsAPain
-      order.dusBoul = this.totalBoulangerie.toFixed(2);
-      order.dusPat = this.totalPatisserie.toFixed(2);
-      order.dusOthers = this.totalOther.toFixed(2);
-      order.dusSales = this.totalSales.toFixed(2)
       order.confirmed = this.disabled
 
-      console.log('MAGASIN: ')
-      console.log(this.magasin)
+      this.addLog(order);
 
-      
-      if(!this.disabled)
+      console.log('confirmed: ')
+      console.log(order.confirmed)
+      console.log(order.shopid)
+
+      var admin = false
+
+      for( var priv in this.$store.getters.creds.user.privileges)
       {
+        if(priv == 'admin'){
+          admin = true
+        }
+      }
+
+        
+       if(!admin  && timeRange[0].getTime() < Date.now())
+       {
+          console.log("Wrong Date")
+          console.log(timeRange[0].getTime())
+          console.log(Date.now())
+       }
+       else{ 
         setTimeout(() => {
           axios.post(
-            this.$store.getters.apiurl + "schamps/new_dus?token="+this.$store.getters.creds.token, order
+            this.$store.getters.apiurl + "schamps/new_order?token="+this.$store.getters.creds.token, order
             ).then((response) => {
               if(response.data.error!="")
                 {
@@ -788,20 +745,21 @@ export default {
                   position: "bottom-right",
                   duration: 2000
                 });
+                  
                 }
           })
           .catch((error)=> {
             console.log(error);
             
           });
-        }, 1000)}
-
+        }, 1000)
+       }
       console.log('Sending Command')
+      //this.setAutoRefresh();
+      
     },
     prepareData() {
       console.log('prepare data')
-      this.setSacAPain();
-      //this.magasin = this.$store.getters.actualShop;
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
         if(priv =='admin' ||  priv=='SHOP_FORM') {
@@ -819,14 +777,6 @@ export default {
       this.$nextTick(() => {
         this.currentApps = JSON.parse(JSON.stringify(this.$store.getters.currentApps))
       });
-    },
-    loadData(){
-        this.records = [];
-        this.setSacAPain();
-        this.getData();
-        console.log('coucou3')
-        this.setSacAPain();
-        console.log('coucou4')
     },
     dateSelected() {
       
@@ -890,11 +840,13 @@ export default {
                 console.log("Categories : "  + cats)
                 this.subCategories = subCategories
                 this.subSubCategories = tree
-                this.classement = cats.sort();
+                this.classement = cats.sort()
                 console.log(this.subSubCategories)
             }
         });    
     },
+
+    
 
     getMagasin() {
       var demandor = this.$store.getters.creds.user.id          
@@ -911,10 +863,11 @@ export default {
             console.log("User Shop Calls list error...");
             else{
                 var res = JSON.parse(response.data.data)
-                console.log("MAGASIN : ")
-                //console.log(res)
+                console.log("MAGASIN COUCOU: ")
+                console.log(res)
                 this.magasin = res.reccords[0]._source.magasin
                 this.shopid = res.reccords[0]._source.shopid
+                console.log(this.shopid)
                 this.prepareData();
                
             }
@@ -925,17 +878,17 @@ export default {
     },
 
     getData() {
-      var demandor = this.$store.getters.creds.user.id  
-      var timeRange=this.$store.getters.timeRangeDay;
-      console.log(this.$store.getters.timeRangeDay)
+      var demandor = this.$store.getters.creds.user.id    
       var magasin = this.shopid
+      var timeRange=this.$store.getters.timeRangeDay;
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +
-      "schamps/check_dus?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
+      "schamps/check_order_new?shop="+magasin+"&demandor="+demandor+"&start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" + this.$store.getters.creds.token;  
 
       console.log('GET NEW LIST')
 
+      
         
       axios
         .get(url, demandor)
@@ -964,34 +917,11 @@ export default {
                     this.oldID = oldId
                     this.records = order
                     this.disabled = res.reccords[0]['_source']['confirmed']  
-                    this.remise = res.reccords[0]['_source']['remise']
-                    this.invendus = res.reccords[0]['_source']['invendus']
-                    this.supplement = res.reccords[0]['_source']['supplement']
-                    this.remisePat = res.reccords[0]['_source']['remisePat']
-                    this.invendusPat = res.reccords[0]['_source']['invendusPat']
-                    this.supplementPat = res.reccords[0]['_source']['supplementPat']
-                    this.supplementSales = res.reccords[0]['_source']['supplementSales']
-                    if(res.reccords[0]['_source']['vitas'])
-                    {
-                        this.vitas = res.reccords[0]['_source']['vitas']
-                    }
-                    else
-                    {
-                      this.vitas = 0
-                    }
-                    if(res.reccords[0]['_source']['nbreSacsAPain'])
-                    {
-                      this.nbreSacsAPain = res.reccords[0]['_source']['nbreSacsAPain']
-                    }
-                    else
-                    {
-                      this.nbreSacsAPain = 0
-                    }
-
                 }
                 this.$forceUpdate();
             }
         });  
+        this.setAutoRefresh();
     },
 
 
@@ -1001,9 +931,10 @@ export default {
       
     createNewForm(){
       console.log('Generate Empty Form')
-      var url = this.$store.getters.apiurl + "generic_search/products_parameters_new?token=" + this.$store.getters.creds.token;
+      var url = this.$store.getters.apiurl + "lambdas/8/get_products_list_by_shop?apikey=" + this.$store.getters.creds.token;
       var minutes = new Date().getMinutes();
       var hours = new Date().getHours();
+      var timeRange=this.$store.getters.timeRangeDay;
       if(hours >= 18){
         this.disabled = true
       }
@@ -1012,37 +943,132 @@ export default {
       }
       this.disabled = false
       var query = {
-            "size":900
+            "shopid": this.shopid
         }
        console.log(query)
 
       axios
         .post(url, query)
         .then((response) => {
-          if(response.data.error!="")
+          if(response.data.error!=""){
             console.log("Order Shops Calls list error...");
+            console.log(response);
+          }
           else
           {
             this.callData=[]
-            this.invendus= 0
-            this.remise= 0
-            this.supplement= 0
-            this.invendusPat= 0
-            this.remisePat= 0
-            this.supplementPat= 0
-            this.supplementSales= 0
-
-            this.nbreSacsAPain= 0
-            this.vitas = 0
             console.log(response)
-
-            for(var i in response.data.records) {
-              response.data.records[i]._source._id = response.data.records[i]._id 
-              response.data.records[i]._source.quantity = 0
-              response.data.records[i]._source.orderquantity = 0
+            for(var i in response.data.products) {
+              response.data.products[i]._source._id = response.data.products[i]._id 
+              response.data.products[i]._source.quantity = 0
+              response.data.products[i]._source.orderquantity = 0
               console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
 
-              this.callData.push(response.data.records[i]._source)
+              if(response.data.products[i]._source.avail == 'always')
+              {
+                this.callData.push(response.data.products[i]._source)
+              }
+              else if(response.data.products[i]._source.avail == 'period')
+              {
+                
+                var period = JSON.parse(response.data.products[i]._source.availabilityConf)
+
+                
+                var start = Date.parse(period["period"][0])
+                console.log('DATE!!!!!!')
+                console.log(start)
+                var stop = Date.parse(period["period"][1])
+
+                
+
+                if(timeRange[0].getTime() >= start && timeRange[0].getTime()<=stop)
+                {
+                  this.callData.push(response.data.products[i]._source)
+                }
+                else
+                {
+                  console.log('Not in period')
+                }
+
+              }
+              else if(response.data.products[i]._source.avail == 'except')
+              {
+               
+                var period = JSON.parse(response.data.products[i]._source.availabilityConf)
+                var start = Date.parse(period["except"][0])
+                var stop = Date.parse(period["except"][1])
+               
+
+                if(timeRange[0].getTime() <= start || timeRange[0].getTime()>=stop)
+                {
+                  this.callData.push(response.data.products[i]._source)
+                }
+
+              }
+              else
+              {
+                var days =  JSON.parse(response.data.products[i]._source.availabilityConf)
+                var dayOfWeek  = timeRange[0].getDay();
+                console.log("Day:" + dayOfWeek.toString())
+                console.log(days)
+                var apply = false
+                switch(dayOfWeek)
+                {
+                  case 1:{
+                    if(days['monday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 2:{
+                    if(days['tuesday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 3:{
+                    if(days['wednesday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 4:{
+                    if(days['thursday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 5:{
+                    if(days['friday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 6:{
+                    if(days['saturday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                  case 0:{
+                    if(days['sunday'])
+                    {
+                      apply = true;
+                    }
+                    break;
+                  }
+                }
+                if(apply)
+                {
+                  this.callData.push(response.data.products[i]._source)
+                }
+              }
             }
 
             
@@ -1059,51 +1085,6 @@ export default {
    
    setTableCurrent(row) {
       this.$refs.callTable.setCurrentRow(row);
-    },
-    refillNan(){
-      console.log('coucou')
-      for(var itemKey in Object.keys(this.records)) {
-          var item = this.records[itemKey]
-          if(item.quantity == null)
-          {
-            item.quantity = 0
-          }
-          if(item.orderquantity)
-          {
-            item.orderquantity = 0
-          }
-      }
-      console.log("Refill NAN")
-      if(this.supplement == null)
-      {
-        this.supplement = 0
-      }
-      if(this.supplementPat == null)
-      {
-        this.supplementPat = 0
-      }
-      if(this.supplementSales == null)
-      {
-        this.supplementSales = 0
-      }
-      if(this.remise == null)
-      {
-        this.remise = 0
-      }
-      if(this.remisePat == null)
-      {
-        this.remisePat = 0
-      }
-      if(this.vitas == null)
-      {
-        this.vitas = 0
-      }
-      if(this.sacapain == null)
-      {
-        this.sacapain = 0
-      }
-      
-      
     },
     handleTableSelect(val) {
       if(this.disable)
@@ -1136,6 +1117,86 @@ export default {
       this.dialogVisible = true
 
     },
+
+    getCloture(){
+
+      var query = {'mes': 'coucou', 'date': this.$store.getters.timeRangeDay[0].getTime()}
+      var url = this.$store.getters.apiurl + "lambdas/8/get_cloture?apikey=" + this.$store.getters.creds.token;
+      axios
+          .post(url, query)
+          .then((response) => {
+
+            var status = false
+
+            console.log(response.data)
+            if(response.data.cloture == true && this.disabled==false)
+            {
+              status = true
+              this.disabled = true
+              
+              //this.onSubmit();
+            }
+            else if(response.data.cloture == true)
+            {
+                status = true
+            }
+
+            
+            console.log('Cloture Status GET')
+            console.log(status)
+            this.isCloture = status
+            //this.onSubmit();
+
+          });
+
+    },
+
+    /*refreshData(){
+
+      if(this.oldID != null)
+      {
+          var query = {"_id": this.oldID}
+          var url = this.$store.getters.apiurl + "lambdas/2/getorderstatus?apikey=" + this.$store.getters.creds.token;
+          axios
+          .post(url, query)
+          .then((response) => {
+
+            var status = false
+
+            console.log(response.data.orderstatus)
+            if(response.data.orderstatus == true)
+            {
+              status = true
+            }
+
+            if(this.disabled == false && status==true)
+            {
+                this.disabled = status
+                this.onSubmit();
+            }
+            console.log('Order Status GET')
+            console.log(status)
+            this.disabled = status
+            //this.onSubmit();
+
+          });
+      }
+    },*/
+
+    setAutoRefresh: function() {
+      console.log('Setting Interval')
+
+      if(this.refAutoRefresh != null)
+        clearInterval(this.refAutoRefresh)
+
+      this.refAutoRefresh =  setInterval(() => {
+        //this.refreshData()
+        this.getCloture();
+      }, 10000)
+
+
+    },
+
     clickDialogDelete() {
 
       this.$confirm(
@@ -1408,15 +1469,6 @@ export default {
           return false;
         }
       });
-    },
-    updateTimeRange() {
-      const start = new Date();
-      console.log('coucou');
-      start.setTime(this.$refs.generic.chart.series.w.globals.minX);
-      this.$globalbus.$emit("charttimerangeupdated", [
-        this.$refs.generic.chart.series.w.globals.minX,
-        this.$refs.generic.chart.series.w.globals.maxX
-      ]);
     }
 
   }

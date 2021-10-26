@@ -300,9 +300,14 @@ export default {
   },
   beforeDestroy: function(){
       console.log('BEFORE DESTROY')
-      this.onSubmit();
-      if(this.refAutoRefresh != null)
-        clearInterval(this.refAutoRefresh)
+      if(!this.isCloture && !this.disabled)
+      {
+        this.onSubmit();
+      }
+      //if(this.refAutoRefresh != null)
+      //{
+      clearInterval(this.refAutoRefresh)
+      //}
   },
   computed: {
     totalPrice: function() {
@@ -579,7 +584,7 @@ export default {
         
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
         //&& data.Available
-        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 
+        return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8 && data.display
     },
     tabChanged(index){
       this.refillNan()
@@ -838,7 +843,7 @@ export default {
 
     getData() {
       var demandor = this.$store.getters.creds.user.id    
-      var magasin = this.magasin 
+      var magasin = this.shopid
       var timeRange=this.$store.getters.timeRangeDay;
       console.log("MAGASIN : " + this.magasin)     
       var url =
@@ -886,7 +891,17 @@ export default {
 
 
     
+    addLog(order){
 
+      console.log(Object.keys(order))
+      if(!Object.keys(order).includes('orderLogs'))
+      {
+        console.log('Adding Orderlogs')
+        order.orderLogs = []
+      }
+      var newLog = {'ts': Date.now(), 'user': this.$store.getters.creds.user.login, 'boulangerie': this.totalBoulangerie, 'patisserie': this.totalPatisserie, 'other': this.totalOther }
+      order.orderLogs.push(newLog)
+    },
       
     createNewForm(){
       console.log('Generate Empty Form')
@@ -1091,7 +1106,7 @@ export default {
               status = true
               this.disabled = true
               
-              this.onSubmit();
+              //this.onSubmit();
             }
             else if(response.data.cloture == true)
             {

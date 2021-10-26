@@ -1047,6 +1047,7 @@ export default {
             
       }
       this.dontrefreshMap=false;
+      this.$forceUpdate();
     },
     graphClicked() {
       var newvalue =
@@ -1164,6 +1165,7 @@ export default {
       if (payLoad.subtype == this.config.timeSelectorType) this.loadData();
       else console.log("Ignoring time change.");
     });
+    this.$forceUpdate();
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING: timerangechanged");

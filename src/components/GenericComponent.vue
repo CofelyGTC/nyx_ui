@@ -52,6 +52,9 @@
             <div v-if="app.type=='generic-table'">
               <GenericTable :config="app" :key="app.rec_id" />
             </div>
+            <div v-else-if="app.type=='lazy-generic-table'">
+              <LazyGenericTable :config="app" :key="app.rec_id" />
+            </div>
             <div v-else-if="app.type=='external'">
               <External :config="app" :key="app.rec_id"></External>
             </div>

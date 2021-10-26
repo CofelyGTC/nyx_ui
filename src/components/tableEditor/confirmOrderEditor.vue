@@ -9,8 +9,9 @@
   >
     <el-row><h1>{{newRec._source.shop}}</h1></el-row>
 
-  <el-row>Total Boulangerie TTC: {{ totalBoulangerie  | roundTo2 }}€  Total Pâtisserie TTC : {{totalPatisserie | roundTo2 }} € Total Autres TTC : {{totalOther  | roundTo2 }} €</el-row>
- 
+  <el-row>Total Boulangerie: {{ totalBoulangerie | roundTo2}}€  Total Pâtisserie TTC : {{totalPatisserie| roundTo2 }} € </el-row>
+  <el-row> Total Salés TTC : {{totalSales| roundTo2 }} €  Autres TTC : {{totalOther| roundTo2 }} €</el-row>
+
   <el-row>Total TTC : {{totalPrice | roundTo2 }} €<br></el-row>
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
@@ -216,6 +217,61 @@
           <el-row>{{productToAdd}}</el-row>
         </div>
       </el-tab-pane>
+      <el-tab-pane
+      :key="'TAB_Logs'"
+        :label="'Logs'"
+        :name="'TAB_Logs'"
+        :lazy="true">
+         <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
+           <el-row>
+              <el-table
+                class="table-logs"
+                size="mini"
+                v-if="newRec._source.orderLogs"
+                :data="newRec._source.orderLogs"
+                style="width: 100%"
+              >
+          <el-table-column
+            width="180"
+            :label="$t('generic.date')"
+            prop="ts"
+            :formatter="formatDate"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            width="180"
+            :label="$t('generic.user')"
+            prop="user"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            width="180"
+            label="Bouangerie"
+            prop="boulangerie"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            width="180"
+            label="Pâtisserie"
+            prop="patisserie"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            width="180"
+            label="Autres"
+            prop="other"
+            sortable
+          >
+          </el-table-column>
+              </el-table>
+             
+           </el-row>
+         </div>
+      </el-tab-pane>
           </el-tabs>
           </el-row>
       </el-card>
@@ -402,6 +458,23 @@ export default {
 
     },
 
+    totalSales: function(){
+
+      var price = 0
+      
+      for(var itemKey in Object.keys(this.newRec._source.products))
+      {
+        var data = this.newRec._source.products[itemKey]
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        {
+          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+        }
+      }
+
+      return price
+
+    },
+
     totalOther: function(){
 
       var price = 0
@@ -409,7 +482,7 @@ export default {
       for(var itemKey in Object.keys(this.newRec._source.products))
       {
         var data = this.newRec._source.products[itemKey]
-        if(data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie')
+        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -556,6 +629,20 @@ export default {
       }
       
     },
+
+    addLog(){
+        
+      console.log('Adding Logs')  
+      console.log(Object.keys(this.newRec._source))
+      if(!Object.keys(this.newRec._source).includes('orderLogs'))
+      {
+        console.log('Create Logs')
+        this.newRec._source.orderLogs = []
+      }
+      var newLog = {'ts': Date.now(), 'user': this.$store.getters.creds.user.login, 'boulangerie': this.totalBoulangerie, 'patisserie': this.totalPatisserie,'sales': this.totalSales, 'other': this.totalOther }
+      this.newRec._source.orderLogs.push(newLog)
+    },
+
     getFilter(data){
 
         //console.log(data)
@@ -607,6 +694,14 @@ export default {
         //data.sortLvl1 == category && data.sortLvl2 == subcategory
         return filter && filter1 && filter2 && filter3 && filter4 && filter5 && filter6 && filter7 && filter8
     },
+
+    formatDate(row, col, value, index){
+
+      var datets =  new Date(value).toLocaleString()
+      return datets
+
+    },
+
     tabChanged(index){
       this.selectedUnderTab = index+'-0'
       console.log('Selected:  TAB-'+index+'-0')
@@ -664,6 +759,15 @@ export default {
 
           console.log(response.data.orderstatus)
           this.newRec._source.products.push(response.data)
+          if(!this.classement.includes(response.data.sortLvl1))
+          {
+            this.classement.push(response.data.sortLvl1)
+            this.subCategories[response.data.sortLvl1] = [response.data.sortLvl2]
+          }
+          if(!this.subCategories[response.data.sortLvl1].includes(response.data.sortLvl2))
+          {
+            this.subCategories[response.data.sortLvl1].push(response.data.sortLvl2)
+          }
           this.getOthersProducts();
 
 
@@ -873,7 +977,10 @@ export default {
       this.newRec._source.totalPrice = this.totalPrice.toFixed(2);
       this.newRec._source.totalBoulangerie = this.totalBoulangerie.toFixed(2)
       this.newRec._source.totalPatisserie = this.totalPatisserie.toFixed(2)
+      this.newRec._source.totalSales = this.totalSales.toFixed(2)
       this.newRec._source.totalOther = this.totalOther.toFixed(2)
+
+      this.addLog(this.newRec._source);
 
       this.$store.commit({
         type: "updateRecord",

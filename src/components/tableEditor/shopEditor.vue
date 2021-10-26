@@ -50,6 +50,18 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+
+                <el-row>
+                   <el-col :span="8">
+                        <el-form-item label="Convention Produits" :label-width="formLabelWidth2">
+                           <el-select v-model="productsContract" placeholder="Sélectionner" @change="contractChange(productsContract)"> 
+                                <el-option v-for="(item, id) in productsContractTypes" :key="id" :label="item.ID" :value="item.ID">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
                  
                
                 </el-card>
@@ -308,7 +320,9 @@ export default {
     horrairesTypes: ['Temps plein', 'Mi-Temps'],
     activeNames: ['1', '2'],
     mailFact: '',
-    categoryFact: 0
+    categoryFact: 0,
+    productsContract: '',
+    productsContractTypes: [],
   }),
   computed: {
     recordin: function() {
@@ -354,6 +368,12 @@ export default {
       this.dialogFormVisible = true;
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+
+      this.getContracts();
+      if(this.newRec._source.productsContract){
+        this.productsContract=this.newRec._source.productsContract
+      }
+
       this.magasin = this.newRec._source['Nom magasin']
       this.adresse = this.newRec._source.address
       this.city = this.newRec._source.city
@@ -388,6 +408,26 @@ export default {
 
       this.mailFact = this.newRec._source.mailFact
       this.categoryFact = this.newRec._source.codeFact
+
+    },
+
+    getContracts(){
+
+      var url = this.$store.getters.apiurl + "lambdas/8/get_products_contracts?apikey=" + this.$store.getters.creds.token;
+        var body = {};
+        axios
+        .post(url, body)
+        .then((response) => {
+            //console.log(response)
+            this.productsContractTypes = response.data.contracts
+            this.$forceUpdate();
+        });
+
+    },
+
+    contractChange: function(productsContract){
+
+      this.newRec._source.productsContract = productsContract
 
     },
 
