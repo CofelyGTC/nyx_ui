@@ -67,18 +67,50 @@
                             </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="newRec._source.cake.type == 'Bavarois'" label="Goût" :label-width="formLabelWidth2" prop="taste">
+                <el-form-item v-if="newRec._source.cake.type == 'Crème fraîche fruits'" label="Intérieur" :label-width="formLabelWidth2" prop="taste">
+                    <el-select v-model="newRec._source.cake.cremeGout1" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, cremeGout1) in cremeGout1" :key="cremeGout1" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="newRec._source.cake.type == 'Crème fraîche fruits'" label="Extérieur" :label-width="formLabelWidth2" prop="taste">
+                    <el-select v-model="newRec._source.cake.cremeGout2" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, cremeGout2) in cremeGout2" :key="cremeGout2" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="newRec._source.cake.type == 'Spécial Patron'" label="Intérieur" :label-width="formLabelWidth2" prop="taste">
+                    <el-select v-model="newRec._source.cake.patronGout1" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, patronGout1) in patronGout1" :key="patronGout1" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="newRec._source.cake.type == 'Spécial Patron'" label="Extérieur" :label-width="formLabelWidth2" prop="taste">
+                    <el-select v-model="newRec._source.cake.patronGout2" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, patronGout2) in patronGout2" :key="patronGout2" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="newRec._source.cake.type == 'Bavarois'" label="Goût Intérieur&Extérieur" :label-width="formLabelWidth2" prop="taste">
                     <el-select v-model="newRec._source.cake.bavaroisType" filterable placeholder="Sélectionner">
                             <el-option v-for="(item, bavaroisType) in bavaroisTypes" :key="bavaroisType" :label="item" :value="item">
                             </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="newRec._source.cake.type == 'Glace'" label="Goût" :label-width="formLabelWidth2" prop="taste">
-                    <el-select multiple :multiple-limit="2" v-model="newRec._source.cake.glaceGout" filterable placeholder="Sélectionner">
-                            <el-option v-for="(item, glaceGout) in glaceGouts" :key="glaceGout" :label="item" :value="item">
-                            </el-option>
-                    </el-select>
-                </el-form-item>
+                <div v-if="newRec._source.cake.type == 'Glace'">
+                  <el-form-item v-if="size == '4P' || size == '6P'" label="Goût" :label-width="formLabelWidth2" prop="taste">
+                      <el-select v-model="glaceGoutSolo" filterable placeholder="Sélectionner">
+                              <el-option v-for="(item, glaceGout) in glaceGouts" :key="glaceGout" :label="item" :value="item">
+                              </el-option>
+                      </el-select>
+                  </el-form-item>
+                  <el-form-item v-else label="Goût" :label-width="formLabelWidth2" prop="taste">
+                      <el-select multiple :multiple-limit="2" v-model="glacesGoutDuo" filterable placeholder="Sélectionner">
+                              <el-option v-for="(item, glaceGout) in glaceGouts" :key="glaceGout" :label="item" :value="item">
+                              </el-option>
+                      </el-select>
+                  </el-form-item>
+                </div>
                 <el-form-item v-if="newRec._source.cake.type == 'Number Cake'" label="Saveur" :label-width="formLabelWidth2" prop="taste">
                     <el-select v-model="newRec._source.cake.numberCakeType" filterable placeholder="Sélectionner">
                             <el-option v-for="(item, numberCakeType) in numberCakeTypes" :key="numberCakeType" :label="item" :value="item">
@@ -86,74 +118,128 @@
                     </el-select>
                 </el-form-item>
                 <div v-if="newRec._source.cake.type == 'Number Cake'">
-                    <el-form-item label="Déco" :label-width="formLabelWidth2" prop="numberDeco">
-                        <el-select v-model="newRec._source.cake.numberCakeGender" filterable placeholder="Sélectionner">
-                                <el-option v-for="(item, numberCakeGender) in numberCakeGenders" :key="numberCakeGender" :label="item" :value="item">
-                                </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item v-if="newRec._source.cake.numberCakeGender == 'Fille' || newRec._source.cake.numberCakeGender == 'Garçon'" label="Âge" :label-width="formLabelWidth2">
-                        <el-input-number size="mini" v-model="newRec._source.age" autocomplete="off" :min="0" :step="1"/>
-                    </el-form-item>
+                    
+                <el-form-item v-if="newRec._source.cake.numberCakeType != 'Crème Fraîche Nature'" label="Intérieur" :label-width="formLabelWidth2" prop="taste">
+                    <el-select v-model="newRec._source.cake.numberCakeGout" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, numberCakeGout1) in numberCakeGout1" :key="numberCakeGout1" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-else label="Intérieur" :label-width="formLabelWidth2" prop="taste">
+                    <el-select v-model="newRec._source.cake.numberCakeGout" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item, numberCakeGout2) in numberCakeGout2" :key="numberCakeGout2" :label="item" :value="item">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+
+
+
                     <el-form-item label="Caractères :" :label-width="formLabelWidth2" prop="caract">
                         <el-input :maxlength="maxLenNC" minlength="1" size="mini" v-model="newRec._source.cake.numberCakeChars" autocomplete="off" placeholder="Vos caractères" ></el-input>
                     </el-form-item>
                 </div>
                 
-                <el-form-item label="Remarques :" :label-width="formLabelWidth2" >
-                    <el-input size="mini" v-model="newRec._source.cake.remarques" autocomplete="off" placeholder="Vos remarque..."></el-input>
-                </el-form-item>
+                <!--el-form-item label="Remarques :" :label-width="formLabelWidth2" >
+                    <el-input size="mini" v-model="newRec._source.cake.remarqu run seres" autocomplete="off" placeholder="Vos remarque..."></el-input>
+                </el-form-item-->
                 <el-row>
-                  <el-col :span=12>
+                  <el-col :span=8>
                 <el-form-item v-if="newRec._source.cake.type != 'Number Cake'" label="Envois photo par mail ?" :label-width="formLabelWidth2" > 
                   <el-switch v-model="imageByMail">
                   </el-switch>
                 </el-form-item>
                   </el-col>
-                  <el-col :span=12>
-                <el-form-item v-if="imageByMail && newRec._source.cake.type != 'Number Cake'" label="Mail :" :label-width="formLabelWidth2">
+                  <el-col :span=8>
+                <el-form-item v-if="imageByMail && newRec._source.cake.type != 'Number Cake'" label="Mail :" :label-width="formLabelWidth2" prop="mail">
                   <el-input size="mini" v-model="mail" autocomplete="off" placeholder="Mail expéditeur de l'image"></el-input>
                 </el-form-item>
                   </el-col>
-                </el-row>
-                <el-row>
                   <el-col :span=8>
-                <el-form-item label="Inscription ?" :label-width="formLabelWidth2" > 
-                  <el-switch v-model="isInscription">
-                  </el-switch>
-                </el-form-item>
-                  </el-col>
-                  <el-col :span=8>
-                <el-form-item v-if="isInscription" label="Inscription personnalisée ?" :label-width="formLabelWidth2" > 
-                  <el-switch v-model="customInscription">
-                  </el-switch>
-                </el-form-item>
-                  </el-col>
-                  <el-col :span=8>
-                <el-form-item v-if="customInscription && isInscription" label="Inscription :" :label-width="formLabelWidth2" >
-                    <el-input size="mini" v-model="inscription" autocomplete="off" placeholder="Ex: Joyeux Anniversaire"></el-input>
-                </el-form-item>
-                <el-form-item v-else-if="isInscription" label="Inscription :" :label-width="formLabelWidth2" >
-                    <el-select v-model="inscription" filterable placeholder="Sélectionner">
-                            <el-option v-for="(item, txt) in inscriptions" :key="txt" :label="item" :value="item">
-                            </el-option>
-                    </el-select>
-                </el-form-item>
+                    <el-form-item v-if="imageByMail && newRec._source.cake.type != 'Number Cake'" label="Description image :" :label-width="formLabelWidth2" prop="mail">
+                      <el-input size="mini" v-model="maildesc" autocomplete="off" placeholder="Description"></el-input>
+                    </el-form-item>
                   </el-col>
                 </el-row>
+                <div v-if="newRec._source.cake.type != 'Number Cake'">
+                  <el-row>
+                    <el-col :span=8>
+                  <el-form-item label="Inscription ?" :label-width="formLabelWidth2" > 
+                    <el-switch v-model="isInscription" @change="changeInscription">
+                    </el-switch>
+                  </el-form-item>
+                    </el-col>
+                    <el-col :span=8>
+                  <el-form-item v-if="isInscription" label="Inscription personnalisée ?" :label-width="formLabelWidth2" > 
+                    <el-switch v-model="customInscription" @change="changeInscription">
+                    </el-switch>
+                  </el-form-item>
+                    </el-col>
+                    <el-col :span=8>
+                  <el-form-item v-if="customInscription && isInscription" label="Inscription (sur le gâteaux):" :label-width="formLabelWidth" >
+                      <el-input size="mini" v-model="inscription" autocomplete="off" placeholder="Inscription sur le Gâteaux"></el-input>
+                  </el-form-item>
+                  <el-form-item v-else-if="isInscription" label="Inscription :" :label-width="formLabelWidth2" >
+                      <el-select v-model="inscription" filterable placeholder="Sélectionner">
+                              <el-option v-for="(item, txt) in inscriptions" :key="txt" :label="item" :value="item">
+                              </el-option>
+                      </el-select>
+                  </el-form-item>
+                    </el-col>
+                  </el-row>
+                </div>
+                  
+                <div v-else>
+                  <el-row>
+                      <el-col :span=8>
+                    <el-form-item label="Inscription ?" :label-width="formLabelWidth2" > 
+                      <el-switch v-model="isInscription">
+                      </el-switch>
+                    </el-form-item>
+                      </el-col>
+                      <el-col :span=8>
+                    <el-form-item v-if="isInscription" label="Inscription:" :label-width="formLabelWidth2" >
+                        <el-select v-model="inscription" filterable placeholder="Sélectionner">
+                                <el-option v-for="(item, txt) in inscriptions" :key="txt" :label="item" :value="item">
+                                </el-option>
+                        </el-select>
+                    </el-form-item>
+                      </el-col>
+                    </el-row>
+                </div>
                 <el-row>
-                  <el-col :span=12>
+                  <el-col :span=6>
                 <el-form-item label="Décorations ?" :label-width="formLabelWidth2" > 
                   <el-switch v-model="isDecoration">
                   </el-switch>
                 </el-form-item>
                   </el-col>
-                  <el-col :span=12>
-                <el-form-item v-if="isDecoration" label="Décorations :" :label-width="formLabelWidth2">
+                  <el-col :span=6>
+                  <el-form-item v-if="isDecoration" label="Genre" :label-width="formLabelWidth2" prop="typeDeco">
+                        <el-select v-model="newRec._source.cake.decoGender" filterable placeholder="Sélectionner">
+                                <el-option v-for="(item, numberCakeGender) in numberCakeGenders" :key="numberCakeGender" :label="item" :value="item">
+                                </el-option>
+                        </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span=6>
+                <el-form-item v-if="isDecoration" label="Décorations :" :label-width="formLabelWidth2" prop="typeDeco">
                   <el-select v-model="decoration" filterable placeholder="Sélectionner">
                             <el-option v-for="(item1, txt1) in decorations" :key="txt1" :label="item1" :value="item1">
                             </el-option>
                     </el-select>
+                </el-form-item>
+                <!--el-form-item v-if="isDecoration" label="Décorations :" :label-width="formLabelWidth2" prop="typeDeco">
+                  <el-select v-model="decoration" filterable placeholder="Sélectionner">
+                            <el-option v-for="(item1, txt1) in decosTypes[newRec._source.cake.decoGender]" :key="txt1" :label="item1" :value="item1">
+                            </el-option>
+                    </el-select>
+                </el-form-item-->
+                  </el-col>
+                  <el-col :span=6>
+                <el-form-item v-if="isDecoration" label="Âge :" :label-width="formLabelWidth2" prop="age">
+                      <el-input-number :min=0 size="mini" v-model="age">
+                      </el-input-number>
+                    
                 </el-form-item>
                   </el-col>
                 </el-row>
@@ -203,9 +289,10 @@ export default {
     title: "Gâteaux",
     isDecoration: false,
     decoration: '',
-    decorations: ['Noël', 'Pâques', 'Anniversaire'],
+    decorations: ['Anniversaire'],
     imageByMail: false,
     mail: '',
+    maildesc: '',
     isInscription: false,
     customInscription: false,
     shop: '',
@@ -241,16 +328,39 @@ export default {
         '24P':{'desc': '26  x 40 cm', 'prix': 91.2}},    
     //bavaroisTypes: ['Fruits des Bois', 'Fraise', 'Framboise', 'Bora Bora'],
     bavaroisTypes: ['Framboise', 'Fraises'],
+    glaceGoutSolo: 'Vanille',
+    glacesGoutDuo: ['Vanille', 'Chocolat'],
     glaceGouts: ['Vanille', 'Chocolat', 'Fraise', 'Framboise', 'Pabana'],
-    numberCakeTypes: ['Crème fraîche - fraise', 'Crème fraîche - framboise', 'Mousse Chocolat'],
-    numberCakeGenders: ['Homme', 'Femme', 'Fille', 'Garçon', 'Autre'],
+    cremeGout1: ['Fruits Mixtes', 'Framboises'],
+    cremeGout2: ['Fruits frais', 'Sans Fruits'],
+    patronGout1: ['Fruits Mixtes', 'Framboises', 'Fraises'],
+    patronGout2: ['Fruits frais', 'Sans Fruits'],
+    numberCakeTypes: ['Mousse fraise', 'Mousse framboise', 'Mousse Chocolat', 'Mousse Nutella', 'Mousse Pabana', 'Crème Fraîche Nature'],
+    numberCakeGout1: ['Fruits Mixtes', 'Fruits Rouges', 'Sans Fruits'],
+    numberCakeGout2: ['Fruits Mixtes', 'Fruits Rouges'],
+    age: 0,
+    decosTypes: {
+      'Homme':['Macarons + Noeud papillons', 'Macarons + Assortiment Papa', 'Macarons + Mix Outils', 'Macarons + Kinder Oréo'],
+      'Femme':['Macarons Roses + Pétales', 'Pastels', 'Déco Dorée', 'Habits Dame'],
+      'Fille':['Fleur Rose', 'Pastels'],
+      'Garçon':['Macarons + Kinder Oreo', 'Foot', 'Pirates'],
+      'Baby Girl':['Licorne', 'Papillons'],
+      'Baby Boy':['Animaux', 'Minions'],
+      'Autre':['-']
+    },
+    
+
+    numberCakeGenders: ['Homme', 'Femme', 'Fille', 'Garçon', 'Baby Boy', 'Baby Girl', 'Autre'],
     magasins: [],
     rules: {
           cake: {type: [{ required: true, message: 'Veuillez sélectionner un type de gâteaux', trigger: 'blur' }]},
           taste: [{ required: true, message: 'Veuillez sélectionner un goût', trigger: 'blur' }],
           magasin: [{ required: true, message: 'Veuillez sélectionner un magasin', trigger: 'blur' }],
           caract: [{ required: true, message: 'Veuillez entrer les caractères du gâteau', trigger: 'blur' }],
-          numberDeco: [{required: true, message: 'Veuillez choisir une décoration', trigger: 'blur'}]
+          numberDeco: [{required: true, message: 'Veuillez choisir une décoration', trigger: 'blur'}],
+          typeDeco: [{required: true, message: 'Veuillez choisir une décoration', trigger: 'blur'}],
+          age:  [{required: true, message: 'Veuillez entrer un âge', trigger: 'blur'}],
+          mail:  [{required: true, message: 'Veuillez remplir ces informations', trigger: 'blur'}],
     }
     
 
@@ -392,7 +502,7 @@ export default {
 
 
 
-        if(this.isInscription && this.customInscription)
+        if((this.isInscription && this.customInscription) || (this.isInscription && this.newRec._source.cake.type == 'Number Cake'))
         {
           price += 5
         }
@@ -486,6 +596,7 @@ export default {
     this.decoration = this.record._source.cake.decoration
     this.imageByMail = this.record._source.cake.imageByMail 
     this.mail = this.record._source.cake.mail
+    this.maildesc = this.record._source.cake.maildesc
     this.isInscription = this.record._source.cake.isInscription
     this.inscription = this.record._source.cake.inscription
     this.record._source.cake.type = this.record._source.type
@@ -524,6 +635,10 @@ export default {
           console.log(valid)
 */
       },
+
+    changeInscription(){
+      this.inscription = '';
+    },
       
     changeCake(selected) {
       console.log(selected)
@@ -639,7 +754,7 @@ export default {
     saveRecord: function() {
 
       console.log(this.newRec._source.cake.type)
-      if(this.newRec._source.cake.type == null || this.selectedShop == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null || this.newRec._source.cake.numberCakeGender == null)))
+      if(this.newRec._source.cake.type == null || this.selectedShop == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Crème fraîche fruits' && this.newRec._source.cake.cremeGout1 == null)|| (this.newRec._source.cake.type == 'Crème fraîche fruits' && this.newRec._source.cake.cremeGout2 == null)|| (this.newRec._source.cake.type == 'Spécial Patron' && this.newRec._source.cake.patronGout1 == null)|| (this.newRec._source.cake.type == 'Spécial Patron' && this.newRec._source.cake.patronGout2 == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null )))
       {
           console.log('In if')
           console.log(this.newRec._source.magasin)
@@ -647,6 +762,15 @@ export default {
 
           this.submitForm('ruleForm')
           console.log(this.newRec._source.cake.glaceGout)   
+      }
+
+      else if (this.isDecoration == true && (this.newRec._source.cake.decoGender == '' || this.decoration =='' || this.age == 0))
+      {
+        this.submitForm('ruleForm')
+      }
+      else if (this.imageByMail == true && (this.mail == '' || this.maildesc == ''))
+      {
+        this.submitForm('ruleForm')
       }
       /*else if(this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGouts == [])
       {
@@ -685,15 +809,29 @@ export default {
         this.newRec._source.cake.decoration = this.decoration
         this.newRec._source.cake.imageByMail = this.imageByMail
         this.newRec._source.cake.mail = this.mail
+        this.newRec._source.cake.mail = this.maildesc
         this.newRec._source.cake.isInscription = this.isInscription
         this.newRec._source.cake.inscription = this.inscription
         this.newRec._source.cake.customInscription = this.customInscription
         this.newRec._source.type = this.newRec._source.cake.type
         this.newRec._source.price = this.totalTTC
+        this.newRec._source.cake.decoAge = this.age
 
         if(this.newRec._source.type == 'Number Cake' && this.newRec._source.age == null)
         {
           this.newRec._source.age = 0
+        }
+
+        if(this.newRec._source.type == 'Glace')
+        {
+          if(this.newRec._source.size=='4P' || this.newRec._source.size=='6P')
+          {
+            this.newRec._source.cake.glaceGouts = [this.glaceGoutSolo, '-']
+          }
+          else
+          {
+            this.newRec._source.cake.glaceGouts = this.glacesGoutDuo;
+          }
         }
 
         /*if(this.$store.getters.currentSubCategory.fulltitle == 'commandes/gâteaux')

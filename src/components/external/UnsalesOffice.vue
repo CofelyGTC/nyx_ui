@@ -635,7 +635,7 @@ export default {
         order.remise = this.remise
         order.totalBoulangerie = this.totalBoulangerie().toFixed(2)
         order.totalPatisserie = this.totalPatisserie().toFixed(2)
-        order.totalSales = this.totalSales.toFixed(2)
+        order.totalSales = this.totalSales().toFixed(2)
         order.totalOther = this.totalOther().toFixed(2)
         order.totalPrice = this.totalPrice.toFixed(2)
         order.confirmed = this.disabled
@@ -869,7 +869,7 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches' && data.sortLvl2 != 'Divers')
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -886,7 +886,7 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
+        if(data.sortLvl2 == 'Quiches'|| (data.sortLvl2 == 'Divers' && data.sortLvl1 == 'Salés') || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }

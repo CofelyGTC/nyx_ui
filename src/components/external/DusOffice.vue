@@ -26,14 +26,14 @@
                         <el-input-number v-model="remise" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
-                <el-col :span="4">
+                <!--el-col :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
                 </el-col>
                 <el-col :span="4">
                     <template>
                         <el-input-number v-model="supplement" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
-                </el-col>
+                </el-col-->
                 <el-col :span="4">
                   <label style="horizontal-align: right; vertical-align: middle;">Bons Vita+: </label>
                 </el-col>
@@ -56,7 +56,7 @@
                         <el-input-number v-model="remisePat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
-                <el-col :span="4">
+                <!--el-col :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Suppléments Totaux (€): </label>
                 </el-col>
                 <el-col :span="4">
@@ -64,7 +64,7 @@
                         <el-input-number v-model="supplementPat" :disabled="this.disabled" :precision="2" :step="0.1" :min="0"></el-input-number>
                     </template>
                 </el-col>
-                <!--el-col v-if="sacapain == true" :span="4">
+                <el-col v-if="sacapain == true" :span="4">
                     <label style="horizontal-align: right; vertical-align: middle;">Sacs à pain: </label>
                 </el-col>
                 <el-col  v-if="sacapain == true"  :span="4">
@@ -73,7 +73,7 @@
                     </template>
                 </el-col-->
             </el-row>
-            <el-row>
+            <!--el-row>
               <h2>
                 SALES
               </h2>
@@ -89,7 +89,7 @@
                     </template>
                 </el-col>
             
-            </el-row>
+            </el-row-->
       <el-form style="widht: 100%" :disabled="this.disabled">
           
          <el-tabs v-model="selectedTab" @tab-click="tabChanged(selectedTab)">
@@ -439,7 +439,7 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches' && data.sortLvl2 != 'Divers')
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -456,7 +456,7 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
+        if(data.sortLvl2 == 'Quiches'|| (data.sortLvl2 == 'Divers' && data.sortLvl1 == 'Salés') || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -777,7 +777,7 @@ export default {
         order.remisePat = this.remisePat
         order.invendusPat = this.invendusPat
         order.supplementPat = this.supplementPat
-        order.supplementSales = this.supplementSales
+        order.supplementsSales = this.supplementSales
         order.vitas = this.vitas
         order.nbreSacsAPain = this.nbreSacsAPain
         order.dusBoul = this.totalBoulangerie.toFixed(2);
@@ -1022,7 +1022,7 @@ export default {
                     this.remisePat = res.reccords[0]['_source']['remisePat']
                     this.invendusPat = res.reccords[0]['_source']['invendusPat']
                     this.supplementPat = res.reccords[0]['_source']['supplementPat']
-                    this.supplementSales = res.reccords[0]['_source']['supplementSales']
+                    this.supplementSales = res.reccords[0]['_source']['supplementsSales']
                     if(res.reccords[0]['_source']['vitas'])
                     {
                         this.vitas = res.reccords[0]['_source']['vitas']

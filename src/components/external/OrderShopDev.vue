@@ -348,7 +348,7 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches')
+        if(data.sortLvl1 == 'Salés' && data.sortLvl2 != 'Quiches' && data.sortLvl2 != 'Divers')
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }
@@ -382,7 +382,7 @@ export default {
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
-        if(data.sortLvl2 == 'Quiches' || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
+        if(data.sortLvl2 == 'Quiches'|| (data.sortLvl2 == 'Divers' && data.sortLvl1 == 'Salés')  || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
           price += (data.conditionnement*data.quantity*data.Prix_TVAC)
         }

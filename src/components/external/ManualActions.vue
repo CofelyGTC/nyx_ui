@@ -648,7 +648,7 @@ export default {
       onDateFacturation: function()
       {
           var body = {
-            "destination": "/topic/ONDATE_FACTURATION",
+            "destination": "/queue/ONDATE_FACTURATION",
             "body": '{"message":"stop", "date": "'+this.dateToFacturation.getTime().toString()+'"}'
             }
 
