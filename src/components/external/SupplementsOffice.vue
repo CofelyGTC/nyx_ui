@@ -635,7 +635,7 @@ export default {
         order.remise = this.remise
         order.totalBoulangerie = this.totalBoulangerie().toFixed(2)
         order.totalPatisserie = this.totalPatisserie().toFixed(2)
-        order.totalSales = this.totalSales.toFixed(2)
+        order.totalSales = this.totalSales().toFixed(2)
         order.totalOther = this.totalOther().toFixed(2)
         order.totalPrice = this.totalPrice.toFixed(2)
         order.confirmed = this.disabled

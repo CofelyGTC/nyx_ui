@@ -15,49 +15,7 @@
                     </el-select>
             </td>
           </el-row>  <br>
-          <el-row><h2>Coeurs</h2></el-row><br>
-          <el-row>
-              <el-col :span=8>
-                  <el-form-item  label="INDIVIDUELLE" :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C620" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="4 PERS." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C621" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="6 PERS." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C622" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-          <el-row><h2>Schamp</h2></el-row><br>
-          <el-row>
-              <el-col :span=8>
-                  <el-form-item  label="INDIVIDUELLE" :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C623" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="4 PERS." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C624" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="6 PERS." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C625" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-          <el-row><h2>Fruits des Bois</h2></el-row><br>
+          <el-row><h2>Coeurs Crème au Beurre</h2></el-row><br>
           <el-row>
               <el-col :span=8>
                   <el-form-item  label="INDIVIDUELLE" :label-width="formLabelWidth2">
@@ -78,6 +36,48 @@
                   </el-form-item>
               </el-col>
           </el-row><br>
+          <el-row><h2>Orangettes</h2></el-row><br>
+          <el-row>
+              <el-col :span=8>
+                  <el-form-item  label="INDIVIDUELLE" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C631" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="4 PERS." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C632" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="6 PERS." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C633" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
+          <el-row><h2>Crème Fraîche Fruits</h2></el-row><br>
+          <el-row>
+              <el-col :span=8>
+                  <el-form-item  label="INDIVIDUELLE" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C634" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="4 PERS." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C635" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="6 PERS." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C636" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
           <el-row><h2>Glaces</h2></el-row><br>
           <el-row>
               <el-col :span=8>
@@ -93,7 +93,37 @@
                   </el-form-item>
               </el-col>
               
+          </el-row><br><br>
+
+          <el-row>
+              <h2>Divers</h2><br>
           </el-row><br>
+          <el-row>
+              <el-col :span=6>
+                  <el-form-item  label="Macaron 8 pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C231" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=6>
+                  <el-form-item  label="Macarons 16 pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C232" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=6>
+                  <el-form-item  label="Baisers du Chef 12 pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C228" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=6>
+                  <el-form-item  label="Cake Amandes" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source['P172.1']" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br><br>
           <el-row><h2>Galettes Nature</h2></el-row><br>
           <el-row>
               <el-col :span=12>

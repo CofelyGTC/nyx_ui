@@ -993,15 +993,18 @@ export default {
               }
               else if(response.data.products[i]._source.avail == 'except')
               {
-               
+                
+                
                 var period = JSON.parse(response.data.products[i]._source.availabilityConf)
                 var start = Date.parse(period["except"][0])
                 var stop = Date.parse(period["except"][1])
                
 
-                if(timeRange[0].getTime() <= start || timeRange[0].getTime()>=stop)
+                if(timeRange[0].getTime() < start || timeRange[0].getTime()>stop)
                 {
                   this.callData.push(response.data.products[i]._source)
+                  console.log("Except")
+                  console.log(response.data.products[i]._source.CODE)
                 }
 
               }

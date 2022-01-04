@@ -140,53 +140,7 @@
               </el-col>
           </el-row><br>
           <el-row>
-              <h2>SCHAMP</h2><br>
-          </el-row><br>
-          <el-row>
-              <el-col :span=8>
-                  <el-form-item  label="Individuelle" :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C503" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C504" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="6 pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C505" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-          <el-row>
-              <h2>Pistache-Framboises</h2><br>
-          </el-row><br>
-          <el-row>
-              <el-col :span=8>
-                  <el-form-item  label="Individuelle" :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C506" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C507" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="6 pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C508" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-          <el-row>
-              <h2>Nutella</h2><br>
+              <h2>Crémeux Praliné</h2><br>
           </el-row><br>
           <el-row>
               <el-col :span=8>
@@ -209,24 +163,70 @@
               </el-col>
           </el-row><br>
           <el-row>
-              <h2>Fruits des Bois</h2><br>
+              <h2>Mikado</h2><br>
           </el-row><br>
           <el-row>
               <el-col :span=8>
                   <el-form-item  label="Individuelle" :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C512" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C517" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
               <el-col :span=8>
                   <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C513" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C518" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
               <el-col :span=8>
                   <el-form-item  label="6 pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C514" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C519" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
+          <el-row>
+              <h2>Nougat Cassis</h2><br>
+          </el-row><br>
+          <el-row>
+              <el-col :span=8>
+                  <el-form-item  label="Individuelle" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C520" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C521" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="6 pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C522" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
+          <el-row>
+              <h2>Crème Fraîche Fruits</h2><br>
+          </el-row><br>
+          <el-row>
+              <el-col :span=8>
+                  <el-form-item  label="Individuelle" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C523" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C524" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=8>
+                  <el-form-item  label="6 pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C525" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
@@ -244,6 +244,36 @@
               <el-col :span=8>
                   <el-form-item  label="Vanille-Framboise 6 pers." :label-width="formLabelWidth2">
                     <el-input-number v-model="record._source.C516" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
+
+          <el-row>
+              <h2>Divers</h2><br>
+          </el-row><br>
+          <el-row>
+              <el-col :span=6>
+                  <el-form-item  label="Macaron 8 pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C229" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=6>
+                  <el-form-item  label="Macarons 16 pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C230" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=6>
+                  <el-form-item  label="Baisers du Chef 12 pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C225" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=6>
+                  <el-form-item  label="Cake Amandes" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.P172" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>

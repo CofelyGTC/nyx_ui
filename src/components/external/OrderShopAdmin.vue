@@ -1035,7 +1035,7 @@ export default {
       var demandor = this.$store.getters.creds.user.id  
       var timeRange=this.$store.getters.timeRangeDay;
       console.log(this.$store.getters.timeRangeDay)
-      var magasin = this.magasin 
+      var magasin = this.shopid
       console.log("MAGASIN : " + this.magasin)     
       var url =
       this.$store.getters.apiurl +

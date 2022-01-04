@@ -155,7 +155,7 @@
                 </el-form-item>
                   </el-col>
                   <el-col :span=8>
-                    <el-form-item v-if="imageByMail && newRec._source.cake.type != 'Number Cake'" label="Description image :" :label-width="formLabelWidth2" prop="mail">
+                    <el-form-item v-if="imageByMail && newRec._source.cake.type != 'Number Cake'" label="Description image :" :label-width="formLabelWidth2" prop="mailDesc">
                       <el-input size="mini" v-model="maildesc" autocomplete="off" placeholder="Description"></el-input>
                     </el-form-item>
                   </el-col>
@@ -263,6 +263,8 @@
     </span>
     </el-form-item>
     </el-card>
+    
+    
     </el-form>
   </el-dialog>
 </template>
@@ -360,7 +362,8 @@ export default {
           numberDeco: [{required: true, message: 'Veuillez choisir une décoration', trigger: 'blur'}],
           typeDeco: [{required: true, message: 'Veuillez choisir une décoration', trigger: 'blur'}],
           age:  [{required: true, message: 'Veuillez entrer un âge', trigger: 'blur'}],
-          mail:  [{required: true, message: 'Veuillez remplir ces informations', trigger: 'blur'}],
+          mail:  [{required: true, message: 'Veuillez entrez un format email correct', trigger: 'blur'}],
+          mailDesc:  [{required: true, message: 'Veuillez remplir ces informations', trigger: 'blur'}],
     }
     
 
@@ -754,21 +757,25 @@ export default {
     saveRecord: function() {
 
       console.log(this.newRec._source.cake.type)
-      if(this.newRec._source.cake.type == null || this.selectedShop == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Crème fraîche fruits' && this.newRec._source.cake.cremeGout1 == null)|| (this.newRec._source.cake.type == 'Crème fraîche fruits' && this.newRec._source.cake.cremeGout2 == null)|| (this.newRec._source.cake.type == 'Spécial Patron' && this.newRec._source.cake.patronGout1 == null)|| (this.newRec._source.cake.type == 'Spécial Patron' && this.newRec._source.cake.patronGout2 == null) || (this.newRec._source.cake.type == 'Glace' && this.newRec._source.cake.glaceGout.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null )))
+      if(this.newRec._source.cake.type == null || this.selectedShop == '' || (this.newRec._source.cake.type == 'Bavarois' && this.newRec._source.cake.bavaroisType == null) || (this.newRec._source.cake.type == 'Crème fraîche fruits' && this.newRec._source.cake.cremeGout1 == null)|| (this.newRec._source.cake.type == 'Crème fraîche fruits' && this.newRec._source.cake.cremeGout2 == null)|| (this.newRec._source.cake.type == 'Spécial Patron' && this.newRec._source.cake.patronGout1 == null)|| (this.newRec._source.cake.type == 'Spécial Patron' && this.newRec._source.cake.patronGout2 == null) || (this.newRec._source.cake.type == 'Glace' && this.glaceGoutSolo == '' && this.glacesGoutDuo.length == 0) ||(this.newRec._source.cake.type == 'Number Cake' && (this.newRec._source.cake.numberCakeType == null || this.newRec._source.cake.numberCakeChars == null )))
       {
           console.log('In if')
           console.log(this.newRec._source.magasin)
           console.log(this.selectedShop)
 
           this.submitForm('ruleForm')
-          console.log(this.newRec._source.cake.glaceGout)   
+          //console.log(this.newRec._source.cake.glaceGout)   
       }
 
       else if (this.isDecoration == true && (this.newRec._source.cake.decoGender == '' || this.decoration =='' || this.age == 0))
       {
         this.submitForm('ruleForm')
       }
-      else if (this.imageByMail == true && (this.mail == '' || this.maildesc == ''))
+      else if (this.imageByMail == true &&  (!this.mail.includes('@') || !this.mail.includes('.')))
+      {
+        this.submitForm('ruleForm')
+      }
+      else if (this.imageByMail == true && this.maildesc == '')
       {
         this.submitForm('ruleForm')
       }
@@ -809,7 +816,7 @@ export default {
         this.newRec._source.cake.decoration = this.decoration
         this.newRec._source.cake.imageByMail = this.imageByMail
         this.newRec._source.cake.mail = this.mail
-        this.newRec._source.cake.mail = this.maildesc
+        this.newRec._source.cake.maildesc = this.maildesc
         this.newRec._source.cake.isInscription = this.isInscription
         this.newRec._source.cake.inscription = this.inscription
         this.newRec._source.cake.customInscription = this.customInscription
