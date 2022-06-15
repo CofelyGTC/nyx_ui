@@ -5,7 +5,7 @@
     :visible.sync="dialogFormVisible"
     :before-close="closeDialog"
     :close-on-click-modal="false"
-    class="recette-editor"
+    class="pre-recette-editor"
   >
   
     <el-form v-model="newRec._source">
@@ -13,33 +13,10 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="Label: " :label-width="formLabelWidth">
-               <el-select v-model="finalProduct" placeholder="Choisissez un produit" filterable size="mini">
-                <el-option v-for="(_source, index) in this.finalProducts" :key="index" :value="[_source['CODE'], _source['Label'], _source['Prix_TVAC']] " :label="_source['CODE']+ ' ' + _source['Label']" ></el-option>
-              </el-select>
+                <el-input size="mini" v-model="newRec._source.label" autocomplete="off"></el-input>
             </el-form-item>
         </el-col> 
         </el-row>
-
-
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="Prix unitaire de vente: " :label-width="formLabelWidth2">
-               {{ this.finalProduct[2]}} €
-            </el-form-item>
-          </el-col> 
-          <el-col :span="6">
-            <el-form-item label="Prix unitaire : " :label-width="formLabelWidth">
-               {{ this.totalPriceUnit}} €
-            </el-form-item>
-          </el-col> 
-          <el-col :span="6">
-            <el-form-item label="Marge : " :label-width="formLabelWidth">
-               {{ this.finalProduct[2]-this.totalPriceUnit}} €
-            </el-form-item>
-          </el-col> 
-
-        </el-row>
-       
 
        <el-row>
            <el-col :span="6">
@@ -58,14 +35,14 @@
             </el-form-item>
        </el-col>     
        <el-col :span="6">
-            <el-form-item label="Prix au kg" :label-width="formLabelWidth">
-               {{totalPrice}} €
+            <el-form-item label="Prix" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="totalPrice" autocomplete="off"></el-input>
             </el-form-item>
        </el-col>    
        </el-row> 
        <el-row style="text-align:left;">
            <el-col>
-               <h2>Ingrédients :</h2>
+               <label>Ingrédients :</label>
            </el-col>
            <el-col v-for="(ingredient, index) in this.newRec._source.ingredients" :key="index">
                 <el-row>
@@ -130,12 +107,11 @@
 
 
 
-       
 
 
        <el-row style="text-align:left;">
            <el-col>
-               <h2>Produits semis-finis :</h2>
+               <label>Produits semis-finis :</label>
            </el-col>
            <el-col v-for="(produit, index) in this.newRec._source.produits" :key="index">
                 <el-row>
@@ -198,80 +174,7 @@
          </el-col>
        </el-row>
 
-
-
-
-
-
-
-
-       <el-row style="text-align:left;">
-           <el-col>
-               <h2>Packaging :</h2>
-           </el-col>
-           <el-col v-for="(pack, index) in this.newRec._source.packaging" :key="index">
-                <el-row>
-                       <el-col :span=3>
-                           <el-form-item label="Code Prod." :label-width="formLabelWidth">
-                              {{pack.code}}
-                           </el-form-item>
-                        </el-col>
-                        <el-col :span=9>
-                           <el-form-item label="Pack." :label-width="formLabelWidth">
-                              {{pack.name}}
-                           </el-form-item>
-                        </el-col>
-                        <el-col :span=4>    
-                           <el-form-item label="Quantity" :label-width="formLabelWidth">
-                               <el-input-number size="mini" v-model="pack.quantity" :min="0"></el-input-number>
-                           </el-form-item>
-                       </el-col>
-                       <el-col :span=3>    
-                         
-                           <el-form-item label="Prix unitaire: " :label-width="formLabelWidth">
-                              {{pack.priceunit}} €
-                           </el-form-item>
-                         
-                           
-                       </el-col>
-                       <el-col :span=4>    
-                         
-                           <el-form-item label="Prix : " :label-width="formLabelWidth">
-                              {{pack.price}} €
-                           </el-form-item>
-                         
-                           
-                       </el-col>
-                       
-                       <el-col :span=1>
-                           <el-button @click="removePackaging(index)" type="danger" icon="el-icon-delete" circle>
-                           </el-button>
-                       </el-col>
-                </el-row>
-           </el-col>
-       </el-row>
-       <el-row style="text-align:left;">
-         <el-col :span="4">
-           <label>Ajouter Packaging : </label>
-         </el-col>
-         <el-col :span="4">
-           <el-select v-model="newPackage" placeholder="Choisissez un emballage" filterable size="mini">
-             <el-option v-for="(_source, index) in this.packagings" :key="index" :value="[_source['CODE'], _source['Label'], _source['cout_prod']] " :label="_source['CODE']+ ' ' + _source['Label']" ></el-option>
-           </el-select>
-         </el-col>
-          <el-col :span="3">
-           <label>Quantité : </label>
-         </el-col>
-         <el-col :span=3>    
-           <el-input-number size="mini" v-model="newPackageQuantity" :min="0" :value="1"></el-input-number>
-         </el-col>
-         <el-col :span="4">
-           <el-button type="primary" @click="addPackaging()" icon="el-icon-plus" circle></el-button>
-         </el-col>
-       </el-row>
-
       </el-card>
-
       
     </el-form>
 
@@ -294,7 +197,7 @@ import YAML from "js-yaml";
 import axios from "axios";
 
 export default {
-  name: "recetteEditor",
+  name: "preRecetteEditor",
   data: () => ({
     orgRec: null,
     newRec: null,
@@ -305,20 +208,13 @@ export default {
     formLabelWidth: "120px",
     changed: false,
     dialogFormVisible: false,
-    title: "Recette",
+    title: "Produit Semi-Fini",
     allIngredients: null,
     newIngredient: null,
     newIngredientQuantity: 1,
     allProduits: null,
     newProduit: null,
-    newProduitQuantity: 1,
-    finalProducts: null,
-    finalProduct:'',
-    packagings: null,
-    newPackage: null,
-    newPackageQuantity: 0
-
-   
+    newProduitQuantity: 1
   }),
   computed: {
     recordin: function() {
@@ -330,43 +226,9 @@ export default {
     recchanged: function() {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
     },
-
-    totalPriceUnit: function() {
-      var price = 0
-      var qty = 0
-      var packagePrice = 0
-
-      for(var ingredient in this.newRec._source.ingredients)
-      {
-        console.log(ingredient)
-        price += this.newRec._source.ingredients[ingredient]['price']
-        qty += this.newRec._source.ingredients[ingredient]['quantity']
-      }
-
-      for(var produit in this.newRec._source.produits)
-      {
-        console.log(produit)
-        price += this.newRec._source.produits[produit]['price']
-        qty += this.newRec._source.produits[produit]['quantity']
-      }
-
-      for(var pack in this.newRec._source.packaging)
-      {
-        packagePrice += this.newRec._source.packaging[pack]['price']
-      }
-
-      if(qty == 0)
-      {
-        qty = 1
-      }
-
-      return parseFloat((price+packagePrice).toFixed(2))
-    },
-
     totalPrice: function() {
       var price = 0
       var qty = 0
-      
 
       for(var ingredient in this.newRec._source.ingredients)
       {
@@ -430,12 +292,6 @@ export default {
         //delete this.newRec._source.ingredients[index]
         this.newRec._source.produits.splice(index, 1)
     },
-    removePackaging: function(index){
-        console.log("coucou")
-        console.log(this.newRec._source.packaging[index])
-        //delete this.newRec._source.ingredients[index]
-        this.newRec._source.packaging.splice(index, 1)
-    },
     prepareData: function() {
       console.log("prepare data");
       this.dialogFormVisible = true;
@@ -445,7 +301,7 @@ export default {
         this.record._source.ingredients = []
         console.log(this.record)
       }
-
+      
       if(!this.record._source.produits)
       {
         console.log("New record")
@@ -453,20 +309,12 @@ export default {
         console.log(this.record)
       }
 
-      if(!this.record._source.packaging)
-      {
-        console.log("New record")
-        this.record._source.packaging = []
-        console.log(this.record)
-      }
-
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
       this.allIngredients = this.getIngredients();
       this.allProduits = this.getProduits();
-      this.getCodes();
-      this.getPackagings();
     },
+    
     addIngredient: function() {
       var ingredientToAdd = {
         "code": this.newIngredient[0],
@@ -487,16 +335,7 @@ export default {
       }
       this.newRec._source.produits.push(produitToAdd);
     },
-    addPackaging: function() {
-      var packagingToAdd = {
-        "code": this.newPackage[0],
-        "name": this.newPackage[1],
-        "quantity": this.newPackageQuantity,
-        "priceunit": this.newPackage[2],
-        "price": parseFloat((this.newPackage[2]*this.newPackageQuantity).toFixed(4))
-      }
-      this.newRec._source.packaging.push(packagingToAdd);
-    },
+    
     getIngredients: function() {
       var url =
         this.$store.getters.apiurl +
@@ -525,94 +364,40 @@ export default {
           console.log(error);
         });
     },
-
     getProduits: function() {
-      var url =
-        this.$store.getters.apiurl +
-        "generic_search/schamp_pre_recettes" +
-        "?token=" +
-        this.$store.getters.creds.token;
-        
-      var query = {
-          "size": 10000
-        }
+          var url =
+            this.$store.getters.apiurl +
+            "generic_search/schamp_pre_recettes" +
+            "?token=" +
+            this.$store.getters.creds.token;
+            
+          var query = {
+              "size": 10000
+            }
 
-        axios
-        .post(url, query)
-        .then(response => {
-          if (response.data.error != "") {
-            console.log("fail to retrieve products");
-          } else {
-            console.log(response);
+            axios
+            .post(url, query)
+            .then(response => {
+              if (response.data.error != "") {
+                console.log("fail to retrieve products");
+              } else {
+                console.log(response);
 
-            this.allProduits = response.data.records
-
-
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    getCodes: function() {
-      var url = this.$store.getters.apiurl + "lambdas/8/get_products_list_light?apikey=" + this.$store.getters.creds.token;
-        
-      var query = {
-          "size": 10000
-        }
-
-        axios
-        .post(url, query)
-        .then(response => {
-          if (response.data.error != "") {
-            console.log("fail to retrieve products");
-          } else {
-            console.log(response);
-
-            this.finalProducts = response.data.products
+                this.allProduits = response.data.records
 
 
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    getPackagings: function() {
-      var url = this.$store.getters.apiurl + "lambdas/8/get_packaging?apikey=" + this.$store.getters.creds.token;
-        
-      var query = {
-          "size": 10000
-        }
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        },
 
-        axios
-        .post(url, query)
-        .then(response => {
-          if (response.data.error != "") {
-            console.log("fail to retrieve products");
-          } else {
-            console.log(response);
-
-            this.packagings = response.data.products
-
-
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
     saveRecord: function() {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.orderDate = Date.now()
       this.newRec._source.price = this.totalPrice
-      this.newRec._source.CODE = this.finalProduct[0]
-      this.newRec._source.Label = this.finalProduct[1]
-      this.newRec._source.Prix_TVAC = this.finalProduct[2]
-      this.newRec._source.priceUnit = this.totalPriceUnit
-      this.newRec._source.marge = this.finalProduct[2] - this.totalPriceUnit
-
 
       this.$store.commit({
         type: "updateRecord",

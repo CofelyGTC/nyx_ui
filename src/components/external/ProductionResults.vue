@@ -2,20 +2,29 @@
   <div style="width: 100%">
   <el-row class="productionresults-container" style="width: 100%" >
       <el-form style="widht: 100%" :disabled="this.disabled">
-        <el-table :data="this.records" style="width: 100%" >
-          <el-table-column prop="CODE" label="CODE"></el-table-column>
-          <el-table-column prop="sortLvl1" label="Catégorie"></el-table-column>
-          <el-table-column prop="sortLvl2" label="Sous-Catégorie"></el-table-column>
-          <el-table-column prop="Label" label="Nom"></el-table-column>
+        <el-table 
+          :data="records.filter(data => !search || ((JSON.stringify(data).toLowerCase().includes(search.toLowerCase()))))"
+          :default-sort="{prop: 'CODE', order: 'descending'}" style="width: 100%" >
+          <el-table-column prop="CODE" label="CODE" sortable></el-table-column>
+          <el-table-column prop="sortLvl1" label="Catégorie" sortable></el-table-column>
+          <el-table-column prop="sortLvl2" label="Sous-Catégorie" sortable></el-table-column>
+          <el-table-column prop="Label" label="Nom" sortable></el-table-column>
           <el-table-column prop="confirmed" label="Confirmé">
             <template slot-scope="scope">
             <el-switch v-model="scope.row.confirmed" @change="recordConfirmed(scope.row)"></el-switch>
             </template>
           </el-table-column>
+          <el-table-column prop="originalquantity" label="Quantité Demandée" sortable>
+          </el-table-column>
           <el-table-column label="Quantité Produite">
           <template slot-scope="scope">
             <el-input-number :disabled="scope.row.confirmed" :min="0" size="mini" v-model="scope.row.quantity" @changed="recordModify(scope.row)"/>
           </template>
+          </el-table-column>
+          <el-table-column align="right" width="150">
+            <template slot="header" slot-scope="scope">
+              <el-input v-model="search" size="mini" placeholder="Type to search" class="searchfield" />
+            </template>
           </el-table-column>
           </el-table> 
       </el-form>    
@@ -36,6 +45,8 @@ export default {
       category: '',
       categoryUp: '',
       ts: 0,
+      params: {},
+      search: "",
 
   }),
   props: {
@@ -59,6 +70,8 @@ export default {
   methods: {
     prepareData() {
       console.log('prepare data')
+      this.params = JSON.parse(this.$store.getters.activeApp.config.controllerparameters)
+      console.log(this.params)
       for(var i in this.$store.getters.creds.user.privileges) {
         var priv = this.$store.getters.creds.user.privileges[i]
         if(priv =='admin' ||  priv=='SHOP_FORM') {
@@ -93,7 +106,7 @@ export default {
       var timeRange=this.$store.getters.timeRangeDay;
       var url =
       this.$store.getters.apiurl +
-      "schamps/getProductionResult?start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&token=" +
+      "schamps/getProductionResult?start="+timeRange[0].getTime()+"&stop="+timeRange[1].getTime()+"&filter="+this.params.production+"&token=" +
       this.$store.getters.creds.token;  
 
       
@@ -311,6 +324,9 @@ export default {
 
 </script>
 <style>
+.searchfield {
+  width: 140px !important;
+}
 .ordershop-container{
   width: 100%;
   margin: 30px 0px;

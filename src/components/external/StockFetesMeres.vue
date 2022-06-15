@@ -3,81 +3,85 @@
   <el-row class="stockviewer-container" style="width: 100%" >
       <el-form style="widht: 100%">
           <el-row><h1>Fêtes des Mères</h1></el-row><br>
-          <el-row><h2>Charlottes aux Fraises</h2></el-row><br>
+          <el-row><h2>Biscuit Litchi Framboise</h2></el-row><br>
           <el-row>
+              <el-col :span=12>
+                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C462" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=12>
+                  <el-form-item  label="5 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C463" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
+           <el-row><h2>Macaron Fraises</h2></el-row><br>
+          <el-row>
+              <el-col :span=12>
+                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C467" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
               <el-col :span=12>
                   <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C452" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=12>
-                  <el-form-item  label="6 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C453" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C468" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
           </el-row><br>
-           <el-row><h2>Mousse à la Rose</h2></el-row><br>
+           <el-row><h2>Bavarois Framboise</h2></el-row><br>
           <el-row>
               <el-col :span=12>
                   <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C454" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C469" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
               <el-col :span=12>
-                  <el-form-item  label="6 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C455" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-           <el-row><h2>Macaron Framboises Litchee</h2></el-row><br>
-          <el-row>
-              <el-col :span=12>
-                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C456" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=12>
-                  <el-form-item  label="6 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C457" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-          <el-row><h2>Schamp</h2></el-row><br>
-          <el-row>
-              <el-col :span=8>
-                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C458" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
                   <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C459" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="6 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C460" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C470" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
           </el-row><br>
-          <el-row><h2>Tarte sablée Coeur </h2></el-row><br>
+          <el-row><h2>Coeur Choc</h2></el-row><br>
+          <el-row>
+              <el-col :span=12>
+                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C471" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              <el-col :span=12>
+                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C472" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+              
+          </el-row><br>
+          <el-row><h2>Coeur Crème au Beurre </h2></el-row><br>
           <el-row>
               <el-col :span=24>
-                  <el-form-item  label="5 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C461" :step=1 :min=0>
+                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C464" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
-          </el-row>  
+          </el-row><br>
+          <el-row><h2>Boite Macarons </h2></el-row><br>
+          <el-row>
+              <el-col :span=24>
+                  <el-form-item  label="8 Pièces" :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C449" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row>    
 
           <br>
           <div>

@@ -263,6 +263,9 @@
     </span>
     </el-form-item>
     </el-card>
+    <!--el-card>
+      {{newRec._source}}
+    </el-card-->
     
     
     </el-form>
@@ -333,9 +336,9 @@ export default {
     glaceGoutSolo: 'Vanille',
     glacesGoutDuo: ['Vanille', 'Chocolat'],
     glaceGouts: ['Vanille', 'Chocolat', 'Fraise', 'Framboise', 'Pabana'],
-    cremeGout1: ['Fruits Mixtes', 'Framboises'],
+    cremeGout1: ['Fruits Mixtes', 'Framboises', 'Sans Fruits'],
     cremeGout2: ['Fruits frais', 'Sans Fruits'],
-    patronGout1: ['Fruits Mixtes', 'Framboises', 'Fraises'],
+    patronGout1: ['Fruits Mixtes', 'Framboises', 'Fraises', 'Sans Fruits'],
     patronGout2: ['Fruits frais', 'Sans Fruits'],
     numberCakeTypes: ['Mousse fraise', 'Mousse framboise', 'Mousse Chocolat', 'Mousse Nutella', 'Mousse Pabana', 'Crème Fraîche Nature'],
     numberCakeGout1: ['Fruits Mixtes', 'Fruits Rouges', 'Sans Fruits'],

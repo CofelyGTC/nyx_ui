@@ -2,7 +2,7 @@
   <el-row class="kpi104-container" :span="24" type="flex" justify="center">  
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span style="font-weight:bold">KPI104 - Twee rondiers op de site</span>
+          <span style="font-weight:bold">KPI104 - Een rondier op de site</span>
         </div>
         <div class="card-body">
           <el-row class="first-row" :span="24">
@@ -46,14 +46,14 @@
 
 
               </el-col>
-              <el-col :span="3" >rondier1</el-col>
-              <el-col :span="3" >rondier2</el-col>
+              <el-col :span="6" >rondier1</el-col>
+              <!--el-col :span="3" >rondier2</el-col-->
               
-              <el-col :span="3" >rondier1</el-col>
-              <el-col :span="3" >rondier2</el-col>
+              <el-col :span="6" >rondier1</el-col>
+              <!--el-col :span="3" >rondier2</el-col-->
               
-              <el-col :span="3" >rondier1</el-col>
-              <el-col :span="3" >rondier2</el-col>
+              <el-col :span="6" >rondier1</el-col>
+              <!--el-col :span="3" >rondier2</el-col-->
               
             </el-row>
             <!--<el-row v-for="(item, day) in switchModel" :key="day" :span="24">-->
@@ -61,7 +61,7 @@
             <el-row v-for="(item, day) in switchModel" :key="day" :span="24" class="row-day">
               <el-col :span="6" style="text-align:left">{{dayConversion[day]}}</el-col>
 
-              <el-col :span="3" v-for="shift in item" :key="shift.key">
+              <el-col :span="6" v-for="shift in item" :key="shift.key">
                 <el-switch 
                   @change="clickSwitchChange" 
                   v-model="shift.model"
@@ -98,7 +98,7 @@ export default {
       switchModel: null,
       dayList: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
       dayConversion: {'Maandag':'', 'Dinsdag':'', 'Woensdag':'', 'Donderdag':'', 'Vrijdag':'', 'Zaterdag':'', 'Zondag':''},
-      shiftList: [1, 2, 3, 4, 5, 6],
+      shiftList: [1, 2, 3],
     };
   },
   computed: {

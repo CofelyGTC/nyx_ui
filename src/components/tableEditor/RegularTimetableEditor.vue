@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-    width="70%"
+    width="80%"
     top="15%"
     :title="title"
     :visible.sync="dialogFormVisible"
@@ -14,7 +14,7 @@
     <el-form v-model="newRec._source">
        <h1 style="text-align:center;">Configuration</h1>
        <el-row>
-         <el-col :span=8>
+         <el-col :span=6>
               <el-form-item label="Sélectionner Circuit: " :label-width="formLabelWidth">
                   <el-select v-model="selectedCircuit" filterable placeholder="Sélectionner">
                       <el-option
@@ -31,7 +31,62 @@
                   <el-input v-model="DB" placeholder="Veuillez enter un nom... (DBXX)"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span=12>
+              <el-form-item label="Commentaire: " :label-width="formLabelWidth">
+                  <el-input v-model="newRec._source.note" placeholder="Commentaires..."></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span=4>
+           <el-form-item label="Automate Next Gen : " :label-width="formLabelWidth">
+                  <el-switch v-model="newRec._source.nextGen" ></el-switch>
+              </el-form-item>
+         </el-col>
+         <el-col :span=4>
+           <el-form-item v-if="!newRec._source.nextGen" label="Encodage Decimal : " :label-width="formLabelWidth">
+                  <el-switch v-model="newRec._source.oldGenDecimal" ></el-switch>
+              </el-form-item>
+         </el-col>
+       </el-row>
+       <el-row>
+            <el-col :span=4>
+              <el-form-item label="Dero Congés : " :label-width="formLabelWidth">
+                  <el-switch v-model="newRec._source.dero_holidays" ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=4>
+              <el-form-item label="Dero Congés ULG : " :label-width="formLabelWidth">
+                  <el-switch v-model="newRec._source.dero_holidays_ulg" ></el-switch>
+              </el-form-item>
+            </el-col>
+       </el-row>
+       <el-row>
+         <el-col :span=4>
+              <el-form-item label="Dero Covid Matin: " :label-width="formLabelWidth">
+                  <el-switch v-model="newRec._source.dero_covid_morning" ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=5>
+              <el-form-item label="Minutes supp. : " :label-width="formLabelWidth">
+                  <el-input-number v-model="newRec._source.dero_covid_morning_mins" size="small" :disabled="!newRec._source.dero_covid_morning"></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span=4>
+              <el-form-item label="Dero Covid Soir: " :label-width="formLabelWidth">
+                  <el-switch v-model="newRec._source.dero_covid" ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span=5>
+              <el-form-item label="Minutes supp. : " :label-width="formLabelWidth">
+                  <el-input-number v-model="newRec._source.dero_covid_mins" :disabled="!newRec._source.dero_covid" size="small" ></el-input-number>
+              </el-form-item>
+            </el-col>
+            
+       </el-row>
 
+       
+         
        </el-row>
        <el-row>
          <el-col>
@@ -133,7 +188,7 @@
            </el-button>
          </el-col>
        </el-row>
-       {{newRec}}
+
       <h1 style="text-align:center;">Grille Horaire</h1>
       <el-row>
         <el-col :span=4>
@@ -289,7 +344,6 @@
       >{{this.$t("buttons.confirm")}}</el-button>
       <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
   </span>
-  {{newRec._source}}
   </el-dialog>
 </template>
 

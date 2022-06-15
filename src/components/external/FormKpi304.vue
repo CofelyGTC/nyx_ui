@@ -213,7 +213,7 @@ export default {
             hoofd: 1,
             ppl: {
               titu: ["Sébastien Docquier", "Patrick Lenaertz"],
-              backup: ["Michiel Villé", "Dirk Van Leemput"]
+              backup: ["Clément Revelart", "Dirk Van Leemput"]
             }
           }
         },
@@ -224,8 +224,8 @@ export default {
             tech2: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Xavier Vos", "Bart Hiel"],
-              backup: ["Gil Van Driessche", "Dirk Van Leemput"]
+              titu: ["Ahmed Karroum", "Wesley Pensis"],
+              backup: ["-", "Dirk Van Leemput"]
             }
           },
           HVAC: {
@@ -234,8 +234,8 @@ export default {
             tech2: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Nour Ajana", "Gil Van Driessche"],
-              backup: ["Bart Hiel", "Dirk Van Leemput"]
+              titu: ["Nour Ajana", "-"],
+              backup: ["Wesley Pensis", "Dirk Van Leemput"]
             }
           },
           ELEC: {
@@ -244,7 +244,7 @@ export default {
             tech2: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Philippe Gonze", "Hans Vanderveken"],
+              titu: ["Philippe Gonze", "Jasper De Landstheer"],
               backup: ["Dirk Van Leemput"]
             }
           },
@@ -264,7 +264,7 @@ export default {
             tech: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Samir Boutil", "Michiel Villé"],
+              titu: ["Pascal Van Den Hauwe", "Clément Revelart"],
               backup: ["Patrick Lenaertzs", "Dirk Van Leemput"]
             }
           }
@@ -274,7 +274,7 @@ export default {
             tech: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Miquel Lamproye", "Hans Vanderveken"],
+              titu: ["Miquel Lamproye", "Jasper De Landstheer"],
               backup: ["Dirk Van Leemput"]
             }
           }

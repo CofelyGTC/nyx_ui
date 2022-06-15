@@ -228,6 +228,7 @@
         </el-row>
       </el-card>
         </el-collapse-item>
+        
         <el-collapse-item title="Disponibilité" name="2">
       <br>
       <el-card>
@@ -441,6 +442,40 @@
           </el-card>
           
         </el-collapse-item>
+        <el-collapse-item title="Image" name="7">
+          <el-card>
+            <span>
+              <el-form-item label>
+                <Upload :config="configUploadPicture" @on-success="uploadPictureSuccess"></Upload>
+              </el-form-item>
+            </span>
+            <span v-if="newRec._source.picture != ''">
+              <img :src="newRec._source.picture" width="350" height="350"/>
+            
+            </span>
+          </el-card>
+        </el-collapse-item>
+        <el-collapse-item title="Cout Produit" name="8">
+      <br>
+      <el-card>
+        <h2>Coût à l'achat</h2>
+        <el-row>
+        </el-row>
+        <el-row>
+          <el-col :span=9>
+            <br>
+          </el-col>
+          <el-col :span=6>
+          <el-form-item label="Coût (€): " :label-width="formLabelWidth2">
+          <el-input-number size="mini" v-model="newRec._source.cout_prod" :step=0.01 :min=0></el-input-number>
+         </el-form-item>
+          </el-col>
+          <el-col :span=9>
+            <br>
+          </el-col>
+        </el-row>
+      </el-card>
+        </el-collapse-item>
       </el-collapse>
 
     </el-form>
@@ -461,6 +496,15 @@ import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";
+
+import upload from "@/components/Upload";
+Vue.component("Upload", upload);
+
+function transformObject(obj) {
+  return rison.encode(obj);
+}
+
+import { extractURLParts } from "../../globalfunctions";
 
 export default {
   name: "productEditor",
@@ -500,6 +544,13 @@ export default {
     conventions: {},
     fournisseurs: {},
     selectedfournisseur: {},
+    configUploadPicture: {
+      config: {
+        queryfilters: [],
+        queue: "/queue/PRODUCT_PICTURE_IMPORT",
+        tip: "Déposez une image ici"
+      }
+    }
 
   }),
   computed: {
@@ -609,6 +660,18 @@ export default {
           
         }
       }
+    },
+    uploadPictureSuccess: function(response, file, fileList) {
+      // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '')
+      
+      var mainurl=extractURLParts(window.location.href);
+      var nurl=mainurl.protocol+"//"+mainurl.host+"";          
+      this.newRec._source.picture =nurl+
+        "/public/pictures/" + file.name;
+
+      var tmp = JSON.parse(JSON.stringify(this.newRec));
+      this.newRec = null;
+      this.newRec = JSON.parse(JSON.stringify(tmp));
     },
     saveRecord: function() {
 

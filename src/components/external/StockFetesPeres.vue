@@ -3,67 +3,49 @@
   <el-row class="stockviewer-container" style="width: 100%" >
       <el-form style="widht: 100%">
           <el-row><h1>Fêtes des Pères</h1></el-row><br>
-          <el-row><h2>Schamp</h2></el-row><br>
+          <el-row><h2>Saint Honoré</h2></el-row><br>
           <el-row>
-              <el-col :span=8>
-                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C550" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
+            <el-col :span=8> <br>
+            </el-col>
               <el-col :span=8>
                   <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C551" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C570" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
-              <el-col :span=8>
-                  <el-form-item  label="6 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C552" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
+              <el-col :span=8><br>
               </el-col>
           </el-row><br>
-           <el-row><h2>Charlotte Fruits</h2></el-row><br>
-          <el-row>
-              <el-col :span=12>
-                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C553" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-              <el-col :span=12>
-                  <el-form-item  label="6 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C554" :step=1 :min=0>
-                    </el-input-number>
-                  </el-form-item>
-              </el-col>
-          </el-row><br>
-           <el-row><h2>Biscuit Mojito</h2></el-row><br>
+           <el-row><h2>Gâteaux 3 Chocolats</h2></el-row><br>
           <el-row>
               <el-col :span=12>
                   <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C555" :step=1 :min=0>
+                    <el-input-number v-model="record._source.C571" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
               <el-col :span=12>
-                  <el-form-item  label="5 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C556" :step=1 :min=0>
+                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C572" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
           </el-row><br>
-          <el-row><h2>Biscuit Coeur </h2></el-row><br>
+           <el-row><h2>Gâteau Choclot Café</h2></el-row><br>
           <el-row>
-              <el-col :span=24>
-                  <el-form-item  label="5 Pers." :label-width="formLabelWidth2">
-                    <el-input-number v-model="record._source.C557" :step=1 :min=0>
+              <el-col :span=12>
+                  <el-form-item  label="1 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C573" :step=1 :min=0>
                     </el-input-number>
                   </el-form-item>
               </el-col>
-          </el-row>  
-
+              <el-col :span=12>
+                  <el-form-item  label="4 Pers." :label-width="formLabelWidth2">
+                    <el-input-number v-model="record._source.C574" :step=1 :min=0>
+                    </el-input-number>
+                  </el-form-item>
+              </el-col>
+          </el-row><br>
           <br>
           <div>
             <el-row>
