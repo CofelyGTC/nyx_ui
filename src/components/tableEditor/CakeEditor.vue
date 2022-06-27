@@ -608,6 +608,13 @@ export default {
     this.record._source.cake.type = this.record._source.type
     this.totalTTC = this.record._source.price
     this.customInscription = this.record._source.cake.customInscription
+    console.log()
+    if('glaceGouts' in this.record._source.cake)
+    {
+
+      this.glacesGoutDuo = this.record._source.cake.glaceGouts
+    }
+      
     //this.getMagasins();
     
     this.prepareData();

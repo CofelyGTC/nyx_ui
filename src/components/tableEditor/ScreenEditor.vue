@@ -295,7 +295,7 @@ export default {
     title: "Screen configuration",
     carouselList: [],
     dockerList: [],
-    modeList: ["Main","Main3G"]
+    modeList: ["Main","Main3G", "MainNoBanner"]
 
   }),
   computed: {
