@@ -1012,8 +1012,35 @@ export default {
       }
       this.disabled = false
       var query = {
-            "size":900
-        }
+        "_source": [
+            "Available",
+            "CODE",
+            "Conditionnement",
+            "HTVA",
+            "Label",
+            "Prix_TVAC",
+            "TVA",
+            "Taux_TVA",
+            "avail",
+            "availabilityConf",
+            "conditionnement",
+            "display",
+            "factCategory",
+            "lieuPreparation",
+            "lieuProduction",
+            "sortLvl1",
+            "sortLvl10",
+            "sortLvl2",
+            "sortLvl3",
+            "sortLvl4",
+            "sortLvl5",
+            "sortLvl6",
+            "sortLvl7",
+            "sortLvl8",
+            "sortLvl9",
+            "provisoire"],
+        "size":2000
+      }
        console.log(query)
 
       axios
@@ -1034,13 +1061,18 @@ export default {
 
             this.nbreSacsAPain= 0
             this.vitas = 0
-            console.log(response)
+            console.log("BEFORE FOR")
 
             for(var i in response.data.records) {
               response.data.records[i]._source._id = response.data.records[i]._id 
               response.data.records[i]._source.quantity = 0
               response.data.records[i]._source.orderquantity = 0
-              console.log("Retrieved data : " + JSON.parse(JSON.stringify(response.data)))
+              if(response.data.records[i]._source._id == "P020")
+              {
+                console.log("******** P020 *********")
+                console.log(JSON.parse(JSON.stringify(response.data.records[i]._source)))
+              }
+              
 
               this.callData.push(response.data.records[i]._source)
             }
@@ -1050,7 +1082,7 @@ export default {
                 this.records = null
                 this.records = JSON.parse(JSON.stringify(tmp))
 
-                console.log(this.records)
+                //console.log(this.records)
                 this.$forceUpdate();
           }});
 

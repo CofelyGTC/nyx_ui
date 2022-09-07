@@ -12,19 +12,34 @@
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="Label: " :label-width="formLabelWidth">
-               <el-select v-model="finalProduct" placeholder="Choisissez un produit" filterable size="mini">
-                <el-option v-for="(_source, index) in this.finalProducts" :key="index" :value="[_source['CODE'], _source['Label'], _source['Prix_TVAC']] " :label="_source['CODE']+ ' ' + _source['Label']" ></el-option>
+            <el-form-item label="Produit: " :label-width="formLabelWidth">
+               <el-select v-model="finalProduct" placeholder="Choisissez un produit" filterable size="mini" @change="changeProduct">
+                <el-option v-for="(_source, index) in this.finalProducts" :key="index" :value="[_source['CODE'], _source['Label'], _source['Prix_TVAC'], _source['HTVA']] " :label="_source['CODE']+ ' ' + _source['Label']" ></el-option>
               </el-select>
             </el-form-item>
         </el-col> 
         </el-row>
 
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="CODE: " :label-width="formLabelWidth2">
+               {{this.codeProduct}}
+            </el-form-item>
+          </el-col> 
+          <el-col :span="6">
+            <el-form-item label="Label : " :label-width="formLabelWidth">
+               {{ this.labelProduct}}
+            </el-form-item>
+          </el-col> 
+          
+
+        </el-row>
+
 
         <el-row>
           <el-col :span="6">
-            <el-form-item label="Prix unitaire de vente: " :label-width="formLabelWidth2">
-               {{ this.finalProduct[2]}} €
+            <el-form-item label="Prix unitaire de vente (HTVA): " :label-width="formLabelWidth2">
+               {{ this.prixUnitProductHTVA}} €
             </el-form-item>
           </el-col> 
           <el-col :span="6">
@@ -34,7 +49,7 @@
           </el-col> 
           <el-col :span="6">
             <el-form-item label="Marge : " :label-width="formLabelWidth">
-               {{ this.finalProduct[2]-this.totalPriceUnit}} €
+               {{ this.prixUnitProductHTVA-this.totalPriceUnit}} €
             </el-form-item>
           </el-col> 
 
@@ -81,7 +96,7 @@
                         </el-col>
                         <el-col :span=4>    
                            <el-form-item label="Quantity" :label-width="formLabelWidth">
-                               <el-input-number size="mini" v-model="ingredient.quantity" :min="0"></el-input-number>
+                               <el-input-number size="mini" v-model="ingredient.quantity" :min="0" @change="$forceUpdate();"></el-input-number>
                            </el-form-item>
                        </el-col>
                        <el-col :span=3>    
@@ -151,7 +166,7 @@
                         </el-col>
                         <el-col :span=4>    
                            <el-form-item label="Quantity" :label-width="formLabelWidth">
-                               <el-input-number size="mini" v-model="produit.quantity" :min="0"></el-input-number>
+                               <el-input-number size="mini" v-model="produit.quantity" :min="0"  @change="$forceUpdate();"></el-input-number>
                            </el-form-item>
                        </el-col>
                        <el-col :span=3>    
@@ -223,7 +238,7 @@
                         </el-col>
                         <el-col :span=4>    
                            <el-form-item label="Quantity" :label-width="formLabelWidth">
-                               <el-input-number size="mini" v-model="pack.quantity" :min="0"></el-input-number>
+                               <el-input-number size="mini" v-model="pack.quantity" :min="0" @change="$forceUpdate();"></el-input-number>
                            </el-form-item>
                        </el-col>
                        <el-col :span=3>    
@@ -273,6 +288,8 @@
       </el-card>
 
       
+
+      
     </el-form>
 
     <span slot="footer" class="dialog-footer">
@@ -280,7 +297,6 @@
       <el-button
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
-        :disabled="!recchanged"
         @click="saveRecord()"
       >{{this.$t("buttons.confirm")}}</el-button>
     </span>
@@ -293,6 +309,8 @@ import Vue from "vue";
 import YAML from "js-yaml";
 import axios from "axios";
 
+
+
 export default {
   name: "recetteEditor",
   data: () => ({
@@ -303,6 +321,7 @@ export default {
     orgName: "",
     newName: "",
     formLabelWidth: "120px",
+    formLabelWidth2: "150px",
     changed: false,
     dialogFormVisible: false,
     title: "Recette",
@@ -316,7 +335,11 @@ export default {
     finalProduct:'',
     packagings: null,
     newPackage: null,
-    newPackageQuantity: 0
+    newPackageQuantity: 0,
+    prixUnitProduct: 0,
+    prixUnitProductHTVA: 0,
+    codeProduct: '',
+    labelProduct: ''
 
    
   }),
@@ -436,6 +459,13 @@ export default {
         //delete this.newRec._source.ingredients[index]
         this.newRec._source.packaging.splice(index, 1)
     },
+    changeProduct: function() {
+        this.codeProduct = this.finalProduct[0]
+        this.labelProduct = this.finalProduct[1]
+        this.prixUnitProduct = this.finalProduct[2]
+        this.prixUnitProductHTVA = this.finalProduct[3]
+
+    },
     prepareData: function() {
       console.log("prepare data");
       this.dialogFormVisible = true;
@@ -464,8 +494,27 @@ export default {
       this.orgRec = JSON.parse(JSON.stringify(this.record));
       this.allIngredients = this.getIngredients();
       this.allProduits = this.getProduits();
+      if(this.editMode!='create')
+      {
+          this.finalProduct = [this.newRec._source['CODE'], this.newRec._source['Label'], this.newRec._source['Prix_TVAC'],this.newRec._source['HTVA']]
+          console.log(this.finalProduct)
+          this.prixUnitProduct = this.newRec._source['Prix_TVAC']
+          this.prixUnitProductHTVA = this.newRec._source['HTVA']
+          this.labelProduct = this.newRec._source['Label']
+          this.codeProduct = this.newRec._source['CODE']
+      }
+       
       this.getCodes();
       this.getPackagings();
+
+      if(this.editMode!='create')
+      {
+          this.finalProduct = [this.newRec._source['CODE'], this.newRec._source['Label'], this.newRec._source['Prix_TVAC'],this.newRec._source['HTVA']]
+          console.log(this.finalProduct)
+      }
+
+      this.$forceUpdate();
+
     },
     addIngredient: function() {
       var ingredientToAdd = {
@@ -602,6 +651,7 @@ export default {
           console.log(error);
         });
     },
+    
     saveRecord: function() {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
@@ -610,8 +660,9 @@ export default {
       this.newRec._source.CODE = this.finalProduct[0]
       this.newRec._source.Label = this.finalProduct[1]
       this.newRec._source.Prix_TVAC = this.finalProduct[2]
+      this.newRec._source.HTVA = this.finalProduct[3]
       this.newRec._source.priceUnit = this.totalPriceUnit
-      this.newRec._source.marge = this.finalProduct[2] - this.totalPriceUnit
+      this.newRec._source.marge = this.finalProduct[3] - this.totalPriceUnit
 
 
       this.$store.commit({
@@ -641,4 +692,6 @@ export default {
 .bhd-tech-editor .add-view-button {
   margin-bottom: 30px;
 }
+
+
 </style>

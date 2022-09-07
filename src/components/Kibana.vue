@@ -431,6 +431,10 @@ export default {
           var user = this.$store.getters.creds.user.id
           this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace('{{user}}', user)
         }
+        if(this.config.config.hiddenQuery.includes('{{shopid}}')){
+          var shopid = this.$store.getters.creds.user.shopid
+          this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace('{{shopid}}', shopid)
+        }
         if (curquery == "") curquery = this.config.config.hiddenQuery;
         else
           curquery =

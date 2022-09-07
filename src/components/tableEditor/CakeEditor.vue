@@ -614,6 +614,12 @@ export default {
 
       this.glacesGoutDuo = this.record._source.cake.glaceGouts
     }
+
+    if('decoAge' in this.record._source.cake)
+    {
+
+      this.age = this.record._source.cake.decoAge
+    }
       
     //this.getMagasins();
     

@@ -215,6 +215,7 @@
                               <el-option key="3" label="3" value="3"></el-option>
                               <el-option key="4" label="4" value="4"></el-option>
                               <el-option key="5" label="5" value="5"></el-option>
+                              <el-option key="6" label="6" value="6"></el-option>
                             </el-select>
                         </el-form-item >
 

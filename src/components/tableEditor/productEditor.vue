@@ -46,12 +46,12 @@
         </el-col>
         </el-row>
         <el-row>
-          <el-col :span=12>
+          <el-col :span=8>
         <el-form-item label="Label" :label-width="formLabelWidth2">
           <el-input size="mini" v-model="newRec._source.Label" autocomplete="off"></el-input>
         </el-form-item>
           </el-col>
-          <el-col :span=12>
+          <el-col :span=8>
             <el-form-item label="Date Création" :label-width="formLabelWidth2">
                <el-date-picker
                 v-model="newRec._source.creationDate"
@@ -59,6 +59,11 @@
                 placeholder="Choississez un jour">
               </el-date-picker>
             </el-form-item>
+          </el-col>
+          <el-col :span=8>
+          <el-form-item label="DLC" :label-width="formLabelWidth2">
+          <el-input-number size="mini" v-model="newRec._source.DLC" autocomplete="off" :step="1"></el-input-number>
+        </el-form-item>
           </el-col>
         </el-row>
         <el-row>

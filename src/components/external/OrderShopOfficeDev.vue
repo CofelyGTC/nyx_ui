@@ -335,7 +335,10 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
+          var prodPrice = (item.conditionnement*item.quantity*item.Prix_TVAC)
+          if(!isNaN(prodPrice)){
+            price += prodPrice
+          }
         }
         
       }
@@ -397,15 +400,24 @@ export default {
 
       var price = 0
       var products = this.records
+      console.log("***** TOTAL OTHER *****")
       for(var itemKey in Object.keys(this.records))
       {
         var data = this.records[itemKey]
         if(data.sortLvl2 == 'Quiches' || (data.sortLvl2 == 'Divers' && data.sortLvl1 == 'Salés') || (data.sortLvl1 != 'Pâtisserie' && data.sortLvl1 != 'Boulangerie' && data.sortLvl1 != 'Salés'))
         {
-          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+          var prodPrice = (data.conditionnement*data.quantity*data.Prix_TVAC)
+          if(!isNaN(prodPrice)){
+            price += prodPrice
+          }
+          else
+          {
+            console.log("NAN Product")
+            console.log(data)
+          }
         }
       }
-
+      
       return price
 
     },

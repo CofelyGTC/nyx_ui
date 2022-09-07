@@ -318,7 +318,11 @@ export default {
         for(var itemKey in Object.keys(this.records))
         {
           var item = this.records[itemKey]
-          price += (item.conditionnement*item.quantity*item.Prix_TVAC)
+          
+          var prodPrice = (item.conditionnement*item.quantity*item.Prix_TVAC)
+          if(!isNaN(prodPrice)){
+            price += prodPrice
+          }
         }
         
       }
@@ -367,7 +371,11 @@ export default {
         var data = this.records[itemKey]
         if(data.sortLvl1 == 'Boulangerie')
         {
-          price += (data.conditionnement*data.quantity*data.Prix_TVAC)
+          var prodPrice = (data.conditionnement*data.quantity*data.Prix_TVAC)
+          if(!isNaN(prodPrice)){
+            price += prodPrice
+          }
+          
         }
       }
 
@@ -605,6 +613,7 @@ export default {
     },
     tabChanged(index){
       this.refillNan()
+      this.onSubmit()
       this.selectedUnderTab = index+'-0'
       console.log('Selected:  TAB-'+index+'-0')
       this.filter1 = '-'
@@ -619,6 +628,7 @@ export default {
     },
     subTabChanged(){
       this.refillNan()
+      this.onSubmit()
       this.filter1 = '-'
       this.filter2 = '-'
       this.filter3 = '-'

@@ -1003,13 +1003,13 @@ export default {
     setAutoRefresh: function() {
       console.log('Setting Interval')
 
-      if(this.refAutoRefresh != null)
+      /*if(this.refAutoRefresh != null)
         clearInterval(this.refAutoRefresh)
 
       this.refAutoRefresh =  setInterval(() => {
         //this.refreshData()
         this.getCloture();
-      }, 30000)
+      }, 30000)*/
 
 
     },

@@ -14,17 +14,26 @@
               <el-col>
                <h2>Informations :</h2>
            </el-col>
-          <el-col :span="8">
+          <el-col :span=12>
             <el-form-item label="Code Ingrédient: " :label-width="formLabelWidth2">
               <el-input :disabled="editMode!='create'" size="mini" v-model="newRec._source['Code ingrédient']" autocomplete="off"></el-input>
             </el-form-item>
           </el-col> 
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="Label : " :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source['Ingrédient']" autocomplete="off"></el-input>
             </el-form-item>
+          </el-col>
+        </el-row> 
+          <el-row>
+          <el-col :span="12">
+            <el-form-item label="Nom affiché : " :label-width="formLabelWidth">
+               <el-input size="mini" v-model="newRec._source['displayName']" autocomplete="off"></el-input>
+            </el-form-item>
           </el-col> 
-          <el-col :span="8">
+
+
+          <el-col :span="12">
             <el-form-item label="Fabricant : " :label-width="formLabelWidth">
                <el-input size="mini" v-model="newRec._source['Fabricant']" autocomplete="off"></el-input>
             </el-form-item>
@@ -70,20 +79,26 @@
       </el-card>
       <br>
       <el-card>
+        
           <el-row style="text-align:left;">
               <el-col>
                <h2>Allergenes :</h2>
            </el-col>
            <el-col v-for="(allergene, index) in this.newRec._source.allergenes" :key="index">
                 <el-row>
-                       <el-col :span=4>
+                       <el-col :span=6>
                            <el-form-item label="Code" :label-width="formLabelWidth">
                               {{allergene.code}}
                            </el-form-item>
                         </el-col>
-                        <el-col :span=4>
+                        <el-col :span=6>
                            <el-form-item label="Label" :label-width="formLabelWidth">
                               {{allergene.name}}
+                           </el-form-item>
+                        </el-col>
+                        <el-col :span=6>
+                           <el-form-item label="Type" :label-width="formLabelWidth">
+                              {{allergene.type}}
                            </el-form-item>
                         </el-col>
                         
@@ -105,11 +120,42 @@
              <el-option v-for="(_source, index) in this.allAllergenes" :key="index" :value="[_source._source['CODE'], _source._source['Label'], _source._source['def']] " :label="_source._source['CODE']+ ' ' + _source._source['Label']" ></el-option>
            </el-select>
          </el-col>
+          <el-col :span="6">
+           <el-select v-model="newTypeAllergene" placeholder="Choisissez un niveau" filterable size="mini">
+             <el-option v-for="type, index in this.typesAllergene" :key="index" :value="type" :label="type" ></el-option>
+           </el-select>
+         </el-col>
          <el-col :span="6">
            <el-button type="primary" @click="addAllergene()" icon="el-icon-plus" circle></el-button>
          </el-col>
        </el-row>
       </el-card>
+      <br>
+      <el-card>
+            <span>
+              <el-form-item label>
+                <Upload :config="configUploadPicture" @on-success="uploadPictureSuccess"></Upload>
+              </el-form-item>
+            </span>
+            <span v-if="newRec._source.picture != ''">
+              <img :src="newRec._source.picture" width="350" height="350"/>
+            
+            </span>
+          </el-card>
+
+          <br>
+
+          <el-card>
+            <span>
+              <el-form-item label>
+                <Upload :config="configUploadDocument" @on-success="uploadDocumentSuccess"></Upload>
+              </el-form-item>
+            </span>
+            <span v-if="newRec._source.document != ''">
+              <img :src="newRec._source.document" width="350" height="350"/>
+            
+            </span>
+          </el-card>
 
       
     </el-form>
@@ -132,6 +178,16 @@ import Vue from "vue";
 import YAML from "js-yaml";
 import axios from "axios";
 
+import upload from "@/components/Upload";
+Vue.component("Upload", upload);
+
+function transformObject(obj) {
+  return rison.encode(obj);
+}
+
+import { extractURLParts } from "../../globalfunctions";
+
+
 export default {
   name: "recetteEditor",
   data: () => ({
@@ -147,7 +203,23 @@ export default {
     dialogFormVisible: false,
     title: "Ingrédient",
     newAllergene: null,
-    allAllergenes: null   
+    allAllergenes: null,
+    newTypeAllergene: null,
+    typesAllergene: ["Présent", "Présent sous forme de trace", "Présent dans l'usine", "Risque de contamination croisée maîtrisée"],
+    configUploadPicture: {
+      config: {
+        queryfilters: [],
+        queue: "/queue/INGREDIENT_PICTURE_IMPORT",
+        tip: "Déposez une image ici"
+      }
+    },
+    configUploadDocument: {
+      config: {
+        queryfilters: [],
+        queue: "/queue/INGREDIENT_DOCUMENT_IMPORT",
+        tip: "Déposez un PDF ici"
+      }
+    }
   }),
   computed: {
     recordin: function() {
@@ -215,7 +287,8 @@ export default {
       var allergeneToAdd = {
         "code": this.newAllergene[0],
         "name": this.newAllergene[1],
-        "def": this.newAllergene[2]
+        "def": this.newAllergene[2],
+        "type": this.newTypeAllergene
         }
       this.newRec._source.allergenes.push(allergeneToAdd);
     },
@@ -247,6 +320,37 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+
+    uploadPictureSuccess: function(response, file, fileList) {
+      // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '')
+
+      console.log('UPLOAD SUCCESS')
+      
+      var mainurl=extractURLParts(window.location.href);
+      var nurl=mainurl.protocol+"//"+mainurl.host+"";          
+      this.newRec._source.picture =nurl+
+        "/public/pictures/" + file.name;
+
+      var tmp = JSON.parse(JSON.stringify(this.newRec));
+      this.newRec = null;
+      this.newRec = JSON.parse(JSON.stringify(tmp));
+    },
+
+
+    uploadDocumentSuccess: function(response, file, fileList) {
+      // this.newRec._source.target = this.$store.getters.apiurl.replace('api/v1/', '')
+
+      console.log('UPLOAD SUCCESS')
+      
+      var mainurl=extractURLParts(window.location.href);
+      var nurl=mainurl.protocol+"//"+mainurl.host+"";          
+      this.newRec._source.document =nurl+
+        "/public/doc/" + file.name;
+
+      var tmp = JSON.parse(JSON.stringify(this.newRec));
+      this.newRec = null;
+      this.newRec = JSON.parse(JSON.stringify(tmp));
     },
 
     
