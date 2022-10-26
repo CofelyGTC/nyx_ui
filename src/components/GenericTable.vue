@@ -1088,7 +1088,11 @@ export default {
   mounted: function() {
     console.log("===============  MOUNTED:");
 
-    this.getMagasin();
+    if(process.env.CLIENT == "SCHAMP")
+    {
+      this.getMagasin();
+    }
+    
     
     if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
       this.loadData();

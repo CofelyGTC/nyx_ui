@@ -80,7 +80,6 @@
       <el-button
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
-        :disabled="!recchanged"
         @click="saveRecord()"
       >{{this.$t("buttons.confirm")}}</el-button>
     </span>
