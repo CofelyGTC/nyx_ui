@@ -73,6 +73,7 @@
 
           </el-row>
       </el-card>
+      
     </el-form>
 
     <span slot="footer" class="dialog-footer">
@@ -184,8 +185,28 @@ export default {
     },
 
     roomchanged: function(){
+      console.log(this.rooms[this.selectedRoomID])
       this.selectedRoom = this.rooms[this.selectedRoomID]
       
+    },
+
+    formatDate: function(x, y) {
+      var z = {
+          M: x.getMonth() + 1,
+          d: x.getDate(),
+          h: x.getHours(),
+          m: x.getMinutes(),
+          s: x.getSeconds()
+      };
+      y = y.replace(/(M+|d+|h+|m+|s+)/g, function(v) {
+          return ((v.length > 1 ? "0" : "") + z[v.slice(-1)]).slice(-2)
+      });
+
+      return y.replace(/(y+)/g, function(v) {
+          return x.getFullYear().toString().slice(-v.length)
+      });
+
+
     },
 
     
@@ -194,6 +215,32 @@ export default {
 
       this.newRec._source.modifyBy = this.$store.getters.creds.user.login
       this.newRec._source.lastModification = Date.now()
+
+      this.newRec._source.id_room = this.selectedRoomID
+      this.newRec._source.name_room = this.selectedRoom
+      this.newRec._source.date = this.formatDate(this.date, "dd-MM-yyyy")
+      this.newRec._source['@timestamp']= this.date.getTime()
+      this.newRec._source.start_time = this.hourStart+':00'
+      this.newRec._source.end_time = this.hourStop+':00'
+
+
+      var startHours = this.hourStart.substring(0,2)
+      var startMinutes =  this.hourStart.substring(3)
+      var endHours = this.hourStop.substring(0,2)
+      var endMinutes = this.hourStop.substring(3)
+
+      console.log(startHours)
+      console.log(startMinutes)
+      console.log(endHours)
+      console.log(endMinutes)
+
+
+      this.newRec._source.start_datetime = parseInt(this.date.getTime()) + (parseInt(startHours) * 3600000) + (parseInt(startMinutes)*60000)
+      this.newRec._source.end_datetime = parseInt(this.date.getTime()) + (parseInt(endHours) * 3600000) + (parseInt(endMinutes)*60000)
+
+
+
+
 
       
 
@@ -206,7 +253,7 @@ export default {
       this.$notify({ 
         title: "Record saved.",
         type: "success",
-        message: "La commande a été enregistrée.",
+        message: "L'horaire a été enregistré.",
         position: "bottom-right"
       });
       this.$emit("dialogcloseupdated");

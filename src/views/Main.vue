@@ -287,6 +287,39 @@ export default {
     }
   },
   methods: {
+    getClient(){
+      //var demandor = this.$store.getters.creds.user.id          
+      var url = this.$store.getters.apiurl + "getClient"
+
+      console.log('CHECK NYX CLIENT')
+
+      axios
+      .get(url)
+        .then((response) => {
+            if(response.data.error!="")
+            console.log("Client Calls list error...");
+            else{
+                console.log(response.data)
+                //var res = JSON.parse(response.data)
+                var res = response.data
+                console.log("CLIENT : ")
+                console.log(res)
+                var client = res.client
+                this.$store.commit({
+                  type: "setClient",
+                  data: client
+                });
+                
+                console.log(client)
+                
+                
+                
+               
+            }
+            return null;
+        });  
+
+    },
     changeMenuState() {
       this.menuOpen = !this.menuOpen;
       this.$store.commit({
@@ -662,6 +695,7 @@ export default {
         this.changeContainerSize(window);
       });
     });
+    this.getClient();
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING CTRU:");

@@ -1149,13 +1149,15 @@ export default {
   mounted: function() {
     console.log("===============  MOUNTED:");
 
-    if(process.env.CLIENT == "SCHAMP")
+    if(this.$store.getters.client == "SCHAMP")
     {
       this.getMagasin();
     }
-    
-    if (!this.config.queryFilterChecked && !this.config.queryBarChecked)
-      this.loadData();
+    else
+    {
+      console.log("Client : ")
+      console.log(this.$store.getters.client)
+    }
 
     console.log("===============  REGISTERING: timerangechanged");
     this.$globalbus.$on("timerangechanged", payLoad => {

@@ -41,6 +41,7 @@
                 <el-input size="mini" :disabled="!isAdmin" v-model="newRec._source.client" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
+            
           </el-row>
           <el-row>
             <el-col :span="8">
