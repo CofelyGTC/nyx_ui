@@ -325,11 +325,11 @@ export default {
           if(j%2 == 0)
             obj.ronde = 'rondier1'
           else 
-            obj.ronde = 'rondier2'
+            obj.ronde = 'rondier1'
 
-          if(j < 2)
+          if(j < 1)
             obj.time = '6u - 14u'
-          else if(j < 4)
+          else if(j < 2)
             obj.time = '14u - 22u'
           else
             obj.time = '22u - 6u'
