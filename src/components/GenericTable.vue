@@ -258,7 +258,6 @@ export default {
     refAutoRefresh: null,
     magasin: null,
     shopID: null,
-    client: null,
     options: {
       chart: {
         stacked: false,
@@ -485,7 +484,6 @@ export default {
 
       return res;
     },
-    
     computeIconColor: function(row, field) {
       var rec = row;
       if (field.indexOf("_source") == 0) {
@@ -1090,14 +1088,9 @@ export default {
   mounted: function() {
     console.log("===============  MOUNTED:");
 
-    if(this.$store.getters.client == "SCHAMP")
+    if(process.env.CLIENT == "SCHAMP")
     {
       this.getMagasin();
-    }
-    else
-    {
-      console.log("Client : ")
-      console.log(this.$store.getters.client)
     }
     
     

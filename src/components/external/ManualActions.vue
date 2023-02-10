@@ -43,7 +43,7 @@
             end-placeholder="Date de fin">
           </el-date-picker>
           
-            <el-select v-model="productToDisable" placeholder="Sélectionner">
+            <el-select v-model="productToDisable" filterable placeholder="Sélectionner">
               <el-option
                 v-for="(prod, idProd) in othersProducts"
                 :key="idProd"
@@ -62,7 +62,7 @@
             end-placeholder="Date de fin">
           </el-date-picker>
           
-            <el-select v-model="productToEnable" placeholder="Sélectionner">
+            <el-select v-model="productToEnable" filterable placeholder="Sélectionner">
               <el-option
                 v-for="(prod, idProd) in othersProducts"
                 :key="idProd"
@@ -81,7 +81,7 @@
             end-placeholder="Date de fin">
           </el-date-picker>
           
-            <el-select v-model="productToAdd" placeholder="Sélectionner">
+            <el-select v-model="productToAdd" filterable placeholder="Sélectionner">
               <el-option
                 v-for="(prod, idProd) in othersProducts"
                 :key="idProd"

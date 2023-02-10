@@ -12,7 +12,6 @@
   <div>
     
     <el-form v-model="newRec._source">
-      <el-card>
        <h1 style="text-align:center;">Configuration</h1>
        <el-row>
          <el-col :span=6>
@@ -59,11 +58,6 @@
             <el-col :span=4>
               <el-form-item label="Dero Congés ULG : " :label-width="formLabelWidth">
                   <el-switch v-model="newRec._source.dero_holidays_ulg" ></el-switch>
-              </el-form-item>
-            </el-col>
-            <el-col :span=5>
-              <el-form-item label="Dero Congés Administration : " :label-width="formLabelWidth">
-                  <el-switch v-model="newRec._source.dero_holidays_office" ></el-switch>
               </el-form-item>
             </el-col>
        </el-row>
@@ -339,9 +333,7 @@
         <el-col :span=5 style="text-align:center;">
           <el-time-select v-model="newRec._source.sundayOFF2" :picker-options="{start: '00:00', end:'23:45', step: '00:15'}" placeholder="Choisissez un horaire"></el-time-select>
         </el-col>
-        
       </el-row>
-    </el-card>
     </el-form>
   </div>
   <span slot="footer" class="dialog-footer">
@@ -349,29 +341,9 @@
         v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
         type="primary"
         @click="saveRecord()"
-      >{{this.$t("buttons.save")}}</el-button>
-      <el-button
-        v-if="$store.getters.creds.hasPrivilege(config.config.writeprivileges)"
-        type="primary"
-        @click="saveAndCloseRecord()"
       >{{this.$t("buttons.confirm")}}</el-button>
       <el-button @click="$emit('dialogclose')">{{this.$t("buttons.cancel")}}</el-button>
   </span>
-  <div>
-    <el-card>
-      <el-row>
-        <el-col>Recompiler ce circuit: </el-col>
-        <el-col>
-          <el-button type="primary"
-              @click="recompile(selectedCircuit)">Recompile
-
-          </el-button>
-        </el-col>
-      </el-row>
-    </el-card>
-  </div>
-  
-
   </el-dialog>
 </template>
 
@@ -496,69 +468,6 @@ export default {
       this.sundayEnd2 = this.newRec._source.sundayOFF2
       
     },
-    recompile: function(circuit) {
-
-      var body = {
-            "destination": "/queue/ULG_COMPUTE_TIMESHEET",
-            "body": "{'circuit': '"+circuit+"' }"
-            }
-
-          setTimeout(() => {
-            axios.post(
-            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
-            ).then((response) => {
-                if(response.data.error!="")
-                {
-                    this.$notify({ 
-                    title: "Error",
-                    message: "Fail to send Data",
-                    type: "error",
-                    position: "bottom-right",
-                    duration: 1500});
-                    }
-                else
-                {
-                    this.$notify({ 
-                    title: "Success",
-                    message: "Success to send Data",
-                    type: "success",
-                    position: "bottom-right",
-                    duration: 2000
-                });
-                    
-                }
-            })
-            .catch((error)=> {
-            console.log(error);
-            
-            });
-        }, 1000)
-
-        console.log('Confirming Sync')
-
-
-
-    },
-    saveAndCloseRecord: function() {
-
-    //this.applyChange();
-    this.newRec._source.circuit = this.selectedCircuit
-    this.newRec._source.DB = this.DB
-    this.newRec._source.modifyBy = this.$store.getters.creds.user.login
-    this.newRec._source.lastUpdate = Date.now()
-    console.log(this.newRec)
-    this.$store.commit({
-      type: "updateRecord",
-      data: this.newRec
-    });
-    this.$notify({ 
-      title: "Record saved.",
-      type: "success",
-      message: "Le produit a été enregistrée.",
-      position: "bottom-right"
-    });
-    this.$emit("dialogcloseupdated");
-    },
     saveRecord: function() {
 
       //this.applyChange();
@@ -577,7 +486,7 @@ export default {
         message: "Le produit a été enregistrée.",
         position: "bottom-right"
       });
-      //this.$emit("dialogcloseupdated");
+      this.$emit("dialogcloseupdated");
     },
 
     getCircuits: function(){

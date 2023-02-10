@@ -202,7 +202,7 @@
         :lazy="true">
         <div style="width: 100%;height: calc(100vh - 225px); overflow: auto;" height=750>
           <el-row>Ajouter: 
-            <el-select v-model="productToAdd" placeholder="Sélectionner">
+            <el-select v-model="productToAdd" filterable placeholder="Sélectionner">
               <el-option
                 v-for="(prod, idProd) in othersProducts"
                 :key="idProd"

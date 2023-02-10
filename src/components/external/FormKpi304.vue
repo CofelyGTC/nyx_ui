@@ -213,7 +213,7 @@ export default {
             hoofd: 1,
             ppl: {
               titu: ["Sébastien Docquier", "Patrick Lenaertz"],
-              backup: ["Clément Revelart", "Dirk Van Leemput"]
+              backup: ["Joris Verhaeghe", "Dirk Van Leemput"]
             }
           }
         },
@@ -264,7 +264,7 @@ export default {
             tech: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Pascal Van Den Hauwe", "Clément Revelart"],
+              titu: ["Michael De Saeger", "Joris Verhaeghe"],
               backup: ["Patrick Lenaertzs", "Dirk Van Leemput"]
             }
           }
