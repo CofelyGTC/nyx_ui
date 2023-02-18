@@ -85,6 +85,7 @@ export default new Vuex.Store({
     wsObject:{"check_alive":false},
     actualShop: '-',
     actualShopID: '-',
+    client: '',
     actualLvl1: 'TAB-0',
     actualLvl2: 'TAB-0-0'
   },
@@ -124,6 +125,7 @@ export default new Vuex.Store({
     searchCache: state => state.searchCache,
     actualShop: state => state.actualShop,
     actualShopID: state => state.actualShopID,
+    client: state => state.client,
     actualLvl1: state => state.actualLvl1,
     actualLvl2: state => state.actualLvl2,
 
@@ -417,6 +419,9 @@ export default new Vuex.Store({
     },
     setActualShopID(state, payload) {
       state.actualShopID = payload.data;
+    },
+    setClient(state, payload){
+      state.client = payload.data
     },
     setActualLvl1(state, payload) {
       state.actualLvl1 = payload.data;

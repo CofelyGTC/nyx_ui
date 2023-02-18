@@ -258,6 +258,7 @@ export default {
     refAutoRefresh: null,
     magasin: null,
     shopID: null,
+    client: null,
     options: {
       chart: {
         stacked: false,
@@ -1088,9 +1089,14 @@ export default {
   mounted: function() {
     console.log("===============  MOUNTED:");
 
-    if(process.env.CLIENT == "SCHAMP")
+    if(this.$store.getters.client == "SCHAMP")
     {
       this.getMagasin();
+    }
+    else
+    {
+      console.log("Client : ")
+      console.log(this.$store.getters.client)
     }
     
     
