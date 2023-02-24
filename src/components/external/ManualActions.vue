@@ -15,6 +15,13 @@
         <el-button type="primary" @click="onGenerateComission">Générer notes de livraisons</el-button>
         </el-row>
         <el-row>
+        <el-button type="primary" @click="onGeneratePrepBoul">Générer Prépa Boulangerie</el-button>
+        <el-button type="primary" @click="onGeneratePrepCave">Générer Prépa Cave</el-button>
+        <el-button type="primary" @click="onGeneratePrepFour">Générer Prépa Four</el-button>
+        <el-button type="primary" @click="onGeneratePrepFourniture">Générer Prépa Fournitures</el-button>
+        <el-button type="primary" @click="onGeneratePrepSales">Générer Prépa Salés</el-button>
+        </el-row>
+        <el-row>
         <el-button type="primary" @click="onGeneratePredictive">Générer Production Provisoire</el-button>
         <el-button type="primary" @click="onGenerateFinale">Générer Production Finale</el-button>
         </el-row>
@@ -418,6 +425,200 @@ export default {
 
         console.log('Confirming Reorder')
       },
+      onGeneratePrepBoul(){
+        var body = {
+            "destination": "/topic/GENERATE_PREPA_BOUL",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Génération",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Bons de Préparation Générés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+      onGeneratePrepCave(){
+        var body = {
+            "destination": "/topic/GENERATE_PREPA_CAVE",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Génération",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Bons de Préparation Générés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+      onGeneratePrepFour(){
+        var body = {
+            "destination": "/topic/GENERATE_PREPA_FOUR",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Génération",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Bons de Préparation Générés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+
+      onGeneratePrepFourniture(){
+        var body = {
+            "destination": "/topic/GENERATE_PREPA_FOURNITURES",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Génération",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Bons de Préparation Générés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+      onGeneratePrepSales(){
+        var body = {
+            "destination": "/topic/GENERATE_PREPA_SALES",
+            "body": "{'message':'stop'}"
+            }
+
+          setTimeout(() => {
+            axios.post(
+            this.$store.getters.apiurl + "sendmessage?token="+this.$store.getters.creds.token, body
+            ).then((response) => {
+                if(response.data.error!="")
+                {
+                    this.$notify({ 
+                    title: "Error",
+                    message: "Echec Génération",
+                    type: "error",
+                    position: "bottom-right",
+                    duration: 1500});
+                    }
+                else
+                {
+                    this.$notify({ 
+                    title: "Success",
+                    message: "Bons de Préparation Générés",
+                    type: "success",
+                    position: "bottom-right",
+                    duration: 2000
+                });
+                }
+            })
+            .catch((error)=> {
+            console.log(error);
+            
+            });
+        }, 1000)
+
+        console.log('Confirming Reorder')
+      },
+
+
+
       onGenerateStocks(){
         var body = {
             "destination": "/topic/GENERATE_STOCKS_REPORT",
