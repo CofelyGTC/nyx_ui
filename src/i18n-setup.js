@@ -1,12 +1,10 @@
 //i18n-setup.js
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
+
+import { createI18n } from 'vue-i18n'
 import {messages as enmessages} from '@/lang/en'
 import {messages as frmessages} from '@/lang/fr'
-import {messages as elmessages} from '@/lang/el'
-import enlocale from 'element-ui/lib/locale/lang/en.js'
-import frlocale from 'element-ui/lib/locale/lang/fr.js'
-import ellocale from 'element-ui/lib/locale/lang/el.js'
+import enlocale from 'element-plus/dist/locale/en.js'
+import frlocale from 'element-plus/dist/locale/fr.js'
 
 // Ready translated locale messages
 
@@ -22,21 +20,18 @@ const messages = {
   fr: {
     ...frlocale,
     ...frmessages.fr
-  },
-  el: {
-    ...ellocale,
-    ...elmessages.el
   }
 }
 
 //Vue.use(ElementUI, {enlocale})
-Vue.use(VueI18n)
+//Vue.use(VueI18n)
 
 //console.log(messages);
 
 export const localized_messages=messages;
 
-export const i18n = new VueI18n({
+export const i18n = new createI18n({
+  legacy: true,
   locale: 'en', // set locale
   fallbackLocale: 'en',
   messages// set locale messages

@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";
@@ -154,7 +154,7 @@ export default {
     formatDuration: function(duration) {
       var ret = ''
 
-      var duration = moment.duration({seconds:duration})
+      duration = moment.duration({seconds:duration})
       if (duration.hours() > 0)
         ret += duration.hours() + 'h '
       if (duration.minutes() > 0)

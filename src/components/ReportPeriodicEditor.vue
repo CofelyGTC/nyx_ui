@@ -6,7 +6,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('scheduler.title')" :label-width="formLabelWidth" prop="title">
-                <el-input size="mini" v-model="record._source.title" autocomplete="off"></el-input>
+                <el-input size="small" v-model="record._source.title" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -14,7 +14,7 @@
             <el-col :span="12">
               <el-form-item :label="$t('report.report')" :label-width="formLabelWidth" align="left">
                 <el-select
-                  size="mini"
+                  size="small"
                   @change="reportChange"
                   v-model="record._source.report"
                   placeholder="Select"
@@ -31,7 +31,7 @@
             <el-col :span="12">
               <el-form-item :label="$t('scheduler.type')" :label-width="formLabelWidth" align="left">
                 <el-select
-                  size="mini"
+                  size="small"
                   v-model="record._source.trigger.type"
                   placeholder="Select"
                   @change="typeChanged"
@@ -46,7 +46,7 @@
             <el-col :span="12">
               <el-form-item :label="$t('scheduler.time')" :label-width="formLabelWidth" align="left">
                 <el-time-select
-                  size="mini"
+                  size="small"
                   v-model="record._source.trigger.time"
                   :picker-options="{
                     start: '00:00',
@@ -59,12 +59,12 @@
             </el-col>
             <!-- <el-col :span="10">
               <el-form-item label="Icon" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="record._source.icon" autocomplete="off"></el-input>
+                <el-input size="small" v-model="record._source.icon" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>-->
             <el-col :span="2">
               
-              <v-icon v-if="record._source.icon" :name="record._source.icon" scale="2" />
+              <v-icon v-if="record._source.icon" :icon="record._source.icon" scale="2" />
             </el-col>
             
             
@@ -72,7 +72,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('scheduler.path')" :label-width="formLabelWidth">
-                <el-input size="mini" placeholder="The path + filename  on the server used to save the report. Empty by default." v-model="record._source.path" autocomplete="off"></el-input>
+                <el-input size="small" placeholder="The path + filename  on the server used to save the report. Empty by default." v-model="record._source.path" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -108,12 +108,12 @@
           <el-row>
             <el-col :span="6">
               <el-form-item :label="$t('scheduler.number_of_days')" :label-width="formLabelWidth">
-                <el-input-number :min="1" size="mini" v-model="resetdays" autocomplete="off"></el-input-number>
+                <el-input-number :min="1" size="small" v-model="resetdays" autocomplete="off"></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="8" align="left">
               <el-form-item label="" :label-width="formLabelWidth">
-                <el-button size="mini" type="danger" plain @click="resetTask(record)">Reset</el-button>
+                <el-button size="small" type="danger" plain @click="resetTask(record)">Reset</el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -125,7 +125,7 @@
                   type="datetime"
                   placeholder="Select date and time">
                 </el-date-picker>
-                <!-- <el-input size="mini" v-model="record._source.nextRun" autocomplete="off"></el-input> -->
+                <!-- <el-input size="small" v-model="record._source.nextRun" autocomplete="off"></el-input> -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -154,7 +154,7 @@
         <el-form>
           <el-row>
             <el-form-item :label="$t('scheduler.subject')" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="record._source.mailSubject" autocomplete="off"></el-input>
+              <el-input size="small" v-model="record._source.mailSubject" autocomplete="off"></el-input>
             </el-form-item>
           </el-row>
 
@@ -162,7 +162,7 @@
             <el-form-item :label="$t('scheduler.attachment')" :label-width="formLabelWidth">
               <el-input
                 placeholder="MyFile-${DATE:%d%B%Y}"
-                size="mini"
+                size="small"
                 v-model="record._source.attachmentName"
                 autocomplete="off"
               ></el-input>

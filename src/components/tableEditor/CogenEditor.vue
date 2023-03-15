@@ -10,19 +10,19 @@
     <el-form v-model="newRec._source">
       <el-card shadow="hover" :body-style="{ padding: '10px' }">
         <el-form-item label="Id" :label-width="formLabelWidth">
-          <el-input :disabled="editMode!='create'" size="mini" v-model="newRec._id" autocomplete="off"></el-input>
+          <el-input :disabled="editMode!='create'" size="small" v-model="newRec._id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="Name" :label-width="formLabelWidth">
-          <el-input :disabled="editMode!='create'" size="mini" v-model="newRec._source.name" autocomplete="off"></el-input>
+          <el-input :disabled="editMode!='create'" size="small" v-model="newRec._source.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="Last Update" :label-width="formLabelWidth">
           <el-date-picker :disabled="editMode!='create'" v-model="newRec._source.LastUpdate" type="date" format="yyyy/MM/dd" value-format="timestamp" ></el-date-picker>
         </el-form-item>
         <el-form-item label="Hours" :label-width="formLabelWidth" >
-          <el-input-number size="mini" v-model="newRec._source.Hours" min=0></el-input-number>
+          <el-input-number size="small" v-model="newRec._source.Hours" min=0></el-input-number>
         </el-form-item>
         <el-form-item label="Starts-Stops" :label-width="formLabelWidth">
-          <el-input-number size="mini" v-model="newRec._source.Starts" min=0></el-input-number>
+          <el-input-number size="small" v-model="newRec._source.Starts" min=0></el-input-number>
         </el-form-item>
         <el-form-item label="Entretiens réalisés" :label-width="formLabelWidth">
           <el-checkbox-group v-model="maintenancesMade">
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";

@@ -13,12 +13,12 @@
           <el-row>
               <el-col :span=8>
                 <el-form-item label="Rule ID" :label-width="formLabelWidth">
-                    <el-input size="mini" v-model="ruleID" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="ruleID" autocomplete="off"></el-input>
                 </el-form-item>
               </el-col>  
               <el-col :span=8>
                 <el-form-item label="Rule Name" :label-width="formLabelWidth">
-                    <el-input size="mini" v-model="ruleName" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="ruleName" autocomplete="off"></el-input>
                 </el-form-item>
               </el-col> 
               <el-col :span=8>
@@ -78,7 +78,7 @@
                         </el-col>
                         <el-col :span=4>
                            <el-form-item label="Value" :label-width="formLabelWidth">
-                              <el-input-number size="mini" v-model="condition.value" :min="0"></el-input-number>
+                              <el-input-number size="small" v-model="condition.value" :min="0"></el-input-number>
                            </el-form-item>
                         </el-col>
                         
@@ -115,7 +115,7 @@
             </el-col>
             <el-col :span=6>
                 <el-form-item label="Time (h)" :label-width="formLabelWidth">
-                  <el-input-number size="mini" v-model="weatherTime"></el-input-number>
+                  <el-input-number size="small" v-model="weatherTime"></el-input-number>
                 </el-form-item>
             </el-col>
             </el-row>
@@ -136,7 +136,7 @@
             </el-col>
             <el-col :span=6>
                 <el-form-item label="Value" :label-width="formLabelWidth">
-                  <el-input-number size="mini" v-model="weatherValue"></el-input-number>
+                  <el-input-number size="small" v-model="weatherValue"></el-input-number>
                 </el-form-item>
               </el-col>
             
@@ -172,7 +172,7 @@
                         </el-col>
                         <el-col :span=4>
                            <el-form-item label="Value" :label-width="formLabelWidth">
-                              <el-input-number size="mini" v-model="condition.value" :min="0"></el-input-number>
+                              <el-input-number size="small" v-model="condition.value" :min="0"></el-input-number>
                            </el-form-item>
                         </el-col>
                         <el-col :span=4>
@@ -215,7 +215,7 @@
           
               <el-col :span=6>    
                 <el-form-item label="Value: " :label-width="formLabelWidth2">
-                    <el-input-number size="mini" v-model="conditionPLCValue" :min="0"></el-input-number>
+                    <el-input-number size="small" v-model="conditionPLCValue" :min="0"></el-input-number>
                 </el-form-item>
             </el-col>
             <el-col :span=6>
@@ -251,7 +251,7 @@
                         </el-col>
                         <el-col :span=6 style="text-align:left;">    
                            <el-form-item label="Value: ">
-                               <el-select size="mini" v-model="action.value">
+                               <el-select size="small" v-model="action.value">
                                   <el-option v-for="item in writeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                               </el-select>
                            </el-form-item>
@@ -294,7 +294,7 @@
               </el-col>
               <el-col :span=6>    
                 <el-form-item label="Value: " :label-width="formLabelWidth2">
-                    <el-select size="mini" v-model="actionValue">
+                    <el-select size="small" v-model="actionValue">
                         <el-option v-for="item in writeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -312,7 +312,7 @@
           <h2>Custom Code Location</h2>
           <el-row>
             <el-form-item label="Lambda Queue : " :label-width="formLabelWidth2">
-              <el-input size="mini" v-model="customRuleQueue" autocomplete="off" placeholder="/QUEUE/NAME_OF_LAMBDA...."></el-input>
+              <el-input size="small" v-model="customRuleQueue" autocomplete="off" placeholder="/QUEUE/NAME_OF_LAMBDA...."></el-input>
             </el-form-item>
           </el-row>
         </el-card>
@@ -346,7 +346,7 @@
             </el-col>
             <el-col v-if="nextRunType=='daily'" :span=6>
               <el-form-item label="Day interval: " :label-width="formLabelWidth2">
-                  <el-input-number size="mini" v-model="dailyDays" :min="0"></el-input-number>
+                  <el-input-number size="small" v-model="dailyDays" :min="0"></el-input-number>
               </el-form-item>
             </el-col>
             <el-col v-if="nextRunType=='daily'" :span=6>
@@ -365,7 +365,7 @@
             </el-col>
             <el-col v-if="nextRunType=='interval'" :span=6>
               <el-form-item label="Time Before Reset (h): " :label-width="formLabelWidth2">
-                  <el-input-number size="mini" v-model="interval" :min="0"></el-input-number>
+                  <el-input-number size="small" v-model="interval" :min="0"></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -451,7 +451,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";
@@ -536,17 +536,17 @@ export default {
     nextRun: function() {
         
         
-
+      var nextRun
       if(this.nextRunType == 'interval')
       {
-        var nextRun = new Date(this.lastRun.getTime() + (this.interval*1000*60*60))
+        nextRun = new Date(this.lastRun.getTime() + (this.interval*1000*60*60))
         return nextRun
       }
       else{
         
         var daysms = this.dailyDays*86400000 
         
-        var nextRun = new Date(this.lastRun.getTime()+daysms)
+        nextRun = new Date(this.lastRun.getTime()+daysms)
 
         //console.typeof
 

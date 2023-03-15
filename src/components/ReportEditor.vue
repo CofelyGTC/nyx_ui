@@ -7,24 +7,24 @@
             <el-col :span="14">
               
               <el-form-item label="Title" :label-width="formLabelWidth" prop="title">
-                <el-input size="mini" v-model="newRec.title" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.title" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="Icon" :label-width="formLabelWidth"  prop="icon">
-                <el-input size="mini" v-model="newRec.icon" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.icon" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="2">
               <el-form-item>
-                <v-icon :name="newRec.icon" scale="2.2" />
+                <v-icon :icon="newRec.icon" scale="2.2" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="22">
               <el-form-item label="Description" :label-width="formLabelWidth"  prop="description">
-                <el-input size="mini" v-model="newRec.description" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.description" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -45,7 +45,7 @@
             <el-row v-if="newRec.reportType=='python'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="code" scale="2.2" />
+                <v-icon icon="fa-code" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 A simple report based on a python source code that will generate the output. 
@@ -58,7 +58,7 @@
           <el-row v-if="newRec.reportType=='notebook_doc'" class="transition-box" style="text-align:left">     
             <el-card shadow="never"  style="height:70px;background-color:rgb(236, 245, 255);">       
             <el-col :span="4" style="text-align:right;padding-right:20px">
-              <v-icon name="regular/file-word" scale="2.2" />
+              <v-icon icon="fa-regular/file-word" scale="2.2" />
             </el-col>
             <el-col :span="20">
               A report that uses a word template with tags and a python notebook to replace the tags by the approriate values.
@@ -71,7 +71,7 @@
           <el-row v-if="newRec.reportType=='notebook'" style="text-align:left">     
             <el-card shadow="never"  style="height:70px;background-color:rgb(236, 245, 255);">       
             <el-col :span="4" style="text-align:right;padding-right:20px">
-              <v-icon name="regular/file-excel" scale="2.2" />
+              <v-icon icon="fa-regular/file-excel" scale="2.2" />
             </el-col>
             <el-col :span="20">
               A report that uses a python notebook to generate the output. Ideal to generate Excel files.
@@ -82,7 +82,7 @@
           <el-row v-if="newRec.reportType=='jasper'" style="text-align:left">     
             <el-card shadow="never"  style="height:70px;background-color:rgb(236, 245, 255);">       
             <el-col :span="4" style="text-align:right;padding-right:20px">
-              <v-icon name="regular/file-pdf" scale="2.2" />
+              <v-icon icon="fa-regular/file-pdf" scale="2.2" />
             </el-col>
             <el-col :span="20">
               A report that uses Jasper report and Elastic Search. In most cases, the output will be a PDF file. <br/>
@@ -94,7 +94,7 @@
           <el-row v-if="newRec.reportType=='jasper_jdbc'" style="text-align:left">     
             <el-card shadow="never"  style="height:90px;background-color:rgb(236, 245, 255);">       
             <el-col :span="4" style="text-align:right;padding-right:20px">
-              <v-icon name="regular/file-pdf" scale="2.2" />
+              <v-icon icon="fa-regular/file-pdf" scale="2.2" />
             </el-col>
             <el-col :span="20">
               A report that uses Jasper report and a JDBC compliant database such as SQL server or PostgreSQL. <br/>
@@ -125,7 +125,7 @@
                     v-if="inputVisible"
                     v-model="inputValue"
                     ref="saveTagInput"
-                    size="mini"
+                    size="small"
                     @keyup.enter.native="handleInputConfirm"
                     @blur="handleInputConfirm"
                   ></el-input>
@@ -147,7 +147,7 @@
                 label="JDBC Driver"
                 :label-width="formLabelWidth"                
               >
-                <el-input size="mini" v-model="newRec.jdbc_driver" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.jdbc_driver" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -155,7 +155,7 @@
                 label="JDBC URL"
                 :label-width="formLabelWidth"                
               >
-                <el-input size="mini" v-model="newRec.jdbc_url" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.jdbc_url" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -165,7 +165,7 @@
                 label="Login"
                 :label-width="formLabelWidth"                
               >
-                <el-input size="mini" v-model="newRec.jdbc_login" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.jdbc_login" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -173,7 +173,7 @@
                 label="Password"
                 :label-width="formLabelWidth"                
               >
-                <el-input type="password" size="mini" v-model="newRec.jdbc_password" autocomplete="off"></el-input>
+                <el-input type="password" size="small" v-model="newRec.jdbc_password" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -185,21 +185,21 @@
                 :label-width="formLabelWidth"
                 v-show="newRec.reportType==undefined || newRec.reportType=='python'"
               >
-                <el-input size="mini" v-model="newRec.exec" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.exec" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item
                 label="Jasper Path"
                 :label-width="formLabelWidth"
                 v-show="newRec.reportType=='jasper' || newRec.reportType=='jasper_jdbc'"
               >
-                <el-input size="mini" v-model="newRec.jasper" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.jasper" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item
                 label="Notebook Path"
                 :label-width="formLabelWidth"
                 v-show="newRec.reportType=='notebook' || newRec.reportType=='notebook_doc'"
               >
-                <el-input size="mini" v-model="newRec.notebook" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec.notebook" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-show="newRec.reportType=='jasper' || newRec.reportType=='jasper_jdbc'">
@@ -211,7 +211,7 @@
                 :on-success="successUpload"
                 
                 accept=".jrxml"
-                size="mini"
+                size="small"
                 style="height:30px"
               >              
                 <div class="el-upload__text">
@@ -231,7 +231,7 @@
           <el-row v-for="(param, index) in newRec.parameters" :key="index">
             <el-col :span="5">
               <el-form-item :label="'Parameter '+(index+1)" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="param.title" placeholder="Title" autocomplete="off"></el-input>
+                <el-input size="small" v-model="param.title" placeholder="Title" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="5">
@@ -240,7 +240,7 @@
                   v-model="param.type"
                   @change="param.value=null"
                   placeholder="Select"
-                  size="mini"
+                  size="small"
                 >
                   <el-option
                     v-for="item in options"
@@ -256,7 +256,7 @@
                 <el-input
                   v-if="param.type=='number'"
                   type="number"
-                  size="mini"
+                  size="small"
                   v-model="param.value"
                   placeholder="0"
                   autocomplete="off"
@@ -264,7 +264,7 @@
                 <el-input
                   v-if="param.type=='text'"
                   type="text"
-                  size="mini"
+                  size="small"
                   v-model="param.value"
                   placeholder="text"
                   autocomplete="off"
@@ -272,7 +272,7 @@
                 <el-input
                   v-if="param.type=='date'"
                   type="text"
-                  size="mini"
+                  size="small"
                   v-model="param.value"
                   placeholder="now-1d"
                   autocomplete="off"
@@ -280,7 +280,7 @@
                 <el-input
                   v-if="param.type=='combo'"
                   type="text"
-                  size="mini"
+                  size="small"
                   v-model="param.value"
                   placeholder="default"
                   autocomplete="off"
@@ -288,7 +288,7 @@
                 <el-input
                   v-if="param.type=='combo'"
                   type="text"
-                  size="mini"
+                  size="small"
                   v-model="param.combos"
                   placeholder="items separated by a comma"
                   autocomplete="off"
@@ -297,7 +297,7 @@
                 <el-input
                   v-if="param.type=='interval'"
                   type="text"
-                  size="mini"
+                  size="small"
                   v-model="param.value"
                   placeholder="now-1d:now"
                   autocomplete="off"
@@ -306,13 +306,13 @@
             </el-col>
             <el-col :span="4">
               <el-form-item label="Hidden" :label-width="formLabelWidth">
-                <el-switch size="mini" v-model="param.hidden"></el-switch>
+                <el-switch size="small" v-model="param.hidden"></el-switch>
               </el-form-item>
             </el-col>
             <el-col :span="2">
               <el-form-item label :label-width="'30px'">
                 <el-button
-                  size="mini"
+                  size="small"
                   @click="deleteParameter(param)"
                   type="danger"
                   icon="el-icon-delete"
@@ -325,7 +325,7 @@
 
           <el-row type="flex" justify="space-around" style="margin-bottom:30px">
             <el-col :span="12">
-              <el-button round @click="addParameter()" type="primary" size="mini">Add Parameter</el-button>
+              <el-button round @click="addParameter()" type="primary" size="small">Add Parameter</el-button>
             </el-col>
           </el-row>
         </el-tab-pane>
@@ -358,7 +358,7 @@
                   style="min-width: 112px;"
                   icon="el-icon-notebook-2"
                   @click="openTabCode()"
-                  size="mini"
+                  size="small"
                   v-if="!isAdd && (newRec.reportType=='notebook' || newRec.reportType=='notebook_doc')"
                 >{{$t('generic.edit_code')}}</el-button>
 

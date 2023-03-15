@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="nyxapp">    
+  <div id="app" class="nyxapp">
     <router-view/>
   </div>
 </template>
@@ -7,7 +7,10 @@
 <script>
 import axios from "axios";
 import _ from "lodash";
+import {useI18n} from "vue-i18n"
 /* eslint-disable */
+
+//const { t } = useI18n()
 export default {
   name: "App",
   data: () => ({
@@ -99,7 +102,7 @@ export default {
 
   },
   mounted: function() {
-    console.log('mounted')
+    console.log('mounted');
     if(this.axiosInterceptor == null) {
       this.enableInterceptor()
     }

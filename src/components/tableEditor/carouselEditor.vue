@@ -16,7 +16,7 @@
     >
 
       <el-select
-        size="mini"
+        size="small"
         v-model="newView"
         filterable
         placeholder="Select"
@@ -46,10 +46,10 @@
             <el-button
               :disabled="loading || !recchanged || newRec._source.name==''"
               type="primary"
-              size="mini"
+              size="small"
               @click="submitForm('newRec')"
             >{{this.$t("buttons.save")}}</el-button>
-            <el-button plain size="mini" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
+            <el-button plain size="small" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
           </el-col>
         </el-row>
       </span>
@@ -72,7 +72,7 @@
             :disabled="!$store.getters.creds.hasPrivilege('admin')"
             ref="carName"
             v-model="newRec._source.name"
-            size="mini"
+            size="small"
           ></el-input>
         </el-form-item>
       </el-col>
@@ -82,7 +82,7 @@
           :disabled="!$store.getters.creds.hasPrivilege('admin')"
           ref="client"
           v-model="newRec._source.client"
-          size="mini"
+          size="small"
         ></el-input>
       </el-col>
     </el-row>
@@ -110,7 +110,7 @@
           <draggable v-bind="dragOptions" v-model="viewList" tag="tbody" handle=".handle">
             <tr v-for="(item, index) in viewList" :key="index" >
               <td scope="row"><el-button
-                  size="mini"
+                  size="small"
                   circle=""
                   plain
                   type="danger"
@@ -124,7 +124,7 @@
                 
 
                 <el-button
-                  size="mini"
+                  size="small"
                   v-if="!(item.type=='kibana' && $store.getters.creds.hasPrivilege('optiboard-nokibana') && !$store.getters.creds.hasPrivilege('admin'))"
                   round
                   @click="clickModifyView(item)"
@@ -132,14 +132,14 @@
                 >Modify</el-button>
                 <el-button
                   v-show="item.type!='optiboard'"
-                  size="mini"
+                  size="small"
                   round
                   @click="handlePreviewView(index)"
                   icon="el-icon-view"
                 >Preview</el-button>
                 <el-button
                   v-if="item.type=='kibana' && (!$store.getters.creds.hasPrivilege('optiboard-nokibana') || $store.getters.creds.hasPrivilege('admin'))"
-                  size="mini"
+                  size="small"
                   round
                   type="danger"
                   plain
@@ -157,8 +157,8 @@
     </el-row>
 
     <el-row style="height:40px;">
-      <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add Exsting view</el-button>
-      <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New view</el-button>
+      <el-button size="small" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add Exsting view</el-button>
+      <el-button size="small" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New view</el-button>
     </el-row>
 
     </el-form>
@@ -166,13 +166,13 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 import _ from "lodash";
 
 import vieweditor from "@/components/tableEditor/ViewEditor";
 
-Vue.component("ViewEditor", vieweditor);
+//Vue.component("ViewEditor", vieweditor);
 
 export default {
   name: "carouselEditor",
@@ -248,6 +248,7 @@ export default {
     this.prepareData();
   },
   components: {
+    vieweditor:"ViewEditor"
   },
   methods: {
     closeDialog: function() {

@@ -1,12 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import axios from "axios";
 import moment from 'moment';
 import _ from "lodash";
 
 import { extractURLParts } from "../globalfunctions";
 
-Vue.use(Vuex);
+import bus from 'vue3-eventbus'
+
+//Vue.use(Vuex);
 
 
 
@@ -49,7 +50,8 @@ function stopSocket(wsObject)
 }
 
 
-export default new Vuex.Store({
+export const store = createStore({
+
   state: {
     apiurl: "api/v1/",
     apiVersion: "",
@@ -167,7 +169,7 @@ export default new Vuex.Store({
           console.log("MUST CREATE SOCKET");
           context.getters.wsObject.last_lifesign=moment(new Date());
           //var socket = new WebSocket('ws://localhost:8080/nyx_ui_websocket/');
-          //var socket = new WebSocket('wss://test2.nyx-ds.com/nyx_ui_websocket/');
+          
           //var wsurl=context.getters.apiurl.replace("http://","ws://").replace("https://","wss://").replace("/api/v1","/nyx_ui_websocket/");
           var mainurl=extractURLParts(window.location.href);
           var wsurl=mainurl.protocol+"//"+mainurl.host+"/nyx_ui_websocket/"; 
@@ -175,10 +177,11 @@ export default new Vuex.Store({
           wsurl=wsurl.replace("https://","wss://").replace("http://","ws://");
           if(context.getters.apiurl.indexOf("http")>=0)
           {
-            wsurl=context.getters.apiurl.replace("http://","ws://").replace("https://","wss://").replace("/api/v1","/nyx_ui_websocket/");
+            wsurl=context.getters.apiurl.replace("http://","ws://").replace("https://","wss://").replace("/api/v1/","/nyx_ui_websocket/");
           }
 
-          var socket = new WebSocket(wsurl);
+          //var socket = new WebSocket(wsurl);
+          var socket = new WebSocket('wss://quantesx-dev-v8.cofelygtc.com/nyx_ui_websocket/');
           // Connection opened
           socket.addEventListener('open', function (event) {
             
@@ -200,7 +203,7 @@ export default new Vuex.Store({
             //console.log(inmes);
             
             if(inmes.type=="message")
-              Vue.prototype.$globalbus.$emit("messagereceived",inmes.data);
+              bus.emit("messagereceived",inmes.data);
           });
           context.getters.wsObject.socket=socket;          
         }
@@ -355,6 +358,7 @@ export default new Vuex.Store({
           for (var k = 0; k < subcat.apps.length; k++) {
             if (subcat.apps[k].rec_id === payload.data) {
               app = subcat.apps[k]
+
               state.currentSubCategory = subcat
               break
             }
@@ -375,7 +379,7 @@ export default new Vuex.Store({
       console.log(app)
       if(app.timeDefault != null && app.timeDefault != '') {
         console.log('send forcetime')
-        Vue.prototype.$globalbus.$emit("forcetime",app.timeDefault);
+        bus.emit("forcetime",app.timeDefault);
         console.log('send forcetime')
       }
     },

@@ -38,7 +38,7 @@
             @change="selectFieldsToFilterChanged"
             ref="fieldsToFilter"
             placeholder="Field to filter"
-            size="mini"
+            size="small"
             style="width:100%;"
           >
             <el-option
@@ -72,7 +72,7 @@
                 <tr v-for="(item, index) in currentConfig.config.queryfilters" :key="index">
                   <td>{{item.field}}</td>
                   <td>
-                    <el-button @click="configureQueryFilter(item)" size="mini">Configure</el-button>
+                    <el-button @click="configureQueryFilter(item)" size="small">Configure</el-button>
                   </td>
 
                   <td>
@@ -82,7 +82,7 @@
               </draggable>
             </table>
             <div style="width:100%;text-align:center;margin-top:10px;">
-              <el-button @click="addGlobalFilter()" size="mini" v-if="fieldsToFilter.indexOf('Global_Filter')<0">Add Global Filter</el-button>  
+              <el-button @click="addGlobalFilter()" size="small" v-if="fieldsToFilter.indexOf('Global_Filter')<0">Add Global Filter</el-button>  
             </div>                        
           </el-card>
           
@@ -100,7 +100,7 @@
                     ref="label"
                     placeholder="Label displayed"
                     v-model="filterFieldToConfigure.title"
-                    size="mini"
+                    size="small"
                   ></el-input>
                 </el-row>
               </el-col>
@@ -113,7 +113,7 @@
                     ref="default"
                     placeholder="Default value"
                     v-model="filterFieldToConfigure.default"
-                    size="mini"
+                    size="small"
                   ></el-input>
                 </el-row>
                 
@@ -126,7 +126,7 @@
                 </el-row>
                 <el-row>
                   <el-select
-                    size="mini"
+                    size="small"
                     v-model="filterFieldToConfigure.type"
                     placeholder="Please select a type"
                   >
@@ -191,7 +191,7 @@
                     ref="default"
                     placeholder="Query index"
                     v-model="filterFieldToConfigure.index"
-                    size="mini"
+                    size="small"
                   ></el-input>                
               </el-col>
               <el-col :span="1">   
@@ -202,7 +202,7 @@
                     ref="default"
                     placeholder="Query column"
                     v-model="filterFieldToConfigure.column"
-                    size="mini"
+                    size="small"
                   ></el-input>                
               </el-col>
               </el-row> -->
@@ -215,7 +215,7 @@
   </el-col>
 </template>
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 import YAML from "js-yaml";
 import _ from "lodash";
@@ -253,7 +253,7 @@ export default {
     );
   },
   components: {
-    editor: require("vue2-ace-editor")
+    editor: require("vue3-ace-editor")
   },
   computed: {
     curConfigIn: function() {

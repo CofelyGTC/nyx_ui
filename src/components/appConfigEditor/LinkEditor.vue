@@ -14,7 +14,7 @@
   </el-row>
   <el-row>
     <el-input
-          size="mini"
+          size="small"
           ref="text"
           placeholder="Text"
           v-model="curItem.linktext"
@@ -25,7 +25,7 @@
   </el-row>
   <el-row>
     <el-input
-          size="mini"
+          size="small"
           ref="type"
           placeholder="primary / success / warning / danger / info / text"
           v-model="curItem.linkbuttontype"
@@ -36,7 +36,7 @@
   </el-row>
   <el-row>
     <el-input
-          size="mini"
+          size="small"
           ref="icon"
           placeholder="el-icon-..."
           v-model="curItem.linkbuttonicon"
@@ -68,7 +68,7 @@
   
 </template>
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 import _ from "lodash";
 

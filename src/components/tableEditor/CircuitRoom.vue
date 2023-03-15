@@ -14,7 +14,7 @@
     <el-form v-model="newRec._source">
         <el-row>
             <el-col>
-                <el-form-item label="Nom du circuit:" size="mini" :label-width="formLabelWidth">
+                <el-form-item label="Nom du circuit:" size="small" :label-width="formLabelWidth">
                     <el-input v-model="circuitName" placeholder="Veuillez enter un nom..."></el-input>
                 </el-form-item>
             </el-col>
@@ -74,7 +74,7 @@
 
 <script>
 
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 export default {
   name: "circuitRoom",

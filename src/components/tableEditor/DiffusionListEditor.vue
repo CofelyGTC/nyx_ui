@@ -22,7 +22,7 @@
             ref="author"
             placeholder="entities name" 
             v-model="newRec._source.header.auteur"
-            size="mini">
+            size="small">
           </el-input>
         </el-row>
 
@@ -56,7 +56,7 @@
                       ref="author"
                       placeholder="Name" 
                       v-model="item.name"
-                      size="mini"
+                      size="small"
                       >
                     </el-input>
                   </td>
@@ -67,7 +67,7 @@
                       v-model="item.company"
                       filterable
                       allow-create
-                      size="mini"
+                      size="small"
                       default-first-option
                       placeholder="Company">
                       <el-option
@@ -85,14 +85,14 @@
                       ref="author"
                       placeholder="Mail" 
                       v-model="item.mail"
-                      size="mini"
+                      size="small"
                       >
                     </el-input>
                   </td>
                   
                   <td style="text-align:left; ">
                     <el-button
-                      size="mini"
+                      size="small"
                       circle
                       plain
                       type="danger"
@@ -142,14 +142,14 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
-import diffusionList from "@/components/tableEditor/DiffusionListEditor";
+//import diffusionList from "@/components/tableEditor/DiffusionListEditor";
 import axios from "axios";
 
 
 
-Vue.component("DiffusionList", diffusionList);
+//Vue.component("DiffusionList", diffusionList);
 
 export default {
   name: "entitiesEditor",

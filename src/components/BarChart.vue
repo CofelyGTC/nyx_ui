@@ -98,8 +98,10 @@
 </template>
 
 <script>
-// import Vue from "vue";
+// //import Vue from "vue";
 import moment from "moment";
+import bus from 'vue3-eventbus'
+
 
 export default {
   name: "BarChart",
@@ -250,7 +252,7 @@ export default {
       //alert("U x: "+x+" y:"+y+" W="+this.dragWidth+" dx"+this.startdragX+" T="+staX);
 
       if (staX < endX) {
-        this.$globalbus.$emit("charttimerangeupdated", [
+        bus.emit("charttimerangeupdated", [
           startt.toDate(),
           endt.toDate()
         ]);
@@ -553,15 +555,15 @@ export default {
 
     this.prepareData();
 
-    this.$globalbus.$on("timerangechanged", () => {
+    bus.on("timerangechanged", () => {
       console.log("GLOBALBUS/BARTIMERANGE/");
       this.prepareData();
     });
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING MAP:");
-    this.$globalbus.$off("timerangechanged");
-    this.$globalbus.$off("kibanaactivated");
+    bus.off("timerangechanged");
+    bus.off("kibanaactivated");
   }
 };
 </script>

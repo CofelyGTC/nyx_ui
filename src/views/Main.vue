@@ -9,11 +9,13 @@
       <el-header style="text-align: right; font-size: 12px">
         <el-row :gutter="24">
           <el-col :span="1">
-            <el-button circle type="primary" icon="el-icon-more" @click="changeMenuState"></el-button>
+            <v-icon icon="bars" size="2x" @click="changeMenuState" style="margin-top: 17px;"></v-icon>
+            <!--el-button circle type="primary" :icon="Search" @click="changeMenuState"></el-button-->
           </el-col>
           <el-col :span="5" style="text-align: left; font-size: 22px;color:white;">
             <span>
               &nbsp;{{$store.getters.maintitle}}
+            
             </span>
           </el-col>
           <el-col :span="18" style="text-align: right;" class="time-selector-row">           
@@ -36,7 +38,7 @@
                         <el-form-item :label="$t('time.last')">
                           <el-input-number
                             :min="1"
-                            size="mini"
+                            size="small"
                             v-model="relativeTimeValue"
                             autocomplete="off"
                             @change="relativeTimeClosed"
@@ -47,7 +49,7 @@
                         <el-form-item >
                         <el-select
                           style="width:97%"
-                          size="mini"
+                          size="small"
                           v-model="relativeTimeType"
                           placeholder="Please select a value"
                           @change="relativeTimeClosed"
@@ -62,7 +64,7 @@
                     </el-row>
                   </el-form>
                   <el-button
-                    size="mini"
+                    size="small"
                     slot="reference"
                     style="margin-right:5px;"
                   >{{$t('time.last')}} {{relativeTimeValue}} {{relativeTimeType}}</el-button>
@@ -77,7 +79,7 @@
                   :picker-options="rangePickerOptions"
                   v-model="timerange"
                   v-on:change="timeRangeChanged"
-                  size="mini"
+                  size="small"
                   type="datetimerange"
                   range-separator="To"
                   start-placeholder="Start date"
@@ -92,7 +94,7 @@
                 style="margin-bottom:3px;"
                 @change="timeModeChanged"
                 v-if="$store.getters.activeApp.timeSelectorChecked"
-                size="mini"
+                size="small"
                 v-model="timeType"
               >
                 <el-radio-button label="absolute">{{$t('time.absolute')}}</el-radio-button>
@@ -109,7 +111,7 @@
                 v-on:change="dayChanged"
                 :picker-options="{firstDayOfWeek:1}"
                 type="date"
-                size="mini"
+                size="small"
                 placeholder="Pick a day"
                 :clearable="false"
               ></el-date-picker>&nbsp;&nbsp;
@@ -124,7 +126,7 @@
                 v-on:change="weekChanged"
                 :picker-options="{firstDayOfWeek:1}"
                 type="week"
-                size="mini"
+                size="small"
                 placeholder="Pick a week"
                 :clearable="false"
               ></el-date-picker>&nbsp;&nbsp;
@@ -137,7 +139,7 @@
                 v-model="monthPicker"
                 v-on:change="monthChanged"
                 type="month"
-                size="mini"
+                size="small"
                 placeholder="Pick a month"
                 :clearable="false"
               ></el-date-picker>&nbsp;&nbsp;
@@ -150,7 +152,7 @@
                 v-model="yearPicker"
                 v-on:change="yearChanged"
                 type="year"
-                size="mini"
+                size="small"
                 placeholder="Pick a year"
                 :clearable="false"
               ></el-date-picker>&nbsp;&nbsp;
@@ -175,12 +177,12 @@
                   text-color="#666"
                 >
                   <!--            v-if="menu.category!='apps'"-->
-                  <el-submenu
+                  <el-sub-menu
                     v-for="menu in filteredmenus"
                     :key="menu.category"
                     :index="menu.category"
                   >
-                    <template slot="title">
+                    <template #title>
                       <!--<i class="el-icon-location"></i>-->
                       <span>{{menu.loc_category}}</span>
                     </template>
@@ -195,13 +197,13 @@
                       <!-- :index="menu.category+'/'+subMenu.title" -->
                       <v-icon
                         class="menuiconaside"
-                        :name="subMenu.icon"
+                        :icon="subMenu.icon"
                         v-if="subMenu.icon"
                         scale="1"
                       />
                       &nbsp;{{subMenu.loc_title}}
                     </el-menu-item>
-                  </el-submenu>
+                  </el-sub-menu>
                 </el-menu>
               </el-col>
             </el-row>
@@ -219,20 +221,27 @@
 
 <script>
 import axios from "axios";
-import logout from "@/components/Logout";
-import apps from "@/components/Apps";
-import changepassword from "@/components/ChangePassword";
-import Vue from "vue";
+import Logout from "@/components/Logout";
+import Apps from "@/components/Apps";
+import ChangePassword from "@/components/ChangePassword";
+//import Vue from "vue";
 import moment from "moment";
 import _ from "lodash";
+import bus from 'vue3-eventbus'
+import {Search} from '@element-plus/icons-vue'
 
-Vue.component("Logout", logout);
-Vue.component("Apps", apps);
-Vue.component("ChangePassword", changepassword);
+//Vue.component("Logout", logout);
+//Vue.component("Apps", apps);
+//Vue.component("ChangePassword", changepassword);
 
 // @ is an alias to /src
 export default {
   name: "home",
+  components:{
+    Logout,
+    Apps,
+    ChangePassword
+  },
   data: () => ({
     styleContainer: "B",
     maintitle: "NYX",
@@ -314,7 +323,7 @@ export default {
           relativeValue: this.relativeTimeValue
         }
       });
-      this.$globalbus.$emit("timerangechanged", {
+      bus.emit("timerangechanged", {
         type: "relative",
         subtype: "classic"
       });
@@ -331,7 +340,7 @@ export default {
         type: "setTimeRange",
         data: { range: ran, type: "absolute", subtype: "day" }
       });
-      this.$globalbus.$emit("timerangechanged", {
+      bus.emit("timerangechanged", {
         range: ran,
         type: "absolute",
         subtype: "day"
@@ -349,7 +358,7 @@ export default {
         type: "setTimeRange",
         data: { range: ran, type: "absolute", subtype: "week" }
       });
-      this.$globalbus.$emit("timerangechanged", {
+      bus.emit("timerangechanged", {
         range: ran,
         type: "absolute",
         subtype: "week"
@@ -367,7 +376,7 @@ export default {
         type: "setTimeRange",
         data: { range: ran, type: "absolute", subtype: "month" }
       });
-      this.$globalbus.$emit("timerangechanged", {
+      bus.emit("timerangechanged", {
         range: ran,
         type: "absolute",
         subtype: "month"
@@ -385,7 +394,7 @@ export default {
         type: "setTimeRange",
         data: { range: ran, type: "absolute", subtype: "year" }
       });
-      this.$globalbus.$emit("timerangechanged", {
+      bus.emit("timerangechanged", {
         range: ran,
         type: "absolute",
         subtype: "year"
@@ -398,7 +407,7 @@ export default {
         type: "setTimeRange",
         data: { range: e, type: "absolute", subtype: "classic" }
       });
-      this.$globalbus.$emit("timerangechanged", {
+      bus.emit("timerangechanged", {
         range: e,
         type: "absolute",
         subtype: "classic"
@@ -430,7 +439,6 @@ export default {
   },
   created: async function() {
     console.log("Main vue created");
-
     this.rangePickerOptions= {
       shortcuts: [
         {
@@ -591,9 +599,9 @@ export default {
 
     if (this.$store.getters.currentSubCategory == undefined) {
       console.log('NOT LOGGED YET')
-      var path = this.$route.path
+      path = this.$route.path
       if(path[path.length-1] == '/')
-	      path = path.substring(0, path.length-1)
+        path = path.substring(0, path.length-1)
 
 
       this.$store.state.redirection = path
@@ -612,7 +620,7 @@ export default {
   },
   mounted: function() {
     console.log("===============  REGISTERING FORCETIME:");
-    this.$globalbus.$on("forcetime", payLoad => {
+    bus.on("forcetime", payLoad => {
       console.log('force time for this app')
 
       let val = payLoad.substring(0, payLoad.length-1)
@@ -639,7 +647,7 @@ export default {
       
     });
     console.log("===============  REGISTERING CTRU:");
-    this.$globalbus.$on("charttimerangeupdated", payLoad => {
+    bus.on("charttimerangeupdated", payLoad => {
       console.log("GLOBALBUS/CHARTTIMERANGEUPDATED/");
       const end = new Date();
       const start = new Date();
@@ -665,13 +673,14 @@ export default {
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING CTRU:");
-    this.$globalbus.$off("charttimerangeupdated");
-    this.$globalbus.$off("forcetime");
+    bus.off("charttimerangeupdated");
+    bus.off("forcetime");
     window.removeEventListener("resize", this.resizeListener);
   }
 };
 </script>
 <style>
+
 .el-aside {
   border-right: 1px solid rgb(226, 226, 226);
 }
@@ -781,5 +790,4 @@ body {
 .time-selector-row div {
   display: inline-block;
 }
-
 </style>

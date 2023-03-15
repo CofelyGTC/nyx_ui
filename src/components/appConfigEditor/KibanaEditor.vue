@@ -6,13 +6,13 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="Hidden Query" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="currentConfig.config.hiddenQuery" autocomplete="off"></el-input>
+              <el-input size="small" v-model="currentConfig.config.hiddenQuery" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8">
             <el-form-item label="Filter Column" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="currentConfig.config.filtercolumn" autocomplete="off"></el-input>
+              <el-input size="small" v-model="currentConfig.config.filtercolumn" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -21,7 +21,7 @@
           <el-col :span="8" style="text-align: left;">
             <el-form-item label="Dashboard" :label-width="formLabelWidth">
               <el-select
-                size="mini"
+                size="small"
                 @change="kibanaDashboardSelected"
                 v-model="currentConfig.config.kibanaId"
                 placeholder="Select"
@@ -42,7 +42,7 @@
             <el-form-item :label-width="formLabelWidth">
               <el-button
                 :disabled="currentConfig.config.kibanaId==null||dashboards.length==0"
-                size="mini"
+                size="small"
                 type="danger"
                 @click="openInKibana()"
                 style="width:100%"
@@ -57,7 +57,7 @@
               prop="config.kibanaTime"
             >
               <el-input
-                size="mini"
+                size="small"
                 @blur="kibanaTimeChange"
                 v-model="currentConfig.config.kibanaTime"
               ></el-input>
@@ -102,7 +102,7 @@
 
               <el-row>
                 <el-select
-                  size="mini"
+                  size="small"
                   v-model="currentConfig.timeSelectorType"
                   placeholder="Please select a type"
                   @change="timeSelectorTypeChange"
@@ -132,7 +132,7 @@
             <el-row>
               <el-select
                 :disabled="!currentConfig.timeRefresh"
-                size="mini"
+                size="small"
                 v-model="currentConfig.timeRefreshValue"
                 placeholder="Refresh Interval"
                 @change="timeRefreshSelectChange"
@@ -167,15 +167,15 @@
   </div>
 </template>
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 // import _ from "lodash";
 
 import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
-Vue.component("KibanaEditor", kibanaeditor);
 
 export default {
   field: "KibanaEditor",
+  //components:{kibanaeditor},
   data() {
     return (
       window.__FORM__ || {

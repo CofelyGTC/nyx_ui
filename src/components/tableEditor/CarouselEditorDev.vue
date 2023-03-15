@@ -38,7 +38,7 @@
             class="carousel-name-input"
             placeholder="carousel name" 
             v-model="newName"
-            size="mini">
+            size="small">
           </el-input>
 
   <!-- <draggable
@@ -82,7 +82,7 @@
             ></i>
             {{element.description}}
             <el-button
-                  size="mini"
+                  size="small"
                   round
                   @click="handleEditView(element)"
                   icon="el-icon-edit"
@@ -159,17 +159,18 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import vieweditor from "@/components/tableEditor/ViewEditor";
 
 import axios from "axios";
 
 import draggable from "vuedraggable";
+import {VAceEditor} from "vue3-ace-editor";
 let id = 1;
 
-Vue.component("ViewEditor", vieweditor);
-Vue.component("draggable", draggable);
+//Vue.component("ViewEditor", vieweditor);
+//Vue.component("draggable", draggable);
 
 
 const message = [
@@ -185,6 +186,7 @@ const message = [
 
 export default {
   name: "carouselEditorDev",
+  components:{vieweditor,draggable,VAceEditor},
   data: () => ({
     activeName: "first",
     orgRec: null,
@@ -206,10 +208,6 @@ export default {
     viewToModify: null,
     drag: false,
   }),
-  components: {
-    draggable,
-    
-  },
   computed: {
     dragOptions() {
       return {
@@ -326,9 +324,6 @@ export default {
   mounted:function() {
     console.log('mounted event')
     this.prepareData();
-  },
-  components: {
-      editor:require('vue2-ace-editor')
   },
   methods: {
     closeDialog: function() {
@@ -505,8 +500,8 @@ export default {
           else
           {
             console.log(response.data.records) 
-            for(var i in response.data.records) {
-              var viewRec = response.data.records[i]
+            for(let i in response.data.records) {
+              let viewRec = response.data.records[i]
 
               var viewObj = {
                 'id': viewRec._id,
@@ -521,9 +516,9 @@ export default {
             }
 
             // really important for ordering to not integrate this double iteration into the one above !
-            for(var i in this.orgRec._source.id_array) {                
+            for(let i in this.orgRec._source.id_array) {                
               for(var j in this.viewListAll) {
-                var viewRec = this.viewListAll[j]
+                let viewRec = this.viewListAll[j]
                 if(this.orgRec._source.id_array[i].id == viewRec.id) {
 
 

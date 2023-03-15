@@ -22,7 +22,7 @@
                   v-if="typeof field.value == 'string'"
                 >
                   <el-input
-                    size="mini"
+                    size="small"
                     v-model="field.value"
                     autocomplete="off"
                     @blur="valueChanged(field)"
@@ -31,7 +31,7 @@
                 <el-input-number
                   v-if="typeof field.value == 'number'"
                   @change="valueChanged(field)"
-                  size="mini"
+                  size="small"
                   v-model="field.value"
                   autocomplete="off"
                 >{{field.key}}</el-input-number>
@@ -142,7 +142,7 @@ export default {
     newrecordstr: {
       handler: function() {
         console.log('1')
-        //this.strNewRec = YAML.safeDump(this.newRec,10)
+        //this.strNewRec = YAML.dump(this.newRec,10)
       },
       deep: true
     }
@@ -159,7 +159,7 @@ export default {
     this.prepareData();
   },
   components: {
-    editor: require("vue2-ace-editor")
+    editor: require("vue3-ace-editor")
   },
   methods: {
     closeDialog: function() {
@@ -177,8 +177,8 @@ export default {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
-      this.strNewRec = YAML.safeDump(this.newRec, 10);
-      this.strOrgRec = YAML.safeDump(this.orgRec, 10);
+      this.strNewRec = YAML.dump(this.newRec, 10);
+      this.strOrgRec = YAML.dump(this.orgRec, 10);
     },
     editorInitRO: function(editor) {
       require("brace/ext/language_tools"); //language extension prerequsite...
@@ -219,8 +219,8 @@ export default {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
-      this.strNewRec = YAML.safeDump(this.newRec, 10);
-      this.strOrgRec = YAML.safeDump(this.orgRec, 10);
+      this.strNewRec = YAML.dump(this.newRec, 10);
+      this.strOrgRec = YAML.dump(this.orgRec, 10);
 
       console.log(this.newRec._id);
       console.log(this.orgRec._id);

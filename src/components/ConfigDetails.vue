@@ -2,10 +2,11 @@
   <el-dialog
     width="80%"
     :title="isAdd?'Create Application':'Modify Application'"
-    :visible.sync="dialogFormVisible"
+    v-model="dialogFormVisible"
     :before-close="closeDialog"
     :close-on-click-modal="false"
-    append-to-body
+    :append-to-body="false"
+
   >
     <el-form :model="curConfig">
       <el-tabs v-model="activeName" @tab-click="refresh2" >
@@ -20,7 +21,7 @@
                     :fetch-suggestions="categorySuggestion"
                     placeholder="Enter Category"
                     @select="handleSelect"
-                    size="mini"
+                    size="small"
                     style="width:100%"
                   ></el-autocomplete>
                 </el-form-item>
@@ -33,14 +34,14 @@
                     :fetch-suggestions="subcategorySuggestion"
                     placeholder="Enter Sub/Category"
                     @select="handleSelect"
-                    size="mini"
+                    size="small"
                     style="width:100%"
                   ></el-autocomplete>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="Title" :label-width="formLabelWidth">
-                  <el-input size="mini" v-model="curConfig.title" autocomplete="off"></el-input>
+                  <el-input size="small" v-model="curConfig.title" autocomplete="off"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -48,7 +49,7 @@
               <el-col :span="8">
                 <el-form-item label="Type" :label-width="formLabelWidth" style="text-align: left;">
                   <el-select
-                    size="mini"
+                    size="small"
                     @change="typeChanged"
                     v-model="curConfig.type"
                     placeholder="Please select a type"
@@ -72,7 +73,7 @@
                   <el-input-number
                     style="width:100%"
                     :min="1"
-                    size="mini"
+                    size="small"
                     v-model="curConfig.order"
                     autocomplete="off"
                   ></el-input-number>
@@ -80,19 +81,19 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="Icon" :label-width="formLabelWidth">
-                  <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
+                  <el-input size="small" v-model="curConfig.icon" autocomplete="off"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
                 &nbsp;&nbsp;
-                <v-icon v-if="curConfig.icon" :name="curConfig.icon" scale="2" />
+                <v-icon v-if="curConfig.icon" :icon="curConfig.icon" scale="2" />
               </el-col>
             </el-row>
          
              <el-row v-if="curConfig.type === 'kibana'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="chart-pie" scale="2.2" />
+                <v-icon icon="fa-chart-pie" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays a kibana dashboard.</b>
@@ -106,7 +107,7 @@
             <el-row v-if="curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="table" scale="2.2" />
+                <v-icon icon="fa-table" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays a collection stored in elastic search.</b>
@@ -121,7 +122,7 @@
             <el-row v-if="curConfig.type === 'pgsql-generic-table'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:90px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="database" scale="2.2" />
+                <v-icon icon="fa-database" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays a table stored in PostgreSQL.</b>
@@ -136,7 +137,7 @@
            <el-row v-if="curConfig.type === 'external'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="external-link-alt" scale="2.2" />
+                <v-icon icon="fa-external-link-alt" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays an external URL in an iframe.</b>
@@ -150,7 +151,7 @@
             <el-row v-if="curConfig.type === 'upload'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="file-upload" scale="2.2" />
+                <v-icon icon="fa-file-upload" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays an upload form.</b>
@@ -164,7 +165,7 @@
             <el-row v-if="curConfig.type === 'file-system'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="regular/folder-open" scale="2.2" />
+                <v-icon icon="fa-regular/folder-open" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays a file explorer.</b>
@@ -178,7 +179,7 @@
             <el-row v-if="curConfig.type === 'internal'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="cogs" scale="2.2" />
+                <v-icon icon="fa-cogs" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays an internal VUE controller.</b>
@@ -192,7 +193,7 @@
              <el-row v-if="curConfig.type === 'form'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="regular/keyboard" scale="2.2" />
+                <v-icon icon="fa-regular/keyboard" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Displays an input form.</b>
@@ -206,7 +207,7 @@
             <el-row v-if="curConfig.type === 'free-text'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(255, 245, 236);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="align-left" scale="2.2" />
+                <v-icon icon="fa-align-left" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Experimental</b>
@@ -220,14 +221,14 @@
             <el-row v-if="curConfig.type === 'vega'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:110px;background-color:rgb(255, 245, 236);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
-                <v-icon name="align-left" scale="2.2" />
+                <v-icon icon="fa-align-left" scale="2.2" />
               </el-col>
               <el-col :span="20">
                 <b>Experimental</b>
                 <br/>                 
                 Displays a vega visualization. The data must be accessed via a data source defined in NYX.<br/>
                 Ex: <b>https://173.242.183.147/api/v1/datasource/my_ds1?token=@TOKEN@&start=@START@&end=@END@</b>
-                </br>START and END are only used if a time selector is checked.
+                <br/>START and END are only used if a time selector is checked.
                 <br/> 
               </el-col>
               </el-card>
@@ -261,7 +262,7 @@
 
                   <el-row>
                     <el-select
-                      size="mini"
+                      size="small"
                       v-model="curConfig.timeSelectorType"
                       placeholder="Please select a type"
                       @change="timeSelectorTypeChange"
@@ -298,7 +299,7 @@
               label="Url"
               :label-width="formLabelWidth"
             >
-              <el-input size="mini" v-model="curConfig.config.url" autocomplete="off"></el-input>
+              <el-input size="small" v-model="curConfig.config.url" autocomplete="off"></el-input>
             </el-form-item>
 
             <!-- Controller -->
@@ -307,7 +308,7 @@
               label="Controller"
               :label-width="formLabelWidth"
             >
-              <el-input size="mini" v-model="curConfig.config.controller" autocomplete="off"></el-input>
+              <el-input size="small" v-model="curConfig.config.controller" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
               v-if="(curConfig.type === 'internal')"
@@ -315,7 +316,7 @@
               :label-width="formLabelWidth"
             >
               <el-input
-                size="mini"
+                size="small"
                 v-model="curConfig.config.controllerparameters"
                 autocomplete="off"
               ></el-input>
@@ -378,7 +379,7 @@
 
                   <el-row>
                     <el-select
-                      size="mini"
+                      size="small"
                       v-model="curConfig.timeSelectorType"
                       placeholder="Please select a type"
                       @change="timeSelectorTypeChange"
@@ -410,12 +411,12 @@
               <el-row>
                 <el-col :span="6">
                   <el-form-item label="Index/Table" :label-width="formLabelWidth">
-                    <el-input size="mini" v-model="curConfig.config.index" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.index" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="Time Field" :label-width="formLabelWidth">
-                    <el-input size="mini" v-model="curConfig.config.timefield" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.timefield" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -424,14 +425,14 @@
                     :label-width="formLabelWidth"
                     v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
                   >
-                    <el-input size="mini" v-model="curConfig.config.doc_type" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.doc_type" autocomplete="off"></el-input>
                   </el-form-item>
                   <el-form-item
                     label="PKey"
                     :label-width="formLabelWidth"
                     v-if="(curConfig.type === 'pgsql-generic-table')"
                   >
-                    <el-input size="mini" v-model="curConfig.config.pkey" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.pkey" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -440,7 +441,7 @@
                     :label-width="formLabelWidth"
                     v-if="curConfig.mapChecked"
                   >
-                    <el-input size="mini" v-model="curConfig.config.mapfield" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.mapfield" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -448,12 +449,12 @@
               <el-row>
                 <el-col :span="6">
                   <el-form-item label="Sort" :label-width="formLabelWidth">
-                    <el-input size="mini" v-model="curConfig.config.sort_column" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.sort_column" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="Order" :label-width="formLabelWidth">
-                    <el-input size="mini" v-model="curConfig.config.sort_order" placeholder="ascending/descending" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.sort_order" placeholder="ascending/descending" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>                
               </el-row>
@@ -463,7 +464,7 @@
                   <el-form-item label="SQL" :label-width="formLabelWidth">
                     <el-input
                       placeholder="SQL: select * from my_table"
-                      size="mini"
+                      size="small"
                       v-model="curConfig.config.sql"
                       autocomplete="off"
                     ></el-input>
@@ -475,7 +476,7 @@
                   <el-form-item label="Editor" :label-width="formLabelWidth">
                     <el-input
                       placeholder="Your specific component url. Eg. specificComponent"
-                      size="mini"
+                      size="small"
                       v-model="curConfig.config.editorComponent"
                       autocomplete="off"
                     ></el-input>
@@ -487,7 +488,7 @@
                     :label-width="formLabelWidth"
                     v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
                   >
-                    <el-input size="mini" v-model="curConfig.config.orderField" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="curConfig.config.orderField" autocomplete="off"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -505,7 +506,7 @@
                   <el-form-item label="Export" :label-width="formLabelWidth">
                     <el-input
                       placeholder="Columns to export"
-                      size="mini"
+                      size="small"
                       v-model="curConfig.config.exportColumns"
                       autocomplete="off"
                     ></el-input>
@@ -514,7 +515,7 @@
                 <el-col :span="6">
                   <el-form-item label="Write Privilege" :label-width="formLabelWidth">
                     <!-- <el-input
-                      size="mini"
+                      size="small"
                       v-model="curConfig.config.writeprivileges"
                       autocomplete="off"
                     ></el-input> -->
@@ -526,7 +527,7 @@
                       allow-create
                       ref="writePrivileges"
                       placeholder="write privileges"
-                      size="mini"
+                      size="small"
                       style="width:100%;"
                     >
                       <el-option
@@ -541,7 +542,7 @@
               </el-row>
               <el-row>
                 <el-col :span="4">
-                  <el-button size="mini" @click="handleAddField()">Add Field</el-button>
+                  <el-button size="small" @click="handleAddField()">Add Field</el-button>
                 </el-col>
                 <el-col :span="20">
                   <!-- Header dialog -->
@@ -555,14 +556,14 @@
                       <el-row :gutter="20">
                         <el-col :span="20">
                           <el-form-item label="Field" :label-width="formLabelWidth">
-                            <el-input size="mini" v-model="currentHeader.field" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="currentHeader.field" autocomplete="off"></el-input>
                           </el-form-item>
                         </el-col>
                       </el-row>
                       <el-row :gutter="20">
                         <el-col :span="20">
                           <el-form-item label="Title" :label-width="formLabelWidth">
-                            <el-input size="mini" v-model="currentHeader.title" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="currentHeader.title" autocomplete="off"></el-input>
                           </el-form-item>
                         </el-col>
                       </el-row>
@@ -570,7 +571,7 @@
                         <el-col :span="20">
                           <el-form-item label="Type" :label-width="formLabelWidth">
                             <el-select
-                              size="mini"
+                              size="small"
                               v-model="currentHeader.type"
                               placeholder="Please select a type"
                             >
@@ -588,7 +589,7 @@
                       >
                         <el-col :span="20">
                           <el-form-item label="Format" :label-width="formLabelWidth">
-                            <el-input size="mini" v-model="currentHeader.format" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="currentHeader.format" autocomplete="off"></el-input>
                           </el-form-item>
                         </el-col>
                       </el-row>
@@ -610,15 +611,15 @@
                     <el-table-column prop="type" label="Type"></el-table-column>
                     <el-table-column prop="format" label="Format"></el-table-column>
                     <el-table-column prop="title" label="Action">
-                      <template slot-scope="scope2">
+                      <template #scope2>
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           @click="handleEditHeader(scope2.$index, scope2.row)"
                           icon="el-icon-edit"
                         ></el-button>
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           type="danger"
                           @click="handleDeleteHeader(scope2.$index, scope2.row)"
@@ -626,7 +627,7 @@
                         ></el-button>
 
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           type="primary"
                           @click="handleMoveHeader(scope2.$index, scope2.row,false)"
@@ -634,7 +635,7 @@
                           v-if="scope2.$index<curConfig.config.headercolumns.length-1"
                         ></el-button>
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           type="primary"
                           @click="handleMoveHeader(scope2.$index, scope2.row,true)"
@@ -702,7 +703,7 @@
             :currentConfig="curConfig"
           ></FormEditor>
         </el-tab-pane>
-        <!-- FREE TEXT -->
+        <!-- FREE TEXT >
         <el-tab-pane
           label="Free Text"
           name="freetext"
@@ -712,7 +713,8 @@
           <el-card>
             <FreeTextDetails :config="currentConfig" v-on:freetextchanged="freeTextChanged"></FreeTextDetails>
           </el-card>
-        </el-tab-pane>
+        </el-tab-pane-->
+
         <!-- Vega -->
         <el-tab-pane label="Vega" name="vega" key="vega" v-if="(curConfig.type === 'vega')">
           <el-card>
@@ -736,7 +738,7 @@
             <div>
               <el-row>
                 <el-col :span="4">
-                  <el-button size="mini" @click="handleAddQueryFilterField()">Add Field</el-button>
+                  <el-button size="small" @click="handleAddQueryFilterField()">Add Field</el-button>
                 </el-col>
                 <el-col :span="20">
                   <QueryFilterEditor
@@ -757,15 +759,15 @@
                     <el-table-column prop="type" label="Type"></el-table-column>
                     <el-table-column prop="default" label="Default"></el-table-column>
                     <el-table-column prop="title" label="Action">
-                      <template slot-scope="scope2">
+                      <template #scope2>
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           @click="handleEditQueryFilterField(scope2.$index, scope2.row)"
                           icon="el-icon-edit"
                         ></el-button>
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           type="danger"
                           @click="handleDeleteQueryFilter(scope2.$index, scope2.row)"
@@ -773,7 +775,7 @@
                         ></el-button>
 
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           type="primary"
                           @click="handleMoveQueryFilter(scope2.$index, scope2.row,false)"
@@ -781,7 +783,7 @@
                           v-if="scope2.$index<curConfig.config.queryfilters.length-1"
                         ></el-button>
                         <el-button
-                          size="mini"
+                          size="small"
                           circle
                           type="primary"
                           @click="handleMoveQueryFilter(scope2.$index, scope2.row,true)"
@@ -825,29 +827,20 @@
   </el-dialog>
 </template>
 <script>
-import freetextdetails from "@/components/FreeTextDetails";
+//import freetextdetails from "@/components/FreeTextDetails";
 
-import queryfiltereditor from "@/components/appConfigEditor/QueryFilterEditor";
-import estableeditor from "@/components/appConfigEditor/ESTableEditor";
-import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
-import formeditor from "@/components/appConfigEditor/FormEditor";
-import uploadeditor from "@/components/appConfigEditor/UploadEditor";
-import filesystemeditor from "@/components/appConfigEditor/FileSystemEditor";
+import QueryFilterEditor from "@/components/appConfigEditor/QueryFilterEditor";
+import ESTableEditor from "@/components/appConfigEditor/ESTableEditor";
+import KibanaEditor from "@/components/appConfigEditor/KibanaEditor";
+import FormEditor from "@/components/appConfigEditor/FormEditor";
+import UploadEditor from "@/components/appConfigEditor/UploadEditor";
+import FileSystemEditor from "@/components/appConfigEditor/FileSystemEditor";
 
 
-import Vue from "vue";
-import axios from "axios";
+//import Vue from "vue";
+//import axios from "axios";
 import rison from "rison";
 import YAML from "js-yaml";
-
-Vue.component("FreeTextDetails", freetextdetails);
-
-Vue.component("QueryFilterEditor", queryfiltereditor);
-Vue.component("ESTableEditor", estableeditor);
-Vue.component("FormEditor", formeditor);
-Vue.component("KibanaEditor", kibanaeditor);
-Vue.component("UploadEditor", uploadeditor);
-Vue.component("FileSystemEditor", filesystemeditor);
 
 
 function transformObject(obj) {
@@ -880,7 +873,11 @@ export default {
     );
   },
   components: {
-    editor: require("vue2-ace-editor")
+    editor: require("vue3-ace-editor"),
+    
+    QueryFilterEditor, ESTableEditor, FormEditor, KibanaEditor,UploadEditor,FileSystemEditor//,freetextdetails
+
+
   },
   computed: {
     curConfigIn: function() {
@@ -925,6 +922,7 @@ export default {
     },
     closeDialog: function() {
       this.$emit("dialogclose");
+
     },
     categorySuggestion: function(queryString, cb) {
       var cat = [];
@@ -1018,6 +1016,8 @@ export default {
       this.curConfig.config.freetext = newvalue;
     },
     prepareData() {
+      console.log("dialog")
+
       console.log(this.currentConfig)
       this.dialogFormVisible = true;
       this.curConfig = JSON.parse(JSON.stringify(this.currentConfig));
@@ -1052,8 +1052,8 @@ export default {
       this.strNewRec = "";
       this.strOrgRec = "";
 
-      this.strNewRec = YAML.safeDump(this.curConfig, 10);
-      this.strOrgRec = YAML.safeDump(this.currentConfig, 10);
+      this.strNewRec = YAML.dump(this.curConfig, 10);
+      this.strOrgRec = YAML.dump(this.currentConfig, 10);
     },
     handleAddField() {
       if (this.curConfig.config.headercolumns == undefined) {

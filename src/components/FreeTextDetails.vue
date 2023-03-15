@@ -7,7 +7,7 @@
           :class="{ 'is-active': isActive.bold() }"
           @click="commands.bold"
         >
-          <v-icon name="bold" scale="1"/>
+          <v-icon icon="fa-bold" scale="1"/>
         </el-button>
 
         <el-button
@@ -15,7 +15,7 @@
           :class="{ 'is-active': isActive.italic() }"
           @click="commands.italic"
         >
-          <v-icon name="italic" scale="1"/>
+          <v-icon icon="fa-italic" scale="1"/>
         </el-button>
 
         <el-button
@@ -23,7 +23,7 @@
           :class="{ 'is-active': isActive.strike() }"
           @click="commands.strike"
         >
-          <v-icon name="strikethrough" scale="1"/>
+          <v-icon icon="fa-strikethrough" scale="1"/>
         </el-button>
 
         <el-button
@@ -31,7 +31,7 @@
           :class="{ 'is-active': isActive.underline() }"
           @click="commands.underline"
         >
-          <v-icon name="underline" scale="1"/>
+          <v-icon icon="fa-underline" scale="1"/>
         </el-button>
 
         <el-button
@@ -39,7 +39,7 @@
           :class="{ 'is-active': isActive.code() }"
           @click="commands.code"
         >
-          <v-icon name="code" scale="1"/>
+          <v-icon icon="fa-code" scale="1"/>
         </el-button>
 
         <el-button
@@ -47,7 +47,7 @@
           :class="{ 'is-active': isActive.paragraph() }"
           @click="commands.paragraph"
         >
-          <v-icon name="paragraph" scale="1"/>
+          <v-icon icon="fa-paragraph" scale="1"/>
         </el-button>
 
         <el-button
@@ -73,7 +73,7 @@
           :class="{ 'is-active': isActive.bullet_list() }"
           @click="commands.bullet_list"
         >
-          <v-icon name="circle" scale="1"/>
+          <v-icon icon="fa-circle" scale="1"/>
         </el-button>
 
         <el-button
@@ -81,7 +81,7 @@
           :class="{ 'is-active': isActive.ordered_list() }"
           @click="commands.ordered_list"
         >
-          <v-icon name="list-ul" scale="1"/>
+          <v-icon icon="fa-list-ul" scale="1"/>
         </el-button>
 
         <el-button
@@ -89,7 +89,7 @@
           :class="{ 'is-active': isActive.blockquote() }"
           @click="commands.blockquote"
         >
-        <v-icon name="list-ol" scale="1"/>
+        <v-icon icon="fa-list-ol" scale="1"/>
         </el-button>
 
         <el-button
@@ -97,7 +97,7 @@
           :class="{ 'is-active': isActive.code_block() }"
           @click="commands.code_block"
         >
-          <v-icon name="square" scale="1"/>
+          <v-icon icon="fa-square" scale="1"/>
         </el-button>
       </div>
     </editor-menu-bar>
@@ -109,7 +109,7 @@
   </div>
 </template>
 <script>
-import { Editor, EditorContent, EditorMenuBar } from "tiptap";
+import { Editor, EditorContent, EditorMenuBar } from "@tiptap/vue-3";
 
 import {
   Blockquote,
@@ -128,7 +128,7 @@ import {
   Strike,
   Underline,
   History
-} from "tiptap-extensions";
+} from "@tiptap/starter-kit";
 
 export default {
   components: {

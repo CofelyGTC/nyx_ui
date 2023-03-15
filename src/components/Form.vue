@@ -25,7 +25,7 @@
               v-else-if="item.type =='datetime'"
             >
               <el-date-picker
-                size="mini"
+                size="small"
                 v-model="item.value"
                 type="datetime"
                 placeholder="Pick a date and a time"
@@ -62,7 +62,7 @@
             >{{this.$t("buttons.submit")}}</el-button>
             <span v-if="commitunderway">
               &nbsp;&nbsp;
-              <v-icon name="spinner" scale="1" spin />
+              <v-icon icon="fa-spinner" scale="1" spin />
             </span>
           </el-col>
         </el-row>
@@ -73,14 +73,15 @@
   
 <script>
 import moment from "moment";
-import Vue from "vue";
+//import Vue from "vue";
 import {computeTranslatedText} from '../globalfunctions'
 
 import VueGeolocation from "vue-browser-geolocation";
-Vue.use(VueGeolocation);
+//Vue.use(VueGeolocation);
 
 export default {
   name: "Form",
+  use:{VueGeolocation},
   data: () => ({
     formLabelWidth: "120px",
     commitunderway: false,

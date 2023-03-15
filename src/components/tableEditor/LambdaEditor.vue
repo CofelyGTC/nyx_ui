@@ -32,7 +32,7 @@
                 :disabled="locEditMode=='edit'"
                 v-model="newRec._source.type"
                 ref="type"
-                size="mini"
+                size="small"
                 placeholder="Mode"
               >
                 <el-option
@@ -46,7 +46,7 @@
             <el-col :span="5" style="padding-right:10px;">
               <el-autocomplete
                 :disabled="locEditMode=='edit'"
-                size="mini"
+                size="small"
                 class="inline-input"
                 ref="runner"
                 v-model="newRec._source.runner"
@@ -58,7 +58,7 @@
             <el-col :span="5" style="padding-right:10px;">
               <el-autocomplete
                 :disabled="locEditMode=='edit'"
-                size="mini"
+                size="small"
                 ref="notebook"
                 class="inline-input"
                 v-model="newRec._source.file"
@@ -69,7 +69,7 @@
             <el-col :span="5" style="padding-right:10px;">
               <el-input
                 :disabled="locEditMode=='edit'"
-                size="mini"
+                size="small"
                 ref="function"
                 placeholder="Function"
                 v-model="newRec._source.orgfunction"
@@ -80,7 +80,7 @@
                 style="min-width: 112px;"
                 icon="el-icon-notebook-2"
                 @click="openTabCode()"
-                size="mini"
+                size="small"
                 v-if="locEditMode=='edit'"
               >{{$t('generic.edit_code')}}</el-button>
               <!-- <el-popconfirm
@@ -95,7 +95,7 @@
                 v-if="locEditMode!='edit'"
                 :loading="createLoading"
                 @click="createFunction()"
-                size="mini"
+                size="small"
                 type="primary"
                 :disabled="goBtnDisabled"
               >Create function</el-button>
@@ -123,7 +123,7 @@
               <el-input
                 style="max-width:80px;"
                 readonly
-                size="mini"
+                size="small"
                 ref="function"
                 v-model="newRec._source.runs"
               ></el-input>
@@ -132,7 +132,7 @@
               <el-input
                 style="max-width:80px;"
                 readonly
-                size="mini"
+                size="small"
                 ref="function"
                 v-model="newRec._source.errors"
               ></el-input>
@@ -141,13 +141,13 @@
               <el-input
                 style="max-width:80px;"
                 readonly
-                size="mini"
+                size="small"
                 ref="function"
                 v-model="newRec._source.crashed"
               ></el-input>
             </el-col>
             <el-col :span="5">
-              <v-icon :style='"color:"+newRec._source.result_icon.split(">")[1]' :name="newRec._source.result_icon.split('>')[0]" scale="1.5"/>
+              <v-icon :style='"color:"+newRec._source.result_icon.split(">")[1]' :icon="newRec._source.result_icon.split('>')[0]" scale="1.5"/>
               
             </el-col>
             <el-col :span="4" style="text-align:right;">
@@ -157,7 +157,7 @@
                 :loading="resetStatsLoading"
                 @click="resetStats()"
                 type="warning"
-                size="mini"
+                size="small"
               >Reset Stats</el-button>
             </el-col>
           </el-row>
@@ -181,7 +181,7 @@
                 :fetch-suggestions="searchLastRun"
                 placeholder="Select run"
                 @select="handleSelectRun"
-                size="mini"
+                size="small"
                 clearable
               >
                 <template slot-scope="{ item }">
@@ -206,7 +206,7 @@
               <el-input
                 v-if="selectedRun"
                 readonly
-                size="mini"
+                size="small"
                 ref="return"
                 v-model="selectedRun.return"
               ></el-input>
@@ -217,7 +217,7 @@
                 style="min-width: 112px;"
                 icon="el-icon-download"
                 @click="openTabInput"
-                size="mini"
+                size="small"
               >Input</el-button>
             </el-col> -->
           </el-row>
@@ -234,7 +234,7 @@
                 <el-form-item label="File" :label-width="formLabelWidth">
                   <el-input
                     :disabled="true"
-                    size="mini"
+                    size="small"
                     v-model="newRec._source.file"
                     autocomplete="off"
                   ></el-input>
@@ -244,7 +244,7 @@
                 <el-form-item label="Function" :label-width="formLabelWidth">
                   <el-input
                     :disabled="true"
-                    size="mini"
+                    size="small"
                     v-model="newRec._source.orgfunction"
                     autocomplete="off"
                   ></el-input>
@@ -256,7 +256,7 @@
                 <el-form-item label="Topics" :label-width="formLabelWidth">
                   <el-input
                     :disabled="true"
-                    size="mini"
+                    size="small"
                     v-model="newRec._source.topics"
                     autocomplete="off"
                   ></el-input>
@@ -290,7 +290,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";
@@ -365,10 +365,8 @@ export default {
       )
         return true;
       else if (
-        this.hierarchy.hasOwnProperty(this.newRec._source.runner) &&
-        this.hierarchy[this.newRec._source.runner].hasOwnProperty(
-          this.newRec._source.file
-        ) &&
+        Object.prototype.hasOwnProperty.call(this.hierarchy,this.newRec._source.runner) &&
+        Object.prototype.hasOwnProperty.call(this.hierarchy[this.newRec._source.runner],this.newRec._source.file) &&
         this.hierarchy[this.newRec._source.runner][
           this.newRec._source.file
         ].has(this.newRec._source.orgfunction)
@@ -513,10 +511,9 @@ export default {
     handleSelectRunner(item) {
       this.fileOptions = [];
 
-      if (item == "") {
-      }
+//      if (item == "") {      }
 
-      if (this.hierarchy.hasOwnProperty(item)) {
+      if (Object.prototype.hasOwnProperty.call(this.hierarchy,item)) {
         Object.keys(this.hierarchy[item]).forEach(not => {
           this.fileOptions.push({
             value: not,
@@ -552,10 +549,10 @@ export default {
               this.allNotebooks.add(notebook);
               this.allFunctions.add(funct);
 
-              if (!this.hierarchy.hasOwnProperty(runner))
+              if (!Object.prototype.hasOwnProperty.call(this.hierarchy,runner))
                 this.hierarchy[runner] = {};
 
-              if (!this.hierarchy[runner].hasOwnProperty(notebook))
+              if (!Object.prototype.hasOwnProperty.call(this.hierarchy[runner],notebook))
                 this.hierarchy[runner][notebook] = new Set();
 
               this.hierarchy[runner][notebook].add(funct);
@@ -645,7 +642,6 @@ export default {
               message: "Unable to send message.",
               position: "bottom-right"
             });
-          } else {
           }
         })
         .catch(error => {

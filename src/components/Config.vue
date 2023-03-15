@@ -10,7 +10,7 @@
       v-on:dialogclose="dialogClosed()"
     ></ConfigDetails>
     <el-table
-      size="mini"
+      size="small"
       :data="tableData.filter(data => !search || ((JSON.stringify(data._source).toLowerCase().includes(search.toLowerCase()))))"
       :default-sort="{prop: '_source.title', order: 'descending'}"
       style="width: 100%"
@@ -25,86 +25,95 @@
       <el-table-column sortable prop="_source.order" label="Order" width="80"></el-table-column>
 
       <el-table-column width="60">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-popover
             v-if="scope.row._source.privileges?true:false"
             placement="left-start"
             title="Privileges"
             width="200"
             trigger="hover"
-            size="mini"
+            size="small"
           >
-            <span :key="item" v-for="item in scope.row._source.privileges">
-              &nbsp;
-              <el-tag size="mini">{{item}}</el-tag>
-            </span>
-            <el-button size="mini" slot="reference">{{scope.row._source.privileges.length}}</el-button>
+          <span :key="item" v-for="item in scope.row._source.privileges">
+            &nbsp;
+            <el-tag size="small">{{item}}</el-tag>
+          </span>
+          <template #reference>
+            <el-button size="small" slot="reference">{{scope.row._source.privileges.length}}</el-button>
+          </template>
           </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="right" width="300">
         <!-- Removed from line below: slot-scope="scope" -->
-        <template slot="header" slot-scope="scope">
-          <div>
-            <el-tooltip
-              v-if="currentRow"
-              class="item"
-              effect="light"
-              content="Duplicate"
-              placement="bottom-end"
-            >
-              <el-button
-                circle
-                size="mini"
-                @click="duplicate()"
-                class="dupbutton"
-                type="primary"
-                icon="el-icon-copy-document"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="light" content="Add" placement="bottom">
-              <el-button
-                circle
-                size="mini"
-                @click="handleAddApp()"
-                class="addbutton"
-                type="primary"
-                icon="el-icon-plus"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="light" content="Reload" placement="bottom-start">
-              <el-button
-                circle
-                size="mini"
-                @click="reloadConfig()"
-                class="regreshbutton"
-                plain
-                icon="el-icon-refresh"
-              ></el-button>
-            </el-tooltip>
-          </div>
-          <el-input v-model="search" size="mini" placeholder="Type to search" class="searchfield" />
+        <template v-slot:header="scope">
+          <el-row style="float:right">
+            <div style="padding:10px">
+              <el-tooltip
+                v-if="currentRow"
+                class="item"
+                effect="light"
+                content="Duplicate"
+                placement="bottom-end"
+              >
+                <el-button
+                  circle
+                  size="small"
+                  @click="duplicate()"
+                  class="dupbutton"
+                  type="primary"
+                >
+                  <el-icon><CopyDocument /></el-icon>
+                </el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="light" content="Add" placement="bottom">
+                <el-button
+                  circle
+                  size="small"
+                  @click="handleAddApp()"
+                  class="addbutton"
+                  type="primary"
+                >
+                  <el-icon><Plus /></el-icon>
+              </el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="light" content="Reload" placement="bottom-start">
+                <el-button
+                  circle
+                  size="small"
+                  @click="reloadConfig()"
+                  class="regreshbutton"
+                  plain
+                >
+                <el-icon><Refresh /></el-icon>
+              </el-button>
+              </el-tooltip>
+            </div>
+            <el-input v-model="search" size="small" placeholder="Type to search" class="searchfield" style="padding:10px" />
+        </el-row>
         </template>
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <v-icon
             v-if="scope.row._source.icon"
-            :name="scope.row._source.icon"
+            :icon="scope.row._source.icon"
             scale="1"
             style="margin-bottom:-3px;"
           />&nbsp;&nbsp;
           <el-button
-            size="mini"
-            icon="el-icon-setting"
+            size="small"
             plain
             @click="handleEdit(scope.$index, scope.row)"
-          ></el-button>
+          >
+            <el-icon><Setting /></el-icon>
+          </el-button>
           <el-button
-            size="mini"
+            size="small"
             type="danger"
-            icon="el-icon-delete"
             plain
             @click="handleDelete(scope.$index, scope.row)"
-          ></el-button>
+          >
+            <el-icon><Delete /></el-icon>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,12 +122,13 @@
 <script>
 import axios from "axios";
 
-import Vue from "vue";
+////import Vue from "vue";
 
-import configdetails from "@/components/ConfigDetails";
-Vue.component("ConfigDetails", configdetails);
+import ConfigDetails from "@/components/ConfigDetails";
+import {CopyDocument,Plus,Refresh,Setting,Delete} from '@element-plus/icons-vue';
 
 export default {
+  components:{ConfigDetails},
   data() {
     return {
       tableData: [],
@@ -345,6 +355,7 @@ export default {
     }
   },
   created: function() {
+
     this.loadData();
   }
 };

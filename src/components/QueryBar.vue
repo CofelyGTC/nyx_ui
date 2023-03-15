@@ -5,7 +5,7 @@
       <el-input
         :placeholder="this.$t('querybar.default')"
         class="query-input"
-        size="mini"
+        size="small"
         v-model="query"
         @change="refresh()"
       >
@@ -28,7 +28,7 @@
                 :type="format.type"
                 :key="format.value"
                 round
-                size="mini"
+                size="small"
                 @click="downloadSelection(format.value)"
               >{{format.label}}</el-button>
             </el-row>
@@ -44,7 +44,7 @@
       </el-input>
     </div>
     <div class="refresh-button" v-if="config.type !='kibana' ">
-      <el-button @click="refresh()" style="width:90%;" size="mini" type="primary">{{this.$t('generic.refresh')}}</el-button>
+      <el-button @click="refresh()" style="width:90%;" size="small" type="primary">{{this.$t('generic.refresh')}}</el-button>
     </div>
   </el-row>
 </template>

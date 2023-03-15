@@ -12,12 +12,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="Firstname" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="newRec._source.firstname" autocomplete="off"></el-input>
+              <el-input size="small" v-model="newRec._source.firstname" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Lastname" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="newRec._source.lastname" autocomplete="off"></el-input>
+              <el-input size="small" v-model="newRec._source.lastname" autocomplete="off"></el-input>
             </el-form-item>
 
           </el-col>
@@ -25,7 +25,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="Sector" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="newRec._source.sector" autocomplete="off"></el-input>
+              <el-input size="small" v-model="newRec._source.sector" autocomplete="off"></el-input>
             </el-form-item>
           </el-col> 
           
@@ -34,7 +34,7 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="Age" :label-width="formLabelWidth"  style="text-align:left">
-              <el-input-number size="mini" v-model="newRec._source.age" :min="0" :max="150"></el-input-number>
+              <el-input-number size="small" v-model="newRec._source.age" :min="0" :max="150"></el-input-number>
             </el-form-item>
           </el-col>
 
@@ -42,7 +42,7 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="Seniority" :label-width="formLabelWidth"  style="text-align:left">
-              <el-input-number size="mini" v-model="newRec._source.seniority" :min="0" :max="150"></el-input-number>
+              <el-input-number size="small" v-model="newRec._source.seniority" :min="0" :max="150"></el-input-number>
             </el-form-item>
           </el-col>
 
@@ -55,14 +55,14 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="File" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="newRec._source.file" autocomplete="off"></el-input>
+              <el-input size="small" v-model="newRec._source.file" autocomplete="off"></el-input>
             </el-form-item>
             
           </el-col>
           <el-col :span="12">
             
             <el-form-item label="Location" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="newRec._source.location" autocomplete="off"></el-input>
+              <el-input size="small" v-model="newRec._source.location" autocomplete="off"></el-input>
             </el-form-item>
             
             
@@ -71,7 +71,7 @@
         </el-row>
         <el-row>
             <el-form-item label="Description" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="newRec._source.injury" autocomplete="off"></el-input>
+              <el-input size="small" v-model="newRec._source.injury" autocomplete="off"></el-input>
             </el-form-item>
         </el-row>
         <el-row>
@@ -79,7 +79,7 @@
           <el-col :span="12">
             <el-form-item label="Type" :label-width="formLabelWidth" style="text-align:left">
               <el-select
-                size="mini"
+                size="small"
                 v-model="newRec._source.type"
                 filterable
                 placeholder="Select"
@@ -104,7 +104,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="Break Duration" :label-width="formLabelWidth">
-              <el-input-number :min="0" :disabled="!newRec._source.break" size="mini" v-model="newRec._source.break_duration" autocomplete="off"></el-input-number>
+              <el-input-number :min="0" :disabled="!newRec._source.break" size="small" v-model="newRec._source.break_duration" autocomplete="off"></el-input-number>
             </el-form-item>
             
           </el-col>
@@ -116,7 +116,7 @@
               <el-date-picker
                 v-model="newRec._source.accident_date"
                 type="date"
-                size="mini"
+                size="small"
                 :picker-options={firstDayOfWeek:1}
                 placeholder="Pick a day">
               </el-date-picker>
@@ -129,7 +129,7 @@
                 v-model="newRec._source.return_date"
                 :disabled="!newRec._source.break"
                 type="date"
-                size="mini"
+                size="small"
                 :picker-options={firstDayOfWeek:1}
                 placeholder="Pick a day">
               </el-date-picker>
@@ -163,7 +163,7 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 
 import YAML from "js-yaml";
 import axios from "axios";

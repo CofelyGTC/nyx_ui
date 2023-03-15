@@ -1,25 +1,30 @@
 <template>
   <span>
-    <el-dropdown @command="handleCommand">
-      <el-button type circle>
+    <el-dropdown popper-class="nyx-popper" @command="handleCommand">
+      <span class="el-dropdown-link" style="margin-top:5px">
+
+      <el-button size="large" circle style="margin-top:7px;">
         <div
           style="width:16px;height:16px;font-size:14px;"
         >{{$store.getters.creds.user.firstname[0]}}</div>
       </el-button>
-      <el-dropdown-menu slot="dropdown">
+      </span>
+      <template #dropdown>
+      <el-dropdown-menu>
         <el-dropdown-item command="info">
-          <v-icon class="menuicon" name="info-circle" scale="1" />
+          <v-icon class="menuicon" icon="fa-info-circle" scale="1" />
           &nbsp;&nbsp;{{ $t("logout.info") }}
         </el-dropdown-item>
         <el-dropdown-item command="password">
-          <v-icon class="menuicon" name="key" scale="1" />
+          <v-icon class="menuicon" icon="fa-key" scale="1" />
           &nbsp;&nbsp;{{ $t("logout.change_pass") }}
         </el-dropdown-item>
         <el-dropdown-item divided command="logout">
-          <v-icon class="menuicon" name="external-link-alt" scale="1" />
-          &nbsp;&nbsp;{{ $t("logout.logout") }}
+          <v-icon class="menuicon" icon="fa-external-link-alt" scale="1" />
+          &nbsp;&nbsp;{{ $t("logout.logout")}}
         </el-dropdown-item>
       </el-dropdown-menu>
+      </template>
     </el-dropdown>
   </span>
 </template>
@@ -47,8 +52,8 @@ export default {
           "," +
           this.$store.getters.containerSize.height +
           ")"
-          +"<br/><strong>Browser:</strong> "+this.$browserDetect.meta.name 
-          +"<br/><strong>Browser Version:</strong> "+this.$browserDetect.meta.version
+//         +"<br/><strong>Browser:</strong> "+this.$browserDetect.meta.name 
+//          +"<br/><strong>Browser Version:</strong> "+this.$browserDetect.meta.version
           
           ,
         "Nyx Version",

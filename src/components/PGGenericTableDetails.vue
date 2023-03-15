@@ -12,7 +12,7 @@
           <el-row v-if="editMode!='add' && editMode!='duplicate'">
             <el-col :span="12">
               <el-form-item label="ID" :label-width="formLabelWidth">
-                <el-input :disabled="true" size="mini" v-model="record._id" autocomplete="off"></el-input>
+                <el-input :disabled="true" size="small" v-model="record._id" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -27,7 +27,7 @@
                   v-if="field.type == '1043'"
                 >
                   <el-input
-                    size="mini"
+                    size="small"
                     v-model="field.value"
                     autocomplete="off"
                     @blur="valueChanged(field)"
@@ -36,7 +36,7 @@
                 <el-input-number
                   v-else-if="field.type == '23' || field.type == '700'"
                   @change="valueChanged(field)"
-                  size="mini"
+                  size="small"
                   v-model="field.value"
                   autocomplete="off"
                 >{{field.key}}</el-input-number>
@@ -44,7 +44,7 @@
                   v-else-if="field.type == '1082' || field.type == '1184' || field.type == '1114'"
                   v-model="field.value"
                   type="datetime"
-                  size="mini"
+                  size="small"
                   placeholder="Select date and time"
                   default-time="12:00:00"
                 ></el-date-picker>

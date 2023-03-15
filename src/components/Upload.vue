@@ -30,6 +30,8 @@
   
 <script>
 import {computeTranslatedText} from '../globalfunctions'
+import bus from 'vue3-eventbus'
+
 
 export default {
   name: "Upload",
@@ -81,7 +83,7 @@ export default {
   },
   mounted: function(){
     console.log("===============  REGISTERING LOCAL MESSSAGE:");
-    this.$localbus.$on("localmessagereceived", payLoad => {
+    bus.on("localmessagereceived", payLoad => {
       console.log("LOCALBUS/GENERICCOMPONENT/LOCALMESSAGERECEIVED");
       console.log(payLoad);
       //alert(payLoad)      
@@ -89,7 +91,7 @@ export default {
   },
   destroyed: function() {
     console.log("===============  UN REGISTERING LOCAL MESSSAGE:");
-    this.$localbus.$off("localmessagereceived");
+    bus.off("localmessagereceived");
   }
 
 };

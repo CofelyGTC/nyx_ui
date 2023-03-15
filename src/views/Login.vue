@@ -1,21 +1,18 @@
 <template>
-  
   <div class="login-container">
     <div class="title-icon"></div>
     <div class="login-logo1">
     </div>
     <div class="title-icon2">
-      <v-icon
-        style="color:white"
-        name="spinner"
-        scale="3"
-        spin
-        v-if="!initialized || loginunderway"
-      />
-      <v-icon
-        style="color:white"
-        :name="config.icon"
-        scale="3"
+      <font-awesome-icon 
+      style="color:white;scale:3"
+      icon="fa-solid fa-spinner"
+      spin
+      v-if="!initialized || loginunderway" ></font-awesome-icon>
+
+      <font-awesome-icon 
+        style="color:white;scale:3"
+        :icon="config.icon"
         v-if="initialized  && !loginunderway"
       />
     </div>
@@ -33,8 +30,8 @@
               name="login"
               autocomplete="none"
               v-model="form.login"
-              size="medium"
-              clearable
+              size="default"
+              
             ></el-input>
           </el-form-item>
           <el-form-item label>
@@ -45,19 +42,28 @@
               name="password"
               autocomplete="none"
               v-model="form.password"
-              size="medium"
+              size="default"
             />
           </el-form-item>
+          <el-row>
           <el-button
             class="login-button"
             @click="validateUser()"
             type="primary"
-            size="default"
+            size="large"
             color="#048"
-            
             :disabled="loginDisabled"
             :loading="loginunderway"
           >Login</el-button>
+          </el-row>
+          <el-row>
+          <el-button 
+            @click="login" 
+            class="login-button"
+            type="success"
+            size="large"
+          >Login with Okta</el-button>
+            </el-row>
           <div class="login_error" v-if="form.error">{{form.error}}</div>
         </el-col>
       </el-form>
@@ -73,7 +79,7 @@
 <script>
 /* eslint-disable */
 
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 import { loadLanguageAsync } from "../i18n-setup";
 
@@ -112,7 +118,6 @@ export default {
         this.$store.getters.apiurl + "config",
         {}
       );
-
       if (response.data.error == "") {
         this.initialized = true;
         this.config = response.data;
@@ -211,8 +216,9 @@ export default {
 
       localStorage.authResponse = JSON.stringify(response)
 
-      this.$i18n.locale = response.data.cred.user.language;
-      Vue.config.lang = response.data.cred.user.language;
+      //$i18n.locale = response.data.cred.user.language;
+      //i18n.global.locale.value=response.data.cred.user.language;
+      //Vue.config.lang = response.data.cred.user.language;
       //alert(this.$i18n.locale);
 
       response.data.cred.user.user = this.form.login;
@@ -333,7 +339,7 @@ export default {
   text-align: center;
   top: 50%;
   color: white;
-  margin-top: 170px;
+  margin-top: 220px;
   font-family: "Helvetica Neue";
 }
 
@@ -369,7 +375,7 @@ export default {
   width: 100px;
   height: 100px;
   margin-left: -48px;
-  margin-top: -162px;
+  margin-top: -150px;
   top: 50%;
   color: red;
   font-family: "Helvetica Neue";
@@ -393,14 +399,15 @@ export default {
 .login-card {
   position: absolute;
   left: 50%;
-  height: 200px;
+  height: 252px;
   top: 50%;
   margin-top: -50px;
   width: 400px;
   margin-left: -200px;
 }
 
-.login-form .el-input__inner{
+.login-form .el-input__wrapper{
+  display: block;
   /*
   border-radius:50px !important;
   */
@@ -408,6 +415,24 @@ export default {
 
 .login-form .el-button{
   margin-top: 12px;
-
 }
+.el-button .el-button{
+  margin-left: 0px;
+}
+input:-internal-autofill-selected {
+  background-color: white !important;
+  color:white !important
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}
+
 </style>

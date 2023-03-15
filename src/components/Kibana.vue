@@ -10,11 +10,11 @@
         <span class="input-label">{{$t("generic.query")}}:</span>
       </el-col>
       <el-col :span="20">        
-        <el-input size="mini" :placeholder="this.$t('generic.pleaseinput')" v-model="queryField"></el-input>
+        <el-input size="small" :placeholder="this.$t('generic.pleaseinput')" v-model="queryField"></el-input>
       </el-col>
       <el-col :span="2" v-if="config.downloadChecked" style="text-alight:right">
         <el-dropdown @command="handleCommand">
-          <el-button circle size="mini" type="primary" icon="el-icon-download"></el-button>
+          <el-button circle size="small" type="primary" icon="el-icon-download"></el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="csv">
               <v-icon class="menuicon" name="file-csv" scale="1" />
@@ -41,7 +41,7 @@
 
         <el-row>
           <div style="font-size:20px; margin-top:10px;">
-            The URL is too long ({{computedurl.length}} characters) for your browser ({{$browserDetect.meta.name}})
+            The URL is too long ({{computedurl.length}} characters) for your browser
           </div>
         </el-row>
 
@@ -49,7 +49,7 @@
           <el-card style="width:300px; text-align:center; margin-top:10px;" shadow="never">
             <el-table
               :data="browsersData"
-              size="mini"
+              size="small"
               style="">
               <el-table-column
                 prop="name"
@@ -83,9 +83,11 @@
 import _ from "lodash";
 import axios from "axios";
 import moment from "moment";
-import Vue from "vue";
-import browserDetect from "vue-browser-detect-plugin";
-Vue.use(browserDetect);
+//import Vue from "vue";
+//import browserDetect from "vue-browser-detect-plugin";
+//Vue.use(browserDetect);
+import bus from 'vue3-eventbus'
+
 
 
 
@@ -232,13 +234,14 @@ export default {
       // console.log(this.computedurl.length)      
       // console.log(this.$browserDetect)      
 
-      if((this.$browserDetect.isEdge || this.$browserDetect.isIE) && this.computedurl.length > 2046)
+      //if((this.$browserDetect.isEdge || this.$browserDetect.isIE) && this.computedurl.length > 2046)
+      //  return true
+      //if(this.$browserDetect.isChrome && this.computedurl.length > 32778)
+      //  return true
+      //if(this.$browserDetect.isChromeIOS > 8192)
+      //  return true
+      if(this.computedurl.length > 2000)
         return true
-      if(this.$browserDetect.isChrome && this.computedurl.length > 32778)
-        return true
-      if(this.$browserDetect.isChromeIOS > 8192)
-        return true
-
       return false
     },
     queryfilterchanged: function(query) {
@@ -515,11 +518,11 @@ export default {
   },
   mounted: function() {
     console.log("===============  REGISTERING KIBANA:");
-    this.$globalbus.$on("timerangechanged", payLoad => {
+    bus.on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/KIBANATIMERANGE/");
       this.createUrl();
     });
-    // this.$globalbus.$on("kibanaactivated", payLoad => {
+    // bus.on("kibanaactivated", payLoad => {
     //   console.log("GLOBALBUS/KIBANAACTIVATED/");
     //   if (payLoad.title == this.config.title && !this.ready) {
     //     this.ready = true;
@@ -537,8 +540,8 @@ export default {
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING KIBANA:");
-    this.$globalbus.$off("timerangechanged");
-    this.$globalbus.$off("kibanaactivated");
+    bus.off("timerangechanged");
+    bus.off("kibanaactivated");
   }
 };
 </script>

@@ -4,17 +4,17 @@
       <el-row v-for="param in filteredParameters" :key="param.name">
         <el-col :span="24" v-if="param.type == 'text'">
           <el-form-item :label="param.title" :label-width="formLabelWidth">
-            <el-input size="mini" v-model="param.value" autocomplete="off"></el-input>
+            <el-input size="small" v-model="param.value" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="param.type == 'number'">
           <el-form-item :label="param.title" :label-width="formLabelWidth">
-            <el-input-number size="mini" v-model="param.value" autocomplete="off"></el-input-number>
+            <el-input-number size="small" v-model="param.value" autocomplete="off"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12" v-if="param.type == 'combo'">
           <el-form-item :label="param.title" :label-width="formLabelWidth">
-            <el-select size="mini" v-model="param.value" placeholder="Please select a type">
+            <el-select size="small" v-model="param.value" placeholder="Please select a type">
               <el-option
                 v-for="item in param.combos.split(',')"
                 :key="item"
@@ -26,13 +26,13 @@
         </el-col>
         <el-col :span="12" v-if="param.type == 'date'">
           <el-form-item :label="param.title" :label-width="formLabelWidth">
-            <el-date-picker size="mini" v-model="param.value" type="date" placeholder="Pick a day"></el-date-picker>
+            <el-date-picker size="small" v-model="param.value" type="date" placeholder="Pick a day"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12" v-if="param.type == 'interval'">
           <el-form-item :label="param.title" :label-width="formLabelWidth">
             <el-date-picker
-              size="mini"
+              size="small"
               :picker-options="rangePickerOptions"
               v-model="param.value"
               type="daterange"
@@ -58,6 +58,8 @@
 import axios from "axios";
 import moment from "moment";
 import {computeTranslatedText} from '../globalfunctions'
+import bus from 'vue3-eventbus'
+
 
 export default {
   name: "ReportEditor",
@@ -230,7 +232,7 @@ export default {
           if (response.data.error != "") console.log("Report list error...");
           else {
             console.log(this);
-            this.$globalbus.$emit("reportgenerated");
+            bus.emit("reportgenerated");
           }
         })
         .catch(error => {

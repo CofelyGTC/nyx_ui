@@ -2,7 +2,7 @@
   <div>
     <el-button
       circle
-      size="mini"
+      size="small"
       @click="prepareVega()"
       class="regreshbutton"
       type="primary"
@@ -16,6 +16,8 @@
 <script>
 import vegaEmbed from "vega-embed";
 import moment from "moment";
+import bus from 'vue3-eventbus'
+
 
 export default {
   name: "Vega",
@@ -91,7 +93,7 @@ export default {
   },
   mounted: function() {
     console.log("===============  REGISTERING VEGA:");
-    this.$globalbus.$on("timerangechanged", payLoad => {
+    bus.on("timerangechanged", payLoad => {
       console.log("GLOBALBUS/VEGATIMERANGE/");
       this.prepareVega();
     });
@@ -99,7 +101,7 @@ export default {
   },
   beforeDestroy: function() {
     console.log("===============  UNREGISTERING VEGA:");
-    this.$globalbus.$off("timerangechanged");
+    bus.off("timerangechanged");
   }
 };
 </script>

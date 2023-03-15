@@ -13,9 +13,9 @@
         <div v-if="$store.getters.currentSubCategory.apps[0].type=='lazy-generic-table'">
           <LazyGenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
         </div>
-        <div v-else-if="$store.getters.currentSubCategory.apps[0].type=='external'">
+        <!--div v-else-if="$store.getters.currentSubCategory.apps[0].type=='external'">
           <External :config="$store.getters.currentSubCategory.apps[0]"></External>          
-        </div>
+        </div-->
         <div class="kibana" v-else-if="$store.getters.currentSubCategory.apps[0].type=='kibana'">
           <Kibana :config="$store.getters.currentSubCategory.apps[0]" :directLoad="true"></Kibana>
         </div>
@@ -55,9 +55,9 @@
             <div v-else-if="app.type=='lazy-generic-table'">
               <LazyGenericTable :config="app" :key="app.rec_id" />
             </div>
-            <div v-else-if="app.type=='external'">
+            <!--div v-else-if="app.type=='external'">
               <External :config="app" :key="app.rec_id"></External>
-            </div>
+            </div-->
             <div class="kibana" v-else-if="app.type=='kibana'">
               <Kibana :config="app" :key="app.rec_id"></Kibana>
             </div>
@@ -69,7 +69,7 @@
             </div>
             <div v-else>
                <!-- v-if="selectedTab===app.rec_id" -->
-              <component :config="app" v-bind:is="app.config.controller" :key="app.rec_id"></component>
+              <component :config="app" :is="app.config.controller" :key="app.rec_id"></component>
             </div>
           </div>
           <!-- <div v-else>LOADING</div> -->
@@ -82,31 +82,33 @@
 
 <script>
 
-import generictable from "@/components/GenericTable";
-import lazygenerictable from "@/components/LazyGenericTable";
+import GenericTable from "@/components/GenericTable";
+import LazyGenericTable from "@/components/LazyGenericTable";
 import pggenerictable from "@/components/PGGenericTable";
-import kibana from "@/components/Kibana";
-import external from "@/components/External";
-import upload from "@/components/Upload";
+import Kibana from "@/components/Kibana";
+//import external from "@/components/External";
+import Upload from "@/components/Upload";
  // eslint-disable-next-line
 import user from "@/components/User";
  // eslint-disable-next-line
-import config from "@/components/Config";
-import map from "@/components/Map";
+import Config from "@/components/Config";
+//import map from "@/components/Map";
 import ReportList from "@/components/ReportList";
 import ProcessList from "@/components/ProcessList";
 import FileSystem from "@/components/FileSystem";
 import reporttask from "@/components/ReportTask";
 import reportperiodic from "@/components/ReportPeriodic";
-import form from "@/components/Form";
+import Form from "@/components/Form";
 import freetext from "@/components/FreeText";
 // import loading from "@/components/Loading";
-import queryfilter from "@/components/QueryFilter";
-import vega from "@/components/Vega";
+import QueryFilter from "@/components/QueryFilter";
+import Vega from "@/components/Vega";
 import LandingPage from "@/components/LandingPage";
 import NYXInfo from "@/components/NYXInfo";
 import SendMessage from "@/components/SendMessage";
-import Vue from "vue";
+import bus from 'vue3-eventbus'
+
+//import Vue from "vue";
 
 const req = require.context('../components/external/', true, /\.vue$/)
 
@@ -117,29 +119,8 @@ req.keys().forEach(filename => {
   dynamicComponents[name] = component
 })
 
-Vue.component("GenericTable", generictable);
-Vue.component("LazyGenericTable", lazygenerictable);
-Vue.component("PGGenericTable", pggenerictable);
-Vue.component("Kibana", kibana);
-Vue.component("External", external);
-Vue.component("Upload", upload);
-Vue.component("User", user);
-Vue.component("Config", config);
-Vue.component("Map", map);
-Vue.component("Form", form);
-Vue.component("FreeText", freetext);
-Vue.component("ReportList", ReportList);
-Vue.component("ReportTask", reporttask);
-Vue.component("ReportPeriodic", reportperiodic);
-Vue.component("ProcessList", ProcessList);
-Vue.component("FileSystem", FileSystem);
-Vue.component("QueryFilter", queryfilter);
-Vue.component("Vega", vega);
-Vue.component("LandingPage", LandingPage);
-Vue.component("NYXInfo", NYXInfo);
-Vue.component("SendMessage", SendMessage);
-
 const myExport = {
+  name:"GenericComponent",
 //export default {
   data: () => ({ 
     selectedTab: null, 
@@ -147,7 +128,8 @@ const myExport = {
     // currentSubCategory: null
     }),
   components: {
-    ...dynamicComponents
+    ...dynamicComponents,SendMessage,NYXInfo,LandingPage,Vega,QueryFilter,FileSystem,ProcessList,reportperiodic,reporttask,ReportList,freetext,Form,
+    user,Upload,Kibana,pggenerictable,LazyGenericTable,GenericTable,Config//,External,Map
   },
   watch: {
     $route(to, from) {
@@ -202,8 +184,8 @@ const myExport = {
     }
   },
   methods: {
-    handleTabClick: function(tab) {
-      var path = "/main/" + tab.name
+    handleTabClick: function(tab,event) {
+      var path = "/main/" + tab.props.name
 
       if(path != this.$route.path)
         this.$router.push(path);
@@ -214,7 +196,7 @@ const myExport = {
     
     this.selectedTab=this.$store.getters.activeApp.rec_id
 
-    this.$globalbus.$on("reportgenerated", () => {
+    bus.on("reportgenerated", () => {
       for (var i in this.$store.getters.currentSubCategory.apps) {
         var app = this.$store.getters.currentSubCategory.apps[i];
         if (app.config.controller == "ReportTask") {
@@ -225,7 +207,7 @@ const myExport = {
     });
 
     console.log("===============  REGISTERING: messagereceived");
-    this.$globalbus.$on("messagereceived", payLoad => {
+    bus.on("messagereceived", payLoad => {
       console.log("GLOBALBUS/GENERICCOMPONENT/MESSAGERECEIVED");
       console.log(payLoad);
       if(payLoad.notif_type=="global")
@@ -238,7 +220,7 @@ const myExport = {
         });
       }
       else{
-        this.$localbus.$emit("localmessagereceived",payLoad);
+        bus.emit("localmessagereceived",payLoad);
       }
       
     });  
@@ -247,9 +229,9 @@ const myExport = {
   },
   destroyed: function() {
     console.log("===============  UN REGISTERING REport Generated:");
-    this.$globalbus.$off("reportgenerated");
+    bus.off("reportgenerated");
     console.log("===============  UN REGISTERING messagereceived:");
-    this.$globalbus.$off("messagereceived");
+    bus.off("messagereceived");
   },
 };
 

@@ -16,8 +16,8 @@
         <el-col :span="12" style="text-align:left;">
           <h1 style=" color:white;">{{fileName}}</h1></el-col>
         <el-col :span="12" style="text-align:right;">
-          <el-button :disabled="loading || !fileHasChanged" type="primary" size="mini" @click="save">{{this.$t("buttons.save")}}</el-button>
-          <el-button plain size="mini" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
+          <el-button :disabled="loading || !fileHasChanged" type="primary" size="small" @click="save">{{this.$t("buttons.save")}}</el-button>
+          <el-button plain size="small" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
         </el-col>
       </el-row>
     </span>
@@ -49,10 +49,10 @@ export default {
     localFileName: null,
     localFile: '',
     loading: true,
-    _keyListener: null,
+    keyListener: null,
   }),
   components: {
-    editor: require("vue2-ace-editor")
+    editor: require("vue3-ace-editor")
   },
   computed: {
     fileHasChanged: function() {
@@ -84,7 +84,7 @@ export default {
     this.dialogFormVisible = true;
   },
   mounted: function() {
-    this._keyListener = e => {
+    this.keyListener = e => {
         if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
             e.preventDefault(); // present "Save Page" from getting triggered.
             console.log(e)
@@ -93,11 +93,11 @@ export default {
         }
     };
 
-    document.addEventListener('keydown', this._keyListener);
+    document.addEventListener('keydown', this.keyListener);
   },
   beforeDestroy: function() {
     console.log('beforeDestroy')
-    document.removeEventListener('keydown', this._keyListener)
+    document.removeEventListener('keydown', this.keyListener)
   },
   methods: {
     prepareData() {

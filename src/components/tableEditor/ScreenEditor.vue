@@ -33,25 +33,25 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="Name" :label-width="formLabelWidth">
-                <el-input :disabled="!isAdmin" size="mini" v-model="newRec._source.optiboard" autocomplete="off"></el-input>
+                <el-input :disabled="!isAdmin" size="small" v-model="newRec._source.optiboard" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>            
             <el-col :span="8" v-show="isAdmin">
               <el-form-item label="Client" :label-width="formLabelWidth">
-                <el-input size="mini" :disabled="!isAdmin" v-model="newRec._source.client" autocomplete="off"></el-input>
+                <el-input size="small" :disabled="!isAdmin" v-model="newRec._source.client" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="Description" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.description" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.description" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="Carousel" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
-                  size="mini"
+                  size="small"
                   v-model="newRec._source.carrousel"
                   filterable
                   placeholder="Select a carousel"
@@ -67,7 +67,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="RSS" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.rss" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.rss" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -76,12 +76,12 @@
             
             <el-col :span="8">
               <el-form-item v-show="isAdmin" label="LifeSign (ms)" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.lifesigninterval" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.lifesigninterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item v-show="isAdmin" label="Poll (ms)" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.pollinterval" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.pollinterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -89,7 +89,7 @@
             <el-col :span="8">
             <el-form-item label="Mode" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
-                  size="mini"
+                  size="small"
                   v-model="newRec._source.mode"
                   filterable
                   placeholder="Select a mode"
@@ -105,12 +105,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="Kibana Wrapper" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.kibanawrapper" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.kibanawrapper" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="Opti Conso ID" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.opticonsoid" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.opticonsoid" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
 
@@ -131,7 +131,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="Icon URL" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
+                <el-input size="small" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>             
           </el-row>
@@ -148,7 +148,7 @@
                 <el-col :span="8">
                   <el-form-item label="API Key" :label-width="formLabelWidth">
                     <el-input
-                      size="mini"
+                      size="small"
                       v-model="newRec._source.weather.apikey"
                       autocomplete="off"
                     ></el-input>
@@ -157,7 +157,7 @@
                 <el-col :span="8">
                   <el-form-item label="Language" :label-width="formLabelWidth">
                     <el-input
-                      size="mini"
+                      size="small"
                       v-model="newRec._source.weather.language"
                       autocomplete="off"
                     ></el-input>
@@ -166,7 +166,7 @@
                 <el-col :span="8">
                   <el-form-item label="Location" :label-width="formLabelWidth">
                     <el-input
-                      size="mini"
+                      size="small"
                       v-model="newRec._source.weather.location"
                       autocomplete="off"
                     ></el-input>
@@ -193,7 +193,7 @@
                   type="danger"
                   v-if="orgRec._source.accepted == 1"
                   @click="refreshScreen()"
-                  size="mini"
+                  size="small"
                 >{{this.$t("buttons.refresh")}}</el-button>
                 </el-tooltip>
             </el-col>
@@ -203,7 +203,7 @@
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
                 @click="openNewScript()"
-                size="mini"
+                size="small"
               >{{this.$t("buttons.createScript")}}</el-button>
             </el-col>
             <el-col :span="4">
@@ -212,14 +212,14 @@
                 type="danger"
                 v-if="orgRec._source.accepted == 1"
                 @click="takeScreenshot()"
-                size="mini"
+                size="small"
               >Screenshot</el-button>
             </el-col>
             <el-col :span="12">
               <span v-show="isAdmin" v-if="dockerList.length>=1">
                 Update screen&nbsp;
                 <el-select
-                  size="mini"
+                  size="small"
                   v-model="selectedDocker"
                   filterable
                   placeholder="Select a version"
@@ -237,7 +237,7 @@
                 type="danger"
                 v-if="selectedDocker"
                 @click="updateScreen()"
-                size="mini"
+                size="small"
               >{{this.$t("buttons.update")}}</el-button>
             </el-col>
           </el-row>
@@ -267,16 +267,16 @@
 </template>
 
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import newscript from "@/components/tableEditor/NewScript";
 import vieweditor from "@/components/tableEditor/ViewEditor";
 //import YAML from "js-yaml";
 import axios from "axios";
 
-Vue.component("NewScript", newscript);
 
 export default {
   name: "screenEditor",
+  components:{newscript},
   data: () => ({
     orgRec: null,
     newRec: null,
@@ -338,7 +338,6 @@ export default {
     this.prepareData();
     this.loadDockerRecords();
   },
-  components: {},
   methods: {
     closeDialog: function() {
       this.$emit("dialogclose");

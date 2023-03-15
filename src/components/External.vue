@@ -17,7 +17,7 @@
 import _ from "lodash";
 import axios from "axios";
 import moment from "moment";
-import Vue from "vue";
+//import Vue from "vue";
 
 export default {
   name: "External",

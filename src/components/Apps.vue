@@ -6,24 +6,26 @@
           :span="24/modulo"
           v-for="(field,index2) in line"
           :key="index2"
-          style="text-align:center;height:90px;"
+          style="text-align:center;height:90px"
         >
-          <el-button plain @click="appClicked(field.value)">
-            <v-icon :name="field.value.icon" scale="2" style="height:40px;" />
+          <el-button plain @click="appClicked(field.value)" style="height:68.5px">
+            <v-icon :icon="field.value.icon" size="2x"/>
           </el-button>
           <br />
           {{field.value.title}}
         </el-col>
       </el-row>
     </el-form>
-
-    <el-button circle type="primary" slot="reference">
-      <i class="el-icon-menu"></i>
+    <template #reference>
+    <el-button circle size="large" type="primary" style="margin-top:-10px;">
+      <el-icon :size="15"><Menu /></el-icon>
     </el-button>
+    </template>
   </el-popover>
 </template>
   
 <script>
+import {Menu} from '@element-plus/icons-vue';
 export default {
   name: "Apps",
   data: () => ({

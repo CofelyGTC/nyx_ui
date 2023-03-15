@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import {createStore} from 'vuex'
 import axios from "axios";
 import moment from 'moment';
 import _ from "lodash";
@@ -49,8 +48,8 @@ function stopSocket(wsObject)
 }
 
 
-export default new Vuex.Store({
-  state: {
+export const store2 = createStore({
+    state: {
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",

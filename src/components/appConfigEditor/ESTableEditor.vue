@@ -26,7 +26,7 @@
             :type="succesIndexPatternDefinition && currentConfig.config.index!=''?'primary': ''"
             icon="el-icon-arrow-right"
             @click="goToStep(2)"
-            size="mini"
+            size="small"
           >Next step</el-button>
         </el-col>
       </el-row>
@@ -38,7 +38,7 @@
       </el-row>
 
       <el-row>
-        <el-table :data="esMapping" size="mini" style="width: 100%">
+        <el-table :data="esMapping" size="small" style="width: 100%">
           <el-table-column label="id" prop="id">
             <template slot="header" slot-scope="scope">
               <p
@@ -69,7 +69,7 @@
             :type="succesIndexPatternDefinition && currentConfig.config.index!=''?'primary': ''"
             icon="el-icon-arrow-left"
             @click="goToStep(1)"
-            size="mini"
+            size="small"
           >Back</el-button>
         </el-col>
       </el-row>
@@ -100,7 +100,7 @@
           <el-select
             v-model="timefieldSelected"
             placeholder="Select"
-            size="mini"
+            size="small"
             ref="timeField"
             @change="timeFieldChanged()"
             style="width:100%;"
@@ -118,13 +118,13 @@
             placeholder="Default doc"
             ref="docType"
             type="text"
-            size="mini"
+            size="small"
             autocomplete="off"
             v-model="currentConfig.config.doc_type"
           ></el-input>
         </el-col>
         <el-col :span="6">
-          <el-select size="mini" style="width:100%" v-model="currentConfig.autoRefreshTime" placeholder="Select">
+          <el-select size="small" style="width:100%" v-model="currentConfig.autoRefreshTime" placeholder="Select">
             <el-option
               v-for="item in timeRefreshOptions"
               :key="item.value"
@@ -149,7 +149,7 @@
                 <el-select
                   v-if="currentConfig.timeSelectorChecked"
                   style="margin-left:20px;"
-                  size="mini"
+                  size="small"
                   v-model="currentConfig.timeSelectorType"
                   placeholder="Please select a type"
                 >
@@ -177,7 +177,7 @@
             @change="selectFieldsToDisplayChanged"
             ref="fieldsToDisplay"
             placeholder="Field to display"
-            size="mini"
+            size="small"
             style="width:100%;"
           >
             <el-option
@@ -220,7 +220,7 @@
                       ref="author"
                       placeholder="Name"
                       v-model="item.title"
-                      size="mini"
+                      size="small"
                     ></el-input>
                   </td>
                   <td>{{item.type}}</td>
@@ -231,7 +231,7 @@
                       ref="author"
                       placeholder="eg. DD/MM/YYYY HH:mm"
                       v-model="item.format"
-                      size="mini"
+                      size="small"
                     ></el-input>
                     <el-input
                       v-else-if="item.type=='long' || item.type=='double'"
@@ -239,14 +239,14 @@
                       ref="author"
                       placeholder="Numeral.js format"
                       v-model="item.format"
-                      size="mini"
+                      size="small"
                     ></el-input>
                     <el-select
                       v-else-if="item.type=='keyword' || item.type=='text'"
                       v-model="item.format"
                       filterable
                       placeholder="Default"
-                      size="mini"
+                      size="small"
                       style="width:100%;"
                     >
                       <el-option label="Default" value="default"></el-option>
@@ -255,7 +255,7 @@
                     </el-select>
                   </td>
                   <td>
-                    <el-button @click="linkEditorVisible=true; selectedItem=item" v-if="item.format=='link'" size="mini">conf</el-button>
+                    <el-button @click="linkEditorVisible=true; selectedItem=item" v-if="item.format=='link'" size="small">conf</el-button>
                   </td>
                   <td>
                     <i class="el-icon-d-caret handle"></i>
@@ -287,7 +287,7 @@
             clearable
             ref="order"
             placeholder="Field to sort on"
-            size="mini"
+            size="small"
             style="width:100%;"
           >
             <el-option
@@ -303,7 +303,7 @@
             placeholder="Records in the table will be filtered by this query"
             ref="hiddenQuery"
             type="text"
-            size="mini"
+            size="small"
             autocomplete="off"
             v-model="currentConfig.config.hiddenQuery"
           ></el-input>
@@ -351,7 +351,7 @@
                 <el-button
                   @click="copyFieldsToDisplayToDownload()"
                   type="text"
-                  size="mini"
+                  size="small"
                   style="color: #606266;"
                 >Copy from fields to display</el-button>
               
@@ -364,7 +364,7 @@
                 @change="selectFieldsToDownloadChanged"
                 ref="fieldsToDownload"
                 placeholder="Field to download, if empty, all fields are dowloaded"
-                size="mini"
+                size="small"
                 style="width:100%;"
               >
                 <el-option
@@ -403,7 +403,7 @@
                           ref="author2"
                           placeholder="Name"
                           v-model="item.title"
-                          size="mini"
+                          size="small"
                         ></el-input>
                       </td>
                       <td>
@@ -436,7 +436,7 @@
                 <el-select
                   v-model="currentConfig.config.mapfield"
                   placeholder="Select"
-                  size="mini"
+                  size="small"
                   ref="geoField"
                   style="width:90%;"
                 >
@@ -452,7 +452,7 @@
                 <el-input-number
                   :min="1"
                   :max="20"
-                  size="mini"
+                  size="small"
                   ref="zoom"
                   v-model="currentConfig.config.mapzoom"
                   autocomplete="off"
@@ -470,7 +470,7 @@
             <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
               <el-col :span="12">
                 <el-input-number
-                  size="mini"
+                  size="small"
                   ref="lat"
                   v-model="currentConfig.config.maplat"
                   autocomplete="off"
@@ -478,7 +478,7 @@
               </el-col>
               <el-col :span="12">
                 <el-input-number
-                  size="mini"
+                  size="small"
                   ref="long"
                   v-model="currentConfig.config.maplong"
                   autocomplete="off"
@@ -505,7 +505,7 @@
             <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
               <el-col :span="24">
                 <el-input
-                  size="mini"
+                  size="small"
                   ref:="colorfunc"
                   placeholder="Fields used by the functions separated by a comma."
                   v-model="currentConfig.config.functionfields"
@@ -522,7 +522,7 @@
             <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
               <el-col :span="24">
                 <el-input
-                  size="mini"
+                  size="small"
                   ref:="colorfunc"
                   v-model="currentConfig.config.colorfunction"
                   autocomplete="off"
@@ -539,7 +539,7 @@
             <el-row style="text-align:left;" v-if="currentConfig.mapChecked">
               <el-col :span="24">
                 <el-input
-                  size="mini"
+                  size="small"
                   ref:="iconfunc"
                   v-model="currentConfig.config.iconfunction"
                   autocomplete="off"
@@ -565,7 +565,7 @@
             placeholder="your specific component url. Eg. specificComponent"
             ref="specificEditor"
             type="text"
-            size="mini"
+            size="small"
             autocomplete="off"
             v-model="currentConfig.config.editorComponent"
           ></el-input>
@@ -578,7 +578,7 @@
             allow-create
             ref="writePrivileges"
             placeholder="write privileges"
-            size="mini"
+            size="small"
             style="width:100%;"
           >
             <el-option
@@ -595,17 +595,17 @@
 </template>
 <script>
 //import axios from "axios";
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 import _ from "lodash";
 
-import userquerieseditor from "@/components/appConfigEditor/UserQueriesEditor";
-import linkeditor from "@/components/appConfigEditor/LinkEditor";
-Vue.component("UserQueriesEditor", userquerieseditor);
-Vue.component("LinkEditor", linkeditor);
+import UserQueriesEditor from "@/components/appConfigEditor/UserQueriesEditor";
+import LinkEditor from "@/components/appConfigEditor/LinkEditor";
+
 
 export default {
   field: "ESTableEditor",
+  components:{UserQueriesEditor,LinkEditor},
   data() {
     return (
       window.__FORM__ || {

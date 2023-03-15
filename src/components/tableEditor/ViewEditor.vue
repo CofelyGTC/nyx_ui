@@ -17,10 +17,10 @@
           <el-button
             :disabled="!recchanged"
             type="primary"
-            size="mini"
+            size="small"
             @click="saveRecord"
           >{{this.$t("buttons.save")}}</el-button>
-          <el-button plain size="mini" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
+          <el-button plain size="small" @click="closeDialog">{{this.$t("buttons.quit")}}</el-button>
         </el-col>
       </el-row>
     </span>
@@ -40,13 +40,13 @@
       <el-row style="text-align:left;">
         <el-col :span="8" class="padding-right">
           <el-form-item prop="_source.title" label>
-            <el-input size="mini" ref="title" v-model="newRec._source.title" autocomplete="off"></el-input>
+            <el-input size="small" ref="title" v-model="newRec._source.title" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="8" class="padding-right">
           <el-form-item>
-            <el-input ref="summary" size="mini" v-model="newRec._source.summary" autocomplete="off"></el-input>
+            <el-input ref="summary" size="small" v-model="newRec._source.summary" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
         <el-col
@@ -58,7 +58,7 @@
             :disabled="!$store.getters.creds.hasPrivilege('admin')"
             ref="client"
             v-model="newRec._source.client"
-            size="mini"
+            size="small"
           ></el-input>
         </el-col>
       </el-row>
@@ -76,7 +76,7 @@
             <el-input-number
               ref="duration"
               :min="10000"
-              size="mini"
+              size="small"
               v-model="newRec._source.duration"
               autocomplete="off"
             ></el-input-number>
@@ -87,7 +87,7 @@
           <el-form-item>
             <el-input
               ref="description"
-              size="mini"
+              size="small"
               v-model="newRec._source.description"
               autocomplete="off"
             ></el-input>
@@ -106,7 +106,7 @@
         <el-col :span="8" style="text-align: left;">
           <el-form-item prop="_source.type">
             <el-select
-              size="mini"
+              size="small"
               ref="type"
               v-model="newRec._source.type"
               placeholder="Please select a type"
@@ -120,7 +120,7 @@
         </el-col>
         <el-col :span="16" style="text-align: left;">
           <el-form-item label prop="_source.target">
-            <el-input ref="url" size="mini" v-model="newRec._source.target" autocomplete="off"></el-input>
+            <el-input ref="url" size="small" v-model="newRec._source.target" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -142,14 +142,14 @@
         <el-row>
           <el-col :span="8" style="text-align: left;" class="padding-right">
             <el-form-item>
-              <el-input ref="rss" size="mini" autocomplete="off" v-model="newRec._source.rss"></el-input>
+              <el-input ref="rss" size="small" autocomplete="off" v-model="newRec._source.rss"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="16" style="text-align: left;">
             <el-form-item>
               <el-input
                 ref="youtube"
-                size="mini"
+                size="small"
                 autocomplete="off"
                 v-model="newRec._source.youtube"
               ></el-input>
@@ -164,7 +164,7 @@
             <el-form-item label :label-width="formLabelWidth">
               <el-button
                 :loading="listLoading"
-                size="mini"
+                size="small"
                 type="primary"
                 @click="loadKibanaDashboards()"
               >Load List</el-button>
@@ -174,7 +174,7 @@
             <el-form-item :label-width="formLabelWidth">
               <el-button
                 :disabled="newRec._source.kibanaId==null||dashboards.length==0"
-                size="mini"
+                size="small"
                 type="danger"
                 @click="kibanaDashboardSelected()"
               >Refresh Dashboard</el-button>
@@ -184,7 +184,7 @@
             <el-form-item :label-width="formLabelWidth">
               <el-button
                 :disabled="newRec._source.kibanaId==null||dashboards.length==0"
-                size="mini"
+                size="small"
                 type="danger"
                 @click="openInKibana()"
               >Open in Kibana</el-button>
@@ -196,7 +196,7 @@
           <el-col :span="8" style="text-align: left;">
             <el-form-item label="Dashboard" :label-width="formLabelWidth">
               <el-select
-                size="mini"
+                size="small"
                 @change="kibanaDashboardSelected"
                 v-model="newRec._source.kibanaId"
                 placeholder="Select"
@@ -213,14 +213,14 @@
 
           <el-col :span="8">
             <el-form-item label="ID" :label-width="formLabelWidth">
-              <el-input size="mini" disabled v-model="newRec._source.kibanaId" autocomplete="off"></el-input>
+              <el-input size="small" disabled v-model="newRec._source.kibanaId" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8">
             <el-form-item label="Kibana Time" :label-width="formLabelWidth">
               <el-input
-                size="mini"
+                size="small"
                 v-model="newRec._source.kibanaTime"
                 @change="kibanaTimeChange"
                 autocomplete="off"
@@ -248,7 +248,7 @@
           <el-col :span="8" v-if="(newRec._source.type === 'kibana')">
             <el-form-item label :label-width="formLabelWidth">
               <el-select
-                size="mini"
+                size="small"
                 v-model="newRec._source.timeRefreshValue"
                 placeholder="Refresh Interval"
                 @change="timeRefreshSelectChange"
@@ -279,10 +279,9 @@
 import axios from "axios";
 import rison from "rison";
 
-import Vue from "vue";
+//import Vue from "vue";
 
 import upload from "@/components/Upload";
-Vue.component("Upload", upload);
 
 import { extractURLParts } from "../../globalfunctions";
 
@@ -291,7 +290,7 @@ function transformObject(obj) {
 }
 
 export default {
-  name: "viewEditor",
+  components:{upload},
   data: () => ({
     orgRec: null,
     newRec: null,
@@ -359,7 +358,6 @@ export default {
     console.log("created event");
     this.prepareData();
   },
-  components: {},
   methods: {
     openInKibana() {
       console.log(this.newRec);
@@ -711,10 +709,6 @@ export default {
       let select = this.$refs.timeField;
       this.$nextTick(() => select.focus());
     }
-  },
-  created: function() {
-    console.log("created event");
-    this.prepareData();
   }
 };
 </script>

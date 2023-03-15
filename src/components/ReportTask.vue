@@ -24,7 +24,7 @@
     </el-dialog>
 
     <el-table
-      size="mini"
+      size="small"
       :data="tableData.filter(data => !search || data._source.creds.user.id.toLowerCase().includes(search.toLowerCase()) ||   data._source.report.title.toLowerCase().includes(search.toLowerCase() ))"
       :default-sort="{prop: '_source.treatment.creation', order: 'descending'}"
       style="width: 100%"
@@ -33,21 +33,21 @@
     >
       <el-table-column width="60">
         <template slot-scope="scope">
-          <v-icon :name="scope.row._source.report.icon" scale="2" />
+          <v-icon :icon="scope.row._source.report.icon" scale="2" />
         </template>
       </el-table-column>
 
       <el-table-column width="60" :label="$t('generic.status')">
         <template slot-scope="scope">
           <v-icon
-            name="spinner"
+            icon="fa-spinner"
             spin
             scale="2"
             v-if="scope.row._source.treatment.status == 'Waiting'"
           />
           <v-icon
             style="color:#409EFF"
-            name="check-circle"
+            icon="fa-check-circle"
             scale="2"
             v-if="scope.row._source.treatment.status == 'Finished'"
           />
@@ -59,7 +59,7 @@
           >
             <v-icon
               style="color:#F56C6C"
-              name="exclamation-triangle"
+              icon="fa-exclamation-triangle"
               scale="2"
               v-if="scope.row._source.treatment.status == 'Error'"
             />
@@ -100,9 +100,9 @@
               :key="scope.row._source.id+item.title+item.name"
             >
               &nbsp;
-              <el-tag size="mini">{{item.title}}:{{item.value}}</el-tag>
+              <el-tag size="small">{{item.title}}:{{item.value}}</el-tag>
             </div>
-            <el-button size="mini" slot="reference">{{scope.row._source.report.parameters.length}}</el-button>
+            <el-button size="small" slot="reference">{{scope.row._source.report.parameters.length}}</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -118,7 +118,7 @@
           >
             <el-button
               v-if="$store.getters.creds.hasPrivilege('reporteditor')"
-              size="mini"
+              size="small"
               icon="el-icon-document"
               @click="openLogs(scope.$index, scope.row)"
               plain
@@ -127,7 +127,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('report.regenerate')" placement="bottom">
             <el-button
               v-if="$store.getters.creds.hasPrivilege('reporteditor')"
-              size="mini"
+              size="small"
               icon="el-icon-refresh-right"
               @click="regenerateReport(scope.$index, scope.row)"
               plain
@@ -138,11 +138,11 @@
       <el-table-column prop="_source.downloads.length" align="right">
         <!-- Removed from line below: slot-scope="scope" -->
         <template slot="header" slot-scope="scope">
-          <el-input v-model="search" size="mini" :placeholder="$t('generic.type_to_search')" class="searchfield" />
+          <el-input v-model="search" size="small" :placeholder="$t('generic.type_to_search')" class="searchfield" />
         </template>
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             round
             style="width:45px; text-align:center; padding:7px 0px;"
             :type="getButtonType(item.extension)"
@@ -158,15 +158,16 @@
 
 <script>
 import axios from "axios";
-import Vue from "vue";
+//import Vue from "vue";
 import moment from "moment";
-import logviewer from "@/components/LogViewer";
+import LogViewer from "@/components/LogViewer";
 import {computeTranslatedText} from '../globalfunctions'
 
-Vue.component("LogViewer", logviewer);
+//Vue.component("LogViewer", logviewer);
 
 export default {
   name: "ReportTask",
+  components:{LogViewer},
   data: () => ({
     tableData: [],
     search: "",
@@ -273,7 +274,7 @@ export default {
           if (response.data.error != "") console.log("Report list error...");
           else {
             console.log(this);
-            // this.$globalbus.$emit("reportgenerated");
+            // bus.emit("reportgenerated");
           }
 
           this.$notify({

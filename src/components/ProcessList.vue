@@ -27,7 +27,7 @@
         <el-row :gutter="10">
           <el-col :span="6"> 
             <el-form-item label="Filter" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="filter" autocomplete="off"></el-input>
+              <el-input size="small" v-model="filter" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -62,7 +62,7 @@
           <div style="text-align:left;padding:2px;">
             <div style="position:absolute;width:65px;padding:2px;height:65px;">
               <v-icon
-                :name="Array.isArray(dat.icon) ? dat.icon[0] : dat.icon"
+                :icon="Array.isArray(dat.icon) ? dat.icon[0] : dat.icon"
                 scale="3"
                 style="height:60px;color:#555"
               />

@@ -8,7 +8,7 @@
     ></ReportPeriodicEditor>
 
     <el-table
-      size="mini"
+      size="small"
       :data="tableData.filter(data => !search || ((JSON.stringify(data._source).toLowerCase().includes(search.toLowerCase())))
       )"
       :default-sort="{prop: '_source.title', order: 'ascending'}"
@@ -47,7 +47,7 @@
             :key="item"
           >
             &nbsp;
-            <el-tag size="mini" type="info">{{(item+1)}}</el-tag>
+            <el-tag size="small" type="info">{{(item+1)}}</el-tag>
           </span>
           <span
             v-if="scope.row._source.trigger.type=='monthly'"
@@ -55,7 +55,7 @@
             :key="item"
           >
             &nbsp;
-            <el-tag size="mini" type="info">{{(item)}}</el-tag>
+            <el-tag size="small" type="info">{{(item)}}</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -79,7 +79,7 @@
             >
               <el-button
                 circle
-                size="mini"
+                size="small"
                 @click="duplicate()"
                 class="dupbutton"
                 type="primary"
@@ -96,7 +96,7 @@
             >
               <el-button
                 circle
-                size="mini"
+                size="small"
                 @click="addScheduler()"
                 class="addbutton"
                 type="primary"
@@ -105,13 +105,13 @@
               ></el-button>
             </el-tooltip>            
           </div>
-          <el-input v-model="search" size="mini" :placeholder="$t('generic.type_to_search')" class="searchfield" />
+          <el-input v-model="search" size="small" :placeholder="$t('generic.type_to_search')" class="searchfield" />
         </template>
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="$t('generic.edit')" placement="bottom">
             <el-button
               v-if="$store.getters.creds.hasPrivilege('reporteditor')"
-              size="mini"
+              size="small"
               icon="el-icon-edit"
               @click="editScheduler(scope.$index, scope.row)"
               circle
@@ -120,7 +120,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('generic.delete')" placement="bottom-end">
             <el-button
               v-if="$store.getters.creds.hasPrivilege('reporteditor')"
-              size="mini"
+              size="small"
               type="danger"
               icon="el-icon-delete"
               @click="askDeleteScheduler(scope.$index, scope.row)"
@@ -136,14 +136,15 @@
 
 <script>
 import axios from "axios";
-import reportperiodiceditor from "@/components/ReportPeriodicEditor";
-import Vue from "vue";
+import ReportPeriodicEditor from "@/components/ReportPeriodicEditor";
+//import Vue from "vue";
 import moment from "moment";
 
-Vue.component("ReportPeriodicEditor", reportperiodiceditor);
+//Vue.component("ReportPeriodicEditor", reportperiodiceditor);
 
 export default {
   name: "ReportPeriodic",
+  components:{ReportPeriodicEditor},
   data: () => ({
     tableData: [],
     search: "",

@@ -10,14 +10,14 @@
       <el-row :gutter="20">
         <el-col :span="20">
           <el-form-item label="Field" :label-width="formLabelWidth">
-            <el-input size="mini" v-model="curField.field" autocomplete="off"></el-input>
+            <el-input size="small" v-model="curField.field" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="20">
           <el-form-item label="Title" :label-width="formLabelWidth">
-            <el-input size="mini" v-model="curField.title" autocomplete="off"></el-input>
+            <el-input size="small" v-model="curField.title" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -25,7 +25,7 @@
         <el-col :span="10">
           <el-form-item label="Type" :label-width="formLabelWidth">
             <el-select
-              size="mini"
+              size="small"
               v-model="curField.type"
               placeholder="Please select a type"
               @change="changeType"
@@ -45,7 +45,7 @@
             :label-width="formLabelWidth"
             v-if="selectedType && selectedType.subTypes"
           >
-            <el-select size="mini" v-model="curField.subType" placeholder="Please select a subtype">
+            <el-select size="small" v-model="curField.subType" placeholder="Please select a subtype">
               <el-option
                 v-for="(subType, index) in selectedType.subTypes"
                 :label="subType.label"
@@ -60,7 +60,7 @@
       <el-row :gutter="20" v-if="curField.type=='string' || curField.type=='number'">
         <el-col :span="20">
           <el-form-item label="Default" :label-width="formLabelWidth">
-            <el-input size="mini" v-model="curField.default" autocomplete="off"></el-input>
+            <el-input size="small" v-model="curField.default" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -88,7 +88,7 @@
               v-if="inputVisible"
               v-model="inputValue"
               ref="saveTagInput"
-              size="mini"
+              size="small"
               @keyup.enter.native="handleInputConfirm"
               @blur="handleInputConfirm"
             ></el-input>
@@ -106,7 +106,7 @@
       <el-row :gutter="20">
         <el-col :span="20">
           <el-form-item label="Color" :label-width="formLabelWidth">
-            <el-input size="mini" v-model="curField.color" autocomplete="off"></el-input>
+            <el-input size="small" v-model="curField.color" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>

@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter,createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Main from '../views/Main.vue'
 
@@ -10,10 +9,11 @@ import GenericComponent from '../components/GenericComponent.vue'
 // import Loading from "@/components/Loading";
 
 
-Vue.use(Router);
+//Vue.use(createRouter);
 
 
-export default new Router({
+export default new createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/',

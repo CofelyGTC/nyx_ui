@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="Folder Name" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="currentConfig.config.foldername" autocomplete="off"></el-input>
+              <el-input size="small" v-model="currentConfig.config.foldername" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -14,14 +14,14 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="Reg Ex" :label-width="formLabelWidth">
-              <el-input size="mini" v-model="currentConfig.config.regexNO" autocomplete="off"></el-input>
+              <el-input size="small" v-model="currentConfig.config.regexNO" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <el-form-item label="Root Path" :label-width="formLabelWidth">
-            <el-input size="mini" v-model="currentConfig.config.rootpath" autocomplete="off"></el-input>
+            <el-input size="small" v-model="currentConfig.config.rootpath" autocomplete="off"></el-input>
           </el-form-item>
         </el-row>
       </el-form>
@@ -30,15 +30,15 @@
   </div>
 </template>
 <script>
-import Vue from "vue";
+//import Vue from "vue";
 import axios from "axios";
 // import _ from "lodash";
 
 import filesystemeditor from "@/components/appConfigEditor/FileSystemEditor";
-Vue.component("FileSystemEditor", filesystemeditor);
 
 export default {
   field: "FileSystemEditor",
+  //components:{filesystemeditor},
   data() {
     return (
       window.__FORM__ || {
