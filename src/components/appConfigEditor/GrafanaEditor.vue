@@ -1,5 +1,5 @@
 <template>
-  <div id="kibana-editor">
+  <div id="grafana-editor">
     <el-card>
       <!-- <h1>{{fieldList}}</h1> -->
       <el-form>
@@ -18,48 +18,22 @@
         </el-row>
 
         <el-row>
-          <el-col :span="8" style="text-align: left;">
-            <el-form-item label="Dashboard" :label-width="formLabelWidth">
-              <el-select
-                size="mini"
-                @change="kibanaDashboardSelected"
-                v-model="currentConfig.config.kibanaId"
-                placeholder="Select"
-                :loading="listLoading"
-                style="width:100%"
-                filterable
-              >
-                <el-option
-                  v-for="dash in dashboards"
-                  :key="dash.id"
-                  :label="dash.space+' - '+dash.attributes.title"
-                  :value="dash.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" style="text-align: left;">
-            <el-form-item :label-width="formLabelWidth">
-              <el-button
-                :disabled="currentConfig.config.kibanaId==null||dashboards.length==0"
-                size="mini"
-                type="danger"
-                @click="openInKibana()"
-                style="width:100%"
-              >Open in Kibana</el-button>
+          <el-col :span="16" style="text-align: left;">
+            <el-form-item label="Dashboard URL" :label-width="formLabelWidth">
+              <el-input size="mini" v-model="currentConfig.config.hiddenQuery" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8">
             <el-form-item
-              label="Kibana Time"
+              label="Grafana Time"
               :label-width="formLabelWidth"
-              prop="config.kibanaTime"
+              prop="config.grafanaTime"
             >
               <el-input
                 size="mini"
-                @blur="kibanaTimeChange"
-                v-model="currentConfig.config.kibanaTime"
+                @blur="GrafanaTimeChange"
+                v-model="currentConfig.config.GrafanaTime"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -173,15 +147,15 @@ import rison from "rison";
 
 // import _ from "lodash";
 
-import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
-Vue.component("KibanaEditor", kibanaeditor);
+//import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
+//Vue.component("KibanaEditor", kibanaeditor);
 
 function transformObject(obj) {
   return rison.encode(obj);
 }
 
 export default {
-  field: "KibanaEditor",
+  field: "GrafanaEditor",
   data() {
     return (
       window.__FORM__ || {
@@ -234,7 +208,7 @@ export default {
         this.curConfig.timeRefresh = true;
 
 
-      this.computeUrlFromKibana();
+      this.computeUrlFromGrafana();
 
 
       var tmp = JSON.parse(JSON.stringify(this.curConfig));
@@ -243,7 +217,7 @@ export default {
     },
     
     timeRefreshSwitchChange() {
-      this.computeUrlFromKibana();
+      this.computeUrlFromGrafana();
 
 
       var tmp = JSON.parse(JSON.stringify(this.curConfig));

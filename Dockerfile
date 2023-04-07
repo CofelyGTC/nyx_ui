@@ -1,6 +1,8 @@
-FROM node:12.13.1-slim as base
+FROM node:16.19.0-slim as base
+
 
 FROM base as builder
+WORKDIR /etc/opt
 RUN npm i express
 COPY . /etc/build
 WORKDIR /etc/build
