@@ -19,6 +19,9 @@
         <div class="kibana" v-else-if="$store.getters.currentSubCategory.apps[0].type=='kibana'">
           <Kibana :config="$store.getters.currentSubCategory.apps[0]" :directLoad="true"></Kibana>
         </div>
+        <div class="grafana" v-else-if="$store.getters.currentSubCategory.apps[0].type=='grafana'">
+          <Grafana :config="$store.getters.currentSubCategory.apps[0]" :directLoad="true"></Grafana>
+        </div>
         <div v-else-if="$store.getters.currentSubCategory.apps[0].type=='form'">
           <Form :config="$store.getters.currentSubCategory.apps[0]"></Form>
         </div>
@@ -61,6 +64,9 @@
             <div class="kibana" v-else-if="app.type=='kibana'">
               <Kibana :config="app" :key="app.rec_id"></Kibana>
             </div>
+            <div class="grafana" v-else-if="app.type=='grafana'">
+              <Grafana :config="app" :key="app.rec_id"></Grafana>
+            </div>
             <div v-else-if="app.type=='form'">
               <Form :config="app" :key="app.rec_id"></Form>
             </div>
@@ -86,6 +92,7 @@ import generictable from "@/components/GenericTable";
 import lazygenerictable from "@/components/LazyGenericTable";
 import pggenerictable from "@/components/PGGenericTable";
 import kibana from "@/components/Kibana";
+import grafana from "@/components/Grafana";
 import external from "@/components/External";
 import upload from "@/components/Upload";
  // eslint-disable-next-line
@@ -121,6 +128,7 @@ Vue.component("GenericTable", generictable);
 Vue.component("LazyGenericTable", lazygenerictable);
 Vue.component("PGGenericTable", pggenerictable);
 Vue.component("Kibana", kibana);
+Vue.component("Grafana", grafana);
 Vue.component("External", external);
 Vue.component("Upload", upload);
 Vue.component("User", user);

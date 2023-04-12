@@ -173,8 +173,8 @@ import rison from "rison";
 
 // import _ from "lodash";
 
-import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
-Vue.component("KibanaEditor", kibanaeditor);
+//import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
+//Vue.component("KibanaEditor", kibanaeditor);
 
 function transformObject(obj) {
   return rison.encode(obj);

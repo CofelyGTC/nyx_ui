@@ -128,7 +128,7 @@ export default {
   color: #2c3e50;
 }
 #nav {
-  background-color: aqua;
+  background-color:#70BD95;
 }
 
 #nav a {
