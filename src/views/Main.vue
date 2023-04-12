@@ -9,7 +9,7 @@
       <el-header style="text-align: right; font-size: 12px">
         <el-row :gutter="24">
           <el-col :span="1">
-            <el-button circle type="primary" icon="el-icon-more" @click="changeMenuState"></el-button>
+            <el-button circle type="default" icon="el-icon-minus" @click="changeMenuState"></el-button>
           </el-col>
           <el-col :span="5" style="text-align: left; font-size: 22px;color:white;">
             <span>
@@ -94,6 +94,7 @@
                 v-if="$store.getters.activeApp.timeSelectorChecked"
                 size="mini"
                 v-model="timeType"
+                fill="#70BD95"
               >
                 <el-radio-button label="absolute">{{$t('time.absolute')}}</el-radio-button>
                 <el-radio-button label="relative">{{$t('time.relative')}}</el-radio-button>
@@ -172,7 +173,7 @@
                   :default-active="$store.getters.currentSubCategory.fulltitle"
                   :unique-opened="true"
                   class="el-menu-vertical"
-                  text-color="#666"
+                  text-color="#70BD95"
                 >
                   <!--            v-if="menu.category!='apps'"-->
                   <el-submenu
@@ -257,7 +258,7 @@ export default {
       return {
         overflow: "hidden",
         border: 0 + "px solid #eee",
-        padding: 1 + "px",
+        //padding: 1 + "px",
         height: this.containerSize.height - 0 + "px"
       };
     },
@@ -780,8 +781,21 @@ body {
   border-bottom: 1px solid lightgrey !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   line-height: 60px;
+  background-color: #002439 !important;
 }
-
+.el-header button{
+  background-color: #70BD95 !important;
+  color: white;
+  border: 0px;
+}
+.el-date-editor {
+  background-color: #70BD95 !important;
+  border: 0px !important;
+}
+.el-date-editor *{
+  background-color: #70BD95 !important;
+  color: white  !important;
+}
 .el-header .el-col-5 span {
   font-weight: bold;
   color: #c0c4cc;
@@ -793,10 +807,10 @@ body {
 }
 
 .el-dialog__header {
-  background-color: #409eff !important;
+  background-color: #70BD95 !important;
 }
 .login-container {
-  background-color: #66b1ff !important;
+  background-color: #70BD95 !important;
 }
 
 .el-table th > .cell {

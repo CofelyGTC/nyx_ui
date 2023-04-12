@@ -17,7 +17,7 @@
       </el-row>
     </el-form>
 
-    <el-button circle type="primary" slot="reference">
+    <el-button circle type="default" slot="reference">
       <i class="el-icon-menu"></i>
     </el-button>
   </el-popover>
@@ -86,4 +86,5 @@ export default {
 .menuicon {
   margin-bottom: -3px;
 }
+
 </style>
