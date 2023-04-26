@@ -17,6 +17,7 @@ import vueNumeralFilterInstaller from 'vue-numeral-filter';
 import draggable from "vuedraggable";
 import InfiniteLoading from 'vue-infinite-loading';
 
+//import '../element-variables.scss'
 
 import '../theme/index.css'
 

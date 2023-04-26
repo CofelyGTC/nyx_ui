@@ -174,6 +174,7 @@
                   :unique-opened="true"
                   class="el-menu-vertical"
                   text-color="#70BD95"
+                  active-text-color="#FFFFFF"
                 >
                   <!--            v-if="menu.category!='apps'"-->
                   <el-submenu
@@ -713,6 +714,7 @@ export default {
 
 .el-aside .el-menu {
   border-right: none;
+  background-color: #002439 !important;
 }
 
 .el-main {
@@ -729,6 +731,7 @@ body {
   text-align: left;
   overflow: none;
   height: 100%;
+  background-color: #002439 !important;
 }
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 200px;
@@ -778,10 +781,10 @@ body {
 
 .el-header {
   background-color: white !important;
-  border-bottom: 1px solid lightgrey !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   line-height: 60px;
   background-color: #002439 !important;
+  border-bottom: 0px;
 }
 .el-header button{
   background-color: #70BD95 !important;
@@ -829,5 +832,7 @@ body {
 .time-selector-row div {
   display: inline-block;
 }
-
+.el-menu-item.is-active:hover{
+  color: #002439 !important;
+}
 </style>
