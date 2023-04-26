@@ -709,7 +709,7 @@ export default {
               "2": {
                 date_histogram: {
                   field: this.config.config.timefield,
-                  interval: this.autotime, //this.$store.getters.autoTime,
+                  fixed_interval: this.autotime, //this.$store.getters.autoTime,
                   time_zone: "Europe/Berlin",
                   min_doc_count: 1
                 }
