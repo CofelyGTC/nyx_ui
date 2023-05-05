@@ -856,7 +856,7 @@ import freetextdetails from "@/components/FreeTextDetails";
 import queryfiltereditor from "@/components/appConfigEditor/QueryFilterEditor";
 import estableeditor from "@/components/appConfigEditor/ESTableEditor";
 import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
-import grafanaeditor from "@/components/appConfigEditor/GrafanaEditor";
+import grafanaeditor from "@/components/appConfigEditor/GrafanaEditor"; 
 import formeditor from "@/components/appConfigEditor/FormEditor";
 import uploadeditor from "@/components/appConfigEditor/UploadEditor";
 import filesystemeditor from "@/components/appConfigEditor/FileSystemEditor";
@@ -873,7 +873,7 @@ Vue.component("QueryFilterEditor", queryfiltereditor);
 Vue.component("ESTableEditor", estableeditor);
 Vue.component("FormEditor", formeditor);
 Vue.component("KibanaEditor", kibanaeditor);
-Vue.component("Grafanaeditor", grafanaeditor);
+Vue.component("GrafanaEditor", grafanaeditor);
 Vue.component("UploadEditor", uploadeditor);
 Vue.component("FileSystemEditor", filesystemeditor);
 
