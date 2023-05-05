@@ -1,24 +1,16 @@
 <template>
   
   <div class="login-container">
-    <div class="title-icon"></div>
-    <div class="login-logo1">
-    </div>
-    <div class="title-icon2">
-      <v-icon
-        style="color:white"
-        name="spinner"
-        scale="3"
-        spin
-        v-if="!initialized || loginunderway"
-      />
-      <v-icon
-        style="color:white"
-        :name="config.icon"
-        scale="3"
-        v-if="initialized  && !loginunderway"
-      />
-    </div>
+    <img class="logo-group" src="../assets/quantesx.png">
+    <div class="logo-container" style="display: none;">
+      <div class="title-icon"></div>
+      <div class="login-logo1">
+      </div>
+      <div class="title-icon2">
+        <v-icon style="color:white" name="spinner" scale="3" spin v-if="!initialized || loginunderway" />
+        <v-icon style="color:white" :name="config.icon" scale="3" v-if="initialized && !loginunderway" />
+      </div>
+    </div>
 
     <div class="title-disclaimer">
       <b>Nyx</b> Platform <b>{{this.$store.getters.version}}</b> ({{$store.getters.elasticVersion}})
@@ -62,9 +54,8 @@
         </el-col>
       </el-form>
     </el-card>
-    <h1 class="title-login">
+    <h1 class="title-login" style="display: none;">
       {{config.welcome}}
-      
     </h1>
 
   </div>
@@ -409,5 +400,12 @@ export default {
 .login-form .el-button{
   margin-top: 12px;
 
+}
+.logo-group {
+  position: absolute;
+  left: 50%;
+  width: 300px;
+  transform: translateX(-50%);
+  top: 35%;
 }
 </style>
