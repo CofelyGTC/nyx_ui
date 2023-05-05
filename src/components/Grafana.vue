@@ -133,7 +133,7 @@ export default {
       console.log("HEIGHT:")
       console.log(this.$store.getters.containerSize.height , headerheight)
       return (
-        this.$store.getters.containerSize.height - 64 - headerheight + "px"
+        this.$store.getters.containerSize.height - 60 - headerheight + "px"
       );
       //return "1400px";
     },
@@ -158,14 +158,14 @@ export default {
         //headerheight += 50;
       }
 
-      var left = 210;
+      var left = 200;
       if (!this.$store.state.menuOpen) left = 0;
 
       return {
         border: "0px solid #888",
         //overflow: "hidden !important",
         position: "fixed",
-        top: 64 + headerheight + "px",
+        top: 60 + headerheight + "px",
         left: left + "px",
         right: "0px"
       };

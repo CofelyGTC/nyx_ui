@@ -52,7 +52,7 @@
     "@vue/cli-plugin-eslint": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
     "babel-eslint": "^10.1.0",
-    "element-theme-chalk": "^2.13.2",
+    "element-theme-chalk": "^2.15.13",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
     "sass-loader": "^7.3.1",
