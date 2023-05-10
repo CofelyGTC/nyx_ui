@@ -2,6 +2,7 @@
   
   <div class="login-container">
     <img class="logo-group" src="../assets/quantesx.png">
+    <img class="logo-team" src="../assets/equansDigital.png">
     <div class="logo-container" style="display: none;">
       <div class="title-icon"></div>
       <div class="login-logo1">
@@ -391,12 +392,6 @@ export default {
   margin-left: -200px;
 }
 
-.login-form .el-input__inner{
-  /*
-  border-radius:50px !important;
-  */
-}
-
 .login-form .el-button{
   margin-top: 12px;
 
@@ -408,4 +403,11 @@ export default {
   transform: translateX(-50%);
   top: 35%;
 }
+.logo-team {
+  position: absolute;
+  left: 1%;
+  width: 150px;
+  top: 92%;
+}
+
 </style>

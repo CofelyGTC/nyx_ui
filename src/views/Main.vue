@@ -9,7 +9,9 @@
       <el-header style="text-align: right; font-size: 12px">
         <el-row :gutter="24">
           <el-col :span="1">
-            <el-button circle type="default" icon="el-icon-minus" @click="changeMenuState"></el-button>
+            <el-button class="menu-button" style="background-color: #002439 !important; padding:17px; color:#70BD95 !important" @click="changeMenuState">
+              <v-icon name="bars" scale="1.5" @click="changeMenuState"/>
+            </el-button>
           </el-col>
           <el-col :span="5" style="text-align: left; font-size: 22px;color:white;">
             <span>
@@ -833,6 +835,9 @@ body {
   display: inline-block;
 }
 .el-menu-item.is-active:hover{
+  color: #002439 !important;
+}
+.el-menu-item.is-active:focus{
   color: #002439 !important;
 }
 </style>
