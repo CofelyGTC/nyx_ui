@@ -37,7 +37,7 @@
               <el-input
                 size="mini"
                 @blur="GrafanaTimeChange"
-                v-model="currentConfig.config.GrafanaTime"
+                v-model="currentConfig.config.grafanaTime"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -130,6 +130,13 @@
             </el-row>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label :label-width="formLabelWidth">
+            <el-row>
+              <el-switch v-model="currentConfig.autoFitChecked" active-text="Auto Fit Panels" @change="computeUrlFromGrafana"></el-switch>
+            </el-row>
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <el-row>
@@ -176,6 +183,7 @@ export default {
     //this.prepareData();
   },
   methods: {
+
     query_filter_changed:function() {
         if(this.currentConfig.queryFilterChecked)
           this.currentConfig.queryBarChecked=false;
@@ -248,6 +256,9 @@ export default {
 
       url +=  strRefresh + "&" + timek ;
       url += "&kiosk";
+      if(this.currentConfig.autoFitChecked){
+        url += "&autofitpanels"
+      }
       console.log(
         "********************compute grafana url***********************"
       );

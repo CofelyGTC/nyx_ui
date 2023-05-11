@@ -73,9 +73,8 @@
               <div 
                 v-if="$store.getters.activeApp.timeSelectorChecked && (timeType=='absolute')"
               >
-
                 <el-date-picker
-                  style="top:1px;"
+                  style="top:0px;"
                   :picker-options="rangePickerOptions"
                   v-model="timerange"
                   v-on:change="timeRangeChanged"
@@ -793,13 +792,16 @@ body {
   color: white;
   border: 0px;
 }
-.el-date-editor {
+.el-header .el-date-editor {
   background-color: #70BD95 !important;
   border: 0px !important;
+  line-height:20px;
+  border-radius: 4px;
 }
-.el-date-editor *{
+.el-header .el-date-editor *{
   background-color: #70BD95 !important;
   color: white  !important;
+  border: 0px !important;
 }
 .el-header .el-col-5 span {
   font-weight: bold;
