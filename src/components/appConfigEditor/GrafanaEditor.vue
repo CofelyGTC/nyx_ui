@@ -19,12 +19,30 @@
 
         <el-row>
           <el-col :span="16" style="text-align: left;">
-            <el-form-item label="Dashboard URL" :label-width="formLabelWidth">
+            <!--el-form-item label="Dashboard URL" :label-width="formLabelWidth">
               <el-input size="mini" 
               @blur="computeUrlFromGrafana"
               v-model="currentConfig.config.url" 
               autocomplete="off"
               ></el-input>
+            </el-form-item-->
+            <el-form-item label="Dashboard" :label-width="formLabelWidth">
+              <el-select
+                size="mini"
+                @change="grafanaDashboardSelected"
+                v-model="currentConfig.config.grafanaId"
+                placeholder="Select"
+                :loading="listLoading"
+                style="width:100%"
+                filterable
+              >
+                <el-option
+                  v-for="dash in dashboards"
+                  :key="dash.id"
+                  :label="dash.space+' - '+dash.attributes.title"
+                  :value="dash.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
 
@@ -133,17 +151,20 @@
           <el-col :span="8">
             <el-form-item label :label-width="formLabelWidth">
             <el-row>
-              <el-switch v-model="currentConfig.autoFitChecked" active-text="Auto Fit Panels" @change="computeUrlFromGrafana"></el-switch>
+              <el-switch v-model="currentConfig.autoFitChecked" active-text="Auto Fit" @change="computeUrlFromGrafana"></el-switch>
             </el-row>
             </el-form-item>
           </el-col>
         </el-row>
-
+          <el-col :span="8">
+            <el-form-item label :label-width="formLabelWidth">
+            <el-row>
+              <el-switch v-model="currentConfig.darkMode" active-text="Dark Mode" @change="computeUrlFromGrafana"></el-switch>
+            </el-row>
+            </el-form-item>
+          </el-col>
         <el-row>
-          <!-- <UserQueriesEditor
-                  :currentConfig="currentConfig"
-                  :allFields="allFieldsFilter"
-          ></UserQueriesEditor>-->
+
         </el-row>
       </el-form>
       <div></div>
@@ -151,6 +172,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 
 export default {
   field: "GrafanaEditor",
@@ -180,7 +202,8 @@ export default {
     currentConfig: { type: Object }
   },
   created: function() {
-    //this.prepareData();
+    this.loadGrafanaDashboards();
+    console.log("CREATED")
   },
   methods: {
 
@@ -229,6 +252,28 @@ export default {
       console.log("grafana time changed");
       this.computeUrlFromGrafana();
     },
+    grafanaDashboardSelected() {
+      for (var i in this.dashboards) {
+        if (this.dashboards[i].id == this.currentConfig.config.grafanaId) {
+          console.log("FOUND");
+          this.selectedDash = this.dashboards[i];
+          console.log(this.dashboards[i]);
+        }
+      }
+      
+      this.currentConfig.config.url =
+        this.$store.getters.grafanaurl.replace("grafana", "grafananyx")+
+        "d/" + this.selectedDash.uid + 
+        this.selectedDash.title.toLowerCase();
+      console.log(this.currentConfig.config.url)
+      this.computeKibanaUrlFromSelectedDash();
+
+      var tmp = JSON.parse(JSON.stringify(this.currentConfig));
+      this.currentConfig = null;
+      this.currentConfig = tmp;
+      console.log(this.currentConfig)
+
+    },
     computeUrlFromGrafana() {
       console.log("computeUrlFromGrafana");
       if (this.currentConfig.url != "") {
@@ -237,7 +282,7 @@ export default {
     },
     computeGrafanaUrlFromOptions() {
       console.log('computeGrafanaUrl')
-      var url = "";
+      var url = "?";
       var timek = "from=now-7d&to=now";
       if (
         this.currentConfig.config != undefined &&
@@ -259,6 +304,11 @@ export default {
       if(this.currentConfig.autoFitChecked){
         url += "&autofitpanels"
       }
+      if(this.currentConfig.darkMode){
+        url += "&theme=dark"
+      }else{
+        url += "&theme=light"
+      }
       console.log(
         "********************compute grafana url***********************"
       );
@@ -266,6 +316,49 @@ export default {
 
       return url;
     },
+    loadGrafanaDashboards: function() {
+      this.listLoading = true;
+      this.dashboards = [];
+      var url = this.$store.getters.grafanaurl + "api/search?type=dash-folder";
+      var url = "https://quantesx.cofelygtc.com/grafana/api/search?type=dash-folder"
+
+      axios
+        .get(url)
+        .then(response => {
+          console.log(response);
+          this.loadGrafanaDashboards2(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+          setTimeout(() => {
+            this.listLoading = false;
+
+          }, 1500)
+      });
+    },
+    loadGrafanaDashboards2: async function(spaces) {
+      console.log(spaces);
+      this.dashboards = [];
+      for (var i in spaces) {
+        var space = spaces[i];
+
+        var spaceurl = "";
+        var url =
+          this.$store.getters.grafanaurl + 
+          "api/search?folderIds" + space.id;
+        //var url = "https://quantesx.cofelygtc.com/grafana/api/search?folderIds"+space.id
+        const response = await axios.get(url, {});
+        this.addDashboards(response.data, space.title);
+      }
+
+      this.listLoading = false;
+    },
+    addDashboards: function(newdashs, space) {
+      for (var dash of newdashs.saved_objects) {
+        dash.space = space;
+        this.dashboards.push(dash);
+      }
+    }
   }
 };
 </script>
