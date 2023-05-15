@@ -156,14 +156,18 @@
             </el-form-item>
           </el-col>
         </el-row>
-          <el-col :span="8">
+        <el-row>
+          <el-col :span="12">
             <el-form-item label :label-width="formLabelWidth">
             <el-row>
-              <el-switch v-model="currentConfig.darkMode" active-text="Dark Mode" @change="computeUrlFromGrafana"></el-switch>
+              <el-switch 
+                v-model="currentConfig.darkMode" 
+                inactive-text="Light Mode" 
+                active-text="Dark Mode" 
+                @change="computeUrlFromGrafana"></el-switch>
             </el-row>
             </el-form-item>
           </el-col>
-        <el-row>
 
         </el-row>
       </el-form>
@@ -295,12 +299,16 @@ export default {
 
       console.log(timek);
       this.currentConfig.config.grafanaTime = timek;
-      var strRefresh=""
-      if (this.currentConfig.timeRefresh && this.currentConfig.timeRefreshValue != null)
-        strRefresh = '&refresh='+this.currentConfig.timeRefreshValue
+      var strRefresh="";
+      
+      url +=  timek 
 
-      url +=  strRefresh + "&" + timek ;
+      if (this.currentConfig.timeRefresh && this.currentConfig.timeRefreshValue != null)
+        strRefresh = '&refresh='+this.currentConfig.timeRefreshValue;
+        url +=  "&" + strRefresh;
+
       url += "&kiosk";
+
       if(this.currentConfig.autoFitChecked){
         url += "&autofitpanels"
       }
@@ -320,7 +328,7 @@ export default {
       this.listLoading = true;
       this.dashboards = [];
       var url = this.$store.getters.grafanaurl + "api/search?type=dash-folder";
-      var url = "https://quantesx.cofelygtc.com/grafana/api/search?type=dash-folder"
+      //var url = "https://quantesx.cofelygtc.com/grafana/api/search?type=dash-folder"
 
       axios
         .get(url)
@@ -341,11 +349,9 @@ export default {
       this.dashboards = [];
       for (var i in spaces) {
         var space = spaces[i];
-
-        var spaceurl = "";
         var url =
           this.$store.getters.grafanaurl + 
-          "api/search?folderIds" + space.id;
+          "api/search?folderIds=" + space.id;
         //var url = "https://quantesx.cofelygtc.com/grafana/api/search?folderIds"+space.id
         const response = await axios.get(url, {});
         this.addDashboards(response.data, space.title);
@@ -354,7 +360,7 @@ export default {
       this.listLoading = false;
     },
     addDashboards: function(newdashs, space) {
-      for (var dash of newdashs.saved_objects) {
+      for (var dash of newdashs) {
         dash.space = space;
         this.dashboards.push(dash);
       }

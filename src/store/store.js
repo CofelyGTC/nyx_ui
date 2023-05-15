@@ -96,6 +96,7 @@ export default new Vuex.Store({
     apiurl: state => state.apiurl,
     menuOpen: state => state.menuOpen,
     kibanaurl: state => state.kibanaurl,
+    grafanaurl: state => state.grafanaurl,
     menus: state => state.menus,
     apps: state => state.apps,
     creds: state => state.creds,
