@@ -265,12 +265,9 @@ export default {
         }
       }
       
-      this.currentConfig.config.url =
-        this.$store.getters.grafanaurl.replace("grafana", "grafananyx")+
-        "d/" + this.selectedDash.uid + 
-        this.selectedDash.title.toLowerCase();
+      this.currentConfig.config.url = this.selectedDash.url
       console.log(this.currentConfig.config.url)
-      this.computeKibanaUrlFromSelectedDash();
+      this.computeUrlFromGrafana();
 
       var tmp = JSON.parse(JSON.stringify(this.currentConfig));
       this.currentConfig = null;
@@ -290,7 +287,8 @@ export default {
       var timek = "from=now-7d&to=now";
       if (
         this.currentConfig.config != undefined &&
-        this.currentConfig.config.grafanaTime != undefined
+        this.currentConfig.config.grafanaTime != undefined &&
+        this.currentConfig.config.grafanaTime != ""
       ) {
         console.log("saving grafana time");
         console.log(this.currentConfig.config.grafanaTime); 
