@@ -39,7 +39,7 @@
                 <el-option
                   v-for="dash in dashboards"
                   :key="dash.id"
-                  :label="dash.space+' - '+dash.attributes.title"
+                  :label="dash.space+' - '+dash.title"
                   :value="dash.id"
                 ></el-option>
               </el-select>
