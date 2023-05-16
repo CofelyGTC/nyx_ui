@@ -42,7 +42,7 @@
       
         @tab-click="handleTabClick">
         <el-tab-pane
-          v-bind:style="styleContainerComputed"
+          v-bind:style="darkTab ? darkStyleContainerComputed : styleContainerComputed"
           v-for="(app, index) in $store.getters.currentSubCategory.apps"
           :key="app.rec_id"
           :label="app.loc_title"
@@ -152,6 +152,7 @@ const myExport = {
   data: () => ({ 
     selectedTab: null, 
     loading: false,
+    darkTab: false,
     // currentSubCategory: null
     }),
   components: {
@@ -159,16 +160,16 @@ const myExport = {
   },
   watch: {
     $route(to, from) {
-      console.log('WATCHER ROUTE GENERIC COMPONENT')
+      //console.log('WATCHER ROUTE GENERIC COMPONENT')
       if(from.params.recid === to.params.recid) {
-        console.log('Same recid, no need to change app')
+        //console.log('Same recid, no need to change app')
         return
       }
-
-      console.log('from')
-      console.log(from)
-      console.log('to')
-      console.log(to)
+      
+      //console.log('from')
+      //console.log(from)
+      //console.log('to')
+      //console.log(to)
 
       this.loading=true
       
@@ -197,6 +198,15 @@ const myExport = {
         height: this.containerSize.height - 125 + "px"
       };
     },
+    darkStyleContainerComputed: function() {
+      return {
+        overflow: "auto",
+        border: 0 + "px solid #eee",
+        padding: 1 + "px",
+        height: this.containerSize.height - 125 + "px",
+        backgroundColor: "black",
+      };
+    },
     singleStyleContainerComputed: function() {
       return {
         overflow: "auto",
@@ -212,13 +222,30 @@ const myExport = {
   methods: {
     handleTabClick: function(tab) {
       var path = "/main/" + tab.name
-
+      console.log("TAAAAAABBBB",tab.name)
+      let currentApp=""
+      for(let app of this.$store.getters.currentSubCategory.apps){
+        if(tab.name==app.rec_id){
+          currentApp=app
+        }
+      }
+      if (currentApp.type=="grafana"){
+        console.log(currentApp)
+        if(currentApp.darkMode){
+          //this.darkTab=true
+          console.log("dark")
+        }
+      }
       if(path != this.$route.path)
         this.$router.push(path);
     },
+    test_method: function(){
+      console.log("METHOD WORKED")
+    }
   },
   mounted: function() {
-    console.log('MOUNTED GenericComponent')
+
+    //console.log('MOUNTED GenericComponent')
     
     this.selectedTab=this.$store.getters.activeApp.rec_id
 
@@ -232,10 +259,10 @@ const myExport = {
       }
     });
 
-    console.log("===============  REGISTERING: messagereceived");
+    //console.log("===============  REGISTERING: messagereceived");
     this.$globalbus.$on("messagereceived", payLoad => {
-      console.log("GLOBALBUS/GENERICCOMPONENT/MESSAGERECEIVED");
-      console.log(payLoad);
+      //console.log("GLOBALBUS/GENERICCOMPONENT/MESSAGERECEIVED");
+      //console.log(payLoad);
       if(payLoad.notif_type=="global")
       {
         this.$alert(payLoad.notif_message, payLoad.notif_title, {
@@ -254,9 +281,9 @@ const myExport = {
     window.dispatchEvent(new Event("resize"));
   },
   destroyed: function() {
-    console.log("===============  UN REGISTERING REport Generated:");
+    //console.log("===============  UN REGISTERING REport Generated:");
     this.$globalbus.$off("reportgenerated");
-    console.log("===============  UN REGISTERING messagereceived:");
+    //console.log("===============  UN REGISTERING messagereceived:");
     this.$globalbus.$off("messagereceived");
   },
 };
