@@ -6,6 +6,9 @@ WORKDIR /etc/opt
 RUN npm i express
 COPY . /etc/build
 WORKDIR /etc/build
+#RUN apt install node-gyp
+#RUN node-gyp --python=python3 configure
+
 RUN npm i
 RUN npm run build
 
