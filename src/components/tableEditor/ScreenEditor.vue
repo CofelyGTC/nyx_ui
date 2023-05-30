@@ -41,6 +41,24 @@
                 <el-input size="mini" :disabled="!isAdmin" v-model="newRec._source.client" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
+            <!-- <el-col :span="8">
+            <el-form-item label="RSS Widget" :label-width="formLabelWidth" style="text-align:left">
+                <el-select
+                  size="mini"
+                  v-model="newRec._source.rsswidget"
+                  filterable
+                  placeholder="Select a widget for RSS"
+                  @change="handleRssWidgetChange"
+                >
+                  <el-option
+                    v-for="rsswidget in rsswidgetList"
+                    :key="rsswidget"
+                    :label="rsswidget"
+                    :value="rsswidget"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col> -->
           </el-row>
           <el-row>
             <el-col :span="8">
@@ -118,6 +136,9 @@
           </el-row>
 
           
+
+
+          
           <el-row v-show="isAdmin">
             <el-col :span="8">
               <el-form-item label="Primary Color" :label-width="formLabelWidth">
@@ -137,6 +158,38 @@
           </el-row>
       
         </el-card>
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+          <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
+            <h2><b>Widgets URL</b></h2>
+          </el-row>
+          <el-row v-show="isAdmin">
+            <el-col :span="8">
+              <el-form-item v-if="newRec._source.rsswidget == 'firstwidget'" label="First Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.firstwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
+              </el-form-item>
+              <el-form-item v-else label="First Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.firstwidget" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item v-if="newRec._source.rsswidget == 'secondwidget'" label="Second Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.secondwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
+              </el-form-item>
+              <el-form-item v-else label="Second Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.secondwidget" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item v-if="newRec._source.rsswidget == 'thirdwidget'" label="Third Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.thirdwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
+              </el-form-item>
+              <el-form-item v-else label="Third Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.thirdwidget" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
+        <div></div>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
             <h2><b>Weather</b></h2>
@@ -243,7 +296,6 @@
           </el-row>
           <el-row></el-row>
         </el-card>
-
         <div></div>
       </el-form>
     </div>
@@ -295,7 +347,9 @@ export default {
     title: "Screen configuration",
     carouselList: [],
     dockerList: [],
-    modeList: ["Main","Main3G", "MainNoBanner"]
+    modeList: ["Main","Main3G", "MainNoBanner"],
+    rsswidget: "",
+    rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"]
 
   }),
   computed: {
@@ -340,6 +394,11 @@ export default {
   },
   components: {},
   methods: {
+    handleRssWidgetChange() {
+      console.log('this.newRec._source.rsswidget: ', this.newRec._source.rsswidget);
+      console.log('this.newRec._source.rss: ', this.newRec._source.rss);
+      // Tu peux également effectuer d'autres actions avec la valeur ici
+    },
     closeDialog: function() {
       this.$emit("dialogclose");
     },    
