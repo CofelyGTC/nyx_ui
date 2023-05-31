@@ -134,11 +134,18 @@
 
             
           </el-row>
-
-          
-
-
-          
+          <el-row v-show="isAdmin">
+            <el-col :span="8">
+              <el-form-item label="Logo URL" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Logo Bg Color" :label-width="formLabelWidth">
+                    <el-color-picker v-model="newRec._source.logobackgroundcolor"></el-color-picker>
+              </el-form-item>
+            </el-col>  
+          </el-row>
           <el-row v-show="isAdmin">
             <el-col :span="8">
               <el-form-item label="Primary Color" :label-width="formLabelWidth">
@@ -149,20 +156,14 @@
               <el-form-item label="Secondary Color" :label-width="formLabelWidth">
                     <el-color-picker v-model="newRec._source.secondarycolor"></el-color-picker>
               </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="Icon URL" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
-              </el-form-item>
-            </el-col>             
+            </el-col>          
           </el-row>
-      
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
             <h2><b>Widgets URL</b></h2>
           </el-row>
-          <el-row v-show="isAdmin">
+          <el-row v-show="isAdmin" style="padding:20px;">
             <el-col :span="8">
               <el-form-item v-if="newRec._source.rsswidget == 'firstwidget'" label="First Widget" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.firstwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
@@ -189,7 +190,6 @@
             </el-col>
           </el-row>
         </el-card>
-        <div></div>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
             <h2><b>Weather</b></h2>
@@ -229,7 +229,6 @@
             </div>
           </el-collapse-transition>
         </el-card>
-        <div></div>
         <el-card shadow="hover" :body-style="{ padding: '10px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
             <h2><b>Actions</b></h2>
@@ -296,7 +295,6 @@
           </el-row>
           <el-row></el-row>
         </el-card>
-        <div></div>
       </el-form>
     </div>
 
