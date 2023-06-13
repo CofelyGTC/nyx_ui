@@ -73,6 +73,7 @@
                   v-model="newRec._source.carrousel"
                   filterable
                   placeholder="Select a carousel"
+                  @change="handleCarrouselChange"
                 >
                   <el-option
                     v-for="car in carouselList"
@@ -89,7 +90,9 @@
               </el-form-item>
             </el-col>
           </el-row>
-
+          <el-row>
+          {{ newRec._source.carrousel }}
+          </el-row>
           <el-row>
             
             <el-col :span="8">
@@ -158,6 +161,53 @@
               </el-form-item>
             </el-col>          
           </el-row>
+        </el-card>
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+          <el-row type="flex" slot="header" class="row-bg" justify="space-between">
+            <h2><b>Default carrousel pages</b></h2>
+            <el-switch v-model="defaultPagesActivated"></el-switch>
+          </el-row>
+          <el-collapse-transition>
+            <div v-if="defaultPagesActivated" style="padding:20px;">
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="API Key" :label-width="formLabelWidth">
+                    <el-select
+                      size="mini"
+                      v-model="newRec._source.carrouselDefaultPage"
+                      filterable
+                      placeholder="Select a page"
+                    >
+                      <el-option
+                        v-for="car in pagesList"
+                        :key="car.value"
+                        :label="car.label"
+                        :value="car.value"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="Language" :label-width="formLabelWidth">
+                    <el-input
+                      size="mini"
+                      v-model="newRec._source.weather.language"
+                      autocomplete="off"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="Location" :label-width="formLabelWidth">
+                    <el-input
+                      size="mini"
+                      v-model="newRec._source.weather.location"
+                      autocomplete="off"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </div>
+          </el-collapse-transition>
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
@@ -319,7 +369,7 @@
 <script>
 import Vue from "vue";
 import newscript from "@/components/tableEditor/NewScript";
-import vieweditor from "@/components/tableEditor/ViewEditor";
+// import vieweditor from "@/components/tableEditor/ViewEditor";
 //import YAML from "js-yaml";
 import axios from "axios";
 
@@ -340,10 +390,12 @@ export default {
     changed: false,
     dialogFormVisible: false,
     accepted: false,
+    defaultPagesActivated: false,
     weatherActivated: true,
     newScriptVisible: false,
     title: "Screen configuration",
     carouselList: [],
+    pagesList: [],
     dockerList: [],
     modeList: ["Main","Main3G", "MainNoBanner"],
     rsswidget: "",
@@ -363,7 +415,6 @@ export default {
     },
     readytovalidate: function() {
       if (this.newRec._source.optiboard == "") return false;
-      if (this.newRec._source.carrousel == null) return false;
       if (this.newRec._source.carrousel == null) return false;
 
       return true;
@@ -389,6 +440,7 @@ export default {
     console.log("mounted event");
     this.prepareData();
     this.loadDockerRecords();
+    this.loadCarrouselPages();
   },
   components: {},
   methods: {
@@ -396,6 +448,15 @@ export default {
       console.log('this.newRec._source.rsswidget: ', this.newRec._source.rsswidget);
       console.log('this.newRec._source.rss: ', this.newRec._source.rss);
       // Tu peux également effectuer d'autres actions avec la valeur ici
+    },
+    handleCarrouselChange() {
+      this.pagesList = this.newRec._source.carrousel;
+      console.log('this.pagesList: ', this.pagesList);
+    },
+    loadCarrouselPages: function(){
+      console.log('this.newRec._source.carrousel: ', this.newRec._source.carrousel);
+      console.log('this.pagesList: ', this.pagesList);
+
     },
     closeDialog: function() {
       this.$emit("dialogclose");
@@ -409,9 +470,9 @@ export default {
       this.isAdmin=this.$store.getters.creds.hasPrivilege("admin");
       
       if (this.newRec._source.primarycolor== undefined)
-        this.newRec._source.primarycolor="#00B0EF";
+        this.newRec._source.primarycolor="#012237";
       if (this.newRec._source.secondarycolor== undefined)
-        this.newRec._source.secondarycolor="#0BCBF5";
+        this.newRec._source.secondarycolor="#1DAA81";
 
     //console.log(this.newRec);
 
@@ -421,7 +482,8 @@ export default {
 
       if (this.newRec._source.rss == null)
         this.newRec._source.rss =
-          "https://www.engie.com/en/journalists/news-flash/feed";
+          // "https://www.engie.com/en/journalists/news-flash/feed";
+          "http://feeds.bbci.co.uk/news/rss.xml";
 
       if (this.newRec._source.weather == null)
         this.newRec._source.weather = {
