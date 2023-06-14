@@ -91,7 +91,7 @@
             </el-col>
           </el-row>
           <el-row>
-          {{ newRec._source.carrousel }}
+          <!-- {{ newRec._source.carrousel }} -->
           </el-row>
           <el-row>
             
@@ -159,7 +159,21 @@
               <el-form-item label="Secondary Color" :label-width="formLabelWidth">
                     <el-color-picker v-model="newRec._source.secondarycolor"></el-color-picker>
               </el-form-item>
-            </el-col>          
+            </el-col>
+            <el-col :span="8">
+              <el-tooltip
+                class="item"
+                effect="light"
+                content="Sends a refresh signal to the screen in order to refresh its configuration."
+                placement="bottom-end"
+              >
+                <el-button
+                  v-if="orgRec._source.accepted == 1"
+                  @click="carrouselPreview()"
+                  size="mini"
+                >Preview</el-button>
+                </el-tooltip>
+            </el-col>       
           </el-row>
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
@@ -444,6 +458,9 @@ export default {
   },
   components: {},
   methods: {
+    carrouselPreview(){
+      window.open("https://quantesx.cofelygtc.com/opti?guid="+this.newRec._source.guid)
+    },
     handleRssWidgetChange() {
       console.log('this.newRec._source.rsswidget: ', this.newRec._source.rsswidget);
       console.log('this.newRec._source.rss: ', this.newRec._source.rss);
@@ -456,7 +473,6 @@ export default {
     loadCarrouselPages: function(){
       console.log('this.newRec._source.carrousel: ', this.newRec._source.carrousel);
       console.log('this.pagesList: ', this.pagesList);
-
     },
     closeDialog: function() {
       this.$emit("dialogclose");
