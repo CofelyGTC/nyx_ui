@@ -128,7 +128,7 @@
               <span v-else>{{computeRec(scope.row,header.field)}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="Actions" align="right" width="150px;">
+          <el-table-column label="Actions" align="right" width="175px;">
             <template slot="header" slot-scope="scope">
               <div>
                 <el-tooltip
@@ -183,6 +183,12 @@
               </div>
             </template>
             <template slot-scope="scope">
+              <el-button v-if="scope.row._source.guid"
+                size="mini"
+                plain
+                icon="el-icon-view"
+                @click="handlePreview(scope.$index, scope.row)"
+              ></el-button>
               <el-button
                 size="mini"
                 plain
@@ -560,6 +566,9 @@ export default {
         console.error(e);
         return row;
       }
+    },
+    handlePreview(index, row) {
+      window.open('https://quantesx.cofelygtc.com/opti/?guid='+row._source.guid)
     },
     handleView(index, row) {
       this.currentRecord = {}; // required by the detail watcher
