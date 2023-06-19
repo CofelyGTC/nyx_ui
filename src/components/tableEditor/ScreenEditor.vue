@@ -411,7 +411,7 @@ export default {
     carouselList: [],
     pagesList: [],
     dockerList: [],
-    modeList: ["Main","Main3G", "MainNoBanner"],
+    modeList: ["Main", "MainOld", "Main3G", "MainNoBanner"],
     rsswidget: "",
     rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"]
 
