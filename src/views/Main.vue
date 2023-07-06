@@ -240,6 +240,8 @@ export default {
     styleContainer: "B",
     maintitle: "NYX",
     timerange: "",
+    timerangeselected: false,
+    startDate: "",
     yearPicker: moment(),
     monthPicker: moment(),
     weekPicker: moment(),
@@ -290,6 +292,26 @@ export default {
     }
   },
   methods: {
+    updateDateFin() {
+      // console.log('this.timerange: ', this.timerange);
+      // console.log('this.timeType: ', this.timeType);
+      // console.log('this.timerangeselected: ', this.timerangeselected);
+      // console.log('updateDateFin');
+      // if (this.timerangeselected && this.timeType == "absolute"){
+      //   this.end = new Date();
+      //   this.timeRangeChanged([this.startDate, this.end], "update");
+      // }
+      if (this.timeType == "relative"){
+        this.$store.commit({
+          type: "setTimeRange",
+          data: {
+            type: "relative",
+            relativeType: this.relativeTimeType,
+            relativeValue: this.relativeTimeValue
+          }
+        });
+      }
+    },
     getClient(){
       //var demandor = this.$store.getters.creds.user.id          
       var url = this.$store.getters.apiurl + "getClient"
@@ -644,7 +666,9 @@ export default {
     const end = new Date();
     const start = new Date();
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+    this.startDate = start;
     this.timeRangeChanged([start, end]);
+    setInterval(this.updateDateFin, 10000)
   },
   mounted: function() {
     console.log("===============  REGISTERING FORCETIME:");
