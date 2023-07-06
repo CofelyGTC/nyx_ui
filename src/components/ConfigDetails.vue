@@ -305,9 +305,33 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
-    
-           
+
+            <el-row
+              :gutter="24"
+              v-if="curConfig.type === 'generic-table'"
+              style="text-align:left"
+            >
+              <el-col :span="8">
+                <el-form-item label :label-width="formLabelWidth">
+                  <el-row>
+                    <el-switch v-model="curConfig.multipleDeletionSelectorType" active-text="Multiple deletion" @change="multipleDeletionSelectorTypeChange"></el-switch>
+                  </el-row>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <!-- <el-form-item v-if="(curConfig.type === 'generic-table')" label="Multiple deletion" :label-width="formLabelWidth">
+              <el-select
+                v-model="curConfig.multipleDeletionSelectorType"
+                placeholder="Please select"
+                @change="multipleDeletionSelectorTypeChange"
+                :value=false
+              >
+                <el-option label="Enable" :value=true></el-option>
+                <el-option label="Disable" :value=false></el-option>
+              </el-select>
+            </el-form-item> -->
+
             <el-form-item
               v-if="(curConfig.type === 'external')"
               label="Url"
@@ -1265,6 +1289,9 @@ export default {
       this.curConfig = tmp;
 
       console.log(this.curConfig.config.url)
+    },
+    multipleDeletionSelectorTypeChange() {
+      console.log('this.curConfig.multipleDeletionSelectorType: ', this.curConfig.multipleDeletionSelectorType);
     },
     timeSelectorTypeChange() {
       if (this.curConfig.timeSelectorType != null)

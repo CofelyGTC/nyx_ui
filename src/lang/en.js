@@ -56,6 +56,7 @@ export const messages = {
         generate:'Generate',
         edit:'Edit',
         delete:'Delete',
+        delete_selected:'Delete selected row(s)',
         user:'User',
         status:'Status', 
         creation:'Creation',

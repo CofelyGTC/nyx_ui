@@ -132,6 +132,22 @@
             <template slot="header" slot-scope="scope">
               <div>
                 <el-tooltip
+                  v-if="Object.keys(selectedRows).length > 0 && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
+                  class="item"
+                  :content="$t('generic.delete_selected')"
+                  effect="light"
+                  placement="bottom-end"
+                  :open-delay="1000"
+                >
+                  <el-button
+                    circle
+                    size="mini"
+                    @click="handleSelectedRows()"
+                    type="primary"
+                    icon="el-icon-remove"
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip
                   v-if="config.config.index.indexOf('*')==-1 && currentRow && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
                   class="item"
                   effect="light"
@@ -183,6 +199,15 @@
               </div>
             </template>
             <template slot-scope="scope">
+              <el-checkbox class="multipledeletion"
+                v-if="configin.multipleDeletionSelectorType"
+                :key="scope._id"
+                :label="scope.id"
+                v-model="scope.row.isChecked"
+                size="mini"
+                plain
+                @change="updateCheckedRows(scope, $event)"
+              ></el-checkbox>
               <el-button v-if="scope.row._source.guid"
                 size="mini"
                 plain
@@ -265,6 +290,8 @@ export default {
     magasin: null,
     shopID: null,
     client: null,
+    isChecked: false,
+    selectedRows: {},
     options: {
       chart: {
         stacked: false,
@@ -352,6 +379,60 @@ export default {
     }
   },
   methods: {
+    updateCheckedRows(scope, event) {
+      console.log(this.configin);
+      if (event == false) {
+        delete this.selectedRows[scope.$index];
+      } else {
+        this.selectedRows[scope.$index] = scope.row
+      }
+      console.log('this.selectedRows: ', this.selectedRows);
+    },
+    handleSelectedRows() {
+      console.log(this.selectedRows);
+      // Gérer l'action du bouton une fois qu'il est cliqué
+      this.$confirm(
+        // this.$t("generic.delete_record"),
+        `This will permanently delete "${Object.values(this.selectedRows).map(value => value._source.name).join(', ')}". Continue?`,
+        this.$t("generic.warning"),
+        {
+          confirmButtonText: this.$t("generic.ok"),
+          cancelButtonText: this.$t("generic.cancel"),
+          type: "warning"
+        }
+      )
+        .then(() => {
+          //this.tableData.splice(index, 1);
+          for (let key in this.selectedRows) {
+            console.log('key: ', key);
+            let value = this.selectedRows[key];
+            console.log('value: ', value);
+            // Appeler une autre fonction et envoyer la valeur
+            this.$store.commit({
+              type: "deleteRecord",
+              data: value
+            });
+          }
+          setTimeout(() => {
+            this.selectedRows = {};
+            this.loadData();
+          }, 3000);
+          this.$notify({
+            title: "Success",
+            type: "success",
+            message: "Delete completed",
+            position: "bottom-right"
+          });
+        })
+        .catch(() => {
+          this.$notify({
+            title: "Cancelled",
+            type: "info",
+            message: "Delete canceled",
+            position: "bottom-right"
+          });
+        });
+    },
     sortChanged:function(e){
       //alert(JSON.stringify(e.column));
       console.log(e)
@@ -589,6 +670,7 @@ export default {
       }
     },
     handleDelete(index, row) {
+      console.log('row: ', row);
       this.$confirm(
         this.$t("generic.delete_record"),
         this.$t("generic.warning"),
@@ -1024,7 +1106,6 @@ export default {
         this.$refs.generic.chart.series.w.globals.maxX
       ]);
     },
-
     queryBarChanged: function(q) {
       console.log("********************************queryBarChanged");
       this.queryField = q;
@@ -1151,4 +1232,17 @@ export default {
   text-align: center;
   max-width: 40px;
 }
+
+.el-checkbox__inner {
+  border-radius: 3px !important;
+  margin-right: 11px !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+.el-checkbox__inner::after {
+  height: 20px !important;
+  left: 9.9px !important;
+  top: 0px !important;
+}
+
 </style>
