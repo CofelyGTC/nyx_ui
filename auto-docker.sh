@@ -1,5 +1,6 @@
 #/bin/bash
-sed -i "s/version:.*\",/version: \"v$1\",/" ./src/store/store.js
-docker build -t engiecofely/nyx_ui:v$1 .
-docker push engiecofely/nyx_ui:v$1
+VERSION="4.1.24"
+sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js
+docker build -t engiecofely/nyx_ui:v$VERSION .
+docker push engiecofely/nyx_ui:v$VERSION
 echo -en "\007"
