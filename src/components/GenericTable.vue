@@ -386,7 +386,17 @@ export default {
       } else {
         this.selectedRows[scope.$index] = scope.row
       }
-      console.log('this.selectedRows: ', this.selectedRows);
+      console.log('Object.keys(this.selectedRows).length: ', Object.keys(this.selectedRows).length);
+      if (Object.keys(this.selectedRows).length == 0) {
+        setTimeout(() => {
+            this.selectedRows = {};
+            this.loadData();
+          }, 100);
+      }
+      // console.log('this.selectedRows: ', this.selectedRows);
+    },
+    refreshCheckboxSelectedRows() {
+      /* Rafraichissement ordre des cases cochées lors de filtrage */
     },
     handleSelectedRows() {
       console.log(this.selectedRows);
@@ -416,7 +426,7 @@ export default {
           setTimeout(() => {
             this.selectedRows = {};
             this.loadData();
-          }, 3000);
+          }, 1000);
           this.$notify({
             title: "Success",
             type: "success",
@@ -434,12 +444,13 @@ export default {
         });
     },
     sortChanged:function(e){
-      //alert(JSON.stringify(e.column));
+      alert(JSON.stringify(e.column));
       console.log(e)
       
       this.sort={}
       if(e.column.order != null)
         this.sort[e.column.property.replace("_source.","")]={"order":e.column.order.substring(0,4).replace("asce","asc")};
+      console.log('this.sort: ', this.sort);
       this.dontrefreshMap=true;
       this.refreshData();
     },
