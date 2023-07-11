@@ -218,11 +218,19 @@ export default {
       if (this.ready) {
         console.log("UPDATE QUERY...");
         var cururl = this.config.config.computedurl;
+        console.log('cururl: ', cururl);
 
         var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
         var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
         console.log("Unix", startTimeAsUtc.unix()*1000);
 
+        var searchParams = cururl.split('?')[1];
+        var params = new URLSearchParams(searchParams);
+
+        params.set("from", startTimeAsUtc.unix()*1000);
+        params.set("to", endTimeAsUtc.unix()*1000);
+        console.log('params: ', params);
+        
         
         var timestring =
           "&from=" +
@@ -292,8 +300,14 @@ export default {
 
         this.specificTime = undefined;
 
-        if (this.config.timeSelectorChecked && timestring != null)
-          cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
+        if (this.config.timeSelectorChecked && timestring != null) {
+          params.set("from", startTimeAsUtc.unix()*1000);
+          params.set("to", endTimeAsUtc.unix()*1000);
+
+          var updatedParams = params.toString();
+          cururl = cururl.replace(searchParams, updatedParams);
+          // cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
+        }
         this.computedurl = cururl;
       }
       console.log("COMPUTED URL: ", this.computedurl)
