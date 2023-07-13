@@ -444,7 +444,7 @@ export default {
         });
     },
     sortChanged:function(e){
-      alert(JSON.stringify(e.column));
+      // alert(JSON.stringify(e.column));
       console.log(e)
       
       this.sort={}
