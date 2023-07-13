@@ -131,6 +131,11 @@
           <el-table-column label="Actions" align="right" width="175px;">
             <template slot="header" slot-scope="scope">
               <div>
+                <el-checkbox class="maincheckbox"
+                  v-if="configin.multipleDeletionSelectorType"
+                  v-model="allRowsSelected"
+                  @change="updateAllCheckbox($event)"
+                ></el-checkbox>
                 <el-tooltip
                   v-if="Object.keys(selectedRows).length > 0 && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
                   class="item"
@@ -201,11 +206,8 @@
             <template slot-scope="scope">
               <el-checkbox class="multipledeletion"
                 v-if="configin.multipleDeletionSelectorType"
-                :key="scope._id"
-                :label="scope.id"
                 v-model="scope.row.isChecked"
-                size="mini"
-                plain
+                :key="scope.row._id"
                 @change="updateCheckedRows(scope, $event)"
               ></el-checkbox>
               <el-button v-if="scope.row._source.guid"
@@ -291,7 +293,9 @@ export default {
     shopID: null,
     client: null,
     isChecked: false,
+    tableDataChecked: {},
     selectedRows: {},
+    allRowsSelected: false,
     options: {
       chart: {
         stacked: false,
@@ -379,30 +383,36 @@ export default {
     }
   },
   methods: {
-    updateCheckedRows(scope, event) {
-      console.log(this.configin);
-      if (event == false) {
-        delete this.selectedRows[scope.$index];
-      } else {
-        this.selectedRows[scope.$index] = scope.row
-      }
-      console.log('Object.keys(this.selectedRows).length: ', Object.keys(this.selectedRows).length);
-      if (Object.keys(this.selectedRows).length == 0) {
-        setTimeout(() => {
-            this.selectedRows = {};
-            this.loadData();
-          }, 100);
-      }
-      // console.log('this.selectedRows: ', this.selectedRows);
+    updateAllCheckbox(event){
+      this.tableData.forEach(element => {
+        element.isChecked = event
+        console.log('element: ', element);
+        this.tableDataChecked[element._id] = { isChecked: event}
+      });
+      setTimeout(() => {
+        this.loadData();
+      }, 100);
     },
-    refreshCheckboxSelectedRows() {
-      /* Rafraichissement ordre des cases cochées lors de filtrage */
+    updateCheckedRows(scope, event) {
+      this.tableDataChecked[scope.row._id] = { isChecked: event}
+      this.tableData[scope.$index].isChecked = event
+      if (event == false) {
+        delete this.selectedRows[scope.row._id];
+      } else {
+        this.selectedRows[scope.row._id] = scope.row
+      }
+      if (Object.keys(this.selectedRows).length == 0) {
+        this.selectedRows = {};
+      }
+      if (Object.keys(this.selectedRows).length == Object.keys(this.tableData).length) this.allRowsSelected = true
+      else this.allRowsSelected = false
+      setTimeout(() => {
+        this.loadData();
+      }, 100);
     },
     handleSelectedRows() {
-      console.log(this.selectedRows);
       // Gérer l'action du bouton une fois qu'il est cliqué
       this.$confirm(
-        // this.$t("generic.delete_record"),
         `This will permanently delete "${Object.values(this.selectedRows).map(value => value._source.name).join(', ')}". Continue?`,
         this.$t("generic.warning"),
         {
@@ -412,11 +422,8 @@ export default {
         }
       )
         .then(() => {
-          //this.tableData.splice(index, 1);
           for (let key in this.selectedRows) {
-            console.log('key: ', key);
             let value = this.selectedRows[key];
-            console.log('value: ', value);
             // Appeler une autre fonction et envoyer la valeur
             this.$store.commit({
               type: "deleteRecord",
@@ -445,12 +452,11 @@ export default {
     },
     sortChanged:function(e){
       // alert(JSON.stringify(e.column));
-      console.log(e)
+      // console.log(e)
       
       this.sort={}
       if(e.column.order != null)
         this.sort[e.column.property.replace("_source.","")]={"order":e.column.order.substring(0,4).replace("asce","asc")};
-      console.log('this.sort: ', this.sort);
       this.dontrefreshMap=true;
       this.refreshData();
     },
@@ -478,7 +484,6 @@ export default {
     },
     duplicateRecord: function() {
       console.log("duplicating record");
-      console.log(this.currentRecord);
       this.currentRecord = JSON.parse(JSON.stringify(this.currentRow));
       this.currentRecord.original._id =
         "id_" + Math.floor((1 + Math.random()) * 0x1000000);
@@ -527,8 +532,6 @@ export default {
       this.partialUpdateRecord(newRec, header);
     },
     switchChanged: function(newRec, header) {
-      console.log(newRec);
-      console.log(header);
       this.partialUpdateRecord(newRec, header);
     },
     cutRec(aRec) {
@@ -681,7 +684,6 @@ export default {
       }
     },
     handleDelete(index, row) {
-      console.log('row: ', row);
       this.$confirm(
         this.$t("generic.delete_record"),
         this.$t("generic.warning"),
@@ -846,7 +848,6 @@ export default {
           //var demandor = this.$store.getters.creds.user.id 
           console.log('MAGASIN')
           if(this.magasin != null){
-            console.log(this.magasin)
             this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{magasin}}", this.magasin)
           }
           console.log("Hidden Query : " + this.config.config.hiddenQuery)
@@ -855,7 +856,6 @@ export default {
           //var demandor = this.$store.getters.creds.user.id 
           console.log('SHOPID')
           if(this.shopID != null){
-            console.log(this.shopID)
             this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{shopid}}", this.shopID)
           }
           console.log("Hidden Query : " + this.config.config.hiddenQuery)
@@ -873,7 +873,7 @@ export default {
 
       this.query = curquery;
        
-       console.log('HIDDEN QUERY: ' + this.query)
+      console.log('HIDDEN QUERY: ' + this.query)
       
 
       if (curquery != "") {
@@ -926,9 +926,8 @@ export default {
       axios
         .post(url, query)
         .then(response => {
+          // console.log('response: ', response);
           this.ready = true;
-
-          //console.log(response);
 
           if (
             response.data.records != null ||
@@ -1013,7 +1012,7 @@ export default {
             this.rows=response.data.total;
 
             if (this.config.config.headercolumns) {
-              // console.log(this.config.config)
+              // console.log('this.config.config: ', this.config.config);
 
               for (var col in this.config.config.headercolumns) {
                 var curcol = this.config.config.headercolumns[col];
@@ -1052,7 +1051,19 @@ export default {
             }
 
             this.tableData = response.data.records;
+            
             this.$refs.genericTable.doLayout()
+          }
+          
+          if (this.configin.multipleDeletionSelectorType){
+            this.tableData.forEach(element => {
+              if (!this.tableDataChecked[element._id]){
+                this.tableDataChecked[element._id] = {isChecked: false}
+              }
+              else if (this.tableDataChecked[element._id].isChecked){
+                element.isChecked = this.tableDataChecked[element._id].isChecked
+              }
+            });
           }
           this.setAutoRefresh()
         })
@@ -1255,5 +1266,4 @@ export default {
   left: 9.9px !important;
   top: 0px !important;
 }
-
 </style>
