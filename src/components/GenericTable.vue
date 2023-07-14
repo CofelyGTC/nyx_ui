@@ -790,6 +790,7 @@ export default {
           }
         }
       };
+        console.log('query: ', query);
       if (
         this.config.config.timefield != null &&
         this.config.config.timefield != ""
@@ -921,6 +922,10 @@ export default {
         query.extra.currentpage=this.currentPage;
         query.extra.pagesize=this.pagesize;
       }
+
+      
+      console.log('url: ', url);
+      console.log('query: ', query);
 
 
       axios
