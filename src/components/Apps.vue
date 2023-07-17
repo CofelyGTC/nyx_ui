@@ -9,7 +9,8 @@
           style="text-align:center;height:90px;"
         >
           <el-button plain @click="appClicked(field.value)">
-            <v-icon :name="field.value.icon" scale="2" style="height:40px;" />
+            <img v-if="field.value.icontype && field.value.icon" :src="field.value.icon" scale="2" style="height:32px;filter: grayscale(100%) brightness(50%)">
+            <v-icon v-else :name="field.value.icon" scale="2" />
           </el-button>
           <br />
           {{field.value.title}}
@@ -35,6 +36,7 @@ export default {
   computed: {},
   methods: {
     appClicked(e) {
+      console.log('e: ', e);
       this.$emit("appclicked", e);
     },
     handleCommand(e) {

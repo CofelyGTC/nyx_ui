@@ -86,8 +86,13 @@
           <el-input v-model="search" size="mini" placeholder="Type to search" class="searchfield" />
         </template>
         <template slot-scope="scope">
+          <img
+            v-if="scope.row._source.icontype && scope.row._source.icon"
+            :src="scope.row._source.icon"
+            style="height:20px;margin-bottom:-3px;filter: grayscale(100%) brightness(50%)"
+          >
           <v-icon
-            v-if="scope.row._source.icon"
+            v-else-if="scope.row._source.icon"
             :name="scope.row._source.icon"
             scale="1"
             style="margin-bottom:-3px;"
@@ -197,7 +202,8 @@ export default {
         });
     },
     duplicate() {
-      console.log(this.currentRow);
+      // console.log(this.currentRow);
+      console.log('this.currentRow: ', this.currentRow);
 
       this.isAdd = true;
 
