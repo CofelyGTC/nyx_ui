@@ -218,7 +218,6 @@ export default {
       if (this.ready) {
         console.log("UPDATE QUERY...");
         var cururl = this.config.config.computedurl;
-        console.log('cururl: ', cururl);
 
         var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
         var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
@@ -229,9 +228,7 @@ export default {
 
         params.set("from", startTimeAsUtc.unix()*1000);
         params.set("to", endTimeAsUtc.unix()*1000);
-        console.log('params: ', params);
-        
-        
+
         var timestring =
           "&from=" +
           startTimeAsUtc.unix()*1000 +
@@ -301,12 +298,23 @@ export default {
         this.specificTime = undefined;
 
         if (this.config.timeSelectorChecked && timestring != null) {
-          params.set("from", startTimeAsUtc.unix()*1000);
-          params.set("to", endTimeAsUtc.unix()*1000);
+          // params.set("from", startTimeAsUtc.unix()*1000);
+          // var date = moment(new Date()).utc()
+          // endTimeAsUtc.set({second:date.seconds(),millisecond:date.milliseconds()})
+          // if (startTimeAsUtc.date == date.date){
+          //   params.set("to", "now");
+          // } else{
+          //   params.set("to", endTimeAsUtc.unix()*1000);
+          // }
+          // var updatedParams = params.toString();
+          // cururl = cururl.replace(searchParams, updatedParams);
 
-          var updatedParams = params.toString();
-          cururl = cururl.replace(searchParams, updatedParams);
-          // cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
+          var timestring =
+            "&from=" +
+            startTimeAsUtc.unix()*1000 +
+            "&to=" +
+            endTimeAsUtc.unix()*1000;
+          cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
         }
         this.computedurl = cururl;
       }
