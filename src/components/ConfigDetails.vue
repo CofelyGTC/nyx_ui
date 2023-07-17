@@ -79,6 +79,23 @@
                   ></el-input-number>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="Icon Type" :label-width="formLabelWidth" style="text-align: left;">
+                  <!-- <el-select
+                    size="mini"
+                    @change="iconTypeChanged"
+                    v-model="curConfig.icontype"
+                    placeholder="Please select a type"
+                    style="width:100%"
+                  >
+                    <el-option label="ICON" value="icon"></el-option>
+                    <el-option label="URL" value="url"></el-option>
+                  </el-select> -->
+                  <el-switch v-model="curConfig.icontype" @change="iconTypeChanged" :active-text="curConfig.icontype ? 'url' : 'icon'"></el-switch>
+                </el-form-item>
+              </el-col>
               <el-col :span="6">
                 <el-form-item label="Icon" :label-width="formLabelWidth">
                   <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
@@ -86,11 +103,11 @@
               </el-col>
               <el-col :span="2">
                 &nbsp;&nbsp;
-                <v-icon v-if="curConfig.icon" :name="curConfig.icon" scale="2" />
+                <img v-if="curConfig.icontype && curConfig.icon" :src="curConfig.icon" scale="2" style="height:40px;filter: grayscale(100%) brightness(50%)"> 
+                <v-icon v-else-if="curConfig.icon" :name="curConfig.icon" scale="2" />
               </el-col>
             </el-row>
-         
-             <el-row v-if="curConfig.type === 'kibana'" class="transition-box" style="text-align:left;">     
+            <el-row v-if="curConfig.type === 'kibana'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
                 <v-icon name="chart-pie" scale="2.2" />
@@ -306,7 +323,7 @@
               </el-col>
             </el-row>
 
-            <el-row
+            <!-- <el-row
               :gutter="24"
               v-if="curConfig.type === 'generic-table'"
               style="text-align:left"
@@ -318,19 +335,7 @@
                   </el-row>
                 </el-form-item>
               </el-col>
-            </el-row>
-
-            <!-- <el-form-item v-if="(curConfig.type === 'generic-table')" label="Multiple deletion" :label-width="formLabelWidth">
-              <el-select
-                v-model="curConfig.multipleDeletionSelectorType"
-                placeholder="Please select"
-                @change="multipleDeletionSelectorTypeChange"
-                :value=false
-              >
-                <el-option label="Enable" :value=true></el-option>
-                <el-option label="Disable" :value=false></el-option>
-              </el-select>
-            </el-form-item> -->
+            </el-row> -->
 
             <el-form-item
               v-if="(curConfig.type === 'external')"
@@ -1052,6 +1057,7 @@ export default {
       else this.curConfig.config.queryfilters.splice(index + 1, 0, row);
     },
     typeChanged(e) {
+      console.log('e: ', e);
       if (e == "free-text") {
         this.curConfig.config.controller = "FreeText";
       } else if (e == "vega") {
@@ -1064,6 +1070,11 @@ export default {
         console.log("lazy-generic-table chosen")
       }
       
+    },
+    iconTypeChanged(e) {
+      console.log('e: ', e);
+      this.curConfig.icontype = e
+      console.log('this.curConfig: ', this.curConfig);
     },
 
     freeTextChanged(newvalue) {
