@@ -10,3 +10,4 @@ echo -en "\007"
 
 #   4.1.29  EBU Fix Multiple Deletion emplacement, add custom url icon
 #   4.1.30  EBU Fix timerange for Grafana
+#   4.1.31  EBU Fix custom url icon for all icon

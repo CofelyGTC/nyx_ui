@@ -9,7 +9,7 @@
           style="text-align:center;height:90px;"
         >
           <el-button plain @click="appClicked(field.value)">
-            <img v-if="field.value.icontype && field.value.icon" :src="field.value.icon" scale="2" style="height:32px;filter: grayscale(100%) brightness(50%)">
+            <img v-if="field.value.icon && field.value.icon.includes('http')" :src="field.value.icon" scale="2" style="height:32px;filter: brightness(0) saturate(100%) invert(39%) sepia(1%) saturate(2250%) hue-rotate(183deg) brightness(93%) contrast(86%)">
             <v-icon v-else :name="field.value.icon" scale="2" />
           </el-button>
           <br />

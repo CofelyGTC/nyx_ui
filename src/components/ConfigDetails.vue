@@ -79,23 +79,6 @@
                   ></el-input-number>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="Icon Type" :label-width="formLabelWidth" style="text-align: left;">
-                  <!-- <el-select
-                    size="mini"
-                    @change="iconTypeChanged"
-                    v-model="curConfig.icontype"
-                    placeholder="Please select a type"
-                    style="width:100%"
-                  >
-                    <el-option label="ICON" value="icon"></el-option>
-                    <el-option label="URL" value="url"></el-option>
-                  </el-select> -->
-                  <el-switch v-model="curConfig.icontype" @change="iconTypeChanged" :active-text="curConfig.icontype ? 'url' : 'icon'"></el-switch>
-                </el-form-item>
-              </el-col>
               <el-col :span="6">
                 <el-form-item label="Icon" :label-width="formLabelWidth">
                   <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
@@ -103,9 +86,26 @@
               </el-col>
               <el-col :span="2">
                 &nbsp;&nbsp;
-                <img v-if="curConfig.icontype && curConfig.icon" :src="curConfig.icon" scale="2" style="height:40px;filter: grayscale(100%) brightness(50%)"> 
+                <img v-if="curConfig.icon && curConfig.icon.includes('http')" :src="curConfig.icon" scale="2" style="height:40px;width: 40px;filter: brightness(0) saturate(100%) invert(39%) sepia(1%) saturate(2250%) hue-rotate(183deg) brightness(93%) contrast(86%);"> 
                 <v-icon v-else-if="curConfig.icon" :name="curConfig.icon" scale="2" />
               </el-col>
+            </el-row>
+            <el-row>
+              <!-- <el-col :span="8">
+                <el-form-item label="Icon Type" :label-width="formLabelWidth" style="text-align: left;">
+                  <el-switch v-model="curConfig.icontype" @change="iconTypeChanged" :active-text="curConfig.icontype ? 'url' : 'icon'"></el-switch>
+                </el-form-item>
+              </el-col> -->
+              <!-- <el-col :span="6">
+                <el-form-item label="Icon" :label-width="formLabelWidth">
+                  <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                &nbsp;&nbsp;
+                <img v-if="curConfig.icon && curConfig.icon.includes('http')" :src="curConfig.icon" scale="2" style="height:40px;width: 40px;"> 
+                <v-icon v-else-if="curConfig.icon" :name="curConfig.icon" scale="2" />
+              </el-col> -->
             </el-row>
             <el-row v-if="curConfig.type === 'kibana'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     

@@ -87,9 +87,9 @@
         </template>
         <template slot-scope="scope">
           <img
-            v-if="scope.row._source.icontype && scope.row._source.icon"
+            v-if="scope.row._source.icon && scope.row._source.icon.includes('http')"
             :src="scope.row._source.icon"
-            style="height:20px;margin-bottom:-3px;filter: grayscale(100%) brightness(50%)"
+            style="height:20px;width:20px;margin-bottom:-3px;filter: brightness(0) saturate(100%) invert(39%) sepia(1%) saturate(2250%) hue-rotate(183deg) brightness(93%) contrast(86%);"
           >
           <v-icon
             v-else-if="scope.row._source.icon"

@@ -196,11 +196,23 @@
                     >
                       <!-- :key="menu.category+'/'+subMenu.title" -->
                       <!-- :index="menu.category+'/'+subMenu.title" -->
-                      <v-icon
+                      <!-- <v-icon
                         class="menuiconaside"
                         :name="subMenu.icon"
                         v-if="subMenu.icon"
                         scale="1"
+                      /> -->
+                      <img 
+                        class="menuiconaside" 
+                        v-if="subMenu.icon && subMenu.icon.includes('https')" 
+                        :src="subMenu.icon" 
+                        style="height:16px;width: 16px;filter: invert(76%) sepia(12%) saturate(1095%) hue-rotate(96deg) brightness(89%) contrast(84%)"
+                      > 
+                      <v-icon 
+                        class="menuiconaside" 
+                        v-else-if="subMenu.icon" 
+                        :name="subMenu.icon" 
+                        scale="1" 
                       />
                       &nbsp;{{subMenu.loc_title}}
                     </el-menu-item>
@@ -285,6 +297,7 @@ export default {
       return this.$store.getters.creds;
     },
     filteredmenus() {
+      console.log('this.$store.getters.filteredmenus: ', this.$store.getters.filteredmenus);
       return this.$store.getters.filteredmenus;
     },
     containerSize() {
