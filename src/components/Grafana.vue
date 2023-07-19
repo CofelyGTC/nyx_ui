@@ -229,15 +229,15 @@ export default {
 
         params.set("from", startTimeAsUtc.unix()*1000);
         params.set("to", endTimeAsUtc.unix()*1000);
+        console.log('startTimeAsUtc.unix()*1000: ', startTimeAsUtc.unix()*1000);
+        console.log('endTimeAsUtc.unix()*1000: ', endTimeAsUtc.unix()*1000);
         console.log('params: ', params);
-        
         
         var timestring =
           "&from=" +
           startTimeAsUtc.unix()*1000 +
           "&to=" +
           endTimeAsUtc.unix()*1000;
-
         switch (this.config.timeSelectorType) {
           case "day":
             var startTimeAsUtc = moment(
@@ -301,9 +301,30 @@ export default {
         this.specificTime = undefined;
 
         if (this.config.timeSelectorChecked && timestring != null) {
-          params.set("from", startTimeAsUtc.unix()*1000);
-          params.set("to", endTimeAsUtc.unix()*1000);
+          const now = new Date();
+          const nowWithoutSeconds = new Date(now);
+          nowWithoutSeconds.setSeconds(0, 0);
+          console.log('nowWithoutSeconds: ', nowWithoutSeconds);
 
+          const endTimeWithoutSeconds = new Date(endTimeAsUtc.unix()*1000);
+          endTimeWithoutSeconds.setSeconds(0, 0);
+          console.log('endTimeWithoutSeconds: ', endTimeWithoutSeconds);
+
+          if (nowWithoutSeconds.getTime() === endTimeWithoutSeconds.getTime()) {
+            const delta = endTimeAsUtc.unix()*1000 - startTimeAsUtc.unix()*1000;
+            console.log("Le temps endTimeAsUtc correspond au temps actuel (sans les secondes).");
+            console.log("Delta en millisecondes:", delta);
+            console.log("Delta en secondes:", delta / 1000);
+            console.log("Delta en minutes:", delta / (1000 * 60));
+            console.log("Delta en heures:", delta / (1000 * 60 * 60));
+            console.log("Delta en jours:", delta / (1000 * 60 * 60 * 24));
+            params.set("from", 'now-'+delta / 1000+'s');
+            params.set("to", 'now');
+          } else {
+            console.log("Le temps endTimeAsUtc ne correspond pas au temps actuel (sans les secondes).");
+            params.set("from", startTimeAsUtc.unix()*1000);
+            params.set("to", endTimeAsUtc.unix()*1000);
+          }
           var updatedParams = params.toString();
           cururl = cururl.replace(searchParams, updatedParams);
           // cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
