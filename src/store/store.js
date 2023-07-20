@@ -135,14 +135,14 @@ export default new Vuex.Store({
   actions: {
     switchToApp(context, payload) {
       console.log("switch to app mutation called.");
-      console.log(payload);
+      // console.log(payload);
       for (var i = 0; i < context.getters.filteredmenus.length; i++) {
         var cat = context.getters.filteredmenus[i]
 
         for (var j = 0; j < cat.submenus.length; j++) {
           var subcat = cat.submenus[j]
           for (var k = 0; k < subcat.apps.length; k++) {
-            console.log(subcat.apps[k].title);
+            // console.log(subcat.apps[k].title);
             if (subcat.apps[k].title.toLowerCase() === payload) {              
               return Promise.resolve(subcat.apps[k].rec_id);              
             }
@@ -160,7 +160,7 @@ export default new Vuex.Store({
           if((context.getters.wsObject.last_lifesign!=null)
           &&(moment(new Date())-context.getters.wsObject.last_lifesign>10000))
           {
-            console.log(moment(new Date())-context.getters.wsObject.last_lifesign);
+            // console.log(moment(new Date())-context.getters.wsObject.last_lifesign);
             console.log("Socket Not Responding...");
             stopSocket(context.getters.wsObject);
             context.getters.wsObject.socket=null;
@@ -343,7 +343,7 @@ export default new Vuex.Store({
     },
     changeContainerSize(state, payload) {
       console.log("VUEX:Change container size:");
-      console.log(payload.data);
+      // console.log(payload.data);
       state.containerSize = payload.data;
     },
     
@@ -433,7 +433,7 @@ export default new Vuex.Store({
     },
     setTimeRange(state, payload) {
       console.log("VUEX:Set Time Range:");
-      console.log(payload);
+      // console.log(payload);
 
       console.log("VUEX:Sub Type " + payload.data.subtype);
       state.lastTimeRangeEvent = payload.data;
@@ -603,7 +603,7 @@ export default new Vuex.Store({
     },
     deleteRecord(state, payload) {
       console.log('deleteRecord')
-      console.log(payload)
+      // console.log(payload)
       let url =
         state.apiurl +
         "generic/" + payload.data._index + "/" + payload.data._id + "?token=" +
@@ -654,7 +654,7 @@ export default new Vuex.Store({
           });
     },
     deletePGRecord(state, payload) {
-      console.log(payload)
+      // console.log(payload)
       console.log("====================================================")
       var url =
         state.apiurl +

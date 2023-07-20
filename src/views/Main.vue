@@ -206,8 +206,9 @@
                         class="menuiconaside" 
                         v-if="subMenu.icon && subMenu.icon.includes('https')" 
                         :src="subMenu.icon" 
-                        style="height:16px;width: 16px;filter: invert(76%) sepia(12%) saturate(1095%) hue-rotate(96deg) brightness(89%) contrast(84%)"
+                        style="height:16px;width: 16px;filter: brightness(0%) invert(54%) sepia(100%) hue-rotate(80deg) saturate(1.4)"
                       > 
+                      <!-- style="height:16px;width: 16px;filter: invert(76%) sepia(12%) saturate(1095%) hue-rotate(96deg) brightness(89%) contrast(84%)" -->
                       <v-icon 
                         class="menuiconaside" 
                         v-else-if="subMenu.icon" 
@@ -306,24 +307,22 @@ export default {
   },
   methods: {
     updateDateFin() {
-      // console.log('this.timerange: ', this.timerange);
-      // console.log('this.timeType: ', this.timeType);
-      // console.log('this.timerangeselected: ', this.timerangeselected);
-      // console.log('updateDateFin');
-      // if (this.timerangeselected && this.timeType == "absolute"){
-      //   this.end = new Date();
-      //   this.timeRangeChanged([this.startDate, this.end], "update");
+      // if (this.$store.getters.activeApp.type == 'grafana'){
+      //   if (this.timeType == "absolute"){
+      //     this.end = new Date();
+      //     this.timeRangeChanged([this.startDate, this.end], "update");
+      //   }
+      //   if (this.timeType == "relative"){
+      //     this.$store.commit({
+      //       type: "setTimeRange",
+      //       data: {
+      //         type: "relative",
+      //         relativeType: this.relativeTimeType,
+      //         relativeValue: this.relativeTimeValue
+      //       }
+      //     });
+      //   }
       // }
-      if (this.timeType == "relative"){
-        this.$store.commit({
-          type: "setTimeRange",
-          data: {
-            type: "relative",
-            relativeType: this.relativeTimeType,
-            relativeValue: this.relativeTimeValue
-          }
-        });
-      }
     },
     getClient(){
       //var demandor = this.$store.getters.creds.user.id          
@@ -337,18 +336,18 @@ export default {
             if(response.data.error!="")
             console.log("Client Calls list error...");
             else{
-                console.log(response.data)
+                // console.log(response.data)
                 //var res = JSON.parse(response.data)
                 var res = response.data
-                console.log("CLIENT : ")
-                console.log(res)
+                // console.log("CLIENT : ")
+                // console.log(res)
                 var client = res.client
                 this.$store.commit({
                   type: "setClient",
                   data: client
                 });
                 
-                console.log(client)
+                // console.log(client)
                 
                 
                 
@@ -479,8 +478,8 @@ export default {
       this.changePasswordVisible = true;
     },
     appClicked(e) {
-      console.log("app clicked");
-      console.log(e);
+      // console.log("app clicked");
+      // console.log(e);
       if (e.type == "external") {
         window.open(e.config.url);
       } else {
@@ -661,14 +660,14 @@ export default {
 
 
     if (this.$store.getters.currentSubCategory == undefined) {
-      console.log('NOT LOGGED YET')
+      // console.log('NOT LOGGED YET')
       var path = this.$route.path
       if(path[path.length-1] == '/')
 	      path = path.substring(0, path.length-1)
 
 
       this.$store.state.redirection = path
-      console.log(this.$route)
+      // console.log(this.$route)
       
       
       this.$router.push("/");
