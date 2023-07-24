@@ -329,7 +329,7 @@ export default {
 
           // var updatedParams = params.toString();
           // cururl = cururl.replace(searchParams, updatedParams);
-          cururl = baseUrl + '?' + params.toString();
+          cururl = baseUrl + '?' + searchParams.toString();
           // console.log('cururl after: ', cururl);
           
           // var timestring =
