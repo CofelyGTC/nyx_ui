@@ -322,8 +322,15 @@ export default {
             params.set("from", startTimeAsUtc.unix()*1000);
             params.set("to", endTimeAsUtc.unix()*1000);
           }
-          var updatedParams = params.toString();
-          cururl = cururl.replace(searchParams, updatedParams);
+
+          var paramsStartIndex = cururl.indexOf('?');
+          var baseUrl = cururl.slice(0, paramsStartIndex);
+          // console.log('baseUrl: ', baseUrl);
+
+          // var updatedParams = params.toString();
+          // cururl = cururl.replace(searchParams, updatedParams);
+          cururl = baseUrl + '?' + searchParams.toString();
+          // console.log('cururl after: ', cururl);
           
           // var timestring =
           //   "&from=" +
