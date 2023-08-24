@@ -71,6 +71,7 @@ export default {
     queryfilter: "",
     timerange: "",
     specificTime: null,
+    grafanaTimeBit: false,
     browsersData: [
       {
         name: 'Chrome',
@@ -297,7 +298,14 @@ export default {
 
         this.specificTime = undefined;
 
-        if (this.config.timeSelectorChecked && timestring != null) {
+        console.log('this.config: ', this.config);
+        console.log('this.config.timeSelectorChecked: ', this.config.timeSelectorChecked);
+        
+        if (!this.config.config.grafanaTime) {
+          this.grafanaTimeBit = true
+        }
+
+        if (this.config.timeSelectorChecked && timestring != null && this.grafanaTimeBit) {
           const now = new Date();
           const nowWithoutSeconds = new Date(now);
           nowWithoutSeconds.setSeconds(0, 0);
@@ -339,6 +347,11 @@ export default {
           //   "&to=" +
           //   endTimeAsUtc.unix()*1000;
           // cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
+        }
+        
+
+        if (this.config.config.grafanaTime) {
+          this.grafanaTimeBit = true
         }
         this.computedurl = cururl;
       }
