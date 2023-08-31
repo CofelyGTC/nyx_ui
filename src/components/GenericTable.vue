@@ -1212,8 +1212,7 @@ export default {
     }
     else
     {
-      console.log("Client : ")
-      console.log(this.$store.getters.client)
+      console.log("Client : ", this.$store.getters.client)
     }
     
     

@@ -178,45 +178,50 @@
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
-            <h2><b>Default carrousel pages</b></h2>
-            <el-switch v-model="defaultPagesActivated"></el-switch>
+            <h2><b>Default carrousel view</b></h2>
+            <el-switch v-model="newRec._source.defaultviewactivated" @change="handleDefaultViewSwitch"></el-switch>
           </el-row>
           <el-collapse-transition>
-            <div v-if="defaultPagesActivated" style="padding:20px;">
+            <div v-if="newRec._source.defaultviewactivated" style="padding:20px;">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label="API Key" :label-width="formLabelWidth">
+                  <el-form-item label="View" :label-width="formLabelWidth" style="text-align:left">
                     <el-select
                       size="mini"
-                      v-model="newRec._source.carrouselDefaultPage"
+                      v-model="newRec._source.defaultView"
                       filterable
-                      placeholder="Select a page"
+                      placeholder="Select a view"
+                      @change="handleDefaultViewChange"
                     >
                       <el-option
-                        v-for="car in pagesList"
-                        :key="car.value"
-                        :label="car.label"
-                        :value="car.value"
+                        v-for="car in currentCarrouselViewsList"
+                        :key="car._id"
+                        :label="car.title"
+                        :value="car._id"
                       ></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="Language" :label-width="formLabelWidth">
-                    <el-input
+                  <el-form-item label="start" :label-width="formLabelWidth" style="text-align:left">
+                    <el-time-picker
+                      v-model="newRec._source.defaultviewstarttime"
                       size="mini"
-                      v-model="newRec._source.weather.language"
-                      autocomplete="off"
-                    ></el-input>
+                      placeholder="Start Time"
+                      :picker-options="pickerOptions"
+                      @change="handleStartTimeChange"
+                    ></el-time-picker>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="Location" :label-width="formLabelWidth">
-                    <el-input
+                  <el-form-item label="end" :label-width="formLabelWidth" style="text-align:left">
+                    <el-time-picker
+                      v-model="newRec._source.defaultviewendtime"
                       size="mini"
-                      v-model="newRec._source.weather.location"
-                      autocomplete="off"
-                    ></el-input>
+                      placeholder="End Time"
+                      :picker-options="pickerOptions"
+                      @change="handleEndTimeChange"
+                    ></el-time-picker>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -230,7 +235,7 @@
           <el-row v-show="isAdmin" style="padding:20px;">
             <el-col :span="8">
               <el-form-item v-if="newRec._source.rsswidget == 'firstwidget'" label="First Widget" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.firstwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
+                <el-input size="mini" v-model="newRec._source.firstwidget" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item v-else label="First Widget" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.firstwidget" autocomplete="off" ></el-input>
@@ -238,7 +243,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item v-if="newRec._source.rsswidget == 'secondwidget'" label="Second Widget" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.secondwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
+                <el-input size="mini" v-model="newRec._source.secondwidget" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item v-else label="Second Widget" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.secondwidget" autocomplete="off" ></el-input>
@@ -246,7 +251,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item v-if="newRec._source.rsswidget == 'thirdwidget'" label="Third Widget" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.thirdwidget" :disabled="true" :v-model="newRec._source.rss"></el-input>
+                <el-input size="mini" v-model="newRec._source.thirdwidget" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item v-else label="Third Widget" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.thirdwidget" autocomplete="off" ></el-input>
@@ -361,7 +366,6 @@
         </el-card>
       </el-form>
     </div>
-
     <span slot="footer" class="dialog-footer" v-if="accepted == 1">
       <el-button
         v-show="isAdmin"
@@ -404,16 +408,22 @@ export default {
     changed: false,
     dialogFormVisible: false,
     accepted: false,
-    defaultPagesActivated: false,
     weatherActivated: true,
     newScriptVisible: false,
     title: "Screen configuration",
     carouselList: [],
+    viewsList: [],
+    currentCarrouselViewsList: [],
     pagesList: [],
     dockerList: [],
     modeList: ["Main", "MainOld", "Main3G", "MainNoBanner"],
     rsswidget: "",
-    rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"]
+    rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"],
+    pickerOptions: {
+      start: "00:00",
+      step: "00:30",
+      end: "23:30",
+    },
 
   }),
   computed: {
@@ -458,6 +468,23 @@ export default {
   },
   components: {},
   methods: {
+    handleStartTimeChange() {
+      console.log('newRec._source: ', this.newRec._source);
+    },
+    handleEndTimeChange() {
+      console.log('newRec._source: ', this.newRec._source);
+      console.log('this.newRec._source.defaultviewstarttime: ', this.newRec._source.defaultviewstarttime);
+      console.log('this.newRec._source.defaultviewendtime: ', this.newRec._source.defaultviewendtime);
+      if (this.newRec._source.defaultviewstarttime && this.newRec._source.defaultviewendtime) {
+        if (this.newRec._source.defaultviewendtime <= this.newRec._source.defaultviewstarttime) {
+          this.newRec._source.defaultviewendtime = null; // Reset end time to prevent invalid selection
+          this.$message.error("End time cannot be earlier than start time");
+        } else {
+          console.log("Selected End Time:", this.newRec._source.defaultviewendtime);
+        }
+      }
+    },
+    
     carrouselPreview(){
       window.open("https://quantesx.cofelygtc.com/opti?guid="+this.newRec._source.guid)
     },
@@ -465,10 +492,6 @@ export default {
       console.log('this.newRec._source.rsswidget: ', this.newRec._source.rsswidget);
       console.log('this.newRec._source.rss: ', this.newRec._source.rss);
       // Tu peux également effectuer d'autres actions avec la valeur ici
-    },
-    handleCarrouselChange() {
-      this.pagesList = this.newRec._source.carrousel;
-      console.log('this.pagesList: ', this.pagesList);
     },
     loadCarrouselPages: function(){
       console.log('this.newRec._source.carrousel: ', this.newRec._source.carrousel);
@@ -494,8 +517,6 @@ export default {
 
       this.accepted = this.newRec._source.accepted;
 
-      console.log(this.newRec._source);
-
       if (this.newRec._source.rss == null)
         this.newRec._source.rss =
           // "https://www.engie.com/en/journalists/news-flash/feed";
@@ -509,6 +530,62 @@ export default {
         };
 
       this.getCarousels();
+    },
+    handleDefaultViewSwitch(){
+      console.log('this.newRec._source.defaultView: ', this.newRec._source.defaultView);
+    },
+    handleDefaultViewChange(){
+      console.log('this.newRec._source.defaultView: ', this.newRec._source.defaultView);
+    },
+    handleCarrouselChange() {
+      var url =
+          this.$store.getters.apiurl +
+          "generic_search/nyx_view_carousel*?token=" +
+          this.$store.getters.creds.token;
+
+      var query = {
+        size: 2000,
+        query: {
+          bool: {
+            must: [
+              {
+                match_all: {}
+              }
+            ]
+          }
+        }
+      };
+
+      axios
+        .post(url, query)
+        .then(response => {
+          if (response.data.error != "")
+            console.log("generic search view carousel error...");
+          else {
+            this.currentCarrouselViewsList = [];
+            console.log('response: ', response.data.records);
+            const records = response.data.records;
+            
+            const objetTrouve = this.carouselList.find(objet => objet.value === this.newRec._source.carrousel);
+            console.log('objetTrouve: ', objetTrouve.views);
+            // var viewsCurrentCarrouselID = [];
+            for (var i in objetTrouve.views){
+              // viewsCurrentCarrouselID.push(objetTrouve.views[i].id)
+              
+              console.log('objetTrouve.views[i].id: ', objetTrouve.views[i].id);
+              const view = records.find(objet => objet._id === objetTrouve.views[i].id);
+              var obj = {
+                _id: view._id,
+                title: `${view._source.summary} - ${view._source.title}`,
+              };
+              this.currentCarrouselViewsList.push(obj)
+            }
+            console.log('this.currentCarrouselViewsList: ', this.currentCarrouselViewsList);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     getCarousels: function() {
       var url =
@@ -539,15 +616,18 @@ export default {
             for (var i in response.data.records) {
               var obj = {
                 label: response.data.records[i]._source.name,
-                value: response.data.records[i]._source.name
+                value: response.data.records[i]._source.name,
+                views: response.data.records[i]._source.id_array,
               };
               this.carouselList.push(obj);
             }
+            console.log('this.carouselList: ', this.carouselList);
           }
         })
         .catch(error => {
           console.log(error);
         });
+        this.handleCarrouselChange();
     },
     validateToken: function() {
       this.newRec._source.accepted = 1;
@@ -679,6 +759,7 @@ export default {
       if (!this.weatherActivated && this.newRec._source.weather != null) {
         delete this.newRec._source.weather;
       }
+      console.log('this.newRec: ', this.newRec);
 
       this.$store.commit({
         type: "updateRecord",
