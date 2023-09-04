@@ -16,9 +16,24 @@
     <div class="title-disclaimer">
       <b>Nyx</b> Platform <b>{{this.$store.getters.version}}</b> ({{$store.getters.elasticVersion}})
     </div>
-
-    <el-card class="login-card" :body-style="{ padding: '30px 20px'  }" shadow="hover">
-      <el-form class="login-form" label-width="0px">
+    <div class="login-choice-card" v-if="!userPassword">
+      <el-button
+            class="login-button email-button"
+            @click="useEmail()"
+            type="primary"
+            size="default"
+          >Login using Email</el-button>
+          <a :href="azure_url">
+          <el-button
+            class="login-button equans-login-button"
+            type="primary"
+            size="default"
+            :loading="azureunderway"           
+          >Equans Login</el-button>
+          </a>
+    </div>
+    <el-card class="login-card" :body-style="{ padding: '30px 20px'  }" shadow="hover" v-if="userPassword">
+      <el-form class="login-form" label-width="0px" >
         <el-col :span="24">
           <el-form-item label>
             <el-input
@@ -83,6 +98,7 @@ function getUrlVars() {
 
 export default {
   data: () => ({
+    userPassword: false,
     form: {
       login: "",
       password: "",
@@ -93,12 +109,23 @@ export default {
       welcome: "loading"
     },
     loginunderway: false,
-    initialized: false
+    initialized: false,
+    azure_url: "",
+    azureunderway: false
   }),
   created: function() {
+    var vars = getUrlVars();
+
+    if (vars["code"] != undefined) {
+      this.getToken()
+    }
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
+    getToken(){
+      console.log("AAD LOGIIIIIIIINNNNN DONEEE")
+      
+    },
     async loadConfig() {
       const response = await axios.get(
         this.$store.getters.apiurl + "config",
@@ -118,7 +145,19 @@ export default {
 
       }
     },
-
+    useEmail(){
+      this.userPassword=true;
+    },
+    async getAzureUrl(){
+      this.azureunderway = true;
+      const response = await axios.get(
+          "http://localhost:5000/equanslogin"
+      );
+      //console.log(window)
+      //this.window.location.assign(response.data)  ;
+      this.azure_url=response.data
+      this.azureunderway = false;
+    },
     async validateUser() {
       try {
         this.loginunderway = true;
@@ -303,6 +342,8 @@ export default {
     if (vars["password"] != undefined) {
       this.form.password = vars["password"].split("#")[0];
     }
+    this.getAzureUrl();
+
   }
 };
 </script>
@@ -391,10 +432,29 @@ export default {
   width: 400px;
   margin-left: -200px;
 }
+.login-choice-card {
+  position: absolute;
+  left: 50%;
+  height: 200px;
+  top: 50%;
+  margin-top: -50px;
+  width: 300px;
+  margin-left: -150px;
+}
 
 .login-form .el-button{
   margin-top: 12px;
 
+}
+.email-button{
+  background-color:#d1011c !important;
+  border-color: #d1011c !important;
+}
+.equans-login-button{
+/*  background-color:#70BD95 !important;
+  border-color: #70BD95 !important;*/
+  margin-left:0 !important;
+  margin-top:1em !important;
 }
 .logo-group {
   position: absolute;
