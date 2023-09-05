@@ -117,14 +117,26 @@ export default {
     var vars = getUrlVars();
 
     if (vars["code"] != undefined) {
-      this.getToken()
+      this.getToken(vars)
     }
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
-    getToken(){
+    async getToken(vars){
       console.log("AAD LOGIIIIIIIINNNNN DONEEE")
-      
+      console.log(vars)
+      for (let key in vars){
+        vars[key]=vars[key].split("#")[0]
+      }
+      console.log(vars)
+      const response = await axios.get(
+        "http://localhost:5000/authcheck",
+        { 
+          withCredentials: true,
+          params: vars
+        }
+      );
+      console.log(response )
     },
     async loadConfig() {
       const response = await axios.get(
@@ -342,7 +354,9 @@ export default {
     if (vars["password"] != undefined) {
       this.form.password = vars["password"].split("#")[0];
     }
-    this.getAzureUrl();
+    if (vars["code"] == undefined) {
+      this.getAzureUrl();
+    }
 
   }
 };
