@@ -163,9 +163,9 @@ export default {
     async getAzureUrl(){
       this.azureunderway = true;
       const response = await axios.get(
-          "http://localhost:5000/equanslogin"
+        this.$store.getters.apiurl + "azure/getlink",
       );
-      //console.log(window)
+      console.log(response.data)
       //this.window.location.assign(response.data)  ;
       this.azure_url=response.data
       this.azureunderway = false;
