@@ -31,6 +31,7 @@
             :loading="azureunderway"           
           >Equans Login</el-button>
           </a>
+          <div class="login_error" v-if="azureError">{{azureError}}</div>
     </div>
     <el-card class="login-card" :body-style="{ padding: '30px 20px'  }" shadow="hover" v-if="userPassword">
       <el-form class="login-form" label-width="0px" >
@@ -111,33 +112,25 @@ export default {
     loginunderway: false,
     initialized: false,
     azure_url: "",
-    azureunderway: false
+    azureunderway: false,
+    azureError:""
   }),
   created: function() {
     var vars = getUrlVars();
 
-    if (vars["code"] != undefined) {
-      this.getToken(vars)
+    if (vars["azure_login"] != undefined) {
+      
+      if (vars["azure_login"] == "successful"){ 
+        console.log('vars["azure_login"]: ', vars["azure_login"]);
+
+        this.validateUser("azure/secondstep");
+      } else if (vars["azure_login"] == "error"){
+        this.azureError="Azure login Error";
+      }
     }
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
-    async getToken(vars){
-      console.log("AAD LOGIIIIIIIINNNNN DONEEE")
-      console.log(vars)
-      for (let key in vars){
-        vars[key]=vars[key].split("#")[0]
-      }
-      console.log(vars)
-      const response = await axios.get(
-        "http://localhost:5000/authcheck",
-        { 
-          withCredentials: true,
-          params: vars
-        }
-      );
-      console.log(response )
-    },
     async loadConfig() {
       const response = await axios.get(
         this.$store.getters.apiurl + "config",
@@ -163,19 +156,27 @@ export default {
     async getAzureUrl(){
       this.azureunderway = true;
       const response = await axios.get(
-        this.$store.getters.apiurl + "azure/getlink",
+        this.$store.getters.apiurl + "azure/getlink",{
+          withCredentials:true
+        }
       );
-      console.log(response.data)
+      console.log(response)
       //this.window.location.assign(response.data)  ;
-      this.azure_url=response.data
+      this.azure_url=response.data.url
       this.azureunderway = false;
     },
-    async validateUser() {
+    async validateUser(endpoint="cred/login") {
       try {
         this.loginunderway = true;
         const response = await axios.post(
-          this.$store.getters.apiurl + "cred/login",
-          { login: this.form.login, password: this.form.password }
+          this.$store.getters.apiurl + endpoint,
+          { 
+            data:{
+              login: this.form.login, 
+              password: this.form.password
+            },           
+            withCredentials:true
+          }
         );
 
         if (response.data.error == "") {
@@ -354,9 +355,7 @@ export default {
     if (vars["password"] != undefined) {
       this.form.password = vars["password"].split("#")[0];
     }
-    if (vars["code"] == undefined) {
-      this.getAzureUrl();
-    }
+    this.getAzureUrl();
 
   }
 };
