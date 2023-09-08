@@ -532,7 +532,7 @@ export default {
       this.getCarousels();
     },
     handleDefaultViewSwitch(){
-      console.log('this.newRec._source.defaultView: ', this.newRec._source.defaultView);
+      console.log('this.newRec._source.defaultviewactivated: ', this.newRec._source.defaultviewactivated);
     },
     handleDefaultViewChange(){
       console.log('this.newRec._source.defaultView: ', this.newRec._source.defaultView);
@@ -756,6 +756,21 @@ export default {
       });
     },
     saveRecord: function() {
+      if (this.newRec._source.defaultviewactivated && (!this.newRec._source.defaultView || !this.newRec._source.defaultviewstarttime || !this.newRec._source.defaultviewendtime)){
+        return this.$notify({
+          title: "Error",
+          message: "Please complete the row of Default carrousel view",
+          type: "error",
+          position: "bottom-right"
+        });
+      }
+
+      if (!this.newRec._source.defaultviewactivated){
+        delete this.newRec._source.defaultView
+        delete this.newRec._source.defaultviewstarttime
+        delete this.newRec._source.defaultviewendtime
+      }
+
       if (!this.weatherActivated && this.newRec._source.weather != null) {
         delete this.newRec._source.weather;
       }
@@ -765,12 +780,12 @@ export default {
         type: "updateRecord",
         data: this.newRec
       });
-      // this.$notify({
-      //   title: "Record saved.",
-      //   type: "success",
-      //   message: "The view has been succesfuly saved.",
-      //   position: "bottom-right"
-      // });
+      this.$notify({
+        title: "Record saved.",
+        type: "success",
+        message: "The view has been succesfuly saved.",
+        position: "bottom-right"
+      });
       this.$emit("dialogcloseupdated");
     }
   }
