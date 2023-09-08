@@ -115,19 +115,10 @@ export default {
     azureunderway: false,
     azureError:""
   }),
-  created: function() {
+  created: async function() {
     var vars = getUrlVars();
-
-    if (vars["azure_login"] != undefined) {
-      
-      if (vars["azure_login"] == "successful"){ 
-        console.log('vars["azure_login"]: ', vars["azure_login"]);
-
-        this.validateUser("azure/secondstep");
-      } else if (vars["azure_login"] == "error"){
-        this.azureError="Azure login Error";
-      }
-    }
+    
+   
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
@@ -167,18 +158,28 @@ export default {
     },
     async validateUser(endpoint="cred/login") {
       try {
+        let response
         this.loginunderway = true;
-        const response = await axios.post(
-          this.$store.getters.apiurl + endpoint,
-          { 
-            data:{
-              login: this.form.login, 
-              password: this.form.password
-            },           
-            withCredentials:true
-          }
-        );
+        if(endpoint=="azure/secondstep"){
+          response = await axios.get(
+            this.$store.getters.apiurl + endpoint,
+            { 
+              withCredentials:true
+            }
+          );
+        }else{
+          response = await axios.post(
+            this.$store.getters.apiurl + endpoint,
+            { 
+              data:{
+                login: this.form.login, 
+                password: this.form.password
+              },           
+            }
+          );
+        }
 
+        console.log('response.data.error: ', response.data.error);
         if (response.data.error == "") {
           this.authenticate(response);
         } else {
@@ -264,8 +265,9 @@ export default {
         type: "login",
         data: response.data
       });
+      console.log('response.data: ', response.data);
       this.loginunderway = false;
-
+      
       var rec_id = null
       try {
         
@@ -348,6 +350,7 @@ export default {
     }
   },
   mounted: function() {
+
     var vars = getUrlVars();
     if (vars["user"] != undefined) {
       this.form.login = vars["user"].split("#")[0];
@@ -356,6 +359,17 @@ export default {
       this.form.password = vars["password"].split("#")[0];
     }
     this.getAzureUrl();
+
+    if (vars["azure_login"] != undefined) {
+      
+      if (vars["azure_login"] == "successful"){ 
+        console.log('vars["azure_login"]: ', vars["azure_login"]);
+
+        this.validateUser("azure/secondstep");
+      } else if (vars["azure_login"] == "error"){
+        this.azureError="Azure login Error";
+      }
+    }
 
   }
 };
