@@ -23,14 +23,15 @@
             type="primary"
             size="default"
           >Login using Email</el-button>
-          <a :href="azure_url">
+          <!--a :href="azure_url" target="popup" -->
           <el-button
             class="login-button equans-login-button"
             type="primary"
             size="default"
+            @click="openPopup()"
             :loading="azureunderway"           
           >Equans Login</el-button>
-          </a>
+          <!--/a-->
           <div class="login_error" v-if="azureError">{{azureError}}</div>
     </div>
     <el-card class="login-card" :body-style="{ padding: '30px 20px'  }" shadow="hover" v-if="userPassword">
@@ -117,11 +118,41 @@ export default {
   }),
   created: async function() {
     var vars = getUrlVars();
-    
-   
+    this.getAzureUrl();
+
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
+    async loopApi(){
+      const response = await axios.get(
+        this.$store.getters.apiurl + "azure/finished",
+        {withCredentials:true}
+      );
+
+      if (response.data.error){
+        this.azureunderway=false
+        console.log("errror AZURE")
+        //ADD message
+      }else{
+        if(response.data.finished){
+          this.azureunderway=false;
+          this.validateUser("azure/secondstep");
+        }
+        return;
+      }
+    },
+    async openPopup(){
+      let win=window.open(this.azure_url,"popup",'width=650,height=700,top=100');
+      this.azureunderway=true;
+      while (this.azureunderway){
+        console.log('this.azureunderway: ', this.azureunderway);
+        this.loopApi()
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+      }
+      console.log("window",win)
+      win.close()
+    },
     async loadConfig() {
       const response = await axios.get(
         this.$store.getters.apiurl + "config",
@@ -147,14 +178,20 @@ export default {
     async getAzureUrl(){
       this.azureunderway = true;
       const response = await axios.get(
-        this.$store.getters.apiurl + "azure/getlink",{
+        this.$store.getters.apiurl + "checkstate",{
           withCredentials:true
         }
       );
       console.log(response)
-      //this.window.location.assign(response.data)  ;
-      this.azure_url=response.data.url
-      this.azureunderway = false;
+      if (response.data.signedIn){
+        //not implemented
+      }
+      if(response.data.azureSignedIn){
+        this.validateUser("azure/secondstep");
+      }else{
+        this.azure_url=response.data.url;
+        this.azureunderway = false;
+      }
     },
     async validateUser(endpoint="cred/login") {
       try {
@@ -358,19 +395,6 @@ export default {
     if (vars["password"] != undefined) {
       this.form.password = vars["password"].split("#")[0];
     }
-    this.getAzureUrl();
-
-    if (vars["azure_login"] != undefined) {
-      
-      if (vars["azure_login"] == "successful"){ 
-        console.log('vars["azure_login"]: ', vars["azure_login"]);
-
-        this.validateUser("azure/secondstep");
-      } else if (vars["azure_login"] == "error"){
-        this.azureError="Azure login Error";
-      }
-    }
-
   }
 };
 </script>
