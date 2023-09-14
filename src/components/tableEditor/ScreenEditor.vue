@@ -511,9 +511,18 @@ export default {
         // Convertissez les heures de début en objets Date pour la comparaison
         const startTimeA = new Date(a.startTime);
         const startTimeB = new Date(b.startTime);
+        
+        var _startDate = new Date();
+          _startDate.setHours(startTimeA.getHours());
+          _startDate.setMinutes(startTimeA.getMinutes());
+          _startDate.setSeconds(startTimeA.getSeconds());
+        var _endDate = new Date();
+          _endDate.setHours(startTimeB.getHours());
+          _endDate.setMinutes(startTimeB.getMinutes());
+          _endDate.setSeconds(startTimeB.getSeconds());
 
         // Utilisez la comparaison des objets Date pour trier le tableau
-        return startTimeA - startTimeB;
+        return _startDate - _endDate;
       });
 
       // Réinitialisez les sélecteurs de temps pour une nouvelle entrée

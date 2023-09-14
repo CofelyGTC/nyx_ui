@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="4.1.39"
+VERSION="4.1.40"
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js
 docker build -t engiecofely/nyx_ui:v$VERSION .
 docker push engiecofely/nyx_ui:v$VERSION
@@ -16,3 +16,4 @@ echo -en "\007"
 #   4.1.36  EBU Fix Grafana default time
 #   4.1.38  EBU Add Optiboard Editor: add default view 
 #   4.1.39  EBU Add Optiboard Editor: add default view MULTIPLE
+#   4.1.40  EBU Fix Optiboard Editor: filter views
