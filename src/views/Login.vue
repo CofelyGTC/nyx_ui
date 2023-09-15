@@ -123,6 +123,73 @@ export default {
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
+    async getAzureUrl(){
+      this.azureunderway = true;
+      const response = await axios.get(
+        this.$store.getters.apiurl + "checkstate",{
+          withCredentials:true
+        }
+      );
+
+      console.log('response.data: ', response.data);
+      //var response.data= await JSON.parse(response.data)
+      if (response.data.signedIn){
+        //not implemented
+      }
+      if(response.data.azureSignedIn){
+        console.log("Azure signed in, signing in");
+        this.validateUser("azure/secondstep");
+      }else{
+        console.log("Azure not signed in, retrieving url: ", response.data.url )
+        this.azure_url=await response.data.url;
+        this.azureunderway = false;
+      }
+    },
+    async openPopup(){
+      var width = 650; // Width of the new window
+      var height = 700; // Height of the new window
+      
+      // Calculate the center position
+      var left = (window.innerWidth - width) / 2;
+      console.log('left: ', left);
+      var top = (window.innerHeight - height) / 2;
+      console.log('top: ', top);
+
+      // Define window features
+      //var features = `width=${width},height=${height},left=${left},top=${top}`;
+      var features = this.popupCenter(width,height)
+      console.log('features: ', features);
+
+      var win = window.open('about:blank', '_blank', features);
+      win.location.href = this.azure_url;
+      console.log('this.azure_url: ', this.azure_url);
+      
+      //let win=window.open(this.azure_url,"popup",features);
+      this.azureunderway=true;
+      console.log("entering loop, wainting for azure signin")
+      while (!win.closed){
+        this.loopApi()
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      this.azureunderway=false;
+
+      console.log("Loop over")
+      win.close()
+    },
+    popupCenter(w, h) {
+      // Fixes dual-screen position                             Most browsers      Firefox
+      const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+      const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+
+      const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+      const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+      const systemZoom = width / window.screen.availWidth;
+      const left = (width - w) / 2 / systemZoom + dualScreenLeft
+      const top = (height - h) / 2 / systemZoom + dualScreenTop
+      const features =`width=${w}, height=${h}, top=${top}, left=${left} `
+      return features
+    },
     async loopApi(){
       const response = await axios.get(
         this.$store.getters.apiurl + "azure/finished",
@@ -140,18 +207,6 @@ export default {
         }
         return;
       }
-    },
-    async openPopup(){
-      let win=window.open(this.azure_url,"popup",'width=650,height=700,top=100');
-      this.azureunderway=true;
-      while (this.azureunderway){
-        console.log('this.azureunderway: ', this.azureunderway);
-        this.loopApi()
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-      }
-      console.log("window",win)
-      win.close()
     },
     async loadConfig() {
       const response = await axios.get(
@@ -175,24 +230,7 @@ export default {
     useEmail(){
       this.userPassword=true;
     },
-    async getAzureUrl(){
-      this.azureunderway = true;
-      const response = await axios.get(
-        this.$store.getters.apiurl + "checkstate",{
-          withCredentials:true
-        }
-      );
-      console.log(response)
-      if (response.data.signedIn){
-        //not implemented
-      }
-      if(response.data.azureSignedIn){
-        this.validateUser("azure/secondstep");
-      }else{
-        this.azure_url=response.data.url;
-        this.azureunderway = false;
-      }
-    },
+    
     async validateUser(endpoint="cred/login") {
       try {
         let response
