@@ -20,17 +20,20 @@
       <el-button
             class="login-button email-button"
             @click="useEmail()"
-            type="primary"
+            type="danger"
             size="default"
-          >Login using Email</el-button>
+          >
+          <v-icon style="color:white" name="regular/envelope" scale="1.5"></v-icon>
+          Login using Email</el-button>
           <!--a :href="azure_url" target="popup" -->
           <el-button
             class="login-button equans-login-button"
-            type="primary"
+            type="secondary"
             size="default"
             @click="openPopup()"
-            :loading="azureunderway"           
-          >Equans Login</el-button>
+          >
+          <img class="equans-logo" src="../assets/EQUANS.png" height="40"/>
+          Equans Login</el-button>
           <!--/a-->
           <div class="login_error" v-if="azureError">{{azureError}}</div>
     </div>
@@ -167,14 +170,12 @@ export default {
       //let win=window.open(this.azure_url,"popup",features);
       this.azureunderway=true;
       console.log("entering loop, wainting for azure signin")
-      while (!win.closed){
-        this.loopApi()
+      while (!win.closed&&this.azureunderway){
+        this.loopApi(win)
         await new Promise(resolve => setTimeout(resolve, 500));
       }
       this.azureunderway=false;
-
-      console.log("Loop over")
-      win.close()
+      console.log("Loop over, Logged in")
     },
     popupCenter(w, h) {
       // Fixes dual-screen position                             Most browsers      Firefox
@@ -190,7 +191,7 @@ export default {
       const features =`width=${w}, height=${h}, top=${top}, left=${left} `
       return features
     },
-    async loopApi(){
+    async loopApi(win){
       const response = await axios.get(
         this.$store.getters.apiurl + "azure/finished",
         {withCredentials:true}
@@ -199,11 +200,13 @@ export default {
       if (response.data.error){
         this.azureunderway=false
         console.log("errror AZURE")
+        win.close()
         //ADD message
       }else{
         if(response.data.finished){
           this.azureunderway=false;
           this.validateUser("azure/secondstep");
+          win.close()
         }
         return;
       }
@@ -448,7 +451,6 @@ export default {
   height: 30px;
   color: red;
 }
-
 .title-login {
   position: absolute;
   width: 100%;
@@ -533,17 +535,27 @@ export default {
 
 .login-form .el-button{
   margin-top: 12px;
-
 }
-.email-button{
-  background-color:#d1011c !important;
-  border-color: #d1011c !important;
+.login-choice-card .el-button{
+  height:45px;
+  border-radius: 6px;
 }
 .equans-login-button{
 /*  background-color:#70BD95 !important;
   border-color: #70BD95 !important;*/
   margin-left:0 !important;
   margin-top:1em !important;
+  position: relative;
+}
+.equans-logo{
+  position:absolute;
+  left:8%;
+  top:-3%;
+}
+.login-choice-card .fa-icon{
+  position:absolute;
+  left:10%;
+  top:5%
 }
 .logo-group {
   position: absolute;
@@ -558,5 +570,6 @@ export default {
   width: 150px;
   top: 92%;
 }
+
 
 </style>

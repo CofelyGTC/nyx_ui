@@ -8,7 +8,20 @@ import { extractURLParts } from "../globalfunctions";
 
 Vue.use(Vuex);
 
+function popupCenter(w, h) {
+  // Fixes dual-screen position                             Most browsers      Firefox
+  const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+  const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
 
+  const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+  const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+  const systemZoom = width / window.screen.availWidth;
+  const left = (width - w) / 2 / systemZoom + dualScreenLeft
+  const top = (height - h) / 2 / systemZoom + dualScreenTop
+  const features =`width=${w}, height=${h}, top=${top}, left=${left} `
+  return features
+}
 
 function computeAutoTime(minutes) {
   if (minutes <= 120)
@@ -55,7 +68,7 @@ export default new Vuex.Store({
     apiVersion: "",
     kibanaurl: "/kibana/",
     grafanaurl: "/grafana/",
-    version: "v4.1.29",
+    version: "v5.0.13",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -329,12 +342,15 @@ export default new Vuex.Store({
         state.creds.token;
 
       axios
-        .get(url)
+        .get(url,{withCredentials:true})
         .then(response => {
           if (response.data.error != "")
             console.log("Logout error...");
           else {
             console.log("Logout success...");
+            var features = popupCenter(650,500)
+            var win = window.open('about:blank', '_blank', features);
+            win.location.href=response.data.azureLogoutUrl
           }
         })
         .catch(error => {
