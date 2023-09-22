@@ -68,7 +68,7 @@ export default new Vuex.Store({
     apiVersion: "",
     kibanaurl: "/kibana/",
     grafanaurl: "/grafana/",
-    version: "v5.0.13",
+    version: "v5.0.15",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -348,9 +348,9 @@ export default new Vuex.Store({
             console.log("Logout error...");
           else {
             console.log("Logout success...");
-            var features = popupCenter(650,500)
-            var win = window.open('about:blank', '_blank', features);
-            win.location.href=response.data.azureLogoutUrl
+            //var features = popupCenter(650,500)
+            //var win = window.open('about:blank', '_blank', features);
+            //win.location.href=response.data.azureLogoutUrl
           }
         })
         .catch(error => {
