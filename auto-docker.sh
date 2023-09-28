@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.0.15"
+VERSION="5.1.1"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js
 docker build -t engiecofely/nyx_ui:v$VERSION .
 docker push engiecofely/nyx_ui:v$VERSION

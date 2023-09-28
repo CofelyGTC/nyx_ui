@@ -13,32 +13,32 @@
       </div>
     </div>
 
-    <div class="title-disclaimer">
-      <b>Nyx</b> Platform <b>{{this.$store.getters.version}}</b> ({{$store.getters.elasticVersion}})
-    </div>
-    <div class="login-choice-card" v-if="!userPassword">
-      <el-button
-            class="login-button email-button"
-            @click="useEmail()"
-            type="danger"
-            size="default"
-          >
-          <v-icon style="color:white" name="regular/envelope" scale="1.5"></v-icon>
-          Login using Email</el-button>
-          <!--a :href="azure_url" target="popup" -->
-          <el-button
-            class="login-button equans-login-button"
-            type="secondary"
-            size="default"
-            @click="openPopup()"
-          >
-          <img class="equans-logo" src="../assets/EQUANS.png" height="40"/>
-          Equans Login</el-button>
-          <!--/a-->
-          <div class="login_error" v-if="azureError">{{azureError}}</div>
-    </div>
-    <el-card class="login-card" :body-style="{ padding: '30px 20px'  }" shadow="hover" v-if="userPassword">
-      <el-form class="login-form" label-width="0px" >
+<div class="title-disclaimer">
+  <b>Nyx</b> Platform <b>{{this.$store.getters.version}}</b> ({{$store.getters.elasticVersion}})
+</div>
+    <el-card class="login-card" :body-style="{padding:'25px 25px'}" shadow="hover">
+      <div class="login-choice-card" v-if="!userPassword">
+        <el-button
+        class="login-button email-button"
+        @click="useEmail()"
+        type="secondary"
+        size="default"
+        >
+        <v-icon style="color:#DCDFE6" name="regular/envelope" scale="1.8"></v-icon>
+        Login using Email</el-button>
+        <!--a :href="azure_url" target="popup" -->
+        <el-button
+              class="login-button equans-login-button"
+              type="primary"
+              size="default"
+              @click="openPopup()"
+            >
+            <img class="equans-logo" src="../assets/EQUANS.png" height="40"/>
+            Equans Login</el-button>
+            <!--/a-->
+            <div class="login_error" v-if="azureError">{{azureError}}</div>
+      </div>
+      <el-form class="login-form" label-width="0px" v-if="userPassword && !resetPassword" >
         <el-col :span="24">
           <el-form-item label>
             <el-input
@@ -71,9 +71,11 @@
             :disabled="loginDisabled"
             :loading="loginunderway"
           >Login</el-button>
+          <a @click="forgottenPassword()" class="forgottenPassword">Forgot password?</a>
           <div class="login_error" v-if="form.error">{{form.error}}</div>
         </el-col>
       </el-form>
+      <ForgottenPassword v-if="resetPassword" />
     </el-card>
     <h1 class="title-login" style="display: none;">
       {{config.welcome}}
@@ -87,7 +89,10 @@
 
 import Vue from "vue";
 import axios from "axios";
+import forgottenPassword from "@/components/ForgottenPassword";
 import { loadLanguageAsync } from "../i18n-setup";
+
+Vue.component("ForgottenPassword",forgottenPassword)
 
 function getUrlVars() {
   var vars = {};
@@ -117,15 +122,19 @@ export default {
     initialized: false,
     azure_url: "",
     azureunderway: false,
-    azureError:""
+    azureError:"",
+    //cardHeight: 110,
+    resetPassword: false
   }),
   created: async function() {
     var vars = getUrlVars();
     this.getAzureUrl();
-
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
+    forgottenPassword(){
+      this.resetPassword=true
+    },
     async getAzureUrl(){
       this.azureunderway = true;
       const response = await axios.get(
@@ -232,6 +241,7 @@ export default {
     },
     useEmail(){
       this.userPassword=true;
+      //this.cardHeight=150;
     },
     
     async validateUser(endpoint="cred/login") {
@@ -248,12 +258,10 @@ export default {
         }else{
           response = await axios.post(
             this.$store.getters.apiurl + endpoint,
-            { 
-              data:{
+            {
                 login: this.form.login, 
                 password: this.form.password
-              },           
-            }
+            },          
           );
         }
 
@@ -323,8 +331,6 @@ export default {
       else{
         console.log("Good Version")
       }
-
-
     },
     authenticate(response) {
 
@@ -391,10 +397,7 @@ export default {
           data: response.data.all_filters
         });
       }
-
-
       console.log('push this path: '+path)
-
       this.$router.push(path);
       this.$store.commit({
         type: "version",
@@ -517,32 +520,23 @@ export default {
 .login-card {
   position: absolute;
   left: 50%;
-  height: 200px;
-  top: 50%;
-  margin-top: -50px;
+  top: 42%;
   width: 400px;
-  margin-left: -200px;
+  transform: translateX(-50%);
+  transition: height 3s;
 }
 .login-choice-card {
-  position: absolute;
-  left: 50%;
-  height: 200px;
-  top: 50%;
-  margin-top: -50px;
-  width: 300px;
-  margin-left: -150px;
+  position: relative;
 }
-
 .login-form .el-button{
   margin-top: 12px;
 }
 .login-choice-card .el-button{
   height:45px;
   border-radius: 6px;
+  border-width: 2px;
 }
 .equans-login-button{
-/*  background-color:#70BD95 !important;
-  border-color: #70BD95 !important;*/
   margin-left:0 !important;
   margin-top:1em !important;
   position: relative;
@@ -555,14 +549,14 @@ export default {
 .login-choice-card .fa-icon{
   position:absolute;
   left:10%;
-  top:5%
+  top:7%
 }
 .logo-group {
   position: absolute;
   left: 50%;
   width: 300px;
-  transform: translateX(-50%);
-  top: 35%;
+  transform: translate(-50%,-100%);
+  top: 40%;
 }
 .logo-team {
   position: absolute;
@@ -570,6 +564,9 @@ export default {
   width: 150px;
   top: 92%;
 }
-
-
+.forgottenPassword{
+  float: left;
+  margin-top: 0.3em;
+  cursor: pointer;
+}
 </style>
