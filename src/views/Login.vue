@@ -71,7 +71,9 @@
             :disabled="loginDisabled"
             :loading="loginunderway"
           >Login</el-button>
-          <a @click="forgottenPassword()" class="forgottenPassword">Forgot password?</a>
+          <div>
+            <a @click="forgottenPassword()" class="forgottenPassword">Forgot password?</a>
+          </div>
           <div class="login_error" v-if="form.error">{{form.error}}</div>
         </el-col>
       </el-form>
