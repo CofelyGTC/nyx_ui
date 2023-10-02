@@ -61,23 +61,22 @@
               size="medium"
             />
           </el-form-item>
-          <el-button
-            class="login-button"
-            @click="validateUser()"
-            type="primary"
-            size="default"
-            color="#048"
-            
-            :disabled="loginDisabled"
-            :loading="loginunderway"
-          >Login</el-button>
+            <el-button
+              class="login-button"
+              @click="validateUser()"
+              type="primary"
+              size="default"
+              color="#048"
+              :disabled="loginDisabled"
+              :loading="loginunderway"
+            >Login</el-button>
           <div>
             <a @click="forgottenPassword()" class="forgottenPassword">Forgot password?</a>
           </div>
           <div class="login_error" v-if="form.error">{{form.error}}</div>
         </el-col>
       </el-form>
-      <ForgottenPassword v-if="resetPassword" />
+      <ForgottenPassword v-if="resetPassword" @error="forgottenPasswordAction($event)"/>
     </el-card>
     <h1 class="title-login" style="display: none;">
       {{config.welcome}}
@@ -110,7 +109,7 @@ function getUrlVars() {
 
 export default {
   data: () => ({
-    userPassword: false,
+    userPassword: true,
     form: {
       login: "",
       password: "",
@@ -126,7 +125,7 @@ export default {
     azureunderway: false,
     azureError:"",
     //cardHeight: 110,
-    resetPassword: false
+    resetPassword: true
   }),
   created: async function() {
     var vars = getUrlVars();
@@ -134,6 +133,10 @@ export default {
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
+    forgottenPasswordAction(error){
+      this.resetPassword=false;
+      this.form.error=error;
+    },
     forgottenPassword(){
       this.resetPassword=true
     },
