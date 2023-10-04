@@ -15,6 +15,9 @@ echo -en "\007"
 #   4.1.35  EBU Fix Grafana param url
 #   4.1.36  EBU Fix Grafana default time
 #   4.1.37  EBU Add Optiboard Editor: add default view 
+#   4.1.38  EBU Add Optiboard Editor: add default view 
+#   4.1.39  EBU Add Optiboard Editor: add default view MULTIPLE
+#   4.1.40  EBU Fix Optiboard Editor: filter views
 #   5.0.1   JFI Breaking Change Azure Signin
 #   5.0.5   JFI added store in
 #   5.0.12  JFI added logout
