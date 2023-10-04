@@ -762,6 +762,7 @@ export default {
 body {
   margin: 0px;
   overflow: hidden;
+  background-color: white;
 }
 
 .aside {

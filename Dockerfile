@@ -14,6 +14,7 @@ RUN npm run build
 
 FROM builder
 RUN mv ./dist /etc/opt/nyx_ui
+COPY ./src/store/store.js /etc/store/store.js
 COPY ./start.sh /etc/opt/start.sh
 COPY ./app.js /etc/opt/app.js
 RUN rm -d -r /etc/build
