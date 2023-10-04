@@ -109,7 +109,7 @@ function getUrlVars() {
 
 export default {
   data: () => ({
-    userPassword: true,
+    userPassword: false,
     form: {
       login: "",
       password: "",
@@ -125,7 +125,7 @@ export default {
     azureunderway: false,
     azureError:"",
     //cardHeight: 110,
-    resetPassword: true
+    resetPassword: false
   }),
   created: async function() {
     var vars = getUrlVars();

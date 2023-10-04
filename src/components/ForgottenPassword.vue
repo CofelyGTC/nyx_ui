@@ -83,7 +83,6 @@ export default {
         error: ""
       },
       state: "",
-      token: ""
     }
   },
   props: {
@@ -123,7 +122,7 @@ export default {
       })
     },
     async apiCall(){
-      const url = this.$store.getters.apiurl + "cred/resetpassword?token=" +this.token
+      const url = this.$store.getters.apiurl + "cred/resetpassword?token="+this.form.token
       const query = {
         login: this.form.login,
         new_password: this.ruleForm.pass

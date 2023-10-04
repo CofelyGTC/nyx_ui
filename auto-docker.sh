@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.1.1"
+VERSION="5.2.1"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js
 docker build -t engiecofely/nyx_ui:v$VERSION .
 docker push engiecofely/nyx_ui:v$VERSION
@@ -19,3 +19,4 @@ echo -en "\007"
 #   5.0.5   JFI added store in
 #   5.0.12  JFI added logout
 #   5.0.14  JFI logout popup removed
+#   5.2.1   JFI forgotten pw added
