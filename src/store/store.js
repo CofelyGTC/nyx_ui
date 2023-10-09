@@ -64,11 +64,12 @@ function stopSocket(wsObject)
 
 export default new Vuex.Store({
   state: {
+    loggedOut: false,
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
     grafanaurl: "/grafana/",
-    version: "v5.2.1",
+    version: "v5.2.3",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -104,6 +105,7 @@ export default new Vuex.Store({
     actualLvl2: 'TAB-0-0'
   },
   getters: {
+    loggedOut: state => state.loggedOut,
     wsObject: state => state.wsObject,
     apiVersion: state => state.apiVersion,
     apiurl: state => state.apiurl,
@@ -333,6 +335,7 @@ export default new Vuex.Store({
       
     },    
     logout(state) {
+      state.loggedOut=true;
       state.wsObject.check_alive=false;
       stopSocket(state.wsObject);
 
@@ -348,9 +351,7 @@ export default new Vuex.Store({
             console.log("Logout error...");
           else {
             console.log("Logout success...");
-            //var features = popupCenter(650,500)
-            //var win = window.open('about:blank', '_blank', features);
-            //win.location.href=response.data.azureLogoutUrl
+
           }
         })
         .catch(error => {

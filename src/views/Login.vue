@@ -143,7 +143,7 @@ export default {
     async getAzureUrl(){
       this.azureunderway = true;
       const response = await axios.get(
-        this.$store.getters.apiurl + "checkstate",{
+        this.$store.getters.apiurl + "checkstate?loggedout=" + this.$store.getters.loggedOut,{
           withCredentials:true
         }
       );
