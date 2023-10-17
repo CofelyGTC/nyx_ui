@@ -213,7 +213,7 @@ export default {
             hoofd: 1,
             ppl: {
               titu: ["Sébastien Docquier", "Patrick Lenaertz"],
-              backup: ["Joris Verhaeghe", "Dirk Van Leemput"]
+              backup: ["Joeri Bergé", "Dirk Van Leemput"]
             }
           }
         },
@@ -224,7 +224,7 @@ export default {
             tech2: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Ahmed Karroum", "Wesley Pensis"],
+              titu: ["Steve Barbé", "Wesley Pensis"],
               backup: ["-", "Dirk Van Leemput"]
             }
           },
@@ -234,7 +234,7 @@ export default {
             tech2: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Nour Ajana", "-"],
+              titu: ["Nour Ajana", "Christophe Frans"],
               backup: ["Wesley Pensis", "Dirk Van Leemput"]
             }
           },
@@ -264,7 +264,7 @@ export default {
             tech: 1,
             hoofd: 1,
             ppl: {
-              titu: ["Michael De Saeger", "Joris Verhaeghe"],
+              titu: ["Michael De Saeger", "Joeri Bergé"],
               backup: ["Patrick Lenaertzs", "Dirk Van Leemput"]
             }
           }
