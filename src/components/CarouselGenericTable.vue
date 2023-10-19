@@ -12,14 +12,14 @@
         v-on:dialogcloseupdated="recordUpdated()"
         v-on:dialogclose="dialogFormVisible=false"
       ></component>
-      <GenericTableDetails
+      <CarouselGenericTableDetails
         v-else
         :record="currentRecord.original"
         :editMode="editMode"
         :config="config"
         v-on:dialogcloseupdated="recordUpdated()"
         v-on:dialogclose="dialogFormVisible=false"
-      ></GenericTableDetails>
+      ></CarouselGenericTableDetails>
     </span>
 
     <el-row v-if="config.queryBarChecked">
@@ -210,7 +210,7 @@
                 :key="scope.row._id"
                 @change="updateCheckedRows(scope, $event)"
               ></el-checkbox>
-              <el-button v-if="scope.row._source.guid"
+              <el-button
                 size="mini"
                 plain
                 icon="el-icon-view"
@@ -241,7 +241,7 @@
 import axios from "axios";
 import moment from "moment";
 import Vue from "vue";
-import generictabledetails from "@/components/GenericTableDetails";
+import carouselgenerictabledetails from "@/components/CarouselGenericTableDetails";
 import map from "@/components/Map";
 import barchart from "@/components/BarChart";
 import querybar from "@/components/QueryBar";
@@ -260,10 +260,10 @@ req.keys().forEach(filename => {
 Vue.component("Map", map);
 Vue.component("BarChart", barchart);
 Vue.component("QueryBar", querybar);
-Vue.component("GenericTableDetails", generictabledetails);
+Vue.component("CarouselGenericTableDetails", carouselgenerictabledetails);
 
 export default {
-  name: "GenericTable",
+  name: "CarouselGenericTable",
   components: {
     ...dynamicComponents
   },
@@ -663,7 +663,8 @@ export default {
       }
     },
     handlePreview(index, row) {
-      window.open('/opti/?guid='+row._source.guid)
+      console.log('row: ', row);
+      window.open('?carousel='+row._id)
     },
     handleView(index, row) {
       this.currentRecord = {}; // required by the detail watcher

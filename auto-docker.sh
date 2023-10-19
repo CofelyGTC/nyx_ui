@@ -1,10 +1,10 @@
 #/bin/bash
-VERSION="5.2.3"
-sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js
+VERSION="5.2.4"
+sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
+sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
 docker push engiecofely/nyx_ui:v$VERSION
 echo -en "\007"
-
 
 ### VERSION HISTORY ###
 
@@ -24,3 +24,4 @@ echo -en "\007"
 #   5.0.14  JFI logout popup removed
 #   5.2.1   JFI forgotten pw added
 #   5.2.2   JFI merged
+#   5.2.4   EBU Add custom carousel table for optiboard

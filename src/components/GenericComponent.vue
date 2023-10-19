@@ -13,6 +13,9 @@
         <div v-if="$store.getters.currentSubCategory.apps[0].type=='lazy-generic-table'">
           <LazyGenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
         </div>
+        <div v-if="$store.getters.currentSubCategory.apps[0].type=='carousel-generic-table'">
+          <CarouselGenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
+        </div>
         <div v-else-if="$store.getters.currentSubCategory.apps[0].type=='external'">
           <External :config="$store.getters.currentSubCategory.apps[0]"></External>          
         </div>
@@ -58,6 +61,9 @@
             <div v-else-if="app.type=='lazy-generic-table'">
               <LazyGenericTable :config="app" :key="app.rec_id" />
             </div>
+            <div v-else-if="app.type=='carousel-generic-table'">
+              <CarouselGenericTable :config="app" :key="app.rec_id" />
+            </div>
             <div v-else-if="app.type=='external'">
               <External :config="app" :key="app.rec_id"></External>
             </div>
@@ -90,6 +96,7 @@
 
 import generictable from "@/components/GenericTable";
 import lazygenerictable from "@/components/LazyGenericTable";
+import carouselgenerictable from "@/components/CarouselGenericTable";
 import pggenerictable from "@/components/PGGenericTable";
 import kibana from "@/components/Kibana";
 import grafana from "@/components/Grafana";
@@ -126,6 +133,7 @@ req.keys().forEach(filename => {
 
 Vue.component("GenericTable", generictable);
 Vue.component("LazyGenericTable", lazygenerictable);
+Vue.component("CarouselGenericTable", carouselgenerictable);
 Vue.component("PGGenericTable", pggenerictable);
 Vue.component("Kibana", kibana);
 Vue.component("Grafana", grafana);

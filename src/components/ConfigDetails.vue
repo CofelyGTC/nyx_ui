@@ -57,6 +57,7 @@
                     <el-option label="ES Table" value="generic-table"></el-option>
                     <el-option label="Lazy ES Table" value="lazy-generic-table"></el-option>
                     <el-option label="PGSQL Table" value="pgsql-generic-table"></el-option>
+                    <el-option label="Carousel Table" value="carousel-generic-table"></el-option>
                     <el-option label="Kibana" value="kibana"></el-option>
                     <el-option label="Grafana" value="grafana"></el-option>
                     <el-option label="External" value="external"></el-option>
@@ -135,7 +136,7 @@
               </el-card>
             </el-row>
 
-            <el-row v-if="curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table'" class="transition-box" style="text-align:left;">     
+            <el-row v-if="curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table' || curConfig.type === 'carousel-generic-table'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
                 <v-icon name="table" scale="2.2" />
@@ -697,7 +698,7 @@
           label="Table"
           name="table"
           key="table"
-          v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
+          v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table' || curConfig.type === 'carousel-generic-table')"
         >
           <ESTableEditor
             :allPrivileges="allPrivileges"

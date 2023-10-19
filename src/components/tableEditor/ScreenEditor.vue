@@ -600,7 +600,8 @@ export default {
     },
 
     carrouselPreview(){
-      window.open("https://quantesx.cofelygtc.com/opti?guid="+this.newRec._source.guid)
+      console.log('this.$store.getters.url: ', this.$store.getters.url);
+      window.open("/opti?guid="+this.newRec._source.guid)
     },
     handleRssWidgetChange() {
       console.log('this.newRec._source.rsswidget: ', this.newRec._source.rsswidget);
