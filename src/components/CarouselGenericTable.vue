@@ -664,7 +664,7 @@ export default {
     },
     handlePreview(index, row) {
       console.log('row: ', row);
-      window.open('?carousel='+row._id)
+      window.open('/opti?carousel='+row._id)
     },
     handleView(index, row) {
       this.currentRecord = {}; // required by the detail watcher
