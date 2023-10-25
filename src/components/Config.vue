@@ -45,7 +45,7 @@
       <el-table-column align="right" width="300">
         <!-- Removed from line below: slot-scope="scope" -->
         <template slot="header" slot-scope="scope">
-          <div>
+          <div style="float: right;margin-left: 10px;">
             <el-tooltip
               v-if="currentRow"
               class="item"
