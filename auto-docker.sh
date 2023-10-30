@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.2.7"
+VERSION="5.2.8"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -26,3 +26,4 @@ echo -en "\007"
 #   5.2.2   JFI merged
 #   5.2.4   EBU Add custom carousel table for optiboard
 #   5.2.7   EBU Fix search input on 1 line
+#   5.2.8   EBU Fix checkbox in configuration privileges
