@@ -13,10 +13,10 @@
       size="mini"
       :data="tableData.filter(data => !search || ((JSON.stringify(data._source).toLowerCase().includes(search.toLowerCase()))))"
       :default-sort="{prop: '_source.title', order: 'descending'}"
-      style="width: 100%"
+      style="width: 100%;"
       highlight-current-row
       @current-change="handleCurrentChange"
-      height="1000"
+      height="calc(100vh - 125px)"
     >
       <el-table-column sortable prop="_source.category" label="Category"></el-table-column>
       <el-table-column sortable prop="_source.subcategory" label="Subcategory"></el-table-column>
