@@ -27,3 +27,4 @@ echo -en "\007"
 #   5.2.4   EBU Add custom carousel table for optiboard
 #   5.2.7   EBU Fix search input on 1 line
 #   5.2.8   EBU Fix checkbox in configuration privileges
+#   5.2.10  EBU Fix Config Scroll
