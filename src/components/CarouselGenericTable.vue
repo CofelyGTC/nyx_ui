@@ -1244,31 +1244,4 @@ export default {
 </script>
 
 <style>
-.small {
-  height: 200px;
-}
-.input-label {
-  display: inline-block;
-  width: 130px;
-  margin-top: 3px;
-  margin-right: 5px;
-}
-
-.icon-cell {
-  height: 24px;
-  text-align: center;
-  max-width: 40px;
-}
-
-.el-checkbox__inner {
-  border-radius: 3px !important;
-  margin-right: 11px !important;
-  width: 26px !important;
-  height: 26px !important;
-}
-.el-checkbox__inner::after {
-  height: 15px !important;
-  left: 6.9px !important;
-  top: 0px !important;
-}
 </style>
