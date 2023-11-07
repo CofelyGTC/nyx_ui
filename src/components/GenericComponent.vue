@@ -173,11 +173,9 @@ const myExport = {
         return
       }
 
-      console.log('from')
-      console.log(from)
-      console.log('to')
-      console.log(to)
-
+      console.log('from: ', from);
+      console.log('to: ', to);
+      
       this.loading=true
       
       this.selectedTab=this.$route.params.recid
@@ -229,6 +227,14 @@ const myExport = {
     console.log('MOUNTED GenericComponent')
     
     this.selectedTab=this.$store.getters.activeApp.rec_id
+    console.log('this.$store.getters.activeApp: ', this.$store.getters.activeApp);
+    var elContainer = document.querySelector('.el-container');
+    console.log('elContainer: ', elContainer);
+    if (this.$store.getters.activeApp.darkMode) {
+      elContainer.style.backgroundColor = '#70bd95';
+    } else {
+      elContainer.style.backgroundColor = '#fff'; // Réinitialise la couleur de fond
+    }
 
     this.$globalbus.$on("reportgenerated", () => {
       for (var i in this.$store.getters.currentSubCategory.apps) {
@@ -239,11 +245,13 @@ const myExport = {
         }
       }
     });
+    console.log('this.selectedTab: ', this.selectedTab);
 
     console.log("===============  REGISTERING: messagereceived");
     this.$globalbus.$on("messagereceived", payLoad => {
       console.log("GLOBALBUS/GENERICCOMPONENT/MESSAGERECEIVED");
       console.log(payLoad);
+      console.log('payLoad: ', payLoad);
       if(payLoad.notif_type=="global")
       {
         this.$alert(payLoad.notif_message, payLoad.notif_title, {

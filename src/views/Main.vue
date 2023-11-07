@@ -167,7 +167,7 @@
 
       <el-container>
         <transition name="el-zoom-in-top">
-          <el-aside width="201px" v-bind:style="styleAsideComputed" class="aside" v-show="menuOpen">
+          <el-aside width="200px" v-bind:style="styleAsideComputed" class="aside" v-show="menuOpen">
             <el-row class="tac">
               <el-col :span="24">
                 <el-menu
@@ -745,9 +745,9 @@ export default {
 };
 </script>
 <style>
-.el-aside {
+/* .el-aside {
   border-right: 1px solid rgb(226, 226, 226);
-}
+} */
 
 .el-aside .el-menu {
   border-right: none;
