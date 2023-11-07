@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.2.11"
+VERSION="5.2.12"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -28,4 +28,4 @@ echo -en "\007"
 #   5.2.7   EBU Fix search input on 1 line
 #   5.2.8   EBU Fix checkbox in configuration privileges
 #   5.2.10  EBU Fix Config Scroll
-#   5.2.11  EBU Change background color when grafana drakmode
+#   5.2.12  EBU Change background color when grafana drakmode
