@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.2.13"
+VERSION="5.2.14"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -30,3 +30,4 @@ echo -en "\007"
 #   5.2.10  EBU Fix Config Scroll
 #   5.2.12  EBU Change background color when grafana drakmode
 #   5.2.13  EBU Fix login: elContainer style if null
+#   5.2.14  EBU Grafana dark mode - Text Color & BG Color & Bar Color

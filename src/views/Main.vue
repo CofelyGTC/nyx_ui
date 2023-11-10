@@ -165,7 +165,7 @@
         </el-row>
       </el-header>
 
-      <el-container>
+      <el-container :style="{'background-color':$store.getters.activeApp.darkMode?'#052538':'#fff'}">
         <transition name="el-zoom-in-top">
           <el-aside width="200px" v-bind:style="styleAsideComputed" class="aside" v-show="menuOpen">
             <el-row class="tac">
@@ -298,7 +298,7 @@ export default {
       return this.$store.getters.creds;
     },
     filteredmenus() {
-      console.log('this.$store.getters.filteredmenus: ', this.$store.getters.filteredmenus);
+      // console.log('this.$store.getters.filteredmenus: ', this.$store.getters.filteredmenus);
       return this.$store.getters.filteredmenus;
     },
     containerSize() {

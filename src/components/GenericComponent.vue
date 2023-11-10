@@ -41,9 +41,7 @@
     </div>
     <!-- More than one application -->
     <div v-else style="overflow:hidden;">
-      <el-tabs v-model="selectedTab" 
-      
-        @tab-click="handleTabClick">
+      <el-tabs v-model="selectedTab" @tab-click="handleTabClick">
         <el-tab-pane
           v-bind:style="styleContainerComputed"
           v-for="(app, index) in $store.getters.currentSubCategory.apps"
@@ -106,6 +104,7 @@ import upload from "@/components/Upload";
 import user from "@/components/User";
  // eslint-disable-next-line
 import config from "@/components/Config";
+import configtree from "@/components/ConfigTree";
 import map from "@/components/Map";
 import ReportList from "@/components/ReportList";
 import ProcessList from "@/components/ProcessList";
@@ -141,6 +140,7 @@ Vue.component("External", external);
 Vue.component("Upload", upload);
 Vue.component("User", user);
 Vue.component("Config", config);
+Vue.component("ConfigTree", configtree);
 Vue.component("Map", map);
 Vue.component("Form", form);
 Vue.component("FreeText", freetext);
@@ -218,24 +218,38 @@ const myExport = {
   methods: {
     handleTabClick: function(tab) {
       var path = "/main/" + tab.name
-
-      if(path != this.$route.path)
-        this.$router.push(path);
+      if(path != this.$route.path) this.$router.push(path);
     },
+    changeColor: function() {
+      var elements = document.getElementsByClassName("el-tabs__item")
+      var bars = document.getElementsByClassName("el-tabs__active-bar")
+      console.log('bars: ', bars);
+      if (this.$store.getters.activeApp.darkMode==true) {
+        for (let index = 0; index < elements.length; index++) {
+          const element = elements[index];
+          element.style.color = "#fff"
+        }
+        for (let index = 0; index < bars.length; index++) {
+          const bar = bars[index];
+          bar.style.backgroundColor = "#70bd95"
+        }
+      } else {
+        for (let index = 0; index < elements.length; index++) {
+          const element = elements[index];
+          element.style.color = "#002439"
+        }
+        for (let index = 0; index < bars.length; index++) {
+          const bar = bars[index];
+          bar.style.backgroundColor = "#002439"
+        }
+      }
+      
+    }
   },
   mounted: function() {
     console.log('MOUNTED GenericComponent')
     
     this.selectedTab=this.$store.getters.activeApp.rec_id
-    console.log('this.$store.getters.activeApp: ', this.$store.getters.activeApp);
-    var elContainer = document.querySelector('.el-container');
-    console.log('elContainer: ', elContainer);
-    if (this.$store.getters.activeApp.darkMode) {
-      elContainer.style.backgroundColor = '#70bd95';
-    } else {
-      elContainer.style.backgroundColor = '#fff'; // Réinitialise la couleur de fond
-    }
-
     this.$globalbus.$on("reportgenerated", () => {
       for (var i in this.$store.getters.currentSubCategory.apps) {
         var app = this.$store.getters.currentSubCategory.apps[i];
@@ -245,12 +259,10 @@ const myExport = {
         }
       }
     });
-    console.log('this.selectedTab: ', this.selectedTab);
 
     console.log("===============  REGISTERING: messagereceived");
     this.$globalbus.$on("messagereceived", payLoad => {
       console.log("GLOBALBUS/GENERICCOMPONENT/MESSAGERECEIVED");
-      console.log(payLoad);
       console.log('payLoad: ', payLoad);
       if(payLoad.notif_type=="global")
       {
@@ -268,6 +280,10 @@ const myExport = {
     });  
 
     window.dispatchEvent(new Event("resize"));
+    
+  },
+  updated: function() {
+    this.changeColor()
   },
   destroyed: function() {
     console.log("===============  UN REGISTERING REport Generated:");
