@@ -1,7 +1,6 @@
 <template>
   <div>
-    <el-table class="headertable" :data="$store.getters.filteredmenus" @current-change="handleCurrentHeaderChange" border
-      style="width: 100%">
+    <el-table class="headertable" :data="$store.getters.filteredmenus" @current-change="handleCurrentHeaderChange" :width="'100%'">
       <!-- Submenus -->
       <el-table-column type="expand">
         <template slot-scope="data">
@@ -9,10 +8,11 @@
             <!-- Apps -->
             <el-table-column type="expand" :show-header="false">
               <template slot-scope="scopesubmenus">
-                <el-table :data="scopesubmenus.row.apps" @current-change="handleCurrentHeaderChange" :show-header="false">
+                <el-table :data="scopesubmenus.row.apps" @current-change="handleCurrentHeaderChange" :show-header="false" class="no-padding-table">
+                  <el-table-column :width="'48px !important'"></el-table-column>
                   <el-table-column prop="title"></el-table-column>
-                  <el-table-column width="100" style="border-color: #70bd95;" border-color="#70bd95">
-                    <template slot-scope="scopesubapps" style="border-color: #70bd95;" border-color="#70bd95">
+                  <el-table-column>
+                    <template slot-scope="scopesubapps">
                       <el-button size="mini" circle type="primary" style="background-color: #70BD95;"
                         @click="handleSubappsMoveHeader(data.$index, data.row, scopesubmenus.$index, scopesubmenus.row, scopesubapps.$index, scopesubapps.row, false)"
                         icon="el-icon-arrow-down"
@@ -26,7 +26,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="title"></el-table-column>
-            <el-table-column prop="title" width="100">
+            <el-table-column prop="title">
               <template slot-scope="scopesubmenus">
                 <el-button size="mini" circle type="primary" style="background-color: #004e7a;"
                   @click="handleSubmenusMoveHeader(data.$index, data.row, scopesubmenus.$index, scopesubmenus.row, false)"
@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="category" label="Category"></el-table-column>
-      <el-table-column prop="title" label="Action" width="100">
+      <el-table-column prop="title" label="Action">
         <template slot-scope="scope2">
           <el-button size="mini" circle type="primary" @click="handleMoveHeader(scope2.$index, scope2.row, false)"
             icon="el-icon-arrow-down" v-if="scope2.$index < $store.getters.filteredmenus.length - 1"></el-button>
@@ -200,12 +200,7 @@ export default {
 }
 
 .el-table__expanded-cell[class*=cell] {
-  /* padding-left: 44px !important; */
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-  border-style: inset;
-  border-right: 0px !important;
-  border-width: 3px;
-  /* border-left: 5px !important; */
+  padding: 0px 45px !important;
 }
+
 </style>

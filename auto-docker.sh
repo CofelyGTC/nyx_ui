@@ -32,3 +32,4 @@ echo -en "\007"
 #   5.2.13  EBU Fix login: elContainer style if null
 #   5.2.14  EBU Grafana dark mode - Text Color & BG Color & Bar Color
 #   5.3.0   EBU Add ConfigTree.vue
+#   5.3.1   EBU Fix ConfigTree.vue css
