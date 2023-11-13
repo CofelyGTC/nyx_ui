@@ -69,7 +69,7 @@ export default new Vuex.Store({
     apiVersion: "",
     kibanaurl: "/kibana/",
     grafanaurl: "/grafana/",
-    version: "v5.2.13",
+    version: "v5.3.0",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -386,29 +386,13 @@ export default new Vuex.Store({
         if (app !== null)
           break
       }
-
-
-
       state.maintitle = state.currentSubCategory.loc_title;
-
       state.activeApp = app
-
-      console.log(app)
-
-      var elContainer = document.querySelector('.el-container');
-      console.log('elContainer: ', elContainer);
-      if (elContainer) {
-        if (app.darkMode) {
-          elContainer.style.backgroundColor = '#70bd95';
-        } else {
-          elContainer.style.backgroundColor = '#fff'; // Réinitialise la couleur de fond
-        }
-  
-        if(app.timeDefault != null && app.timeDefault != '') {
-          console.log('send forcetime')
-          Vue.prototype.$globalbus.$emit("forcetime",app.timeDefault);
-          console.log('send forcetime')
-        }
+      console.log('app: ', app);
+      if(app.timeDefault != null && app.timeDefault != '') {
+        console.log('send forcetime')
+        Vue.prototype.$globalbus.$emit("forcetime",app.timeDefault);
+        console.log('send forcetime')
       }
     },
 

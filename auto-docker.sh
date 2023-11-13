@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.2.14"
+VERSION="5.3.0"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -31,3 +31,4 @@ echo -en "\007"
 #   5.2.12  EBU Change background color when grafana drakmode
 #   5.2.13  EBU Fix login: elContainer style if null
 #   5.2.14  EBU Grafana dark mode - Text Color & BG Color & Bar Color
+#   5.3.0   EBU Add ConfigTree.vue

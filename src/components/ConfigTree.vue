@@ -2,8 +2,45 @@
   <div>
     <el-table class="headertable" :data="$store.getters.filteredmenus" @current-change="handleCurrentHeaderChange" border
       style="width: 100%">
+      <!-- Submenus -->
+      <el-table-column type="expand">
+        <template slot-scope="data">
+          <el-table :data="data.row.submenus" @current-change="handleCurrentHeaderChange" :show-header="false">
+            <!-- Apps -->
+            <el-table-column type="expand" :show-header="false">
+              <template slot-scope="scopesubmenus">
+                <el-table :data="scopesubmenus.row.apps" @current-change="handleCurrentHeaderChange" :show-header="false">
+                  <el-table-column prop="title"></el-table-column>
+                  <el-table-column width="100" style="border-color: #70bd95;" border-color="#70bd95">
+                    <template slot-scope="scopesubapps" style="border-color: #70bd95;" border-color="#70bd95">
+                      <el-button size="mini" circle type="primary" style="background-color: #70BD95;"
+                        @click="handleSubappsMoveHeader(data.$index, data.row, scopesubmenus.$index, scopesubmenus.row, scopesubapps.$index, scopesubapps.row, false)"
+                        icon="el-icon-arrow-down"
+                        v-if="scopesubapps.$index < scopesubmenus.row.apps.length - 1"></el-button>
+                      <el-button size="mini" circle type="primary" style="background-color: #70BD95;"
+                        @click="handleSubappsMoveHeader(data.$index, data.row, scopesubmenus.$index, scopesubmenus.row, scopesubapps.$index, scopesubapps.row, true)"
+                        icon="el-icon-arrow-up" v-if="scopesubapps.$index > 0"></el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+            </el-table-column>
+            <el-table-column prop="title"></el-table-column>
+            <el-table-column prop="title" width="100">
+              <template slot-scope="scopesubmenus">
+                <el-button size="mini" circle type="primary" style="background-color: #004e7a;"
+                  @click="handleSubmenusMoveHeader(data.$index, data.row, scopesubmenus.$index, scopesubmenus.row, false)"
+                  icon="el-icon-arrow-down" v-if="scopesubmenus.$index < data.row.submenus.length - 1"></el-button>
+                <el-button size="mini" circle type="primary" style="background-color: #004e7a;"
+                  @click="handleSubmenusMoveHeader(data.$index, data.row, scopesubmenus.$index, scopesubmenus.row, true)"
+                  icon="el-icon-arrow-up" v-if="scopesubmenus.$index > 0"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
       <el-table-column prop="category" label="Category"></el-table-column>
-      <el-table-column prop="title" label="Action">
+      <el-table-column prop="title" label="Action" width="100">
         <template slot-scope="scope2">
           <el-button size="mini" circle type="primary" @click="handleMoveHeader(scope2.$index, scope2.row, false)"
             icon="el-icon-arrow-down" v-if="scope2.$index < $store.getters.filteredmenus.length - 1"></el-button>
@@ -42,80 +79,90 @@ export default {
   methods: {
     handleCurrentHeaderChange(val) {
       console.log('val: ', val);
-      // this.currentHeader = val;
     },
     handleMoveHeader(index, row, down) {
-      console.log('row: ', row);
-      this.$store.getters.filteredmenus.splice(index, 1);
-      if (down) this.$store.getters.filteredmenus.splice(index - 1, 0, row);
-      else this.$store.getters.filteredmenus.splice(index + 1, 0, row);
-      console.log('this.$store.getters: ', this.$store.getters.filteredmenus);
-      console.log('this.tableData: ', this.tableData);
-      for (let index = 0; index < this.$store.getters.filteredmenus.length; index++) {
-        var category = this.$store.getters.filteredmenus[index].category
-        console.log('category: ', category);
-        // console.log('category: ', category);
-        // console.log(this.tableData.filter(data => ((JSON.stringify(data._source.category).toLowerCase().includes(category.toLowerCase())))));
-        this.tableData.forEach(element2 => {
-          if (element2._source.category == category) {
-            element2._source.order = (index + 1) * Math.pow(10, 4) + (element2._source.order % 10000)
-            console.log('element2._source: ', element2._source.order);
-            // console.log('element2: ', element2);
-            // console.log('element2._source.category: ', element2._source.category);
-            // console.log('element2._source.subcategory: ', element2._source.subcategory);
-            // (element2._source.subcategory).forEach(subcategory => {
-            //   console.log('subcategory: ', subcategory);
-              
-            // });
-          } 
-        })
-      }
-      // this.$store.commit({
-      //   type: "updateCategoryTree",
-      //   data: this.$store.getters.filteredmenus
-      // });
-      
-    },
-    handleEditHeader(index, row) {
-      console.log('row: ', row);
-      // eslint-disable-line
-      // this.currentHeader = row;
-      // this.dialogHeaderVisible = true;
-    },
-    dialogClosed() {
-      this.dialogFormVisible = false;
-      setTimeout(() => {
-        this.loadData();
-      }, 1000);
-    },
-    reloadConfig() {
-      var url = this.$store.getters.apiurl +
-        "reloadconfig?token=" +
-        this.$store.getters.creds.token;
-      axios
-        .get(url)
-        .then(response => {
-          if (response.data.error != "")
-            console.log("Reload error...");
-          else {
+      var storeData = this.$store.getters.filteredmenus
+      storeData.splice(index, 1);
+      if (down) storeData.splice(index - 1, 0, row);
+      else storeData.splice(index + 1, 0, row);
+      var targetIndex = down ? index - 1 : index
+      for (let index = 0; index < storeData.length; index++) {
+        if (index == targetIndex || index == targetIndex + 1) {
+          const targetCategory = storeData[index].category.toLowerCase();
+          const filteredItems = this.tableData.filter(item =>
+            item._source && item._source.category &&
+            item._source.category.toLowerCase() === targetCategory
+          );
+          filteredItems.forEach(element => {
+            element._source.order = (index + 1) * Math.pow(10, 4) + (element._source.order % 10000)
             this.$store.commit({
-              type: "login",
-              data: response.data
+              type: "updateRecord",
+              data: element
             });
-            this.$notify({
-              title: "Message",
-              message: "Config Reloaded",
-              type: "success",
-              position: "bottom-right"
+            // console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}"  ${element._source.order}`);
+          })
+          
+        }
+      }
+    },
+    handleSubmenusMoveHeader(parentindex, parentrow, index, row, down) {
+      var storeData = this.$store.getters.filteredmenus
+      var category = storeData[parentindex].category.toLowerCase()
+      var submenus = storeData[parentindex].submenus
+      submenus.splice(index, 1);
+      if (down) submenus.splice(index - 1, 0, row);
+      else submenus.splice(index + 1, 0, row);
+      var targetIndex = down ? index - 1 : index
+      for (let index = 0; index < submenus.length; index++) {
+        if (index == targetIndex || index == targetIndex + 1) {
+          const targetSubmenus = submenus[index].title.toLowerCase();
+          const filteredItems = this.tableData.filter(item =>
+            item._source && item._source.category &&
+            item._source.category.toLowerCase() === category &&
+            item._source.subcategory.toLowerCase() === targetSubmenus
+          );
+          filteredItems.forEach(element => {
+            element._source.order = Math.floor(element._source.order / 10000) * Math.pow(10, 4) + index * Math.pow(10, 2) + element._source.order % 100;
+            // console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}"  ${element._source.order}`);
+            if (element) {
+              this.$store.commit({
+                type: "updateRecord",
+                data: element
+              });
+            }
+          });
+        }
+      }
+    },
+    handleSubappsMoveHeader(parentindex, parentrow, subindex, subrow, index, row, down) {
+      var storeData = this.$store.getters.filteredmenus
+      var category = storeData[parentindex]
+      var submenus = category.submenus[subindex]
+      var apps = submenus.apps
+      apps.splice(index, 1);
+      if (down) apps.splice(index - 1, 0, row);
+      else apps.splice(index + 1, 0, row);
+      var targetIndex = down ? index - 1 : index
+      for (let index = 0; index < apps.length; index++) {
+        if (index == targetIndex || index == targetIndex + 1) {
+          const targetApps = apps[index].title.toLowerCase();
+          const filteredItems = this.tableData.find(item =>
+            item._source.category.toLowerCase() === category.category.toLowerCase() &&
+            item._source.subcategory.toLowerCase() === submenus.title.toLowerCase() &&
+            item._source.title.toLowerCase() === targetApps
+          );
+          filteredItems._source.order = Math.floor(filteredItems._source.order / 100) * 100 + index;
+          console.log('filteredItems: ', filteredItems);
+          if (filteredItems) {
+            this.$store.commit({
+              type: "updateRecord",
+              data: filteredItems
             });
           }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        }
+      }
     },
     loadData() {
-      console.log('loadData: ');
       var url = this.$store.getters.apiurl +
         "generic_search/nyx_app*?token=" +
         this.$store.getters.creds.token;
@@ -126,137 +173,16 @@ export default {
             console.log("User list error...");
           else {
             this.tableData = response.data.records;
-            console.log('this.$store.getters.filteredmenus: ', this.$store.getters.filteredmenus);
-            console.log('this.tableData: ', this.tableData);
+            // this.tableData.forEach(element => {
+            //   if (!element._source.subcategory) console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.title.toLowerCase()}" `);
+            //   else console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}" `);
+            // });
           }
         })
         .catch(error => {
           console.log(error);
         });
     },
-    duplicate() {
-      // console.log(this.currentRow);
-      console.log('this.currentRow: ', this.currentRow);
-      this.isAdd = true;
-      var newrec = JSON.parse(JSON.stringify(this.currentRow));
-      newrec._id = "id_" + Math.floor((1 + Math.random()) * 0x1000000);
-      this.curConfig = JSON.parse(JSON.stringify(newrec._source));
-      this.$store.commit({
-        type: "setAppConfigObj",
-        data: JSON.parse(JSON.stringify(newrec._source))
-      });
-      this.orgConfig = newrec;
-      this.dialogHeaderVisible = false;
-      this.currentHeader = {};
-      this.dialogFormVisible = true;
-    },
-    handleAddApp() {
-      this.isAdd = true;
-      var newrec = {
-        _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
-        _index: "nyx_app",
-        _source: {
-          title: "New App",
-          type: "generic-table",
-          category: "",
-          order: 1000,
-          privileges: [],
-          queryBarChecked: false,
-          queryFilterChecked: false,
-          config: {
-            headercolumns: [],
-            tableFieldsToDownload: [],
-            tableFieldsToFilter: [],
-            writeprivileges: [],
-            queryfilters: []
-          }
-        },
-        _type: "doc"
-      };
-      this.curConfig = JSON.parse(JSON.stringify(newrec._source));
-      this.orgConfig = newrec;
-      this.$store.commit({
-        type: "setAppConfigObj",
-        date: newrec._source
-      });
-      this.dialogHeaderVisible = false;
-      this.currentHeader = {};
-      this.dialogFormVisible = true;
-    },
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
-    handleCurrentChange(val) {
-      this.currentRow = val;
-    },
-    handleEdit(index, row) {
-      if (row._source.config == null) {
-        row._source.config = {
-          headercolumns: [],
-          tableFieldsToDownload: [],
-          tableFieldsToFilter: [],
-          writeprivileges: [],
-          queryfilters: []
-        };
-      }
-      if (row._source.config.headercolumns == null)
-        row._source.config.headercolumns = [];
-      if (row._source.config.tableFieldsToDownload == null)
-        row._source.config.tableFieldsToDownload = [];
-      if (row._source.config.tableFieldsToFilter == null)
-        row._source.config.tableFieldsToFilter = [];
-      if (row._source.config.queryfilters == null)
-        row._source.config.queryfilters = [];
-      if (row._source.queryBarChecked == null)
-        row._source.queryBarChecked = false;
-      if (row._source.queryFilterChecked == null)
-        row._source.queryFilterChecked = false;
-      if (row._source.config.writeprivileges == null)
-        row._source.config.writeprivileges = [];
-      else if (typeof (row._source.config.writeprivileges) == 'string')
-        row._source.config.writeprivileges = [row._source.config.writeprivileges];
-      this.curConfig = JSON.parse(JSON.stringify(row._source));
-      this.$store.commit({
-        type: "setAppConfigObj",
-        data: JSON.parse(JSON.stringify(row._source))
-      });
-      this.orgConfig = row;
-      this.dialogHeaderVisible = false;
-      this.currentHeader = {};
-      this.isAdd = false;
-      this.dialogFormVisible = true;
-    },
-    handleDelete(index, row) {
-      this.$confirm("This will permanently delete the application. Continue?", "Warning", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "warning"
-      })
-        .then(() => {
-          //this.tableData.splice(index, 1);
-          this.$store.commit({
-            type: "deleteRecord",
-            data: row
-          });
-          setTimeout(() => {
-            this.loadData();
-          }, 1000);
-          this.$notify({
-            title: "Success",
-            type: "success",
-            message: "Delete completed",
-            position: "bottom-right"
-          });
-        })
-        .catch(() => {
-          this.$notify({
-            title: "Cancelled",
-            type: "info",
-            message: "Delete canceled",
-            position: "bottom-right"
-          });
-        });
-    }
   },
   created: function () {
     this.loadData();
@@ -271,5 +197,15 @@ export default {
 
 .searchfield {
   width: 150px !important;
+}
+
+.el-table__expanded-cell[class*=cell] {
+  /* padding-left: 44px !important; */
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  border-style: inset;
+  border-right: 0px !important;
+  border-width: 3px;
+  /* border-left: 5px !important; */
 }
 </style>
