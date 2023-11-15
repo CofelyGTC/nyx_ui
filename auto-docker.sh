@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.0"
+VERSION="5.3.2"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -33,3 +33,4 @@ echo -en "\007"
 #   5.2.14  EBU Grafana dark mode - Text Color & BG Color & Bar Color
 #   5.3.0   EBU Add ConfigTree.vue
 #   5.3.1   EBU Fix ConfigTree.vue css
+#   5.3.2   EBU add Order auto when new config & reload config

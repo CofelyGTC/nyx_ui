@@ -122,7 +122,7 @@ export default {
             item._source.subcategory.toLowerCase() === targetSubmenus
           );
           filteredItems.forEach(element => {
-            element._source.order = Math.floor(element._source.order / 10000) * Math.pow(10, 4) + index * Math.pow(10, 2) + element._source.order % 100;
+            element._source.order = Math.floor(element._source.order / 10000) * Math.pow(10, 4) + (index+1) * Math.pow(10, 2) + element._source.order % 100;
             // console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}"  ${element._source.order}`);
             if (element) {
               this.$store.commit({
@@ -151,7 +151,7 @@ export default {
             item._source.subcategory.toLowerCase() === submenus.title.toLowerCase() &&
             item._source.title.toLowerCase() === targetApps
           );
-          filteredItems._source.order = Math.floor(filteredItems._source.order / 100) * 100 + index;
+          filteredItems._source.order = Math.floor(filteredItems._source.order / 100) * 100 + (index+1);
           console.log('filteredItems: ', filteredItems);
           if (filteredItems) {
             this.$store.commit({
@@ -173,10 +173,6 @@ export default {
             console.log("User list error...");
           else {
             this.tableData = response.data.records;
-            // this.tableData.forEach(element => {
-            //   if (!element._source.subcategory) console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.title.toLowerCase()}" `);
-            //   else console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}" `);
-            // });
           }
         })
         .catch(error => {

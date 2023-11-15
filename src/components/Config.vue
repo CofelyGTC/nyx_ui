@@ -36,9 +36,9 @@
           >
             <span :key="item" v-for="item in scope.row._source.privileges">
               &nbsp;
-              <el-tag size="mini">{{item}}</el-tag>
+              <el-tag size="mini">{{ item }}</el-tag>
             </span>
-            <el-button size="mini" slot="reference">{{scope.row._source.privileges.length}}</el-button>
+            <el-button size="mini" slot="reference">{{ scope.row._source.privileges.length }}</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -138,7 +138,7 @@ export default {
     };
   },
   computed: {
-    privilegesdata: function() {
+    privilegesdata: function () {
       var data = [];
       for (var i in this.$store.getters.privileges) {
         var priv = this.$store.getters.privileges[i];
@@ -172,12 +172,13 @@ export default {
               type: "login",
               data: response.data
             });
+            this.orderUpdate();
             this.$notify({
-            title: "Message",
-            message: "Config Reloaded",
-            type: "success",
-            position: "bottom-right"
-          });
+              title: "Message",
+              message: "Config Reloaded",
+              type: "success",
+              position: "bottom-right"
+            });
           }
         })
         .catch(error => {
@@ -202,26 +203,63 @@ export default {
         });
     },
     duplicate() {
-      // console.log(this.currentRow);
-      console.log('this.currentRow: ', this.currentRow);
-
       this.isAdd = true;
-
       var newrec = JSON.parse(JSON.stringify(this.currentRow));
-
       newrec._id = "id_" + Math.floor((1 + Math.random()) * 0x1000000);
-
       this.curConfig = JSON.parse(JSON.stringify(newrec._source));
-
       this.$store.commit({
         type: "setAppConfigObj",
         data: JSON.parse(JSON.stringify(newrec._source))
       });
-
       this.orgConfig = newrec;
+      this.orgConfig._source.order = this.orderConfig();
       this.dialogHeaderVisible = false;
       this.currentHeader = {};
       this.dialogFormVisible = true;
+    },
+    orderConfig() {
+      var order = null
+      var category = this.$store.getters.filteredmenus.find(item =>
+        item.category.toLowerCase() === this.orgConfig._source.category.toLowerCase()
+      );
+      if (!category) {
+        return (this.$store.getters.filteredmenus.length+1) * 10000
+      }
+      var submenus = category.submenus.find(item =>
+        item.title.toLowerCase() === this.orgConfig._source.subcategory.toLowerCase()
+      );
+      if (!submenus) {
+        order = (this.$store.getters.filteredmenus.indexOf(category)+1) * 10000 + (category.submenus.length+1) * 100
+        console.log(category.submenus.length);
+        return order
+      }
+      order = (this.$store.getters.filteredmenus.indexOf(category)+1) * 10000 + (category.submenus.indexOf(submenus)+1) * 100 + (submenus.apps.length+1);
+      return order
+    },
+    orderUpdate() {
+      var storeData = this.$store.getters.filteredmenus
+      for (let index_category = 0; index_category < storeData.length; index_category++) {
+        const submenus = storeData[index_category].submenus;
+        for (let index_submenu = 0; index_submenu < submenus.length; index_submenu++) {
+          const apps = submenus[index_submenu].apps;
+          for (let index_app = 0; index_app < apps.length; index_app++) {
+            var app = apps[index_app];
+            // console.log('app: ', app);
+            var appTableData = this.tableData.find(item =>
+              item._id === app.rec_id
+            )
+            var order = ((index_category + 1) * 10000) + ((index_submenu + 1) * 100) + (index_app + 1)
+            if (appTableData && order != appTableData._source.order) {
+              appTableData._source.order = order
+              console.log('New order for: ', order, appTableData);
+              this.$store.commit({
+                type: "updateRecord",
+                data: appTableData
+              });
+            }
+          }
+        }
+      }
     },
     handleAddApp() {
       this.isAdd = true;
@@ -232,16 +270,16 @@ export default {
           title: "New App",
           type: "generic-table",
           category: "",
-          order: 1000,
+          order: undefined,
           privileges: [],
           queryBarChecked: false,
           queryFilterChecked: false,
-          config: { 
-            headercolumns: [], 
-            tableFieldsToDownload: [], 
-            tableFieldsToFilter: [], 
-            writeprivileges: [], 
-            queryfilters: [] 
+          config: {
+            headercolumns: [],
+            tableFieldsToDownload: [],
+            tableFieldsToFilter: [],
+            writeprivileges: [],
+            queryfilters: []
           }
         },
 
@@ -266,41 +304,39 @@ export default {
       this.currentRow = val;
     },
     handleEdit(index, row) {
-      
-      if(row._source.config == null) {
+      if (row._source.config == null) {
         row._source.config = {
-          headercolumns: [], 
-          tableFieldsToDownload: [], 
-          tableFieldsToFilter: [], 
-          writeprivileges: [], 
-          queryfilters: [] 
+          headercolumns: [],
+          tableFieldsToDownload: [],
+          tableFieldsToFilter: [],
+          writeprivileges: [],
+          queryfilters: []
         }
       }
 
-      
-      if(row._source.config.headercolumns == null)
+      if (row._source.config.headercolumns == null)
         row._source.config.headercolumns = []
-      
-      if(row._source.config.tableFieldsToDownload == null)
+
+      if (row._source.config.tableFieldsToDownload == null)
         row._source.config.tableFieldsToDownload = []
-      
-      if(row._source.config.tableFieldsToFilter == null)
+
+      if (row._source.config.tableFieldsToFilter == null)
         row._source.config.tableFieldsToFilter = []
-      
-      if(row._source.config.queryfilters == null)
+
+      if (row._source.config.queryfilters == null)
         row._source.config.queryfilters = []
-      
-      if(row._source.queryBarChecked == null)
+
+      if (row._source.queryBarChecked == null)
         row._source.queryBarChecked = false
-      
-      if(row._source.queryFilterChecked == null)
+
+      if (row._source.queryFilterChecked == null)
         row._source.queryFilterChecked = false
 
-      if(row._source.config.writeprivileges == null)
+      if (row._source.config.writeprivileges == null)
         row._source.config.writeprivileges = []
-      else if(typeof(row._source.config.writeprivileges) == 'string')
+      else if (typeof (row._source.config.writeprivileges) == 'string')
         row._source.config.writeprivileges = [row._source.config.writeprivileges]
-        
+
       this.curConfig = JSON.parse(JSON.stringify(row._source));
 
       this.$store.commit({
@@ -350,7 +386,7 @@ export default {
         });
     }
   },
-  created: function() {
+  created: function () {
     this.loadData();
   }
 };
@@ -359,6 +395,7 @@ export default {
 .el-row {
   margin-bottom: 5px;
 }
+
 .searchfield {
   width: 150px !important;
 }

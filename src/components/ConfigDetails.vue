@@ -69,7 +69,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- <el-col :span="8">
                 <el-form-item label="Order" :label-width="formLabelWidth" style="text-align: left;">
                   <el-input-number
                     style="width:100%"
@@ -79,7 +79,7 @@
                     autocomplete="off"
                   ></el-input-number>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="6">
                 <el-form-item label="Icon" :label-width="formLabelWidth">
                   <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
@@ -1077,7 +1077,6 @@ export default {
       this.curConfig.icontype = e
       console.log('this.curConfig: ', this.curConfig);
     },
-
     freeTextChanged(newvalue) {
       this.curConfig.config.freetext = newvalue;
     },
@@ -1086,7 +1085,7 @@ export default {
       this.dialogFormVisible = true;
       this.curConfig = JSON.parse(JSON.stringify(this.currentConfig));
       console.log('end of prepare date configDetails')
-      console.log(this.curConfig)
+      console.log('this.curConfig: ', this.curConfig);
 
       this.dialogHeaderVisible = false;
       this.formFielfEditorVisible = false;
@@ -1095,10 +1094,8 @@ export default {
       if (this.curConfig.config.queryfilters == undefined)
         this.curConfig.config.queryfilters = [];
 
-
       if(this.currentConfig.timeRefreshValue != null)
         this.curConfig.timeRefreshValue = this.curConfig.timeRefreshValue.replace('refreshInterval:(pause:!f,value:', '').replace(')', '')
-
 
       this.strNewRec = "";
       this.strOrgRec = "";
@@ -1108,9 +1105,6 @@ export default {
       this.$nextTick(() => {
         this.refresh2();
       });
-
-
-
     },
     refresh2: function() {
       this.strNewRec = "";
@@ -1283,23 +1277,16 @@ export default {
     timeRefreshSelectChange() {
       if (this.curConfig.timeRefreshValue != null)
         this.curConfig.timeRefresh = true;
-
-
       this.computeUrlFromKibana();
-
-
       var tmp = JSON.parse(JSON.stringify(this.curConfig));
       this.curConfig = null;
       this.curConfig = tmp;
     },
     timeRefreshSwitchChange() {
       this.computeUrlFromKibana();
-
-
       var tmp = JSON.parse(JSON.stringify(this.curConfig));
       this.curConfig = null;
       this.curConfig = tmp;
-
       console.log(this.curConfig.config.url)
     },
     multipleDeletionSelectorTypeChange() {
@@ -1333,13 +1320,14 @@ export default {
       }
     },
     saveRecord() {
+      console.log('>>>> saveRecord');
       if (this.strNewRec != this.strOrgRec && !this.isAdd) {
         this.orgConfig._source = YAML.safeLoad(this.strNewRec);
       } else {
         this.orgConfig._source = this.curConfig;
       }
 
-      console.log('this.orgConfig: ', this.orgConfig);
+      if (!this.orgConfig._source.order && this.orgConfig._source.category.toLowerCase() != "apps") { this.orgConfig._source.order=this.orderConfig() }
 
       this.$store.commit({
         type: "updateRecord",
@@ -1352,6 +1340,25 @@ export default {
         position: "bottom-right"
       });
       this.$emit("dialogclose");
+    },
+    orderConfig() {
+      var order = null
+      var category = this.$store.getters.filteredmenus.find(item =>
+        item.category.toLowerCase() === this.orgConfig._source.category.toLowerCase()
+      );
+      if (!category) {
+        return (this.$store.getters.filteredmenus.length+1) * 10000 + 101
+      }
+      var submenus = category.submenus.find(item =>
+        item.title.toLowerCase() === this.orgConfig._source.subcategory.toLowerCase()
+      );
+      if (!submenus) {
+        order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.length+1) * 100) + 1
+        console.log(category.submenus.length);
+        return order
+      }
+      order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.indexOf(submenus)+1) * 100) + (submenus.apps.length+1);
+      return order
     },
     formFieldEditorClosed(field) {
       console.log(field);

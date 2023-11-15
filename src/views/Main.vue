@@ -658,22 +658,41 @@ export default {
         }
     }
 
-
     if (this.$store.getters.currentSubCategory == undefined) {
       // console.log('NOT LOGGED YET')
       var path = this.$route.path
       if(path[path.length-1] == '/')
 	      path = path.substring(0, path.length-1)
-
-
       this.$store.state.redirection = path
       // console.log(this.$route)
-      
-      
       this.$router.push("/");
-
       return;
     }
+
+    var url =
+      this.$store.getters.apiurl +
+      "reloadconfig?token=" +
+      this.$store.getters.creds.token;
+    axios
+      .get(url)
+      .then(response => {
+        if (response.data.error != "") console.log("Reload error...");
+        else {
+          this.$store.commit({
+            type: "login",
+            data: response.data
+          });
+          this.$notify({
+          title: "Message",
+          message: "Config Reloaded",
+          type: "success",
+          position: "bottom-right"
+        });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
     const end = new Date();
     const start = new Date();
