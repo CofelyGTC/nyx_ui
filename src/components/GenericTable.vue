@@ -67,7 +67,14 @@
           ref="genericTable"
           fit
           @sort-change="sortChanged"
+          @selection-change="handleSelectionChange"
+          class="custom-es-table"
+          :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 75px)':'calc(100vh - 130px)'"
         >
+          <el-table-column v-if="configin.multipleDeletionSelectorType"
+            type="selection"
+            width="35"
+          ></el-table-column>              
           <el-table-column
             v-for="header in config.config.headercolumns"
             :key="header.field"
@@ -131,13 +138,8 @@
           <el-table-column label="Actions" align="right" width="175px;">
             <template slot="header" slot-scope="scope">
               <div>
-                <el-checkbox class="maincheckbox"
-                  v-if="configin.multipleDeletionSelectorType"
-                  v-model="allRowsSelected"
-                  @change="updateAllCheckbox($event)"
-                ></el-checkbox>
                 <el-tooltip
-                  v-if="Object.keys(selectedRows).length > 0 && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
+                  v-if="multipleSelection.length > 0 && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
                   class="item"
                   :content="$t('generic.delete_selected')"
                   effect="light"
@@ -204,12 +206,6 @@
               </div>
             </template>
             <template slot-scope="scope">
-              <el-checkbox class="multipledeletion"
-                v-if="configin.multipleDeletionSelectorType"
-                v-model="scope.row.isChecked"
-                :key="scope.row._id"
-                @change="updateCheckedRows(scope, $event)"
-              ></el-checkbox>
               <el-button v-if="scope.row._source.guid"
                 size="mini"
                 plain
@@ -296,6 +292,7 @@ export default {
     tableDataChecked: {},
     selectedRows: {},
     allRowsSelected: false,
+    multipleSelection: [],
     options: {
       chart: {
         stacked: false,
@@ -383,6 +380,16 @@ export default {
     }
   },
   methods: {
+    handleSelectionChange(val) {
+      console.log('val: ', val);
+      this.multipleSelection = val;
+      val.forEach(element => {
+        console.log('element: ', element);
+        var isCheck = this.tableData.find( item => item._id===element._id)
+        console.log('isCheck: ', isCheck);
+        this.tableDataChecked[element._id] = { isChecked: true }
+      });
+    },
     updateAllCheckbox(event){
       this.tableData.forEach(element => {
         element.isChecked = event
@@ -406,14 +413,14 @@ export default {
       }
       if (Object.keys(this.selectedRows).length == Object.keys(this.tableData).length) this.allRowsSelected = true
       else this.allRowsSelected = false
-      setTimeout(() => {
-        this.loadData();
-      }, 100);
+      // setTimeout(() => {
+      //   this.loadData();
+      // }, 100);
     },
     handleSelectedRows() {
       // Gérer l'action du bouton une fois qu'il est cliqué
       this.$confirm(
-        `This will permanently delete "${Object.values(this.selectedRows).map(value => value._source.name).join(', ')}". Continue?`,
+        `This will permanently delete "${Object.values(this.multipleSelection).map(value => value._source.name).join(', ')}". Continue?`,
         this.$t("generic.warning"),
         {
           confirmButtonText: this.$t("generic.ok"),
@@ -422,8 +429,8 @@ export default {
         }
       )
         .then(() => {
-          for (let key in this.selectedRows) {
-            let value = this.selectedRows[key];
+          for (let key in this.multipleSelection) {
+            let value = this.multipleSelection[key];
             // Appeler une autre fonction et envoyer la valeur
             this.$store.commit({
               type: "deleteRecord",
@@ -431,7 +438,7 @@ export default {
             });
           }
           setTimeout(() => {
-            this.selectedRows = {};
+            this.multipleSelection = [];
             this.loadData();
           }, 1000);
           this.$notify({
@@ -684,6 +691,7 @@ export default {
       }
     },
     handleDelete(index, row) {
+      console.log('row: ', row);
       this.$confirm(
         this.$t("generic.delete_record"),
         this.$t("generic.warning"),
@@ -1259,6 +1267,17 @@ export default {
   max-width: 40px;
 }
 
+.custom-es-table .cell .el-table_1_column_1 {
+  padding: 0px !important;
+}
+
+.custom-es-table .el-checkbox__inner {
+  border-radius: 3px !important;
+  margin-right: -20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
 .el-checkbox__inner {
   border-radius: 3px !important;
   margin-right: 11px !important;
@@ -1266,9 +1285,18 @@ export default {
   height: 26px !important;
 }
 
+.el-checkbox__inner::before {
+  top: 8px !important
+}
+
 .el-checkbox__inner::after {
   height: 15px !important;
   left: 6.9px !important;
   top: 0px !important;
+}
+
+
+.el-table th.el-table__cell>.cell {
+  text-wrap: nowrap;
 }
 </style>

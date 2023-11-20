@@ -69,7 +69,7 @@ export default new Vuex.Store({
     apiVersion: "",
     kibanaurl: "/kibana/",
     grafanaurl: "/grafana/",
-    version: "v5.3.2",
+    version: "v5.3.3",
     devMode: false,
     menus: [],
     menuOpen: true,

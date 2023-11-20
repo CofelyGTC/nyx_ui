@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-table class="headertable" :data="$store.getters.filteredmenus" @current-change="handleCurrentHeaderChange" :width="'100%'">
+    <el-table 
+      class="headertable" 
+      :data="$store.getters.filteredmenus" 
+      @current-change="handleCurrentHeaderChange" 
+      :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 75px)':'calc(100vh - 125px)'"
+      :width="'100%'"
+    >
       <!-- Submenus -->
       <el-table-column type="expand">
         <template slot-scope="data">
@@ -39,7 +45,7 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="category" label="Category"></el-table-column>
+      <el-table-column prop="category" label="Category / Menus / Apps"></el-table-column>
       <el-table-column prop="title" label="Action">
         <template slot-scope="scope2">
           <el-button size="mini" circle type="primary" @click="handleMoveHeader(scope2.$index, scope2.row, false)"
