@@ -69,7 +69,7 @@
           @sort-change="sortChanged"
           @selection-change="handleSelectionChange"
           class="custom-es-table"
-          :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 75px)':'calc(100vh - 130px)'"
+          :height="tableHeight()"
         >
           <el-table-column v-if="configin.multipleDeletionSelectorType"
             type="selection"
@@ -380,6 +380,31 @@ export default {
     }
   },
   methods: {
+    tableHeight() {
+      console.log(">>>>> tableHeight");
+      console.log('this.$store.getters.activeApp: ', this.$store.getters.activeApp);
+      var queryBarChecked = this.$store.getters.activeApp.queryBarChecked
+      var queryFilterChecked = this.$store.getters.activeApp.queryFilterChecked
+      var timeSelectorChecked = this.$store.getters.activeApp.timeSelectorChecked
+      if (this.$store.getters.currentSubCategory.apps.length==1){
+        if ( queryFilterChecked && !queryBarChecked && !timeSelectorChecked ) return 'calc(100vh - 70px)';
+        else if ( !queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 80px)';
+        // else if ( !queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 500px)'
+        else if ( queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 350px)';
+        else if ( queryBarChecked && !timeSelectorChecked ) return 'calc(100vh - 108px)';
+      }
+      else { // apps.length > 1
+        if ( queryFilterChecked && !queryBarChecked && !timeSelectorChecked ) return 'calc(100vh - 157px)';
+        else if ( !queryBarChecked && !timeSelectorChecked ) return 'calc(100vh - 120px)';
+        else if ( !queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 50px)';
+        else if ( queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 396px)';
+        else if ( queryBarChecked && !timeSelectorChecked ) {
+          if (this.rows > 100) return 'calc(100vh - 194px)'
+          return 'calc(100vh - 157px)'
+        }
+        else if (this.rows > 100) return 'calc(100vh - 194px)'
+      }
+    },
     handleSelectionChange(val) {
       console.log('val: ', val);
       this.multipleSelection = val;

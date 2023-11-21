@@ -200,7 +200,7 @@ const myExport = {
         overflow: "auto",
         border: 0 + "px solid #eee",
         padding: 1 + "px",
-        height: this.containerSize.height - 125 + "px"
+        height: this.containerSize.height - 114 + "px"
       };
     },
     singleStyleContainerComputed: function() {
@@ -208,7 +208,7 @@ const myExport = {
         overflow: "auto",
         border: 0 + "px solid #eee",
         padding: 1 + "px",
-        height: this.containerSize.height - 70 + "px"
+        height: this.containerSize.height - 65 + "px"
       };
     },
     containerSize() {

@@ -15,6 +15,7 @@
       style="width: 100%"
       highlight-current-row
       @current-change="handleCurrentChange"
+      :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 68px)':'calc(100vh - 116px)'"
     >
       <el-table-column prop="_id" label="ID" sortable width="250"></el-table-column>
       <el-table-column prop="_source.firstname" :label="$t('user.firstname')" sortable width="180"></el-table-column>
@@ -50,7 +51,7 @@
       <el-table-column align="right" width="250">
         <!-- Removed from line below: slot-scope="scope" -->
         <template slot="header" slot-scope="scope">
-          <div>
+          <div style="float: right;margin-left: 10px;">
             <el-button
               size="mini"
               @click="handleAddUser()"

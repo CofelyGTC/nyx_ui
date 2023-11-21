@@ -4,7 +4,7 @@
       class="headertable" 
       :data="$store.getters.filteredmenus" 
       @current-change="handleCurrentHeaderChange" 
-      :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 75px)':'calc(100vh - 125px)'"
+      :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 68px)':'calc(100vh - 116px)'"
       :width="'100%'"
     >
       <!-- Submenus -->

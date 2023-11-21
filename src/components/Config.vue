@@ -16,7 +16,7 @@
       style="width: 100%;"
       highlight-current-row
       @current-change="handleCurrentChange"
-      height="calc(100vh - 125px)"
+      :height="$store.getters.currentSubCategory.apps.length==1?'calc(100vh - 68px)':'calc(100vh - 116px)'"
     >
       <el-table-column sortable prop="_source.category" label="Category"></el-table-column>
       <el-table-column sortable prop="_source.subcategory" label="Subcategory"></el-table-column>
