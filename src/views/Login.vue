@@ -325,13 +325,13 @@ export default {
 
       var curVer = resVersion.data.uiversion
 
-      console.log(version)
-      console.log(curVer)
-
+      
       if(version != curVer)
       {
+        console.log(version)
+        console.log(curVer)
         console.log("Must be reload")
-        window.location.reload()
+        //window.location.reload()
       }
       else{
         console.log("Good Version")
