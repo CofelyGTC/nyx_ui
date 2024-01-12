@@ -86,6 +86,7 @@ export default {
       if (response.data.error == "") {
         this.initialized = true;
         this.config = response.data;
+        document.title=this.config.title;
 
         if(response.data.elastic_version != null) {
           this.$store.commit({
