@@ -147,11 +147,11 @@ export default {
           withCredentials:true
         }
       );
-
+      
       console.log('response.data: ', response.data);
       //var response.data= await JSON.parse(response.data)
-      if (response.data.signedIn){
-        //not implemented
+      if (response.data.skipActiveDirectory){
+        this.userPassword=true;
       }
       if(response.data.azureSignedIn){
         console.log("Azure signed in, signing in");
