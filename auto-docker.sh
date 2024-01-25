@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.7"
+VERSION="5.3.8"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -36,3 +36,4 @@ echo -en "\007"
 #   5.3.2   EBU add Order auto when new config & reload config
 #   5.3.3   EBU Fix multiple deletion & Fix Header Table
 #   5.3.7   EBU Add Title Env Variable
+#   5.3.8   JFI skipActiveDirectory added
