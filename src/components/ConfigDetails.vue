@@ -1361,33 +1361,6 @@ export default {
           this.computeKibanaUrlFromSelectedDash();
       }
     },
-    reloadConfig() {
-      var url =
-        this.$store.getters.apiurl +
-        "reloadconfig?token=" +
-        this.$store.getters.creds.token;
-      axios
-        .get(url)
-        .then(response => {
-          if (response.data.error != "") console.log("Reload error...");
-          else {
-            this.$store.commit({
-              type: "login",
-              data: response.data
-            });
-            this.orderUpdate();
-            this.$notify({
-              title: "Message",
-              message: "Config Reloaded",
-              type: "success",
-              position: "bottom-right"
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
     saveRecord() {
       console.log('>>>> saveRecord');
       if (this.strNewRec != this.strOrgRec && !this.isAdd) {
@@ -1401,7 +1374,6 @@ export default {
         type: "updateRecord",
         data: this.orgConfig
       });
-      this.reloadConfig();
       this.$notify({
         title: "Record saved.",
         type: "success",
