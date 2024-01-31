@@ -1401,6 +1401,7 @@ export default {
         type: "updateRecord",
         data: this.orgConfig
       });
+      this.reloadConfig();
       this.$notify({
         title: "Record saved.",
         type: "success",
