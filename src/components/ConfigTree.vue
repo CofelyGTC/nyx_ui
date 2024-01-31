@@ -102,7 +102,7 @@ export default {
           filteredItems.forEach(element => {
             element._source.order = (index + 1) * Math.pow(10, 4) + (element._source.order % 10000)
             this.$store.commit({
-              type: "updateRecord",
+              type: "onlyUpdateRecord",
               data: element
             });
             // console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}"  ${element._source.order}`);
@@ -132,7 +132,7 @@ export default {
             // console.log(`element: ${this.tableData.indexOf(element)}"${element._source.category.toLowerCase()}/${element._source.subcategory.toLowerCase()}/${element._source.title.toLowerCase()}"  ${element._source.order}`);
             if (element) {
               this.$store.commit({
-                type: "updateRecord",
+                type: "onlyUpdateRecord",
                 data: element
               });
             }
@@ -161,7 +161,7 @@ export default {
           console.log('filteredItems: ', filteredItems);
           if (filteredItems) {
             this.$store.commit({
-              type: "updateRecord",
+              type: "onlyUpdateRecord",
               data: filteredItems
             });
           }

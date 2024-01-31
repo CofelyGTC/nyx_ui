@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.8"
+VERSION="5.3.9"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -37,3 +37,4 @@ echo -en "\007"
 #   5.3.3   EBU Fix multiple deletion & Fix Header Table
 #   5.3.7   EBU Add Title Env Variable
 #   5.3.8   JFI skipActiveDirectory added
+#   5.3.9   EBU tree when config created and grafana time picker

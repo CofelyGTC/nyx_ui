@@ -19,7 +19,6 @@
                     v-model="curConfig.category"
                     :fetch-suggestions="categorySuggestion"
                     placeholder="Enter Category"
-                    @select="handleSelect"
                     size="mini"
                     style="width:100%"
                   ></el-autocomplete>
@@ -32,7 +31,7 @@
                     v-model="curConfig.subcategory"
                     :fetch-suggestions="subcategorySuggestion"
                     placeholder="Enter Sub/Category"
-                    @select="handleSelect"
+                    @select="handleSubcategorySelect"
                     size="mini"
                     style="width:100%"
                   ></el-autocomplete>
@@ -89,6 +88,31 @@
                 &nbsp;&nbsp;
                 <img v-if="curConfig.icon && curConfig.icon.includes('http')" :src="curConfig.icon" scale="2" style="height:40px;width: 40px;filter: brightness(0) saturate(100%) invert(39%) sepia(1%) saturate(2250%) hue-rotate(183deg) brightness(93%) contrast(86%);"> 
                 <v-icon v-else-if="curConfig.icon" :name="curConfig.icon" scale="2" />
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="center" style="left:2%">
+              <el-col :span="8" v-if="isAdd && curConfig.subcategory && apps.length > 1" >
+                <table class="table-display">
+                  <thead class="thead-display">
+                    <tr>
+                      <th>Vue</th>
+                      <th width="1"></th>
+                    </tr>
+                  </thead>
+                  <draggable
+                    v-bind="dragOptionsDisplay"
+                    v-model="apps"
+                    tag="tbody"
+                    handle=".handle"
+                  >
+                    <tr v-for="(item, index) in this.apps" :key="index">
+                      <td>{{item.title}}</td>
+                      <td>
+                        <i class="el-icon-d-caret handle"></i>
+                      </td>
+                    </tr>
+                  </draggable>
+                </table>
               </el-col>
             </el-row>
             <el-row>
@@ -934,6 +958,8 @@ export default {
         strOrgRec: "",
         strNewRec: "",
         esMapping: null,
+        apps: [],
+        oldAppName: "",
       }
     );
   },
@@ -951,7 +977,15 @@ export default {
       set(value) {
         this.$store.commit("setAppConfigObj", value);
       }
-    }
+    },
+    dragOptionsDisplay() {
+      return {
+        animation: 0,
+        group: "display",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    },
   },
   watch: {
     curConfigIn: {
@@ -984,6 +1018,16 @@ export default {
     closeDialog: function() {
       this.$emit("dialogclose");
     },
+    handleSubcategorySelect(item) {
+      for (var i in this.$store.getters.filteredmenus) {
+        if (this.$store.getters.filteredmenus[i].value.toLowerCase() == this.curConfig.category.toLowerCase()) {
+          var objetRecherche = this.$store.getters.filteredmenus[i].submenus.find(objet => objet.value === item.value.toLowerCase());
+          this.apps = [... objetRecherche.apps]
+          this.apps.push({"title": "THIS APPLICATION"})
+          break;
+        }
+      }
+    },
     categorySuggestion: function(queryString, cb) {
       var cat = [];
       for (var i in this.$store.getters.filteredmenus) {
@@ -998,7 +1042,6 @@ export default {
 
       cb(results);
     },
-    handleSelect(item) {},
     subcategorySuggestion: function(queryString, cb) {
       if (this.curConfig.category == "") return cb([]);
 
@@ -1085,7 +1128,6 @@ export default {
       this.dialogFormVisible = true;
       this.curConfig = JSON.parse(JSON.stringify(this.currentConfig));
       console.log('end of prepare date configDetails')
-      console.log('this.curConfig: ', this.curConfig);
 
       this.dialogHeaderVisible = false;
       this.formFielfEditorVisible = false;
@@ -1328,11 +1370,11 @@ export default {
       }
 
       if (!this.orgConfig._source.order && this.orgConfig._source.category.toLowerCase() != "apps") { this.orgConfig._source.order=this.orderConfig() }
-
       this.$store.commit({
         type: "updateRecord",
         data: this.orgConfig
       });
+      this.reloadConfig();
       this.$notify({
         title: "Record saved.",
         type: "success",
@@ -1340,6 +1382,29 @@ export default {
         position: "bottom-right"
       });
       this.$emit("dialogclose");
+    },
+    orderUpdate() {
+      var category = this.$store.getters.filteredmenus.find(item=>item.value===this.curConfig.category.toLowerCase())
+      var index_category = this.$store.getters.filteredmenus.indexOf(category)
+      var submenu = category.submenus.find(item=>item.value===this.curConfig.subcategory.toLowerCase())
+      var index_submenu = category.submenus.indexOf(submenu)
+      var apps = submenu.apps
+      for (let index_app = 0; index_app < apps.length; index_app++) {
+        var app = apps[index_app];
+        var checkIndexApp = this.apps.indexOf(app);
+        if (index_app != checkIndexApp) {
+          this.$store.commit({
+            type: "onlyUpdateRecord",
+            data: {
+              _index: "nyx_app",
+              _id: app.rec_id,
+              _source: {
+                order: ((index_category + 1) * 10000) + ((index_submenu + 1) * 100) + (checkIndexApp + 1)
+              }
+            }
+          });
+        }
+      }
     },
     orderConfig() {
       var order = null
@@ -1354,10 +1419,11 @@ export default {
       );
       if (!submenus) {
         order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.length+1) * 100) + 1
-        console.log(category.submenus.length);
         return order
       }
-      order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.indexOf(submenus)+1) * 100) + (submenus.apps.length+1);
+      this.orderUpdate();
+      var app = this.apps.find(item => item.title === "THIS APPLICATION")
+      order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.indexOf(submenus)+1) * 100) + (this.apps.indexOf(app)+1);
       return order
     },
     formFieldEditorClosed(field) {

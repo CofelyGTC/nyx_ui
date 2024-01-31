@@ -201,11 +201,7 @@ export default {
     printKey: function (e){
       console.log(e)
     },
-    urlTooLong: function() {
-      // console.log('urlTooLong')      
-      // console.log(this.computedurl.length)      
-      // console.log(this.$browserDetect)      
-
+    urlTooLong: function() {  
       if((this.$browserDetect.isEdge || this.$browserDetect.isIE) && this.computedurl.length > 2046)
         return true
       if(this.$browserDetect.isChrome && this.computedurl.length > 32778)
@@ -219,94 +215,13 @@ export default {
       if (this.ready) {
         console.log("UPDATE QUERY...");
         var cururl = this.config.config.computedurl;
-
-        var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
-        var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
-        console.log("Unix", startTimeAsUtc.unix()*1000);
-
         var searchParams = cururl.split('?')[1];
         var params = new URLSearchParams(searchParams);
 
-        params.set("from", startTimeAsUtc.unix()*1000);
-        params.set("to", endTimeAsUtc.unix()*1000);
-
-        var timestring =
-          "&from=" +
-          startTimeAsUtc.unix()*1000 +
-          "&to=" +
-          endTimeAsUtc.unix()*1000;
-
-        switch (this.config.timeSelectorType) {
-          case "day":
-            var startTimeAsUtc = moment(
-              this.$store.getters.timeRangeDay[0]
-            ).utc();
-            var endTimeAsUtc = moment(
-              this.$store.getters.timeRangeDay[1]
-            ).utc();
-
-            var timestring =
-              "&from=" +
-              startTimeAsUtc.unix()*1000 +
-              "&to=" +
-              endTimeAsUtc.unix()*1000;
-            break;
-          case "week":
-            var startTimeAsUtc = moment(
-              this.$store.getters.timeRangeWeek[0]
-            ).utc();
-            var endTimeAsUtc = moment(
-              this.$store.getters.timeRangeWeek[1]
-            ).utc();
-
-            var timestring =
-              "&from=" +
-              startTimeAsUtc.unix()*1000 +
-              "&to=" +
-              endTimeAsUtc.unix()*1000;
-            break;
-          case "month":
-            var startTimeAsUtc = moment(
-              this.$store.getters.timeRangeMonth[0]
-            ).utc();
-            var endTimeAsUtc = moment(
-              this.$store.getters.timeRangeMonth[1]
-            ).utc();
-
-            var timestring =
-              "&from=" +
-              startTimeAsUtc.unix()*1000 +
-              "&to=" +
-              endTimeAsUtc.unix()*1000;
-            break;
-          case "year":
-            var startTimeAsUtc = moment(
-              this.$store.getters.timeRangeYear[0]
-            ).utc();
-            var endTimeAsUtc = moment(
-              this.$store.getters.timeRangeYear[1]
-            ).utc();
-
-            var timestring =
-              "&from=" +
-              startTimeAsUtc.unix()*1000 +
-              "&to=" +
-              endTimeAsUtc.unix()*1000;
-            break;
-        }
-        this.timerange = timestring;
-
-        this.specificTime = undefined;
-
-        console.log('this.config: ', this.config);
-        console.log('this.config.timeSelectorChecked: ', this.config.timeSelectorChecked);
+        var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
+        var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
         
-        if (!this.config.config.grafanaTime) {
-          this.grafanaTimeBit = true
-        }
-
-        if (this.config.timeSelectorChecked && timestring != null && this.grafanaTimeBit) {
-          const now = new Date();
+        const now = new Date();
           const nowWithoutSeconds = new Date(now);
           nowWithoutSeconds.setSeconds(0, 0);
           console.log('nowWithoutSeconds: ', nowWithoutSeconds);
@@ -330,24 +245,9 @@ export default {
             params.set("from", startTimeAsUtc.unix()*1000);
             params.set("to", endTimeAsUtc.unix()*1000);
           }
-
-          // var paramsStartIndex = cururl.indexOf('?');
-          // var baseUrl = cururl.slice(0, paramsStartIndex);
-          // console.log('baseUrl: ', baseUrl);
-
-          var updatedParams = params.toString();
-          cururl = cururl.replace(searchParams, updatedParams);
-          // cururl = baseUrl + '?' + params.toString();
-          cururl = cururl.replace(/=&/g, "&");
-          // console.log('cururl after: ', cururl);
-          
-          // var timestring =
-          //   "&from=" +
-          //   startTimeAsUtc.unix()*1000 +
-          //   "&to=" +
-          //   endTimeAsUtc.unix()*1000;
-          // cururl = cururl.replace(/(&from=).*(&to=)[^&]*/g, timestring);
-        }
+        var updatedParams = params.toString();
+        cururl = cururl.replace(searchParams, updatedParams);
+        cururl = cururl.replace(/=&/g, "&");
         
 
         if (this.config.config.grafanaTime) {
