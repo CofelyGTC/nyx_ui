@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.10"
+VERSION="5.3.11"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -38,4 +38,5 @@ echo -en "\007"
 #   5.3.7   EBU Add Title Env Variable
 #   5.3.8   JFI skipActiveDirectory added
 #   5.3.9   EBU Add tree view for configuration creation and Grafana time picker
-#   5.3.10   EBU Fix tree config creation and Add auto-refresh when deleting or duplicating a configuration
+#   5.3.10  EBU Fix tree config creation and Add auto-refresh when deleting or duplicating a configuration
+#   5.3.11  EBU Add Auto-refresh Optiboard when carousel is modified
