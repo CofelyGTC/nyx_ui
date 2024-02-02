@@ -236,7 +236,6 @@ export default {
       );
       if (!submenus) {
         order = (this.$store.getters.filteredmenus.indexOf(category)+1) * 10000 + (category.submenus.length+1) * 100
-        console.log(category.submenus.length);
         return order
       }
       order = (this.$store.getters.filteredmenus.indexOf(category)+1) * 10000 + (category.submenus.indexOf(submenus)+1) * 100 + (submenus.apps.length+1);
@@ -250,14 +249,12 @@ export default {
           const apps = submenus[index_submenu].apps;
           for (let index_app = 0; index_app < apps.length; index_app++) {
             var app = apps[index_app];
-            // console.log('app: ', app);
             var appTableData = this.tableData.find(item =>
               item._id === app.rec_id
             )
             var order = ((index_category + 1) * 10000) + ((index_submenu + 1) * 100) + (index_app + 1)
             if (appTableData && order != appTableData._source.order) {
               appTableData._source.order = order
-              console.log('New order for: ', order, appTableData);
               this.$store.commit({
                 type: "updateRecord",
                 data: appTableData

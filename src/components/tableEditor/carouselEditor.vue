@@ -244,7 +244,6 @@ export default {
   },
   mounted: function() {
     console.log("mounted event");
-    console.log(this.record)
     this.prepareData();
   },
   components: {
@@ -269,10 +268,7 @@ export default {
                                                         return {'id': obj.id};
                                                       });
     }, 500),
-    viewListAllToViewList: _.debounce(function() {
-      console.log('viewListAllToViewList')
-      console.log(this.newRec._source.id_array)
-      
+    viewListAllToViewList: _.debounce(function() {      
       this.viewList = []
 
       for (var i in this.newRec._source.id_array) {
@@ -401,7 +397,6 @@ export default {
         });
     },
     saveRecord: function() {
-      console.log('this.newRec: ', this.newRec);
       this.$store.commit({
         type: "updateRecord",
         data: this.newRec
@@ -440,7 +435,6 @@ export default {
             console.log("generic search optiboard_token error...");
           else {
             response.data.records.forEach(element => {
-              console.log('element: ', element);
               if (this.newRec._source.name == element._source.carrousel){
                 var refreshrec = {
                   _index: "optiboard_command",
