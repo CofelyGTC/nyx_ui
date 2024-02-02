@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.9"
+VERSION="5.3.10"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -28,7 +28,7 @@ echo -en "\007"
 #   5.2.7   EBU Fix search input on 1 line
 #   5.2.8   EBU Fix checkbox in configuration privileges
 #   5.2.10  EBU Fix Config Scroll
-#   5.2.12  EBU Change background color when grafana drakmode
+#   5.2.12  EBU Change background color when grafana darkmode
 #   5.2.13  EBU Fix login: elContainer style if null
 #   5.2.14  EBU Grafana dark mode - Text Color & BG Color & Bar Color
 #   5.3.0   EBU Add ConfigTree.vue
@@ -37,4 +37,5 @@ echo -en "\007"
 #   5.3.3   EBU Fix multiple deletion & Fix Header Table
 #   5.3.7   EBU Add Title Env Variable
 #   5.3.8   JFI skipActiveDirectory added
-#   5.3.9   EBU tree when config created and grafana time picker
+#   5.3.9   EBU Add tree view for configuration creation and Grafana time picker
+#   5.3.10   EBU Fix tree config creation and Add auto-refresh when deleting or duplicating a configuration

@@ -201,6 +201,9 @@ export default {
         .catch(error => {
           console.log(error);
         });
+      setTimeout(() => {
+        this.reloadConfig();
+      }, 500);
     },
     duplicate() {
       this.isAdd = true;
@@ -216,6 +219,9 @@ export default {
       this.dialogHeaderVisible = false;
       this.currentHeader = {};
       this.dialogFormVisible = true;
+      setTimeout(() => {
+        this.reloadConfig();
+      }, 500);
     },
     orderConfig() {
       var order = null

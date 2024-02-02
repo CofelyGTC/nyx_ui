@@ -91,7 +91,7 @@
               </el-col>
             </el-row>
             <el-row type="flex" justify="center" style="left:2%">
-              <el-col :span="8" v-if="isAdd && curConfig.subcategory && apps.length > 1" >
+              <el-col :span="8" v-if="isAdd && curConfig.subcategory && apps.length > 0" >
                 <table class="table-display">
                   <thead class="thead-display">
                     <tr>
