@@ -440,7 +440,7 @@ export default {
     carouselList: [],
     currentCarrouselViewsList: [],
     dockerList: [],
-    modeList: ["Main", "MainOld", "Main3G", "MainNoBanner"],
+    modeList: ["Main", "Main4G", "MainOld", "Main3G", "MainNoBanner"],
     rsswidget: "",
     rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"],
     pickerOptions: {
