@@ -3,6 +3,7 @@ FROM node:16.19.0-slim as base
 
 FROM base as builder
 WORKDIR /etc/opt
+RUN apt-get update && apt-get upgrade -y
 RUN npm i express
 COPY . /etc/build
 WORKDIR /etc/build
