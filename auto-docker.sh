@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.12"
+VERSION="5.3.13"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -34,10 +34,11 @@ echo -en "\007"
 #   5.3.0   EBU Add ConfigTree.vue
 #   5.3.1   EBU Fix ConfigTree.vue css
 #   5.3.2   EBU add Order auto when new config & reload config
-#   5.3.3   EBU Fix multiple deletion & Fix Header Table
+#   5.3.3   EBU Fix multiple deletion && Fix Header Table
 #   5.3.7   EBU Add Title Env Variable
 #   5.3.8   JFI skipActiveDirectory added
 #   5.3.9   EBU Add tree view for configuration creation and Grafana time picker
 #   5.3.10  EBU Fix tree config creation and Add auto-refresh when deleting or duplicating a configuration
 #   5.3.11  EBU Add Auto-refresh Optiboard when carousel is modified
-#   5.3.12  EBU Add Optiboard Mode Main4G AND Add Dockerfile update & upgrade
+#   5.3.12  EBU Add Optiboard Mode Main4G && Add Dockerfile update & upgrade
+#   5.3.13  EBU Add @USERLOGIN for external url && Fix token=TOKEN
