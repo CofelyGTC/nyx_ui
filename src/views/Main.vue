@@ -481,7 +481,16 @@ export default {
       // console.log("app clicked");
       // console.log(e);
       if (e.type == "external") {
-        window.open(e.config.url);
+        window.open(e.config.url
+          .replace(
+            /token=TOKEN/g,
+            "token=" + this.$store.getters.creds.token
+          )
+          .replace(
+            /@USERLOGIN/g,
+            this.$store.getters.creds.user.login.split('@')[0].replace(/\./g, '')
+          )
+        );
       } else {
         this.maintitle = e.loc_title;
     
