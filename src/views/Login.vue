@@ -439,7 +439,7 @@ export default {
 
     var vars = getUrlVars();
     if (vars["user"] != undefined) {
-      this.form.login = vars["user"].split("#")[0];
+      this.form.login = vars["user"].split("#")[0].replace("%40","@");
     }
     if (vars["password"] != undefined) {
       this.form.password = vars["password"].split("#")[0];

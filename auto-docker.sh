@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.14"
+VERSION="5.3.15"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -43,3 +43,4 @@ echo -en "\007"
 #   5.3.12  EBU Add Optiboard Mode Main4G && Add Dockerfile update & upgrade
 #   5.3.13  EBU Add @USERLOGIN for external url && Fix token=TOKEN
 #   5.3.14  EBU Add phrase for @USERLOGIN
+#   5.3.15  JFI replace("%40","@")
