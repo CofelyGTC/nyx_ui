@@ -198,7 +198,8 @@
               <el-col :span="20">
                 <b>Displays an external URL in an iframe.</b>
                 <br/> 
-                It the external url contains <b>token=TOKEN</b>, the <b>TOKEN</b> tag is replaced by the actual user token.<br/> 
+                If the external url contains <b>token=TOKEN</b>, the <b>TOKEN</b> tag is replaced by the actual user token.<br/> 
+                Or If the external URL contains the <b>@USERLOGIN</b> tag, it will be replaced with the actual user's full name without spaces.<br/> 
                 <br/> 
               </el-col>
               </el-card>
