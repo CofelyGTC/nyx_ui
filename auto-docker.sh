@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.15"
+VERSION="5.3.17"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -44,3 +44,5 @@ echo -en "\007"
 #   5.3.13  EBU Add @USERLOGIN for external url && Fix token=TOKEN
 #   5.3.14  EBU Add phrase for @USERLOGIN
 #   5.3.15  JFI replace("%40","@")
+#   5.3.16  JFI autosignin if user & password set
+#   5.3.17  JFI decodeURIComponent insteaed of replace

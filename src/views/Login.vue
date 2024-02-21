@@ -439,10 +439,13 @@ export default {
 
     var vars = getUrlVars();
     if (vars["user"] != undefined) {
-      this.form.login = vars["user"].split("#")[0].replace("%40","@");
+      this.form.login = decodeURIComponent(vars["user"].split("#")[0]);
     }
     if (vars["password"] != undefined) {
-      this.form.password = vars["password"].split("#")[0];
+      this.form.password = decodeURIComponent(vars["password"].split("#")[0]);
+      if (vars["user"] != undefined) {
+        this.validateUser()
+      }
     }
   }
 };
