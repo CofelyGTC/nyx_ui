@@ -105,10 +105,27 @@
                 <el-input size="mini" v-model="newRec._source.pollinterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="Usage Counter" :label-width="formLabelWidth" style="text-align:left">
+                <el-select
+                  size="mini"
+                  v-model="newRec._source.usagecounter"
+                  filterable
+                  placeholder="Select a mode"
+                >
+                  <el-option
+                    v-for="mod in usagecounterModeList"
+                    :key="mod"
+                    :label="mod"
+                    :value="mod"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row v-show="isAdmin">
             <el-col :span="8">
-            <el-form-item label="Mode" :label-width="formLabelWidth" style="text-align:left">
+              <el-form-item label="Mode" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
                   size="mini"
                   v-model="newRec._source.mode"
@@ -441,6 +458,7 @@ export default {
     currentCarrouselViewsList: [],
     dockerList: [],
     modeList: ["Main", "Main4G", "MainOld", "Main3G", "MainNoBanner"],
+    usagecounterModeList: ["Nothing", "User", "Carousel", "User & Carousel"],
     rsswidget: "",
     rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"],
     pickerOptions: {
