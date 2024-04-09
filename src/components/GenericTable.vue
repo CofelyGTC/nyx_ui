@@ -388,6 +388,7 @@ export default {
       var timeSelectorChecked = this.$store.getters.activeApp.timeSelectorChecked
       if (this.$store.getters.currentSubCategory.apps.length==1){
         if ( queryFilterChecked && !queryBarChecked && !timeSelectorChecked ) return 'calc(100vh - 70px)';
+        else if ( !queryFilterChecked && queryBarChecked ) return 'calc(100vh - 145px)';
         else if ( !queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 80px)';
         // else if ( !queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 500px)'
         else if ( queryBarChecked && timeSelectorChecked ) return 'calc(100vh - 350px)';
@@ -1081,7 +1082,7 @@ export default {
                     if (curtime != undefined) {
                       record["_source"][
                         curcol.field.replace("_source.", "")
-                      ] = moment(curtime).format(format);
+                      ] = moment([":","/","-"].some(el => curtime.includes(el))?curtime:parseInt(curtime)).format(format);
                     }
                   }
                 }
