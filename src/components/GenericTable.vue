@@ -1065,9 +1065,15 @@ export default {
                     );
 
                     if (curtime != undefined) {
-                      record["_source"][
-                        curcol.field.replace("_source.", "")
-                      ] = moment([":","/","-"].some(el => curtime.includes(el))?curtime:parseInt(curtime)).format(format);
+                      if (typeof(curtime) != "string") {
+                        record["_source"][
+                          curcol.field.replace("_source.", "")
+                        ] = moment(curtime).format(format);
+                      } else {
+                        record["_source"][
+                          curcol.field.replace("_source.", "")
+                        ] = moment([":","/","-"].some(el => curtime.includes(el))?curtime:parseInt(curtime)).format(format);
+                      }
                     }
                   }
                 }
