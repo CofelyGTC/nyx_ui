@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.22"
+VERSION="5.3.23"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -48,3 +48,4 @@ echo -en "\007"
 #   5.3.17  JFI decodeURIComponent insteaed of replace
 #   5.3.18  EBU Add Optiboard Usage counter option
 #   5.3.19  EBU Fix moment timestamp & size table
+#   5.3.23  EBU optiboard add third color

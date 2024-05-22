@@ -178,19 +178,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-tooltip
-                class="item"
-                effect="light"
-                content="Sends a refresh signal to the screen in order to refresh its configuration."
-                placement="bottom-end"
-              >
-                <el-button
-                  v-if="orgRec._source.accepted == 1"
-                  @click="carrouselPreview()"
-                  size="mini"
-                >Preview</el-button>
-                </el-tooltip>
-            </el-col>       
+              <el-form-item label="Third Color" :label-width="formLabelWidth">
+                    <el-color-picker v-model="newRec._source.thirdcolor"></el-color-picker>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
