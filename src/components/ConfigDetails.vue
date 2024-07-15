@@ -1022,7 +1022,7 @@ export default {
     handleSubcategorySelect(item) {
       for (var i in this.$store.getters.filteredmenus) {
         if (this.$store.getters.filteredmenus[i].value.toLowerCase() == this.curConfig.category.toLowerCase()) {
-          var objetRecherche = this.$store.getters.filteredmenus[i].submenus.find(objet => objet.value === item.value.toLowerCase());
+          var objetRecherche = this.$store.getters.filteredmenus[i].submenus.find(objet => objet.title.toLowerCase() === item.value.toLowerCase());
           this.apps = [... objetRecherche.apps]
           this.apps.push({"title": "THIS APPLICATION"})
           break;
