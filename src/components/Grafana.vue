@@ -218,37 +218,40 @@ export default {
         var searchParams = cururl.split('?')[1];
         var params = new URLSearchParams(searchParams);
 
-        var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
-        var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
-        
-        const now = new Date();
-          const nowWithoutSeconds = new Date(now);
-          nowWithoutSeconds.setSeconds(0, 0);
-          console.log('nowWithoutSeconds: ', nowWithoutSeconds);
+        if (this.config.config.grafanaTime && !this.grafanaTimeBit){
+          // Créer une instance de URLSearchParams
+          const searchParams = new URLSearchParams(this.config.config.grafanaTime);
 
-          const endTimeWithoutSeconds = new Date(endTimeAsUtc.unix()*1000);
-          endTimeWithoutSeconds.setSeconds(0, 0);
-          console.log('endTimeWithoutSeconds: ', endTimeWithoutSeconds);
+          // Récupérer les valeurs des paramètres
+          const fromValue = searchParams.get("from");
+          const toValue = searchParams.get("to");
 
-          if (nowWithoutSeconds.getTime() === endTimeWithoutSeconds.getTime()) {
-            const delta = endTimeAsUtc.unix()*1000 - startTimeAsUtc.unix()*1000;
-            console.log("Le temps endTimeAsUtc correspond au temps actuel (sans les secondes).");
-            console.log("Delta en millisecondes:", delta);
-            console.log("Delta en secondes:", delta / 1000);
-            console.log("Delta en minutes:", delta / (1000 * 60));
-            console.log("Delta en heures:", delta / (1000 * 60 * 60));
-            console.log("Delta en jours:", delta / (1000 * 60 * 60 * 24));
-            params.set("from", 'now-'+delta / 1000+'s');
-            params.set("to", 'now');
-          } else {
-            console.log("Le temps endTimeAsUtc ne correspond pas au temps actuel (sans les secondes).");
-            params.set("from", startTimeAsUtc.unix()*1000);
-            params.set("to", endTimeAsUtc.unix()*1000);
-          }
-        var updatedParams = params.toString();
-        cururl = cururl.replace(searchParams, updatedParams);
-        cururl = cururl.replace(/=&/g, "&");
-        
+          // Mettre à jour les paramètres dans l'objet data
+          params.set("from", fromValue);
+          params.set("to", toValue);
+        } else {
+          var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
+          var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
+          
+          const now = new Date();
+            const nowWithoutSeconds = new Date(now);
+            nowWithoutSeconds.setSeconds(0, 0);
+
+            const endTimeWithoutSeconds = new Date(endTimeAsUtc.unix()*1000);
+            endTimeWithoutSeconds.setSeconds(0, 0);
+
+            if (nowWithoutSeconds.getTime() === endTimeWithoutSeconds.getTime()) {
+              const delta = endTimeAsUtc.unix()*1000 - startTimeAsUtc.unix()*1000;
+              params.set("from", 'now-'+delta / 1000+'s');
+              params.set("to", 'now');
+            } else {
+              params.set("from", startTimeAsUtc.unix()*1000);
+              params.set("to", endTimeAsUtc.unix()*1000);
+            }
+          var updatedParams = params.toString();
+          cururl = cururl.replace(searchParams, updatedParams);
+          cururl = cururl.replace(/=&/g, "&");
+        }
 
         if (this.config.config.grafanaTime) {
           this.grafanaTimeBit = true
