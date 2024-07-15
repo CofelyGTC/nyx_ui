@@ -1370,7 +1370,12 @@ export default {
         this.orgConfig._source = this.curConfig;
       }
 
-      if (!this.orgConfig._source.order && this.orgConfig._source.category.toLowerCase() != "apps") { this.orgConfig._source.order=this.orderConfig() }
+      try {
+        if (!this.orgConfig._source.order && this.orgConfig._source.category.toLowerCase() != "apps") { this.orgConfig._source.order=this.orderConfig() }
+      } catch {
+        console.log("get apps for order failed");
+      }
+
       this.$store.commit({
         type: "updateRecord",
         data: this.orgConfig
