@@ -18,7 +18,7 @@
         </el-row-->
 
         <el-row>
-          <el-col :span="16" style="text-align: left;">
+          <el-col :span="8" style="text-align: left;">
             <!--el-form-item label="Dashboard URL" :label-width="formLabelWidth">
               <el-input size="mini" 
               @blur="computeUrlFromGrafana"
@@ -56,6 +56,19 @@
                 size="mini"
                 @blur="GrafanaTimeChange"
                 v-model="currentConfig.config.grafanaTime"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item
+              label="Query"
+              :label-width="formLabelWidth"
+              prop="config.grafanaQuery"
+            >
+              <el-input
+                size="mini"
+                @blur="GrafanaQueryChange"
+                v-model="currentConfig.config.grafanaQuery"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -256,6 +269,10 @@ export default {
       console.log("grafana time changed");
       this.computeUrlFromGrafana();
     },
+    GrafanaQueryChange() {
+      console.log("grafana query changed");
+      this.computeUrlFromGrafana();
+    },
     grafanaDashboardSelected() {
       for (var i in this.dashboards) {
         if (this.dashboards[i].id == this.currentConfig.config.grafanaId) {
@@ -285,6 +302,7 @@ export default {
       console.log('computeGrafanaUrl')
       var url = "?";
       var timek = "from=now-7d&to=now";
+      var grafanaQuery = "";
       if (
         this.currentConfig.config != undefined &&
         this.currentConfig.config.grafanaTime != undefined &&
@@ -295,8 +313,22 @@ export default {
         timek = this.currentConfig.config.grafanaTime;
       }
 
+      if (
+        this.currentConfig.config != undefined &&
+        this.currentConfig.config.grafanaQuery != undefined &&
+        this.currentConfig.config.grafanaQuery != ""
+      ) {
+        console.log("saving grafana query");
+        console.log(this.currentConfig.config.grafanaQuery); 
+        grafanaQuery += this.currentConfig.config.grafanaQuery;
+        url += "var-query=" + grafanaQuery + "&";
+        console.log('url: ', url);
+      }
+
       console.log(timek);
       this.currentConfig.config.grafanaTime = timek;
+      this.currentConfig.config.grafanaQuery = grafanaQuery;
+
       var strRefresh="";
       
       url +=  timek 
