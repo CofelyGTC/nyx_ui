@@ -23,7 +23,7 @@
         @change="viewSelected()"
       >
         <el-option
-          v-for="item in viewListAll"
+          v-for="item in filteredViewList"
           :key="item.id"
           :label="item.type + ' - ' + item.description + ' ('+item.duration/1000+'s)'"
           :value="item"
@@ -218,6 +218,10 @@ export default {
         disabled: false,
         ghostClass: "ghost"
       };
+    },
+    filteredViewList() {
+      if (this.$store.getters.creds.hasPrivilege('admin')) return this.viewListAll
+      else return this.viewListAll.filter(item => this.$store.getters.creds.user.privileges.includes(item.client));
     }
   },
   props: {
@@ -265,8 +269,8 @@ export default {
     },
     viewListToRecord: _.debounce(function() {
       this.newRec._source.id_array = this.viewList.map(function (obj) {
-                                                        return {'id': obj.id};
-                                                      });
+        return {'id': obj.id};
+      });
     }, 500),
     viewListAllToViewList: _.debounce(function() {      
       this.viewList = []
@@ -499,7 +503,8 @@ export default {
                 type: viewRec._source.type,
                 description: viewRec._source.description,
                 duration: viewRec._source.duration,
-                target: viewRec._source.target
+                target: viewRec._source.target,
+                client: viewRec._source.client
               };
 
               this.viewListAll.push(viewObj);
