@@ -52,3 +52,4 @@ echo -en "\007"
 #   5.3.24  EBU Fix Grafana default time
 #   5.3.25  EBU Add Grafana query
 #   5.3.26  EBU fix Config Get Apps from submenus
+#   5.3.27  EBU Add filter by client privilege for carousel view list
