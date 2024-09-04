@@ -96,7 +96,7 @@
       </el-row>
       <el-row style="text-align:left;">
         <el-col :span="8">
-          <el-button @click="setFocus('type')" type="text">Type</el-button>
+          <el-button @click="setFocus('type')" type="text">View Type</el-button>
         </el-col>
         <el-col :span="16">
           <el-button @click="setFocus('url')" type="text">URL</el-button>
@@ -273,40 +273,45 @@
       <el-row style="text-align:left">
 
       <el-col :span="8">
-        <el-button @click="setFocus('typebutton')" type="text">Type</el-button>
+        <el-button @click="setFocus('typebutton')" type="text">Button Type</el-button>
       </el-col>
 
-      <el-col :span="6">
+      <el-col :span="8">
         <el-button @click="setFocus('icon')" type="text">Icon</el-button>
+      </el-col>
+      <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')">
+        <el-button @click="setFocus('icon')" type="text">Background Cache</el-button>
       </el-col>
       </el-row>
       <el-row>
-      <el-col :span="8" style="text-align: left;">
-        <el-form-item prop="_source.type">
-          <el-select
-            size="mini"
-            ref="typebutton"
-            v-model="newRec._source.typebutton"
-            placeholder="Please select a type"
-          >
+        <el-col :span="8" style="text-align: left;">
+          <el-form-item prop="_source.type">
+            <el-select
+              size="mini"
+              ref="typebutton"
+              v-model="newRec._source.typebutton"
+              placeholder="Please select a type"
+            >
 
 
-            <el-option label="Text" value="text"></el-option>
-            <el-option label="Icon" value="icon"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-        <el-col :span="6">
+              <el-option label="Text" value="text"></el-option>
+              <el-option label="Icon" value="icon"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
             <el-form-item >
               <el-input size="mini" ref="icon" v-model="newRec._source.iconname" autocomplete="off"></el-input>
             </el-form-item>
-
-          </el-col>
-          <el-col :span="2">
-            <v-icon v-if="(newRec._source.typebutton == 'icon')" :name="newRec._source.iconname" scale="2"/>
-
-          </el-col>
-</el-row>
+        </el-col>
+        <el-col :span="4">
+          <v-icon v-if="newRec._source.typebutton == 'icon'" :name="newRec._source.iconname" scale="2"/>
+          <span style="visibility: hidden;">&nbsp;</span>
+        </el-col>
+        <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')" style="position: relative; top: -5px;">
+          <el-switch v-model="newRec._source.backgroundCache" @change="backgroundCacheButtonSwitch"></el-switch>
+        </el-col>
+      </el-row>
     </el-form>
     <!-- </span> -->
   </el-dialog>
@@ -398,6 +403,9 @@ export default {
   },
   components: {},
   methods: {
+    backgroundCacheButtonSwitch: function () {
+      console.log('this.newRec._source.backgroundCache: ', this.newRec._source.backgroundCache);
+    },
     openInKibana() {
       console.log(this.newRec);
       window.open(
