@@ -51,7 +51,7 @@
         </el-col>
         <el-col
           :span="8"
-          v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')"
+          v-if="$store.getters.creds.hasPrivilege('admin')"
         >
           <el-input
             placeholder="clients to filter"
