@@ -724,7 +724,7 @@ export default {
             console.log("generic search view carousel error...");
           else {
             console.log(response);
-            const filteredRecords = response.data.records.filter(item => this.$store.getters.creds.user.privileges.includes(item._source.client))
+            const filteredRecords = response.data.records.filter(item => this.$store.getters.creds.user.privileges.includes(item._source.client) || this.isAdmin)
             for (var i in filteredRecords) {
               var obj = {
                 label: filteredRecords[i]._source.name,
