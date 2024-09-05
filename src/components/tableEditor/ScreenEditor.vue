@@ -105,7 +105,7 @@
                 <el-input size="mini" v-model="newRec._source.pollinterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-show="isAdmin">
               <el-form-item label="Usage Counter" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
                   size="mini"
@@ -724,11 +724,12 @@ export default {
             console.log("generic search view carousel error...");
           else {
             console.log(response);
-            for (var i in response.data.records) {
+            const filteredRecords = response.data.records.filter(item => this.$store.getters.creds.user.privileges.includes(item._source.client))
+            for (var i in filteredRecords) {
               var obj = {
-                label: response.data.records[i]._source.name,
-                value: response.data.records[i]._source.name,
-                views: response.data.records[i]._source.id_array,
+                label: filteredRecords[i]._source.name,
+                value: filteredRecords[i]._source.name,
+                views: filteredRecords[i]._source.id_array,
               };
               this.carouselList.push(obj);
             }

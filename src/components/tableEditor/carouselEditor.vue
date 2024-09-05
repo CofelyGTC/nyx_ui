@@ -59,7 +59,7 @@
       <el-col :span="12">
         <el-button @click="setFocus('carName')" type="text">Carousel Name</el-button>
       </el-col>
-      <el-col :span="12" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
+      <el-col :span="12" v-show="$store.getters.creds.hasPrivilege('admin')" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
         <el-button @click="setFocus('client')" type="text">Client</el-button>
       </el-col>
     </el-row>
@@ -69,14 +69,13 @@
         <el-form-item label="" prop="_source.name">
           <el-input
             placeholder="carousel name"
-            :disabled="!$store.getters.creds.hasPrivilege('admin')"
             ref="carName"
             v-model="newRec._source.name"
             size="mini"
           ></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="12"  v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
+      <el-col :span="12" v-show="$store.getters.creds.hasPrivilege('admin')" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
         <el-input
           placeholder="clients to filter"
           :disabled="!$store.getters.creds.hasPrivilege('admin')"

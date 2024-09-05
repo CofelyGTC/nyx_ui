@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.28"
+VERSION="5.3.29"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -54,3 +54,4 @@ echo -en "\007"
 #   5.3.26  EBU fix Config Get Apps from submenus
 #   5.3.27  EBU Add filter by client privilege for carousel view list
 #   5.3.28  EBU Add Carousel Views: Switch button fon background cache
+#   5.3.29  EBU Filter carousel by client and more optimizations for consumers not admin

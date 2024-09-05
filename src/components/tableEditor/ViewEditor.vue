@@ -33,7 +33,7 @@
         <el-col :span="8">
           <el-button @click="setFocus('summary')" type="text">Summary</el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')">
           <el-button @click="setFocus('client')" type="text">Client</el-button>
         </el-col>
       </el-row>
