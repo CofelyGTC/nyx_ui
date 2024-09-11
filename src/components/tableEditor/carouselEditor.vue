@@ -120,8 +120,6 @@
               <td style="text-align:left;">{{ item.description }}</td>
               <td style="text-align:left;">{{ item.duration }}</td>
               <td style="text-align:left; width:400px;">
-                
-
                 <el-button
                   size="mini"
                   v-if="!(item.type=='kibana' && $store.getters.creds.hasPrivilege('optiboard-nokibana') && !$store.getters.creds.hasPrivilege('admin'))"
@@ -155,10 +153,12 @@
       </el-card>
     </el-row>
 
-    <el-row style="height:40px;">
-      <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add Exsting view</el-button>
-      <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New view</el-button>
-    </el-row>
+      <el-row style="height:40px;">
+        <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add
+          Exsting view</el-button>
+        <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New
+          view</el-button>
+      </el-row>
 
     </el-form>
   </el-dialog>
@@ -197,17 +197,17 @@ export default {
     loadingViewList: false,
     rules: {
       _source: {
-        name : [
+        name: [
           { required: true, message: "Carousel name cannot be empty", trigger: "change" }
         ],
       }
     },
   }),
   computed: {
-    recordin: function() {
+    recordin: function () {
       return this.record;
     },
-    recchanged: function() {
+    recchanged: function () {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
     },
     dragOptions() {
@@ -233,7 +233,7 @@ export default {
   },
   watch: {
     viewList: {
-      handler: function() {
+      handler: function () {
         this.viewListToRecord()
       },
       deep: true
@@ -245,33 +245,32 @@ export default {
     //   deep: true
     // },
   },
-  mounted: function() {
+  mounted: function () {
     console.log("mounted event");
     this.prepareData();
   },
   components: {
   },
   methods: {
-    closeDialog: function() {
-      if (!(this.loading || !this.recchanged || this.newRec._source.name==''))
-      {
+    closeDialog: function () {
+      if (!(this.loading || !this.recchanged || this.newRec._source.name == '')) {
         this.$confirm('There are unsaved changes. Continue?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           this.$emit("dialogclose");
-        })      
+        })
       }
       else
         this.$emit("dialogclose");
     },
-    viewListToRecord: _.debounce(function() {
+    viewListToRecord: _.debounce(function () {
       this.newRec._source.id_array = this.viewList.map(function (obj) {
-        return {'id': obj.id};
+        return { 'id': obj.id };
       });
     }, 500),
-    viewListAllToViewList: _.debounce(function() {      
+    viewListAllToViewList: _.debounce(function () {
       this.viewList = []
 
       for (var i in this.newRec._source.id_array) {
@@ -287,7 +286,7 @@ export default {
       this.viewList = null;
       this.viewList = JSON.parse(JSON.stringify(tmp));
     }, 500),
-    prepareData: function() {
+    prepareData: function () {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
@@ -338,8 +337,8 @@ export default {
     },
     viewUpdated() {
 
-      if(this.viewModifyMode == 'add') {
-        this.newRec._source.id_array.push({'id':this.viewToModify._id});
+      if (this.viewModifyMode == 'add') {
+        this.newRec._source.id_array.push({ 'id': this.viewToModify._id });
       }
 
       this.loadingViewList = true;
@@ -362,7 +361,7 @@ export default {
         }
       };
 
-      if(this.newRec._source.client)
+      if (this.newRec._source.client)
         this.viewToModify._source.client = this.newRec._source.client
 
       this.dialogViewVisible = true;
@@ -399,7 +398,7 @@ export default {
           }
         });
     },
-    saveRecord: function() {
+    saveRecord: function () {
       this.$store.commit({
         type: "updateRecord",
         data: this.newRec
@@ -413,7 +412,7 @@ export default {
       });
       this.refreshScreen();
     },
-    refreshScreen: function() {
+    refreshScreen: function () {
       var url =
         this.$store.getters.apiurl +
         "generic_search/optiboard_token*?token=" +
@@ -438,7 +437,20 @@ export default {
             console.log("generic search optiboard_token error...");
           else {
             response.data.records.forEach(element => {
-              if (this.newRec._source.name == element._source.carrousel){
+              if (element._source.carrousel == this.orgRec._source.name && element._source.carrousel != this.newRec._source.name) {
+                  this.$store.commit({
+                    type: "onlyUpdateRecord",
+                    data: {
+                      _index: "optiboard_token",
+                      _id: element._id,
+                      _source: {
+                        carrousel: this.newRec._source.name
+                      }
+                    }
+                  });
+                }
+              if (this.newRec._source.name == element._source.carrousel) {
+                
                 var refreshrec = {
                   _index: "optiboard_command",
                   _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
@@ -463,7 +475,6 @@ export default {
         .catch(error => {
           console.log(error);
         });
-      
       return
     },
     getViews() {
@@ -527,7 +538,7 @@ export default {
       let input = this.$refs.indexPattern;
       this.$nextTick(() => input.focus());
     },
-    setFocusSelect: function() {
+    setFocusSelect: function () {
       let select = this.$refs.timeField;
       this.$nextTick(() => select.focus());
     }
@@ -535,7 +546,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .carousel-editor .view-table {
   margin-bottom: 30px;
 }
