@@ -154,7 +154,7 @@
 
             
           </el-row>
-          <el-row v-show="isAdmin">
+          <el-row>
             <el-col :span="8">
               <el-form-item label="Logo URL" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
@@ -262,11 +262,11 @@
             </div>
           </el-collapse-transition>
         </el-card>
-        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+        <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
             <h2><b>Widgets URL</b></h2>
           </el-row>
-          <el-row v-show="isAdmin" style="padding:20px;">
+          <el-row style="padding:20px;">
             <el-col :span="8">
               <el-form-item v-if="newRec._source.rsswidget == 'firstwidget'" label="First Widget" :label-width="formLabelWidth">
                 <el-input size="mini" v-model="newRec._source.firstwidget" :disabled="true"></el-input>

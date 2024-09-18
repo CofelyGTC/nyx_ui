@@ -111,10 +111,10 @@
               v-model="newRec._source.type"
               placeholder="Please select a type"
             >
-              <el-option v-if="!$store.getters.creds.hasPrivilege('optiboard-nokibana') || $store.getters.creds.hasPrivilege('admin')" label="Kibana" value="kibana"></el-option>
+              <el-option v-if="$store.getters.creds.hasPrivilege('admin')" label="Kibana" value="kibana"></el-option>
               <el-option label="Picture" value="picture"></el-option>
               <el-option label="URL" value="url"></el-option>
-              <el-option label="Optiboard" value="optiboard"></el-option>
+              <el-option v-if="$store.getters.creds.hasPrivilege('admin')" label="Optiboard" value="optiboard"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
