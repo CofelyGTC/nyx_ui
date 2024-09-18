@@ -262,7 +262,7 @@
             </div>
           </el-collapse-transition>
         </el-card>
-        <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
             <h2><b>Widgets URL</b></h2>
           </el-row>
