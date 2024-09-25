@@ -290,6 +290,14 @@ export default {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
+      const str = this.config.config.hiddenQuery;
+      const regex = /client:\s*"(.*?)"/;
+      const match = str.match(regex);
+      if (match) {
+        this.newRec._source.client = match[1]
+      }
+
+
       // if (this.orgRec._source.id_array == null) {
       //   this.orgRec._source.id_array = [];
       // }

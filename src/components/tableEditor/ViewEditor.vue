@@ -292,20 +292,28 @@
               v-model="newRec._source.typebutton"
               placeholder="Please select a type"
             >
-
-
               <el-option label="Text" value="text"></el-option>
               <el-option label="Icon" value="icon"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-            <el-form-item >
-              <el-input size="mini" ref="icon" v-model="newRec._source.iconname" autocomplete="off"></el-input>
-            </el-form-item>
+            <el-select v-if="newRec._source.typebutton == 'icon'" size="mini" ref="typebutton" v-model="newRec._source.iconname" filterable placeholder="Select"
+            style="width: -webkit-fill-available;">
+              <el-option
+                v-for="(iconData, iconName) in icons"
+                :key="iconName"
+                :label="iconName"
+                :value="iconName"
+                :title="iconName"
+                style="width: auto; float: inline-start;">
+                <v-icon class="selectIcon" :name="iconName" scale="1.5"/>
+              </el-option>
+            </el-select>
+            <el-input v-else size="mini" ref="icon" v-model="newRec._source.iconname" autocomplete="off"></el-input>
         </el-col>
         <el-col :span="4">
-          <v-icon v-if="newRec._source.typebutton == 'icon'" :name="newRec._source.iconname" scale="2"/>
+          <v-icon v-if="newRec._source.typebutton == 'icon'" :name="newRec._source.iconname" scale="2" style="position: relative; left: 5px"/>
           <span style="visibility: hidden;">&nbsp;</span>
         </el-col>
         <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')" style="position: relative; top: -5px;">
@@ -324,6 +332,7 @@ import rison from "rison";
 import Vue from "vue";
 
 import upload from "@/components/Upload";
+import Icon from 'vue-awesome/components/Icon';
 Vue.component("Upload", upload);
 
 import { extractURLParts } from "../../globalfunctions";
@@ -335,6 +344,7 @@ function transformObject(obj) {
 export default {
   name: "viewEditor",
   data: () => ({
+    icons: Icon.icons,
     orgRec: null,
     newRec: null,
     rules: {
@@ -347,7 +357,7 @@ export default {
           }
         ],
         type: [
-          { required: true, message: "Please select a type", trigger: "change" }
+          { required: true, message: "Please select a view type", trigger: "change" }
         ],
         target: [
           // { required: true, message: 'URL cannot be empty', trigger: 'blur' },
@@ -433,6 +443,13 @@ export default {
     prepareData: function() {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+
+      const str = this.config.config.hiddenQuery;
+      const regex = /client:\s*"(.*?)"/;
+      const match = str.match(regex);
+      if (match) {
+        this.newRec._source.client = match[1]
+      }
 
       this.dialogFormVisible = true;
     },
@@ -778,5 +795,17 @@ export default {
 .view-editor .el-form-item__content {
   padding-bottom: 5px;
   line-height: normal;
+}
+
+.el-scrollbar {
+  max-width: 420px;
+}
+
+.selectIcon {
+  width: 30px; 
+  top: 50%;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, -50%);
 }
 </style>
