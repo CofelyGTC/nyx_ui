@@ -445,10 +445,12 @@ export default {
       this.orgRec = JSON.parse(JSON.stringify(this.record));
 
       const str = this.config.config.hiddenQuery;
-      const regex = /client:\s*"(.*?)"/;
-      const match = str.match(regex);
-      if (match) {
-        this.newRec._source.client = match[1]
+      if (str) {
+        const regex = /client:\s*"(.*?)"/;
+        const match = str.match(regex);
+        if (match) {
+          this.newRec._source.client = match[1]
+        }
       }
 
       this.dialogFormVisible = true;

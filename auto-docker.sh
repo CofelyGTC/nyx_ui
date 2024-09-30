@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.31"
+VERSION="5.3.32"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -56,3 +56,4 @@ echo -en "\007"
 #   5.3.28  EBU Add Carousel Views: Switch button fon background cache
 #   5.3.29  EBU Filter carousel by client and more optimizations for consumers not admin
 #   5.3.31  EBU Add logo selection & Fix privileges
+#   5.3.32  EBU Fix match
