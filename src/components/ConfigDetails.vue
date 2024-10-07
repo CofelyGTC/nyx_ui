@@ -81,7 +81,23 @@
               </el-col> -->
               <el-col :span="6">
                 <el-form-item label="Icon" :label-width="formLabelWidth">
-                  <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
+                  <el-select 
+                    size="mini" ref="typebutton" 
+                    v-model="curConfig.icon" 
+                    filterable 
+                    placeholder="Select" 
+                    allow-create
+                    style="width: -webkit-fill-available;">
+                  <el-option
+                    v-for="(iconData, iconName) in $store.fontAwesomeIcons"
+                    :key="iconName"
+                    :label="iconName"
+                    :value="iconName"
+                    :title="iconName"
+                    style="width: auto; float: inline-start;">
+                    <v-icon class="selectIcon" :name="iconName" scale="1.5"/>
+                  </el-option>
+                </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
