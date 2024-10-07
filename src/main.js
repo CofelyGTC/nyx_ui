@@ -113,6 +113,8 @@ if (vars["api"]!=undefined)
 
 ElementLocale.i18n((key, value) => i18n.t(key, value))
 
+store.fontAwesomeIcons = Icon.icons
+
 var app=new Vue({
   i18n,
   router,
