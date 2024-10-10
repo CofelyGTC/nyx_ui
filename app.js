@@ -9,11 +9,26 @@ var http = require('http');
 var express = require('express');
 var app = express();
 var path="/etc/opt/nyx_ui"
+//var cors = require('cors');
 console.log("Path:"+path)
 app.use(express.static(path));
+//app.use(cors())
 
 
 //************** HTTP *************
+
+/*app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  next();
+  });
+  
+  app.use(bodyParser.urlencoded({ extended: true }))
+  
+  app.use(bodyParser.json())*/
+  
 
 var server = app.listen(7654, function () {
 
