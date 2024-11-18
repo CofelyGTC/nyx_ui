@@ -219,8 +219,19 @@ export default {
       };
     },
     filteredViewList() {
-      if (this.$store.getters.creds.hasPrivilege('admin')) return this.viewListAll
-      else return this.viewListAll.filter(item => this.$store.getters.creds.user.privileges.includes(item.client));
+      if (this.$store.getters.creds.hasPrivilege('admin')) {
+        return this.viewListAll;
+      } else {
+        return this.viewListAll.filter(item => {
+          return this.$store.getters.creds.user.privileges.some(privilege => {
+            return (
+              privilege &&
+              item.client &&
+              privilege.toLowerCase() === item.client.toLowerCase()
+            );
+          });
+        });
+      }
     }
   },
   props: {

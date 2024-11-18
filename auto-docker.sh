@@ -58,3 +58,4 @@ echo -en "\007"
 #   5.3.31  EBU Add logo selection & Fix privileges
 #   5.3.32  EBU Fix match
 #   5.3.33  EBU Add logo selection with custom (Ex: link for config)
+#   5.3.34  EBU Fix Carousel Views: Case-insensitive privilege filtering and compatibility adjustment
