@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.33"
+VERSION="5.3.34"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
