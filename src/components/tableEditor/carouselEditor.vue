@@ -459,7 +459,8 @@ export default {
             console.log("generic search optiboard_token error...");
           else {
             response.data.records.forEach(element => {
-              if (element._source.carrousel == this.orgRec._source.name && element._source.carrousel != this.newRec._source.name) {
+              if (this.$attrs.editMode == "edit") {
+                if (element._source.carrousel == this.orgRec._source.name && element._source.carrousel != this.newRec._source.name) {
                   this.$store.commit({
                     type: "onlyUpdateRecord",
                     data: {
@@ -471,25 +472,25 @@ export default {
                     }
                   });
                 }
-              if (this.newRec._source.name == element._source.carrousel) {
-                
-                var refreshrec = {
-                  _index: "optiboard_command",
-                  _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
-                  _source: {
-                    "@timestamp": Date.now(),
-                    cmd: "REFRESH",
-                    cmdType: "REFRESH",
-                    executed: 0,
-                    guid: element._source.guid,
-                    screen: element._source.optiboard
-                  },
-                  _type: "doc"
-                };
-                this.$store.commit({
-                  type: "updateRecord",
-                  data: refreshrec
-                });
+                if (this.newRec._source.name == element._source.carrousel) {
+                  var refreshrec = {
+                    _index: "optiboard_command",
+                    _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
+                    _source: {
+                      "@timestamp": Date.now(),
+                      cmd: "REFRESH",
+                      cmdType: "REFRESH",
+                      executed: 0,
+                      guid: element._source.guid,
+                      screen: element._source.optiboard
+                    },
+                    _type: "doc"
+                  };
+                  this.$store.commit({
+                    type: "updateRecord",
+                    data: refreshrec
+                  });
+                }
               }
             });
           }
