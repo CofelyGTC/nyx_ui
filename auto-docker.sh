@@ -1,5 +1,5 @@
 #/bin/bash
-VERSION="5.3.35"
+VERSION="5.3.36"
 sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
 sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
@@ -59,4 +59,5 @@ echo -en "\007"
 #   5.3.32  EBU Fix match
 #   5.3.33  EBU Add logo selection with custom (Ex: link for config)
 #   5.3.34  EBU Fix Carousel Views: Case-insensitive privilege filtering and compatibility adjustment
-#   5.3.35  EBU Fix Fix carousel update for Optiboard when edited only  
+#   5.3.35  EBU Fix Carousel update for Optiboard when edited only
+#   5.3.36  EBU Fix Privilege: preview button Optiboard only for Admin

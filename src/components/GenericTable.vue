@@ -206,7 +206,7 @@
               </div>
             </template>
             <template slot-scope="scope">
-              <el-button v-if="scope.row._source.guid"
+              <el-button v-if="$store.getters.creds.hasPrivilege('admin') && scope.row._source.guid"
                 size="mini"
                 plain
                 icon="el-icon-view"
