@@ -301,7 +301,7 @@ export default {
         "." +
         this.$store.getters.kibanaurl.replace("kibana", "kibananyx") +
         space +
-        "/app/kibana#" +
+        "/app/dashboard#" +
         this.computeKibanaUrlFromSelectedDash();
 
       var tmp = JSON.parse(JSON.stringify(this.currentConfig));
@@ -314,7 +314,7 @@ export default {
       console.log('computeKibanaUrlFromSelectedDash')
       var dashdata = this.selectedDash;
       var url = "";
-      url += "/dashboard/" + dashdata.id + "";
+      url += "/view/" + dashdata.id + "";
       var timek = "from:now-7d,mode:quick,to:now";
       if (
         this.currentConfig.config != undefined &&
@@ -334,10 +334,9 @@ export default {
         strRefresh = 'refreshInterval:(pause:!f,value:'+this.currentConfig.timeRefreshValue+')'
 
       url +=
-        "?embed=true&_g=(" + strRefresh + ",time:(" + timek + "))";
+        "?fullScreenMode&hide-filter-bar=true&embed=true&_g=(" + strRefresh + ",time:(" + timek + "))";
       url += "&_a=(description:'" + dashdata.attributes.description + "'";
       url += ",filters:!(),fullScreenMode:!f";
-      console.log(url);
       if (dashdata.attributes.optionsJSON != undefined) {
         var options = JSON.parse(dashdata.attributes.optionsJSON);
         var urloptions = Object.entries(options)
@@ -351,8 +350,6 @@ export default {
       var panels = [];
       var panelsJSON = JSON.parse(dashdata.attributes.panelsJSON);
 
-      console.log(url);
-      console.log(panelsJSON);
       for (var p in panelsJSON) {
         console.log("==========+>");
         console.log(panelsJSON[p]);
