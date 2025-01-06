@@ -301,7 +301,7 @@ export default {
         "." +
         this.$store.getters.kibanaurl.replace("kibana", "kibananyx") +
         space +
-        "/app/dashboard#" +
+        "/app/kibana#" +
         this.computeKibanaUrlFromSelectedDash();
 
       var tmp = JSON.parse(JSON.stringify(this.currentConfig));
@@ -314,7 +314,7 @@ export default {
       console.log('computeKibanaUrlFromSelectedDash')
       var dashdata = this.selectedDash;
       var url = "";
-      url += "/view/" + dashdata.id + "";
+      url += "/dashboard/" + dashdata.id + "";
       var timek = "from:now-7d,mode:quick,to:now";
       if (
         this.currentConfig.config != undefined &&
@@ -376,7 +376,7 @@ export default {
         .join(",")
         .replace(/#/g, "%23")
         .replace(/&/g, "%26");
-      url += ",panels:!(" + panels + ")";
+      // url += ",panels:!(" + panels + ")";
 
       var querybag = "query:(language:lucene,query:'*')";
       if (
@@ -392,12 +392,14 @@ export default {
         }
       }
 
-      url += "," + querybag + ",timeRestore:!f,title:Test,viewMode:view)";
+      // url += "," + querybag + ",timeRestore:!f,title:Test,viewMode:view)";
 
+      url += ")";
+      
       console.log(
         "********************compute kibana url***********************"
       );
-      console.log(url);
+      console.log('url: ', url);
 
       return url;
     },
