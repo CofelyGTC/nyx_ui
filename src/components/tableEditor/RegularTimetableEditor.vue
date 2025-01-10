@@ -90,6 +90,21 @@
           
      </el-row>
 
+     <el-row>
+        <el-col :span=6>
+          <el-form-item label="Temps de coupure minimum (secs): " :label-width="formLabelWidth3">
+                  <el-input-number v-model="newRec._source.minimal_interrupt" :min="0"></el-input-number>
+              </el-form-item>
+
+        </el-col>
+        <el-col :span=6>
+          <el-form-item label="Temps de coupure maximum (secs): " :label-width="formLabelWidth3">
+            <el-input-number v-model="newRec._source.maximal_interrupt" :min="0"></el-input-number>
+              </el-form-item>
+
+        </el-col>
+       </el-row>
+
      
 
      <el-row>
