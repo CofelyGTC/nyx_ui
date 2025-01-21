@@ -20,6 +20,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        
 
         <el-form-item label="Uitleg " :label-width="formLabelWidth">
           <el-input style="max-width:620px;" v-model="dialogObj.desc" :controls="false" size="mini" type="textarea"></el-input>
