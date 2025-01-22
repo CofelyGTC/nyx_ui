@@ -58,7 +58,7 @@
                 <h3 style="text-align:center; width:100%;">{{selectedTech}} </h3>
               </el-row>
               <el-row  :span="24" class="danone-switches">
-                <el-form style="text-align:left" :model="triggers"  ref="formKPI600">
+                <el-form style="text-align:left" :model="triggers"  ref="formDanone">
                   <el-form-item
                     :label="triggers.safety.label"
                     :label-width="formLabelWidth">
@@ -89,16 +89,16 @@
   import Vue from "vue";
   import moment from "moment";
   import axios from "axios";
-  import formdanone from "@/components/external/FormDanone";
-  Vue.component("FormDanone", formdanone);
+  import formDanone from "@/components/external/FormDanone";
+  Vue.component("FormDanone", formDanone);
   
   export default {
     name: "FormDanone",
     data() {
       return {
         daySelected: new Date(),
-        techArray: ["Water Supply"],
-        selectedTech: null,
+        techArray: ["Water Supply", "Steam", "HVAC", "Chilled Water", "Compressed Air"],
+        selectedTech: "Water Supply",
         selectedTec: null,
         disable: true,
         currentObj: null,
@@ -106,6 +106,7 @@
         strPeriod2: '',
         formLabelWidth: '200px',
         writeAccess:false,
+        limitDate: new Date(),
         triggers: {
           safety: {
             value: false,
@@ -138,10 +139,18 @@
       prepareData() {
         console.log('prepare data')
         //this.getEntitiesModel()
+        for(var i in this.$store.getters.creds.user.privileges) {
+          var priv = this.$store.getters.creds.user.privileges[i]
+          if(priv =='admin' || priv=='danone-write') {
+            this.writeAccess = true
+        }
+      }
         
-        
-        this.daySelected = new Date()
-        this.dateSelected()
+        this.daySelected = new Date();
+        this.daySelected.setHours(0);
+        this.limitDate = new Date();
+        this.limitDate.setHours(16)
+        this.dateSelected();
   
       },
       
@@ -150,6 +159,23 @@
   
         if(this.daySelected == null)
           this.daySelected = new Date()
+
+        console.log("===DATE CHANGED===")
+        console.log(this.limitDate)
+        console.log(this.daySelected)
+        console.log((this.limitDate > this.daySelected))
+        var now = new Date();
+        this.disable = (this.limitDate > this.daySelected)
+
+        if (this.limitDate.toDateString() == this.daySelected.toDateString())
+        {
+           this.disable=(now > this.limitDate)
+        }
+
+
+     
+        
+        this.getData()
   
   
         
