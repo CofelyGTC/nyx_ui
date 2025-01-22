@@ -172,7 +172,7 @@
   
         console.log(strDate)
         axios.defaults.withCredentials = true;
-        var url = this.$store.getters.apiurl + "lambda/4/get_danone_data"
+        var url = this.$store.getters.apiurl + "lambdas/4/get_danone_data"
         var body= {
             "dt": strDate,
             "technic": this.selectedTech
@@ -180,7 +180,7 @@
         console.log(url)
 
         axios.post(url,body,{params: {
-            apikey: "GETMSAPITOKEN2024"}}).then((response) => {
+            apikey: this.$store.getters.creds.token}}).then((response) => {
             if(response.data.error!="")
               console.log("get KPI600 monthly error");
             else {
