@@ -251,6 +251,25 @@
         console.log('tec '+tech)
         console.log('date '+date)
         console.log(obj)
+
+        var year = date.getFullYear().toString()
+        var month = (date.getMonth() + 1).toString()
+        var day = date.getDate().toString()
+
+        if(month.length<2)
+        {
+            month = '0'+month
+        }
+        if(day.length<2)
+        {
+          day = '0'+day
+        }
+
+        var strDt = year+month+day
+
+        obj._id  = tech.toLowerCase().replace(/\s/g, '')+'_'+strDt
+
+
         
   
         var rec = {
