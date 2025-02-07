@@ -273,7 +273,7 @@
         rec._source = JSON.parse(JSON.stringify(obj))
         delete rec._source._id
         rec._source['@timestamp'] = moment(rec._source['@timestamp']).format()
-  
+        rec._source['technic'] = tech
         console.log(rec)
   
         this.$store.commit({
