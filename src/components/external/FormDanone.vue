@@ -240,6 +240,22 @@
       
       this.currentObj.quality_trigger = this.triggers.safety.value
       this.currentObj.safety_trigger = this.triggers.quality.value
+      if(this.currentObj.quality_trigger)
+      {
+        this.currentObj.int_quality_trigger = 1
+      }
+      else
+      {
+        this.currentObj.int_quality_trigger = 0
+      }
+      if(this.currentObj.safety_trigger)
+      {
+        this.currentObj.int_safety_trigger = 1
+      }
+      else
+      {
+        this.currentObj.int_safety_trigger = 0
+      }
 
       this.updateData(this.selectedTech, this.daySelected, this.currentObj)
       
