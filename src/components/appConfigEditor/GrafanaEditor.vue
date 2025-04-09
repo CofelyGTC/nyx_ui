@@ -170,7 +170,14 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
+            <el-form-item label :label-width="formLabelWidth">
+            <el-row>
+              <el-switch v-model="currentConfig.hideTimePicker" active-text="Hide time picker" @change="computeUrlFromGrafana"></el-switch>
+            </el-row>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label :label-width="formLabelWidth">
             <el-row>
               <el-switch 
@@ -181,6 +188,7 @@
             </el-row>
             </el-form-item>
           </el-col>
+          
 
         </el-row>
       </el-form>
@@ -341,6 +349,9 @@ export default {
 
       if(this.currentConfig.autoFitChecked){
         url += "&autofitpanels"
+      }
+      if(this.currentConfig.hideTimePicker){
+        url += "&_dash.hideTimePicker"
       }
       if(this.currentConfig.darkMode){
         url += "&theme=dark"
