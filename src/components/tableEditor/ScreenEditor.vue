@@ -263,6 +263,19 @@
           </el-collapse-transition>
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+          <el-row type="flex" slot="header" class="row-bg" justify="space-between">
+            <h2><b>Button Controller</b></h2>
+            <el-switch v-model="newRec._source.buttoncontrolleractivated" @change="handleDefaultViewButtonSwitch"></el-switch>
+          </el-row>
+          <el-collapse-transition>
+            <div v-if="newRec._source.buttoncontrolleractivated" style="padding:20px;">
+              <el-row style="text-align:left;">
+                <el-button @click="setFocus('fieldsToDisplay')" type="text">Fields to display</el-button>
+              </el-row>
+            </div>
+          </el-collapse-transition>
+        </el-card>
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
             <h2><b>Widgets URL</b></h2>
           </el-row>
