@@ -1297,8 +1297,6 @@ export default {
       if (this.selectedDash.space != "default") {
         space = "s/" + this.selectedDash.space; //.toLowerCase();
       }
-      if (space.endsWith('/')) space = space.slice(0,-1)
-      console.log('space: ', space);
 
       this.curConfig.config.url =
         "." +
@@ -1372,8 +1370,6 @@ export default {
         if (this.selectedDash.space != "default") {
           space = "s/" + this.selectedDash.space; //.toLowerCase();
         }
-        if (space.endsWith('/')) space = space.slice(0,-1)
-        console.log('space: ', space);
         this.curConfig.config.url =
           "." +
           this.$store.getters.kibanaurl.replace("kibana", "kibananyx") +
@@ -1396,18 +1392,17 @@ export default {
         console.log("get apps for order failed");
       }
 
-      // this.$store.commit({
-      //   type: "updateRecord",
-      //   data: this.orgConfig
-      console.log('this.orgConfig: ', this.orgConfig);
-      // });
-      // this.$notify({
-      //   title: "Record saved.",
-      //   type: "success",
-      //   message: "Logout/Login to see changes.",
-      //   position: "bottom-right"
-      // });
-      // this.$emit("dialogclose");
+      this.$store.commit({
+        type: "updateRecord",
+        data: this.orgConfig
+      });
+      this.$notify({
+        title: "Record saved.",
+        type: "success",
+        message: "Logout/Login to see changes.",
+        position: "bottom-right"
+      });
+      this.$emit("dialogclose");
     },
     orderUpdate() {
       var category = this.$store.getters.filteredmenus.find(item=>item.value===this.curConfig.category.toLowerCase())
