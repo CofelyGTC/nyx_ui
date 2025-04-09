@@ -173,14 +173,7 @@
           <el-col :span="8">
             <el-form-item label :label-width="formLabelWidth">
             <el-row>
-              <el-switch v-model="currentConfig.hideTimePicker" active-text="Hide time picker" @change="computeUrlFromGrafana"></el-switch>
-            </el-row>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label :label-width="formLabelWidth">
-            <el-row>
-              <el-switch v-model="currentConfig.hideVariables" active-text="Hide variables" @change="computeUrlFromGrafana"></el-switch>
+              <el-switch v-model="currentConfig.displayVariables" active-text="Display variables filter" @change="computeUrlFromGrafana"></el-switch>
             </el-row>
             </el-form-item>
           </el-col>
@@ -352,16 +345,14 @@ export default {
         strRefresh = '&refresh='+this.currentConfig.timeRefreshValue;
         url +=  "&" + strRefresh;
 
-      url += "&kiosk";
+      url += "&kiosk&_dash.hideTimePicker";
+
+      if(!this.currentConfig.displayVariables){
+        url += "&_dash.hideVariables"
+      }
 
       if(this.currentConfig.autoFitChecked){
         url += "&autofitpanels"
-      }
-      if(this.currentConfig.hideTimePicker){
-        url += "&_dash.hideTimePicker"
-      }
-      if(this.currentConfig.hideVariables){
-        url += "&_dash.hideVariables"
       }
       if(this.currentConfig.darkMode){
         url += "&theme=dark"
