@@ -180,6 +180,13 @@
           <el-col :span="8">
             <el-form-item label :label-width="formLabelWidth">
             <el-row>
+              <el-switch v-model="currentConfig.hideVariables" active-text="Hide variables" @change="computeUrlFromGrafana"></el-switch>
+            </el-row>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label :label-width="formLabelWidth">
+            <el-row>
               <el-switch 
                 v-model="currentConfig.darkMode" 
                 inactive-text="Light Mode" 
@@ -352,6 +359,9 @@ export default {
       }
       if(this.currentConfig.hideTimePicker){
         url += "&_dash.hideTimePicker"
+      }
+      if(this.currentConfig.hideVariables){
+        url += "&_dash.hideVariables"
       }
       if(this.currentConfig.darkMode){
         url += "&theme=dark"
