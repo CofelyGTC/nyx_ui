@@ -24,18 +24,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_ENV
-
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: engiecofely/nyx_ui:v${{ github.ref_name }}
-          
+          tags: engiecofely/nyx_ui:${{ github.ref_name }}
+
       - name: Logout from Docker Hub
         run: docker logout
