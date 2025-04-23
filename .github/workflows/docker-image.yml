@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -33,7 +35,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: engiecofely/nyx_ui:v${{ env.date }}
-
+          tags: engiecofely/nyx_ui:v${{ github.ref_name }}
+          
       - name: Logout from Docker Hub
         run: docker logout
