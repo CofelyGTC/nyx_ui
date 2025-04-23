@@ -19,7 +19,6 @@
                     v-model="curConfig.category"
                     :fetch-suggestions="categorySuggestion"
                     placeholder="Enter Category"
-                    @select="handleSelect"
                     size="mini"
                     style="width:100%"
                   ></el-autocomplete>
@@ -32,7 +31,7 @@
                     v-model="curConfig.subcategory"
                     :fetch-suggestions="subcategorySuggestion"
                     placeholder="Enter Sub/Category"
-                    @select="handleSelect"
+                    @select="handleSubcategorySelect"
                     size="mini"
                     style="width:100%"
                   ></el-autocomplete>
@@ -57,7 +56,9 @@
                     <el-option label="ES Table" value="generic-table"></el-option>
                     <el-option label="Lazy ES Table" value="lazy-generic-table"></el-option>
                     <el-option label="PGSQL Table" value="pgsql-generic-table"></el-option>
+                    <el-option label="Carousel Table" value="carousel-generic-table"></el-option>
                     <el-option label="Kibana" value="kibana"></el-option>
+                    <el-option label="Grafana" value="grafana"></el-option>
                     <el-option label="External" value="external"></el-option>
                     <el-option label="Upload" value="upload"></el-option>
                     <el-option label="Internal" value="internal"></el-option>
@@ -67,7 +68,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- <el-col :span="8">
                 <el-form-item label="Order" :label-width="formLabelWidth" style="text-align: left;">
                   <el-input-number
                     style="width:100%"
@@ -77,19 +78,77 @@
                     autocomplete="off"
                   ></el-input-number>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="6">
+                <el-form-item label="Icon" :label-width="formLabelWidth">
+                  <el-select 
+                    size="mini" ref="typebutton" 
+                    v-model="curConfig.icon" 
+                    filterable 
+                    placeholder="Select" 
+                    allow-create
+                    style="width: -webkit-fill-available;">
+                  <el-option
+                    v-for="(iconData, iconName) in $store.fontAwesomeIcons"
+                    :key="iconName"
+                    :label="iconName"
+                    :value="iconName"
+                    :title="iconName"
+                    style="width: auto; float: inline-start;">
+                    <v-icon class="selectIcon" :name="iconName" scale="1.5"/>
+                  </el-option>
+                </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                &nbsp;&nbsp;
+                <img v-if="curConfig.icon && curConfig.icon.includes('http')" :src="curConfig.icon" scale="2" style="height:40px;width: 40px;filter: brightness(0) saturate(100%) invert(39%) sepia(1%) saturate(2250%) hue-rotate(183deg) brightness(93%) contrast(86%);"> 
+                <v-icon v-else-if="curConfig.icon" :name="curConfig.icon" scale="2" />
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="center" style="left:2%">
+              <el-col :span="8" v-if="isAdd && curConfig.subcategory && apps.length > 0" >
+                <table class="table-display">
+                  <thead class="thead-display">
+                    <tr>
+                      <th>Vue</th>
+                      <th width="1"></th>
+                    </tr>
+                  </thead>
+                  <draggable
+                    v-bind="dragOptionsDisplay"
+                    v-model="apps"
+                    tag="tbody"
+                    handle=".handle"
+                  >
+                    <tr v-for="(item, index) in this.apps" :key="index">
+                      <td>{{item.title}}</td>
+                      <td>
+                        <i class="el-icon-d-caret handle"></i>
+                      </td>
+                    </tr>
+                  </draggable>
+                </table>
+              </el-col>
+            </el-row>
+            <el-row>
+              <!-- <el-col :span="8">
+                <el-form-item label="Icon Type" :label-width="formLabelWidth" style="text-align: left;">
+                  <el-switch v-model="curConfig.icontype" @change="iconTypeChanged" :active-text="curConfig.icontype ? 'url' : 'icon'"></el-switch>
+                </el-form-item>
+              </el-col> -->
+              <!-- <el-col :span="6">
                 <el-form-item label="Icon" :label-width="formLabelWidth">
                   <el-input size="mini" v-model="curConfig.icon" autocomplete="off"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
                 &nbsp;&nbsp;
-                <v-icon v-if="curConfig.icon" :name="curConfig.icon" scale="2" />
-              </el-col>
+                <img v-if="curConfig.icon && curConfig.icon.includes('http')" :src="curConfig.icon" scale="2" style="height:40px;width: 40px;"> 
+                <v-icon v-else-if="curConfig.icon" :name="curConfig.icon" scale="2" />
+              </el-col> -->
             </el-row>
-         
-             <el-row v-if="curConfig.type === 'kibana'" class="transition-box" style="text-align:left;">     
+            <el-row v-if="curConfig.type === 'kibana'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
                 <v-icon name="chart-pie" scale="2.2" />
@@ -103,7 +162,21 @@
               </el-card>
             </el-row>
 
-            <el-row v-if="curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table'" class="transition-box" style="text-align:left;">     
+            <el-row v-if="curConfig.type === 'grafana'" class="transition-box" style="text-align:left;">     
+              <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
+              <el-col :span="4" style="text-align:right;padding-right:20px">
+                <v-icon name="chart-line" scale="2.2" />
+              </el-col>
+              <el-col :span="20">
+                <b>Displays a grafana dashboard.</b>
+                <br/> 
+                The dashboard must previously be created in Grafana.<br/> 
+                <br/> 
+              </el-col>
+              </el-card>
+            </el-row>
+
+            <el-row v-if="curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table' || curConfig.type === 'carousel-generic-table'" class="transition-box" style="text-align:left;">     
               <el-card shadow="never" style="height:70px;background-color:rgb(236, 245, 255);">     
               <el-col :span="4" style="text-align:right;padding-right:20px">
                 <v-icon name="table" scale="2.2" />
@@ -141,7 +214,8 @@
               <el-col :span="20">
                 <b>Displays an external URL in an iframe.</b>
                 <br/> 
-                It the external url contains <b>token=TOKEN</b>, the <b>TOKEN</b> tag is replaced by the actual user token.<br/> 
+                If the external url contains <b>token=TOKEN</b>, the <b>TOKEN</b> tag is replaced by the actual user token.<br/> 
+                Or If the external URL contains the <b>@USERLOGIN</b> tag, it will be replaced with the actual user's full name without spaces.<br/> 
                 <br/> 
               </el-col>
               </el-card>
@@ -227,7 +301,7 @@
                 <br/>                 
                 Displays a vega visualization. The data must be accessed via a data source defined in NYX.<br/>
                 Ex: <b>https://173.242.183.147/api/v1/datasource/my_ds1?token=@TOKEN@&start=@START@&end=@END@</b>
-                </br>START and END are only used if a time selector is checked.
+                <br/>START and END are only used if a time selector is checked.
                 <br/> 
               </el-col>
               </el-card>
@@ -290,9 +364,21 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            
-    
-           
+
+            <!-- <el-row
+              :gutter="24"
+              v-if="curConfig.type === 'generic-table'"
+              style="text-align:left"
+            >
+              <el-col :span="8">
+                <el-form-item label :label-width="formLabelWidth">
+                  <el-row>
+                    <el-switch v-model="curConfig.multipleDeletionSelectorType" active-text="Multiple deletion" @change="multipleDeletionSelectorTypeChange"></el-switch>
+                  </el-row>
+                </el-form-item>
+              </el-col>
+            </el-row> -->
+
             <el-form-item
               v-if="(curConfig.type === 'external')"
               label="Url"
@@ -653,7 +739,7 @@
           label="Table"
           name="table"
           key="table"
-          v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table')"
+          v-if="(curConfig.type === 'generic-table' || curConfig.type === 'lazy-generic-table' || curConfig.type === 'carousel-generic-table')"
         >
           <ESTableEditor
             :allPrivileges="allPrivileges"
@@ -672,6 +758,17 @@
             :allPrivileges="allPrivileges"
             :currentConfig="curConfig"
           ></KibanaEditor>
+        </el-tab-pane>
+        <el-tab-pane
+          label="Grafana"
+          name="grafana"
+          key="grafana"
+          v-if="(curConfig.type === 'grafana')"
+        >
+          <GrafanaEditor
+            :allPrivileges="allPrivileges"
+            :currentConfig="curConfig"
+          ></GrafanaEditor>
         </el-tab-pane>
         <el-tab-pane
           label="Upload"
@@ -730,7 +827,7 @@
           label="Query-Filter"
           key="queryfilter"
           name="queryfilter"
-          v-if="((curConfig.type === 'kibana')||(curConfig.type === 'generic-table') || (curConfig.type === 'lazy-generic-table')) && (curConfig.queryFilterChecked)"
+          v-if="((curConfig.type === 'kibana')||(curConfig.type === 'grafana')||(curConfig.type === 'generic-table') || (curConfig.type === 'lazy-generic-table')) && (curConfig.queryFilterChecked)"
         >
           <el-card>
             <div>
@@ -830,6 +927,7 @@ import freetextdetails from "@/components/FreeTextDetails";
 import queryfiltereditor from "@/components/appConfigEditor/QueryFilterEditor";
 import estableeditor from "@/components/appConfigEditor/ESTableEditor";
 import kibanaeditor from "@/components/appConfigEditor/KibanaEditor";
+import grafanaeditor from "@/components/appConfigEditor/GrafanaEditor"; 
 import formeditor from "@/components/appConfigEditor/FormEditor";
 import uploadeditor from "@/components/appConfigEditor/UploadEditor";
 import filesystemeditor from "@/components/appConfigEditor/FileSystemEditor";
@@ -846,6 +944,7 @@ Vue.component("QueryFilterEditor", queryfiltereditor);
 Vue.component("ESTableEditor", estableeditor);
 Vue.component("FormEditor", formeditor);
 Vue.component("KibanaEditor", kibanaeditor);
+Vue.component("GrafanaEditor", grafanaeditor);
 Vue.component("UploadEditor", uploadeditor);
 Vue.component("FileSystemEditor", filesystemeditor);
 
@@ -876,6 +975,8 @@ export default {
         strOrgRec: "",
         strNewRec: "",
         esMapping: null,
+        apps: [],
+        oldAppName: "",
       }
     );
   },
@@ -893,7 +994,15 @@ export default {
       set(value) {
         this.$store.commit("setAppConfigObj", value);
       }
-    }
+    },
+    dragOptionsDisplay() {
+      return {
+        animation: 0,
+        group: "display",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    },
   },
   watch: {
     curConfigIn: {
@@ -926,6 +1035,16 @@ export default {
     closeDialog: function() {
       this.$emit("dialogclose");
     },
+    handleSubcategorySelect(item) {
+      for (var i in this.$store.getters.filteredmenus) {
+        if (this.$store.getters.filteredmenus[i].value.toLowerCase() == this.curConfig.category.toLowerCase()) {
+          var objetRecherche = this.$store.getters.filteredmenus[i].submenus.find(objet => objet.title.toLowerCase() === item.value.toLowerCase());
+          this.apps = [... objetRecherche.apps]
+          this.apps.push({"title": "THIS APPLICATION"})
+          break;
+        }
+      }
+    },
     categorySuggestion: function(queryString, cb) {
       var cat = [];
       for (var i in this.$store.getters.filteredmenus) {
@@ -940,7 +1059,6 @@ export default {
 
       cb(results);
     },
-    handleSelect(item) {},
     subcategorySuggestion: function(queryString, cb) {
       if (this.curConfig.category == "") return cb([]);
 
@@ -1000,6 +1118,7 @@ export default {
       else this.curConfig.config.queryfilters.splice(index + 1, 0, row);
     },
     typeChanged(e) {
+      console.log('e: ', e);
       if (e == "free-text") {
         this.curConfig.config.controller = "FreeText";
       } else if (e == "vega") {
@@ -1013,7 +1132,11 @@ export default {
       }
       
     },
-
+    iconTypeChanged(e) {
+      console.log('e: ', e);
+      this.curConfig.icontype = e
+      console.log('this.curConfig: ', this.curConfig);
+    },
     freeTextChanged(newvalue) {
       this.curConfig.config.freetext = newvalue;
     },
@@ -1022,7 +1145,6 @@ export default {
       this.dialogFormVisible = true;
       this.curConfig = JSON.parse(JSON.stringify(this.currentConfig));
       console.log('end of prepare date configDetails')
-      console.log(this.curConfig)
 
       this.dialogHeaderVisible = false;
       this.formFielfEditorVisible = false;
@@ -1031,10 +1153,8 @@ export default {
       if (this.curConfig.config.queryfilters == undefined)
         this.curConfig.config.queryfilters = [];
 
-
       if(this.currentConfig.timeRefreshValue != null)
         this.curConfig.timeRefreshValue = this.curConfig.timeRefreshValue.replace('refreshInterval:(pause:!f,value:', '').replace(')', '')
-
 
       this.strNewRec = "";
       this.strOrgRec = "";
@@ -1044,9 +1164,6 @@ export default {
       this.$nextTick(() => {
         this.refresh2();
       });
-
-
-
     },
     refresh2: function() {
       this.strNewRec = "";
@@ -1219,24 +1336,20 @@ export default {
     timeRefreshSelectChange() {
       if (this.curConfig.timeRefreshValue != null)
         this.curConfig.timeRefresh = true;
-
-
       this.computeUrlFromKibana();
-
-
       var tmp = JSON.parse(JSON.stringify(this.curConfig));
       this.curConfig = null;
       this.curConfig = tmp;
     },
     timeRefreshSwitchChange() {
       this.computeUrlFromKibana();
-
-
       var tmp = JSON.parse(JSON.stringify(this.curConfig));
       this.curConfig = null;
       this.curConfig = tmp;
-
       console.log(this.curConfig.config.url)
+    },
+    multipleDeletionSelectorTypeChange() {
+      console.log('this.curConfig.multipleDeletionSelectorType: ', this.curConfig.multipleDeletionSelectorType);
     },
     timeSelectorTypeChange() {
       if (this.curConfig.timeSelectorType != null)
@@ -1266,10 +1379,17 @@ export default {
       }
     },
     saveRecord() {
+      console.log('>>>> saveRecord');
       if (this.strNewRec != this.strOrgRec && !this.isAdd) {
         this.orgConfig._source = YAML.safeLoad(this.strNewRec);
       } else {
         this.orgConfig._source = this.curConfig;
+      }
+
+      try {
+        if (!this.orgConfig._source.order && this.orgConfig._source.category.toLowerCase() != "apps") { this.orgConfig._source.order=this.orderConfig() }
+      } catch {
+        console.log("get apps for order failed");
       }
 
       this.$store.commit({
@@ -1283,6 +1403,49 @@ export default {
         position: "bottom-right"
       });
       this.$emit("dialogclose");
+    },
+    orderUpdate() {
+      var category = this.$store.getters.filteredmenus.find(item=>item.value===this.curConfig.category.toLowerCase())
+      var index_category = this.$store.getters.filteredmenus.indexOf(category)
+      var submenu = category.submenus.find(item=>item.value===this.curConfig.subcategory.toLowerCase())
+      var index_submenu = category.submenus.indexOf(submenu)
+      var apps = submenu.apps
+      for (let index_app = 0; index_app < apps.length; index_app++) {
+        var app = apps[index_app];
+        var checkIndexApp = this.apps.indexOf(app);
+        if (index_app != checkIndexApp) {
+          this.$store.commit({
+            type: "onlyUpdateRecord",
+            data: {
+              _index: "nyx_app",
+              _id: app.rec_id,
+              _source: {
+                order: ((index_category + 1) * 10000) + ((index_submenu + 1) * 100) + (checkIndexApp + 1)
+              }
+            }
+          });
+        }
+      }
+    },
+    orderConfig() {
+      var order = null
+      var category = this.$store.getters.filteredmenus.find(item =>
+        item.category.toLowerCase() === this.orgConfig._source.category.toLowerCase()
+      );
+      if (!category) {
+        return (this.$store.getters.filteredmenus.length+1) * 10000 + 101
+      }
+      var submenus = category.submenus.find(item =>
+        item.title.toLowerCase() === this.orgConfig._source.subcategory.toLowerCase()
+      );
+      if (!submenus) {
+        order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.length+1) * 100) + 1
+        return order
+      }
+      this.orderUpdate();
+      var app = this.apps.find(item => item.title === "THIS APPLICATION")
+      order = ((this.$store.getters.filteredmenus.indexOf(category)+1) * 10000) + ((category.submenus.indexOf(submenus)+1) * 100) + (this.apps.indexOf(app)+1);
+      return order
     },
     formFieldEditorClosed(field) {
       console.log(field);

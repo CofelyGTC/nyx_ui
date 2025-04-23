@@ -8,7 +8,20 @@ import { extractURLParts } from "../globalfunctions";
 
 Vue.use(Vuex);
 
+function popupCenter(w, h) {
+  // Fixes dual-screen position                             Most browsers      Firefox
+  const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+  const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
 
+  const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+  const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+  const systemZoom = width / window.screen.availWidth;
+  const left = (width - w) / 2 / systemZoom + dualScreenLeft
+  const top = (height - h) / 2 / systemZoom + dualScreenTop
+  const features =`width=${w}, height=${h}, top=${top}, left=${left} `
+  return features
+}
 
 function computeAutoTime(minutes) {
   if (minutes <= 120)
@@ -51,10 +64,12 @@ function stopSocket(wsObject)
 
 export default new Vuex.Store({
   state: {
+    loggedOut: false,
     apiurl: "api/v1/",
     apiVersion: "",
     kibanaurl: "/kibana/",
-    version: "v3.27.8",
+    grafanaurl: "/grafana/",
+    version: "v5.3.37",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -90,11 +105,13 @@ export default new Vuex.Store({
     actualLvl2: 'TAB-0-0'
   },
   getters: {
+    loggedOut: state => state.loggedOut,
     wsObject: state => state.wsObject,
     apiVersion: state => state.apiVersion,
     apiurl: state => state.apiurl,
     menuOpen: state => state.menuOpen,
     kibanaurl: state => state.kibanaurl,
+    grafanaurl: state => state.grafanaurl,
     menus: state => state.menus,
     apps: state => state.apps,
     creds: state => state.creds,
@@ -133,14 +150,14 @@ export default new Vuex.Store({
   actions: {
     switchToApp(context, payload) {
       console.log("switch to app mutation called.");
-      console.log(payload);
+      // console.log(payload);
       for (var i = 0; i < context.getters.filteredmenus.length; i++) {
         var cat = context.getters.filteredmenus[i]
 
         for (var j = 0; j < cat.submenus.length; j++) {
           var subcat = cat.submenus[j]
           for (var k = 0; k < subcat.apps.length; k++) {
-            console.log(subcat.apps[k].title);
+            // console.log(subcat.apps[k].title);
             if (subcat.apps[k].title.toLowerCase() === payload) {              
               return Promise.resolve(subcat.apps[k].rec_id);              
             }
@@ -158,7 +175,7 @@ export default new Vuex.Store({
           if((context.getters.wsObject.last_lifesign!=null)
           &&(moment(new Date())-context.getters.wsObject.last_lifesign>10000))
           {
-            console.log(moment(new Date())-context.getters.wsObject.last_lifesign);
+            // console.log(moment(new Date())-context.getters.wsObject.last_lifesign);
             console.log("Socket Not Responding...");
             stopSocket(context.getters.wsObject);
             context.getters.wsObject.socket=null;
@@ -318,6 +335,7 @@ export default new Vuex.Store({
       
     },    
     logout(state) {
+      state.loggedOut=true;
       state.wsObject.check_alive=false;
       stopSocket(state.wsObject);
 
@@ -327,12 +345,13 @@ export default new Vuex.Store({
         state.creds.token;
 
       axios
-        .get(url)
+        .get(url,{withCredentials:true})
         .then(response => {
           if (response.data.error != "")
             console.log("Logout error...");
           else {
             console.log("Logout success...");
+
           }
         })
         .catch(error => {
@@ -341,7 +360,7 @@ export default new Vuex.Store({
     },
     changeContainerSize(state, payload) {
       console.log("VUEX:Change container size:");
-      console.log(payload.data);
+      // console.log(payload.data);
       state.containerSize = payload.data;
     },
     
@@ -367,14 +386,9 @@ export default new Vuex.Store({
         if (app !== null)
           break
       }
-
-
-
       state.maintitle = state.currentSubCategory.loc_title;
-
       state.activeApp = app
-
-      console.log(app)
+      console.log('app: ', app);
       if(app.timeDefault != null && app.timeDefault != '') {
         console.log('send forcetime')
         Vue.prototype.$globalbus.$emit("forcetime",app.timeDefault);
@@ -431,7 +445,7 @@ export default new Vuex.Store({
     },
     setTimeRange(state, payload) {
       console.log("VUEX:Set Time Range:");
-      console.log(payload);
+      // console.log(payload);
 
       console.log("VUEX:Sub Type " + payload.data.subtype);
       state.lastTimeRangeEvent = payload.data;
@@ -601,7 +615,7 @@ export default new Vuex.Store({
     },
     deleteRecord(state, payload) {
       console.log('deleteRecord')
-      console.log(payload)
+      // console.log(payload)
       let url =
         state.apiurl +
         "generic/" + payload.data._index + "/" + payload.data._id + "?token=" +
@@ -652,7 +666,7 @@ export default new Vuex.Store({
           });
     },
     deletePGRecord(state, payload) {
-      console.log(payload)
+      // console.log(payload)
       console.log("====================================================")
       var url =
         state.apiurl +

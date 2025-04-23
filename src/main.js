@@ -17,6 +17,7 @@ import vueNumeralFilterInstaller from 'vue-numeral-filter';
 import draggable from "vuedraggable";
 import InfiniteLoading from 'vue-infinite-loading';
 
+//import '../element-variables.scss'
 
 import '../theme/index.css'
 
@@ -111,6 +112,8 @@ if (vars["api"]!=undefined)
 }
 
 ElementLocale.i18n((key, value) => i18n.t(key, value))
+
+store.fontAwesomeIcons = Icon.icons
 
 var app=new Vue({
   i18n,

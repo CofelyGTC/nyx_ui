@@ -9,7 +9,9 @@
       <el-header style="text-align: right; font-size: 12px">
         <el-row :gutter="24">
           <el-col :span="1">
-            <el-button circle type="primary" icon="el-icon-more" @click="changeMenuState"></el-button>
+            <el-button class="menu-button" style="background-color: #002439 !important; padding:17px; color:#70BD95 !important" @click="changeMenuState">
+              <v-icon name="bars" scale="1.5" @click="changeMenuState"/>
+            </el-button>
           </el-col>
           <el-col :span="5" style="text-align: left; font-size: 22px;color:white;">
             <span>
@@ -71,9 +73,8 @@
               <div 
                 v-if="$store.getters.activeApp.timeSelectorChecked && (timeType=='absolute')"
               >
-
                 <el-date-picker
-                  style="top:1px;"
+                  style="top:0px;"
                   :picker-options="rangePickerOptions"
                   v-model="timerange"
                   v-on:change="timeRangeChanged"
@@ -94,6 +95,7 @@
                 v-if="$store.getters.activeApp.timeSelectorChecked"
                 size="mini"
                 v-model="timeType"
+                fill="#70BD95"
               >
                 <el-radio-button label="absolute">{{$t('time.absolute')}}</el-radio-button>
                 <el-radio-button label="relative">{{$t('time.relative')}}</el-radio-button>
@@ -163,16 +165,17 @@
         </el-row>
       </el-header>
 
-      <el-container>
+      <el-container :style="{'background-color':$store.getters.activeApp.darkMode?'#052538':'#fff'}">
         <transition name="el-zoom-in-top">
-          <el-aside width="201px" v-bind:style="styleAsideComputed" class="aside" v-show="menuOpen">
+          <el-aside width="200px" v-bind:style="styleAsideComputed" class="aside" v-show="menuOpen">
             <el-row class="tac">
               <el-col :span="24">
                 <el-menu
                   :default-active="$store.getters.currentSubCategory.fulltitle"
                   :unique-opened="true"
                   class="el-menu-vertical"
-                  text-color="#666"
+                  text-color="#70BD95"
+                  active-text-color="#FFFFFF"
                 >
                   <!--            v-if="menu.category!='apps'"-->
                   <el-submenu
@@ -193,11 +196,24 @@
                     >
                       <!-- :key="menu.category+'/'+subMenu.title" -->
                       <!-- :index="menu.category+'/'+subMenu.title" -->
-                      <v-icon
+                      <!-- <v-icon
                         class="menuiconaside"
                         :name="subMenu.icon"
                         v-if="subMenu.icon"
                         scale="1"
+                      /> -->
+                      <img 
+                        class="menuiconaside" 
+                        v-if="subMenu.icon && subMenu.icon.includes('https')" 
+                        :src="subMenu.icon" 
+                        style="height:16px;width: 16px;filter: brightness(0%) invert(54%) sepia(100%) hue-rotate(80deg) saturate(1.4)"
+                      > 
+                      <!-- style="height:16px;width: 16px;filter: invert(76%) sepia(12%) saturate(1095%) hue-rotate(96deg) brightness(89%) contrast(84%)" -->
+                      <v-icon 
+                        class="menuiconaside" 
+                        v-else-if="subMenu.icon" 
+                        :name="subMenu.icon" 
+                        scale="1" 
                       />
                       &nbsp;{{subMenu.loc_title}}
                     </el-menu-item>
@@ -237,6 +253,8 @@ export default {
     styleContainer: "B",
     maintitle: "NYX",
     timerange: "",
+    timerangeselected: false,
+    startDate: "",
     yearPicker: moment(),
     monthPicker: moment(),
     weekPicker: moment(),
@@ -257,7 +275,7 @@ export default {
       return {
         overflow: "hidden",
         border: 0 + "px solid #eee",
-        padding: 1 + "px",
+        //padding: 1 + "px",
         height: this.containerSize.height - 0 + "px"
       };
     },
@@ -280,6 +298,7 @@ export default {
       return this.$store.getters.creds;
     },
     filteredmenus() {
+      // console.log('this.$store.getters.filteredmenus: ', this.$store.getters.filteredmenus);
       return this.$store.getters.filteredmenus;
     },
     containerSize() {
@@ -287,6 +306,24 @@ export default {
     }
   },
   methods: {
+    updateDateFin() {
+      // if (this.$store.getters.activeApp.type == 'grafana'){
+      //   if (this.timeType == "absolute"){
+      //     this.end = new Date();
+      //     this.timeRangeChanged([this.startDate, this.end], "update");
+      //   }
+      //   if (this.timeType == "relative"){
+      //     this.$store.commit({
+      //       type: "setTimeRange",
+      //       data: {
+      //         type: "relative",
+      //         relativeType: this.relativeTimeType,
+      //         relativeValue: this.relativeTimeValue
+      //       }
+      //     });
+      //   }
+      // }
+    },
     getClient(){
       //var demandor = this.$store.getters.creds.user.id          
       var url = this.$store.getters.apiurl + "getClient"
@@ -299,18 +336,18 @@ export default {
             if(response.data.error!="")
             console.log("Client Calls list error...");
             else{
-                console.log(response.data)
+                // console.log(response.data)
                 //var res = JSON.parse(response.data)
                 var res = response.data
-                console.log("CLIENT : ")
-                console.log(res)
+                // console.log("CLIENT : ")
+                // console.log(res)
                 var client = res.client
                 this.$store.commit({
                   type: "setClient",
                   data: client
                 });
                 
-                console.log(client)
+                // console.log(client)
                 
                 
                 
@@ -441,10 +478,19 @@ export default {
       this.changePasswordVisible = true;
     },
     appClicked(e) {
-      console.log("app clicked");
-      console.log(e);
+      // console.log("app clicked");
+      // console.log(e);
       if (e.type == "external") {
-        window.open(e.config.url);
+        window.open(e.config.url
+          .replace(
+            /token=TOKEN/g,
+            "token=" + this.$store.getters.creds.token
+          )
+          .replace(
+            /@USERLOGIN/g,
+            this.$store.getters.creds.user.login.split('@')[0].replace(/\./g, '')
+          )
+        );
       } else {
         this.maintitle = e.loc_title;
     
@@ -621,27 +667,48 @@ export default {
         }
     }
 
-
     if (this.$store.getters.currentSubCategory == undefined) {
-      console.log('NOT LOGGED YET')
+      // console.log('NOT LOGGED YET')
       var path = this.$route.path
       if(path[path.length-1] == '/')
 	      path = path.substring(0, path.length-1)
-
-
       this.$store.state.redirection = path
-      console.log(this.$route)
-      
-      
+      // console.log(this.$route)
       this.$router.push("/");
-
       return;
     }
+
+    var url =
+      this.$store.getters.apiurl +
+      "reloadconfig?token=" +
+      this.$store.getters.creds.token;
+    axios
+      .get(url)
+      .then(response => {
+        if (response.data.error != "") console.log("Reload error...");
+        else {
+          this.$store.commit({
+            type: "login",
+            data: response.data
+          });
+          this.$notify({
+          title: "Message",
+          message: "Config Reloaded",
+          type: "success",
+          position: "bottom-right"
+        });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
     const end = new Date();
     const start = new Date();
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+    this.startDate = start;
     this.timeRangeChanged([start, end]);
+    setInterval(this.updateDateFin, 10000)
   },
   mounted: function() {
     console.log("===============  REGISTERING FORCETIME:");
@@ -706,12 +773,13 @@ export default {
 };
 </script>
 <style>
-.el-aside {
+/* .el-aside {
   border-right: 1px solid rgb(226, 226, 226);
-}
+} */
 
 .el-aside .el-menu {
   border-right: none;
+  background-color: #002439 !important;
 }
 
 .el-main {
@@ -722,12 +790,14 @@ export default {
 body {
   margin: 0px;
   overflow: hidden;
+  background-color: white;
 }
 
 .aside {
   text-align: left;
   overflow: none;
   height: 100%;
+  background-color: #002439 !important;
 }
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 200px;
@@ -777,11 +847,27 @@ body {
 
 .el-header {
   background-color: white !important;
-  border-bottom: 1px solid lightgrey !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   line-height: 60px;
+  background-color: #002439 !important;
+  border-bottom: 0px;
 }
-
+.el-header button{
+  background-color: #70BD95 !important;
+  color: white;
+  border: 0px;
+}
+.el-header .el-date-editor {
+  background-color: #70BD95 !important;
+  border: 0px !important;
+  line-height:20px;
+  border-radius: 4px;
+}
+.el-header .el-date-editor *{
+  background-color: #70BD95 !important;
+  color: white  !important;
+  border: 0px !important;
+}
 .el-header .el-col-5 span {
   font-weight: bold;
   color: #c0c4cc;
@@ -793,10 +879,10 @@ body {
 }
 
 .el-dialog__header {
-  background-color: #409eff !important;
+  background-color: #70BD95 !important;
 }
 .login-container {
-  background-color: #66b1ff !important;
+  background-color: #70BD95 !important;
 }
 
 .el-table th > .cell {
@@ -815,5 +901,10 @@ body {
 .time-selector-row div {
   display: inline-block;
 }
-
+.el-menu-item.is-active:hover{
+  color: #002439 !important;
+}
+.el-menu-item.is-active:focus{
+  color: #002439 !important;
+}
 </style>

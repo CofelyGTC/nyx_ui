@@ -33,7 +33,7 @@
         <el-col :span="8">
           <el-button @click="setFocus('summary')" type="text">Summary</el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')">
           <el-button @click="setFocus('client')" type="text">Client</el-button>
         </el-col>
       </el-row>
@@ -51,7 +51,7 @@
         </el-col>
         <el-col
           :span="8"
-          v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')"
+          v-if="$store.getters.creds.hasPrivilege('admin')"
         >
           <el-input
             placeholder="clients to filter"
@@ -96,7 +96,7 @@
       </el-row>
       <el-row style="text-align:left;">
         <el-col :span="8">
-          <el-button @click="setFocus('type')" type="text">Type</el-button>
+          <el-button @click="setFocus('type')" type="text">View Type</el-button>
         </el-col>
         <el-col :span="16">
           <el-button @click="setFocus('url')" type="text">URL</el-button>
@@ -111,10 +111,10 @@
               v-model="newRec._source.type"
               placeholder="Please select a type"
             >
-              <el-option v-if="!$store.getters.creds.hasPrivilege('optiboard-nokibana') || $store.getters.creds.hasPrivilege('admin')" label="Kibana" value="kibana"></el-option>
+              <el-option v-if="$store.getters.creds.hasPrivilege('admin')" label="Kibana" value="kibana"></el-option>
               <el-option label="Picture" value="picture"></el-option>
               <el-option label="URL" value="url"></el-option>
-              <el-option label="Optiboard" value="optiboard"></el-option>
+              <el-option v-if="$store.getters.creds.hasPrivilege('admin')" label="Optiboard" value="optiboard"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -270,6 +270,56 @@
           </el-col>
         </el-row>
       </el-card>
+      <el-row style="text-align:left">
+
+      <el-col :span="8">
+        <el-button @click="setFocus('typebutton')" type="text">Button Type</el-button>
+      </el-col>
+
+      <el-col :span="8">
+        <el-button @click="setFocus('icon')" type="text">Icon</el-button>
+      </el-col>
+      <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')">
+        <el-button @click="setFocus('icon')" type="text">Background Cache</el-button>
+      </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8" style="text-align: left;">
+          <el-form-item prop="_source.type">
+            <el-select
+              size="mini"
+              ref="typebutton"
+              v-model="newRec._source.typebutton"
+              placeholder="Please select a type"
+            >
+              <el-option label="Text" value="text"></el-option>
+              <el-option label="Icon" value="icon"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+            <el-select v-if="newRec._source.typebutton == 'icon'" size="mini" ref="typebutton" v-model="newRec._source.iconname" filterable placeholder="Select"
+            style="width: -webkit-fill-available;">
+              <el-option
+                v-for="(iconData, iconName) in icons"
+                :key="iconName"
+                :label="iconName"
+                :value="iconName"
+                :title="iconName"
+                style="width: auto; float: inline-start;">
+                <v-icon class="selectIcon" :name="iconName" scale="1.5"/>
+              </el-option>
+            </el-select>
+            <el-input v-else size="mini" ref="icon" v-model="newRec._source.iconname" autocomplete="off"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <v-icon v-if="newRec._source.typebutton == 'icon'" :name="newRec._source.iconname" scale="2" style="position: relative; left: 5px"/>
+          <span style="visibility: hidden;">&nbsp;</span>
+        </el-col>
+        <el-col :span="8" v-if="$store.getters.creds.hasPrivilege('admin')" style="position: relative; top: -5px;">
+          <el-switch v-model="newRec._source.backgroundCache" @change="backgroundCacheButtonSwitch"></el-switch>
+        </el-col>
+      </el-row>
     </el-form>
     <!-- </span> -->
   </el-dialog>
@@ -282,6 +332,7 @@ import rison from "rison";
 import Vue from "vue";
 
 import upload from "@/components/Upload";
+import Icon from 'vue-awesome/components/Icon';
 Vue.component("Upload", upload);
 
 import { extractURLParts } from "../../globalfunctions";
@@ -293,6 +344,7 @@ function transformObject(obj) {
 export default {
   name: "viewEditor",
   data: () => ({
+    icons: Icon.icons,
     orgRec: null,
     newRec: null,
     rules: {
@@ -305,7 +357,7 @@ export default {
           }
         ],
         type: [
-          { required: true, message: "Please select a type", trigger: "change" }
+          { required: true, message: "Please select a view type", trigger: "change" }
         ],
         target: [
           // { required: true, message: 'URL cannot be empty', trigger: 'blur' },
@@ -361,6 +413,9 @@ export default {
   },
   components: {},
   methods: {
+    backgroundCacheButtonSwitch: function () {
+      console.log('this.newRec._source.backgroundCache: ', this.newRec._source.backgroundCache);
+    },
     openInKibana() {
       console.log(this.newRec);
       window.open(
@@ -388,6 +443,15 @@ export default {
     prepareData: function() {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+
+      const str = this.config.config.hiddenQuery;
+      if (str) {
+        const regex = /client:\s*"(.*?)"/;
+        const match = str.match(regex);
+        if (match) {
+          this.newRec._source.client = match[1]
+        }
+      }
 
       this.dialogFormVisible = true;
     },
@@ -733,5 +797,17 @@ export default {
 .view-editor .el-form-item__content {
   padding-bottom: 5px;
   line-height: normal;
+}
+
+.el-scrollbar {
+  max-width: 420px;
+}
+
+.selectIcon {
+  width: 30px; 
+  top: 50%;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, -50%);
 }
 </style>

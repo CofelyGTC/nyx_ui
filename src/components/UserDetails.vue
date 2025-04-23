@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    width="700px"
+    width="800px"
     :title="this.$t('user.user_form')"
     :before-close="closeDialog"
     :visible.sync="dialogFormVisible"

@@ -324,12 +324,18 @@
         <el-col :span="12">
           <el-button @click="setFocus('')" type="text">User queries</el-button>
         </el-col>
+        <el-col :span="12">
+          <el-button type="text">Multiple deletion</el-button>
+        </el-col>
       </el-row>
       <el-row>
         <UserQueriesEditor
           :currentConfig="currentConfig"
           :allFields="allFieldsFilter"
         ></UserQueriesEditor>
+        <el-card shadow="never">
+          <el-switch v-model="currentConfig.multipleDeletionSelectorType" active-text="Multiple deletion" ></el-switch>
+        </el-card>
       </el-row>
       <el-row>
         <el-col :span="12">

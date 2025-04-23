@@ -9,7 +9,8 @@
           style="text-align:center;height:90px;"
         >
           <el-button plain @click="appClicked(field.value)">
-            <v-icon :name="field.value.icon" scale="2" style="height:40px;" />
+            <img v-if="field.value.icon && field.value.icon.includes('http')" :src="field.value.icon" scale="2" style="height:32px;filter: brightness(0) saturate(100%) invert(39%) sepia(1%) saturate(2250%) hue-rotate(183deg) brightness(93%) contrast(86%)">
+            <v-icon v-else :name="field.value.icon" scale="2" />
           </el-button>
           <br />
           {{field.value.title}}
@@ -17,7 +18,7 @@
       </el-row>
     </el-form>
 
-    <el-button circle type="primary" slot="reference">
+    <el-button circle type="default" slot="reference">
       <i class="el-icon-menu"></i>
     </el-button>
   </el-popover>
@@ -35,6 +36,7 @@ export default {
   computed: {},
   methods: {
     appClicked(e) {
+      console.log('e: ', e);
       this.$emit("appclicked", e);
     },
     handleCommand(e) {
@@ -86,4 +88,5 @@ export default {
 .menuicon {
   margin-bottom: -3px;
 }
+
 </style>

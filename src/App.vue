@@ -19,36 +19,36 @@ export default {
         console.log('enable interceptors axios')
 
         this.axiosInterceptor = axios.interceptors.request.use((config) => {
-            // console.log('request interceptor success')
-            return config
+          // console.log('request interceptor success')
+          return config
         }, (error) => {
-            // console.log('request interceptor error')
-            return Promise.reject(error)
+          // console.log('request interceptor error')
+          return Promise.reject(error)
         })
         
         axios.interceptors.response.use((response) => {
-            // console.log('response interceptor success')
-            // console.log(response)
-            if(response.data != null && response.data.error != null && response.data.error == 'UNKNOWN_TOKEN') {
-              console.warn('UNKNOWN_TOKEN')
-              if(this.$route.path != '/') {
-                this.logoutDebounce(true)
-              }
+          // console.log('response interceptor success')
+          // console.log(response)
+          if(response.data != null && response.data.error != null && response.data.error == 'UNKNOWN_TOKEN') {
+            console.warn('UNKNOWN_TOKEN')
+            if(this.$route.path != '/') {
+              this.logoutDebounce(true)
             }
-            else if (response.data != null && response.data.error != null && response.data.error != ''){
-              this.$notify({
-                title: "Error",
-                message: response.data.error,
-                type: "error",
-                position: "bottom-right"
-              });
-            }
+          }
+          else if (response.data != null && response.data.error != null && response.data.error != ''){
+            this.$notify({
+              title: "Error",
+              message: response.data.error,
+              type: "error",
+              position: "bottom-right"
+            });
+          }
 
-            return response
+          return response
         }, function(error) {
-            console.warn('response interceptor error')
-            console.log(response)
-            return Promise.reject(error)
+          console.warn('response interceptor error')
+          console.log(response)
+          return Promise.reject(error)
         })
     },
     
@@ -86,6 +86,7 @@ export default {
       if (response.data.error == "") {
         this.initialized = true;
         this.config = response.data;
+        document.title=this.config.title;
 
         if(response.data.elastic_version != null) {
           this.$store.commit({
@@ -128,7 +129,7 @@ export default {
   color: #2c3e50;
 }
 #nav {
-  background-color: aqua;
+  background-color:#70BD95;
 }
 
 #nav a {

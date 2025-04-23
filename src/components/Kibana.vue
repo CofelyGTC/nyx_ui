@@ -107,7 +107,7 @@ export default {
     browsersData: [
       {
         name: 'Chrome',
-        maxSize:'32779'
+        maxSize:'32767'
       }, 
       {
         name: 'Android',
@@ -123,11 +123,11 @@ export default {
       },
       {
         name: 'IE11',
-        maxSize:2047
+        maxSize:2048
       },
       {
         name: 'Edge 16',
-        maxSize:2047
+        maxSize:32767
       },
     ],
   }),
@@ -307,9 +307,7 @@ export default {
     },
     queryBarChanged:function(q)
     {
-      console.log("********************************queryBarChanged");
       this.queryField = q;
-      
       this.createUrl();
     }
     ,
@@ -317,6 +315,15 @@ export default {
       console.log("DEBOUNCED:" + this.queryField);
       this.createUrl();
     }, 1500),
+
+    formatTimeString(startTimeAsUtc, endTimeAsUtc){
+      return "time:(from:'" +
+          startTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
+          "Z',mode:absolute,to:'" +
+          endTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
+          "Z')";
+    },
+
     createUrl: function() {
       if (this.ready) {
         console.log("UPDATE QUERY...");
@@ -324,12 +331,7 @@ export default {
         var startTimeAsUtc = moment(this.$store.getters.timeRange[0]).utc();
         var endTimeAsUtc = moment(this.$store.getters.timeRange[1]).utc();
 
-        var timestring =
-          "time:(from:'" +
-          startTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-          "Z',mode:absolute,to:'" +
-          endTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-          "Z')";
+        var timestring = this.formatTimeString(startTimeAsUtc, endTimeAsUtc);
 
         switch (this.config.timeSelectorType) {
           case "day":
@@ -340,12 +342,7 @@ export default {
               this.$store.getters.timeRangeDay[1]
             ).utc();
 
-            timestring =
-              "time:(from:'" +
-              startTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z',mode:absolute,to:'" +
-              endTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z')";
+            timestring = this.formatTimeString(startTimeAsUtc, endTimeAsUtc);
             break;
           case "week":
             var startTimeAsUtc = moment(
@@ -355,12 +352,7 @@ export default {
               this.$store.getters.timeRangeWeek[1]
             ).utc();
 
-            timestring =
-              "time:(from:'" +
-              startTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z',mode:absolute,to:'" +
-              endTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z')";
+            timestring = this.formatTimeString(startTimeAsUtc, endTimeAsUtc);
             break;
           case "month":
             var startTimeAsUtc = moment(
@@ -370,12 +362,7 @@ export default {
               this.$store.getters.timeRangeMonth[1]
             ).utc();
 
-            timestring =
-              "time:(from:'" +
-              startTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z',mode:absolute,to:'" +
-              endTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z')";
+            timestring = this.formatTimeString(startTimeAsUtc, endTimeAsUtc);
             break;
           case "year":
             var startTimeAsUtc = moment(
@@ -385,13 +372,7 @@ export default {
               this.$store.getters.timeRangeYear[1]
             ).utc();
 
-            timestring =
-              "time:(from:'" +
-              startTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z',mode:absolute,to:'" +
-              endTimeAsUtc.format("YYYY-MM-DDTHH:mm:ss.SSS") +
-              "Z')";
-            break;
+            timestring = this.formatTimeString(startTimeAsUtc, endTimeAsUtc);
         }
         this.timerange = timestring;
 
@@ -410,14 +391,13 @@ export default {
           console.log(timestring);
         }
 
-        //alert("====>"+timestring);
-
         if (this.config.timeSelectorChecked && timestring != null)
           cururl = cururl.replace(/time:\([^\)]*\)/g, timestring);
         this.computedurl = this.updateQuery(cururl);
       }
     },
     updateQuery(url) {
+      console.log('url: ', url);
       var curquery = "";
       if (this.config.queryBarChecked && this.queryField != "") {
         curquery = this.queryField;
@@ -442,11 +422,10 @@ export default {
       }
 
       var fullurl = url;
-
       const myregex = /(query:'[^']*')/g;
       var match = myregex.exec(fullurl);
 
-      var queryextract = match[0].replace("query:'", "").replace("'", "");
+      var queryextract = match!=null ? match[0].replace("query:'", "").replace("'", "") : "";
       var replacement = "";
       if (queryextract == "" || queryextract == "*") {
         replacement = curquery;
@@ -470,8 +449,8 @@ export default {
       replacement = "query:'" + replacement + "'";
 
       var result = fullurl.replace(myregex, replacement);
+      console.log('result: ', result);
       
-      //console.log(result);
       return result;
     },
     injectStyleIframe: function() {

@@ -24,7 +24,7 @@
                   effect="dark"
                   :content="field.value"
                   placement="right"
-                  v-if="field.type == '1043'"
+                  v-if="field.type == '1043' || field.type == '25'"
                 >
                   <el-input
                     size="mini"
@@ -34,7 +34,7 @@
                   ></el-input>
                 </el-tooltip>
                 <el-input-number
-                  v-else-if="field.type == '23' || field.type == '700'"
+                  v-else-if="field.type == '23' || field.type == '700' || field.type == '1700'"
                   @change="valueChanged(field)"
                   size="mini"
                   v-model="field.value"

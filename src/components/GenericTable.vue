@@ -67,7 +67,14 @@
           ref="genericTable"
           fit
           @sort-change="sortChanged"
+          @selection-change="handleSelectionChange"
+          class="custom-es-table"
+          :height="tableHeight()"
         >
+          <el-table-column v-if="configin.multipleDeletionSelectorType"
+            type="selection"
+            width="35"
+          ></el-table-column>              
           <el-table-column
             v-for="header in config.config.headercolumns"
             :key="header.field"
@@ -128,9 +135,25 @@
               <span v-else>{{computeRec(scope.row,header.field)}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="Actions" align="right" width="150px;">
+          <el-table-column label="Actions" align="right" width="175px;">
             <template slot="header" slot-scope="scope">
               <div>
+                <el-tooltip
+                  v-if="multipleSelection.length > 0 && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
+                  class="item"
+                  :content="$t('generic.delete_selected')"
+                  effect="light"
+                  placement="bottom-end"
+                  :open-delay="1000"
+                >
+                  <el-button
+                    circle
+                    size="mini"
+                    @click="handleSelectedRows()"
+                    type="primary"
+                    icon="el-icon-remove"
+                  ></el-button>
+                </el-tooltip>
                 <el-tooltip
                   v-if="config.config.index.indexOf('*')==-1 && currentRow && $store.getters.creds.hasPrivilege(config.config.writeprivileges)"
                   class="item"
@@ -183,6 +206,12 @@
               </div>
             </template>
             <template slot-scope="scope">
+              <el-button v-if="$store.getters.creds.hasPrivilege('admin') && scope.row._source.guid"
+                size="mini"
+                plain
+                icon="el-icon-view"
+                @click="handlePreview(scope.$index, scope.row)"
+              ></el-button>
               <el-button
                 size="mini"
                 plain
@@ -259,6 +288,11 @@ export default {
     magasin: null,
     shopID: null,
     client: null,
+    isChecked: false,
+    tableDataChecked: {},
+    selectedRows: {},
+    allRowsSelected: false,
+    multipleSelection: [],
     options: {
       chart: {
         stacked: false,
@@ -346,9 +380,97 @@ export default {
     }
   },
   methods: {
+    tableHeight() {
+      var queryBarChecked = this.$store.getters.activeApp.queryBarChecked
+      var queryFilterChecked = this.$store.getters.activeApp.queryFilterChecked
+      var graphicChecked = this.$store.getters.activeApp.graphicChecked
+      var calcul_px = this.$store.getters.currentSubCategory.apps.length == 1? 75:120;
+      if (queryFilterChecked) calcul_px += 40;
+      if (graphicChecked) calcul_px += 200;
+      if (queryBarChecked) calcul_px += 40;
+      if (this.rows > 100) calcul_px += 40;
+      return `calc(100vh - ${calcul_px}px)`
+    },
+    handleSelectionChange(val) {
+      console.log('val: ', val);
+      this.multipleSelection = val;
+      val.forEach(element => {
+        console.log('element: ', element);
+        var isCheck = this.tableData.find( item => item._id===element._id)
+        console.log('isCheck: ', isCheck);
+        this.tableDataChecked[element._id] = { isChecked: true }
+      });
+    },
+    updateAllCheckbox(event){
+      this.tableData.forEach(element => {
+        element.isChecked = event
+        console.log('element: ', element);
+        this.tableDataChecked[element._id] = { isChecked: event}
+      });
+      setTimeout(() => {
+        this.loadData();
+      }, 100);
+    },
+    updateCheckedRows(scope, event) {
+      this.tableDataChecked[scope.row._id] = { isChecked: event}
+      this.tableData[scope.$index].isChecked = event
+      if (event == false) {
+        delete this.selectedRows[scope.row._id];
+      } else {
+        this.selectedRows[scope.row._id] = scope.row
+      }
+      if (Object.keys(this.selectedRows).length == 0) {
+        this.selectedRows = {};
+      }
+      if (Object.keys(this.selectedRows).length == Object.keys(this.tableData).length) this.allRowsSelected = true
+      else this.allRowsSelected = false
+      // setTimeout(() => {
+      //   this.loadData();
+      // }, 100);
+    },
+    handleSelectedRows() {
+      // Gérer l'action du bouton une fois qu'il est cliqué
+      this.$confirm(
+        `This will permanently delete "${Object.values(this.multipleSelection).map(value => value._source.name).join(', ')}". Continue?`,
+        this.$t("generic.warning"),
+        {
+          confirmButtonText: this.$t("generic.ok"),
+          cancelButtonText: this.$t("generic.cancel"),
+          type: "warning"
+        }
+      )
+        .then(() => {
+          for (let key in this.multipleSelection) {
+            let value = this.multipleSelection[key];
+            // Appeler une autre fonction et envoyer la valeur
+            this.$store.commit({
+              type: "deleteRecord",
+              data: value
+            });
+          }
+          setTimeout(() => {
+            this.multipleSelection = [];
+            this.loadData();
+          }, 1000);
+          this.$notify({
+            title: "Success",
+            type: "success",
+            message: "Delete completed",
+            position: "bottom-right"
+          });
+        })
+        .catch(() => {
+          this.$notify({
+            title: "Cancelled",
+            type: "info",
+            message: "Delete canceled",
+            position: "bottom-right"
+          });
+        });
+    },
     sortChanged:function(e){
-      //alert(JSON.stringify(e.column));
-      console.log(e)
+      // alert(JSON.stringify(e.column));
+      // console.log(e)
       
       this.sort={}
       if(e.column.order != null)
@@ -380,7 +502,6 @@ export default {
     },
     duplicateRecord: function() {
       console.log("duplicating record");
-      console.log(this.currentRecord);
       this.currentRecord = JSON.parse(JSON.stringify(this.currentRow));
       this.currentRecord.original._id =
         "id_" + Math.floor((1 + Math.random()) * 0x1000000);
@@ -429,8 +550,6 @@ export default {
       this.partialUpdateRecord(newRec, header);
     },
     switchChanged: function(newRec, header) {
-      console.log(newRec);
-      console.log(header);
       this.partialUpdateRecord(newRec, header);
     },
     cutRec(aRec) {
@@ -561,6 +680,9 @@ export default {
         return row;
       }
     },
+    handlePreview(index, row) {
+      window.open('/opti/?guid='+row._source.guid)
+    },
     handleView(index, row) {
       this.currentRecord = {}; // required by the detail watcher
       this.editMode = "edit";
@@ -580,6 +702,7 @@ export default {
       }
     },
     handleDelete(index, row) {
+      console.log('row: ', row);
       this.$confirm(
         this.$t("generic.delete_record"),
         this.$t("generic.warning"),
@@ -686,6 +809,7 @@ export default {
           }
         }
       };
+        console.log('query: ', query);
       if (
         this.config.config.timefield != null &&
         this.config.config.timefield != ""
@@ -709,7 +833,7 @@ export default {
               "2": {
                 date_histogram: {
                   field: this.config.config.timefield,
-                  interval: this.autotime, //this.$store.getters.autoTime,
+                  fixed_interval: this.autotime, //this.$store.getters.autoTime,
                   time_zone: "Europe/Berlin",
                   min_doc_count: 1
                 }
@@ -744,7 +868,6 @@ export default {
           //var demandor = this.$store.getters.creds.user.id 
           console.log('MAGASIN')
           if(this.magasin != null){
-            console.log(this.magasin)
             this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{magasin}}", this.magasin)
           }
           console.log("Hidden Query : " + this.config.config.hiddenQuery)
@@ -753,7 +876,6 @@ export default {
           //var demandor = this.$store.getters.creds.user.id 
           console.log('SHOPID')
           if(this.shopID != null){
-            console.log(this.shopID)
             this.config.config.hiddenQuery = this.config.config.hiddenQuery.replace("{{shopid}}", this.shopID)
           }
           console.log("Hidden Query : " + this.config.config.hiddenQuery)
@@ -771,7 +893,7 @@ export default {
 
       this.query = curquery;
        
-       console.log('HIDDEN QUERY: ' + this.query)
+      console.log('HIDDEN QUERY: ' + this.query)
       
 
       if (curquery != "") {
@@ -820,13 +942,16 @@ export default {
         query.extra.pagesize=this.pagesize;
       }
 
+      
+      console.log('url: ', url);
+      console.log('query: ', query);
+
 
       axios
         .post(url, query)
         .then(response => {
+          // console.log('response: ', response);
           this.ready = true;
-
-          //console.log(response);
 
           if (
             response.data.records != null ||
@@ -911,7 +1036,7 @@ export default {
             this.rows=response.data.total;
 
             if (this.config.config.headercolumns) {
-              // console.log(this.config.config)
+              // console.log('this.config.config: ', this.config.config);
 
               for (var col in this.config.config.headercolumns) {
                 var curcol = this.config.config.headercolumns[col];
@@ -940,9 +1065,15 @@ export default {
                     );
 
                     if (curtime != undefined) {
-                      record["_source"][
-                        curcol.field.replace("_source.", "")
-                      ] = moment(curtime).format(format);
+                      if (typeof(curtime) != "string") {
+                        record["_source"][
+                          curcol.field.replace("_source.", "")
+                        ] = moment(curtime).format(format);
+                      } else {
+                        record["_source"][
+                          curcol.field.replace("_source.", "")
+                        ] = moment([":","/","-"].some(el => curtime.includes(el))?curtime:parseInt(curtime)).format(format);
+                      }
                     }
                   }
                 }
@@ -950,7 +1081,19 @@ export default {
             }
 
             this.tableData = response.data.records;
+            
             this.$refs.genericTable.doLayout()
+          }
+          
+          if (this.configin.multipleDeletionSelectorType){
+            this.tableData.forEach(element => {
+              if (!this.tableDataChecked[element._id]){
+                this.tableDataChecked[element._id] = {isChecked: false}
+              }
+              else if (this.tableDataChecked[element._id].isChecked){
+                element.isChecked = this.tableDataChecked[element._id].isChecked
+              }
+            });
           }
           this.setAutoRefresh()
         })
@@ -1015,7 +1158,6 @@ export default {
         this.$refs.generic.chart.series.w.globals.maxX
       ]);
     },
-
     queryBarChanged: function(q) {
       console.log("********************************queryBarChanged");
       this.queryField = q;
@@ -1095,8 +1237,7 @@ export default {
     }
     else
     {
-      console.log("Client : ")
-      console.log(this.$store.getters.client)
+      console.log("Client : ", this.$store.getters.client)
     }
     
     
@@ -1141,5 +1282,38 @@ export default {
   height: 24px;
   text-align: center;
   max-width: 40px;
+}
+
+.custom-es-table .cell .el-table_1_column_1 {
+  padding: 0px !important;
+}
+
+.custom-es-table .el-checkbox__inner {
+  border-radius: 3px !important;
+  margin-right: -20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.el-checkbox__inner {
+  border-radius: 3px !important;
+  margin-right: 11px !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.el-checkbox__inner::before {
+  top: 8px !important
+}
+
+.el-checkbox__inner::after {
+  height: 15px !important;
+  left: 6.9px !important;
+  top: 0px !important;
+}
+
+
+.el-table th.el-table__cell>.cell {
+  text-wrap: nowrap;
 }
 </style>

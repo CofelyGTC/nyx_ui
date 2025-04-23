@@ -13,11 +13,17 @@
         <div v-if="$store.getters.currentSubCategory.apps[0].type=='lazy-generic-table'">
           <LazyGenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
         </div>
+        <div v-if="$store.getters.currentSubCategory.apps[0].type=='carousel-generic-table'">
+          <CarouselGenericTable :config="$store.getters.currentSubCategory.apps[0]"/>
+        </div>
         <div v-else-if="$store.getters.currentSubCategory.apps[0].type=='external'">
           <External :config="$store.getters.currentSubCategory.apps[0]"></External>          
         </div>
         <div class="kibana" v-else-if="$store.getters.currentSubCategory.apps[0].type=='kibana'">
           <Kibana :config="$store.getters.currentSubCategory.apps[0]" :directLoad="true"></Kibana>
+        </div>
+        <div class="grafana" v-else-if="$store.getters.currentSubCategory.apps[0].type=='grafana'">
+          <Grafana :config="$store.getters.currentSubCategory.apps[0]" :directLoad="true"></Grafana>
         </div>
         <div v-else-if="$store.getters.currentSubCategory.apps[0].type=='form'">
           <Form :config="$store.getters.currentSubCategory.apps[0]"></Form>
@@ -35,9 +41,7 @@
     </div>
     <!-- More than one application -->
     <div v-else style="overflow:hidden;">
-      <el-tabs v-model="selectedTab" 
-      
-        @tab-click="handleTabClick">
+      <el-tabs v-model="selectedTab" @tab-click="handleTabClick">
         <el-tab-pane
           v-bind:style="styleContainerComputed"
           v-for="(app, index) in $store.getters.currentSubCategory.apps"
@@ -55,11 +59,17 @@
             <div v-else-if="app.type=='lazy-generic-table'">
               <LazyGenericTable :config="app" :key="app.rec_id" />
             </div>
+            <div v-else-if="app.type=='carousel-generic-table'">
+              <CarouselGenericTable :config="app" :key="app.rec_id" />
+            </div>
             <div v-else-if="app.type=='external'">
               <External :config="app" :key="app.rec_id"></External>
             </div>
             <div class="kibana" v-else-if="app.type=='kibana'">
               <Kibana :config="app" :key="app.rec_id"></Kibana>
+            </div>
+            <div class="grafana" v-else-if="app.type=='grafana'">
+              <Grafana :config="app" :key="app.rec_id"></Grafana>
             </div>
             <div v-else-if="app.type=='form'">
               <Form :config="app" :key="app.rec_id"></Form>
@@ -84,14 +94,17 @@
 
 import generictable from "@/components/GenericTable";
 import lazygenerictable from "@/components/LazyGenericTable";
+import carouselgenerictable from "@/components/CarouselGenericTable";
 import pggenerictable from "@/components/PGGenericTable";
 import kibana from "@/components/Kibana";
+import grafana from "@/components/Grafana";
 import external from "@/components/External";
 import upload from "@/components/Upload";
  // eslint-disable-next-line
 import user from "@/components/User";
  // eslint-disable-next-line
 import config from "@/components/Config";
+import configtree from "@/components/ConfigTree";
 import map from "@/components/Map";
 import ReportList from "@/components/ReportList";
 import ProcessList from "@/components/ProcessList";
@@ -119,12 +132,15 @@ req.keys().forEach(filename => {
 
 Vue.component("GenericTable", generictable);
 Vue.component("LazyGenericTable", lazygenerictable);
+Vue.component("CarouselGenericTable", carouselgenerictable);
 Vue.component("PGGenericTable", pggenerictable);
 Vue.component("Kibana", kibana);
+Vue.component("Grafana", grafana);
 Vue.component("External", external);
 Vue.component("Upload", upload);
 Vue.component("User", user);
 Vue.component("Config", config);
+Vue.component("ConfigTree", configtree);
 Vue.component("Map", map);
 Vue.component("Form", form);
 Vue.component("FreeText", freetext);
@@ -157,11 +173,9 @@ const myExport = {
         return
       }
 
-      console.log('from')
-      console.log(from)
-      console.log('to')
-      console.log(to)
-
+      console.log('from: ', from);
+      console.log('to: ', to);
+      
       this.loading=true
       
       this.selectedTab=this.$route.params.recid
@@ -186,7 +200,7 @@ const myExport = {
         overflow: "auto",
         border: 0 + "px solid #eee",
         padding: 1 + "px",
-        height: this.containerSize.height - 125 + "px"
+        height: this.containerSize.height - 114 + "px"
       };
     },
     singleStyleContainerComputed: function() {
@@ -194,7 +208,7 @@ const myExport = {
         overflow: "auto",
         border: 0 + "px solid #eee",
         padding: 1 + "px",
-        height: this.containerSize.height - 70 + "px"
+        height: this.containerSize.height - 65 + "px"
       };
     },
     containerSize() {
@@ -204,16 +218,38 @@ const myExport = {
   methods: {
     handleTabClick: function(tab) {
       var path = "/main/" + tab.name
-
-      if(path != this.$route.path)
-        this.$router.push(path);
+      if(path != this.$route.path) this.$router.push(path);
     },
+    changeColor: function() {
+      var elements = document.getElementsByClassName("el-tabs__item")
+      var bars = document.getElementsByClassName("el-tabs__active-bar")
+      console.log('bars: ', bars);
+      if (this.$store.getters.activeApp.darkMode==true) {
+        for (let index = 0; index < elements.length; index++) {
+          const element = elements[index];
+          element.style.color = "#fff"
+        }
+        for (let index = 0; index < bars.length; index++) {
+          const bar = bars[index];
+          bar.style.backgroundColor = "#70bd95"
+        }
+      } else {
+        for (let index = 0; index < elements.length; index++) {
+          const element = elements[index];
+          element.style.color = "#002439"
+        }
+        for (let index = 0; index < bars.length; index++) {
+          const bar = bars[index];
+          bar.style.backgroundColor = "#002439"
+        }
+      }
+      
+    }
   },
   mounted: function() {
     console.log('MOUNTED GenericComponent')
     
     this.selectedTab=this.$store.getters.activeApp.rec_id
-
     this.$globalbus.$on("reportgenerated", () => {
       for (var i in this.$store.getters.currentSubCategory.apps) {
         var app = this.$store.getters.currentSubCategory.apps[i];
@@ -227,7 +263,7 @@ const myExport = {
     console.log("===============  REGISTERING: messagereceived");
     this.$globalbus.$on("messagereceived", payLoad => {
       console.log("GLOBALBUS/GENERICCOMPONENT/MESSAGERECEIVED");
-      console.log(payLoad);
+      console.log('payLoad: ', payLoad);
       if(payLoad.notif_type=="global")
       {
         this.$alert(payLoad.notif_message, payLoad.notif_title, {
@@ -244,6 +280,10 @@ const myExport = {
     });  
 
     window.dispatchEvent(new Event("resize"));
+    
+  },
+  updated: function() {
+    this.changeColor()
   },
   destroyed: function() {
     console.log("===============  UN REGISTERING REport Generated:");

@@ -41,6 +41,24 @@
                 <el-input size="mini" :disabled="!isAdmin" v-model="newRec._source.client" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
+            <!-- <el-col :span="8">
+            <el-form-item label="RSS Widget" :label-width="formLabelWidth" style="text-align:left">
+                <el-select
+                  size="mini"
+                  v-model="newRec._source.rsswidget"
+                  filterable
+                  placeholder="Select a widget for RSS"
+                  @change="handleRssWidgetChange"
+                >
+                  <el-option
+                    v-for="rsswidget in rsswidgetList"
+                    :key="rsswidget"
+                    :label="rsswidget"
+                    :value="rsswidget"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col> -->
           </el-row>
           <el-row>
             <el-col :span="8">
@@ -55,6 +73,7 @@
                   v-model="newRec._source.carrousel"
                   filterable
                   placeholder="Select a carousel"
+                  @change="handleCarrouselChange"
                 >
                   <el-option
                     v-for="car in carouselList"
@@ -71,7 +90,9 @@
               </el-form-item>
             </el-col>
           </el-row>
-
+          <el-row>
+          <!-- {{ newRec._source.carrousel }} -->
+          </el-row>
           <el-row>
             
             <el-col :span="8">
@@ -84,10 +105,27 @@
                 <el-input size="mini" v-model="newRec._source.pollinterval" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8" v-show="isAdmin">
+              <el-form-item label="Usage Counter" :label-width="formLabelWidth" style="text-align:left">
+                <el-select
+                  size="mini"
+                  v-model="newRec._source.usagecounter"
+                  filterable
+                  placeholder="Select a mode"
+                >
+                  <el-option
+                    v-for="mod in usagecounterModeList"
+                    :key="mod"
+                    :label="mod"
+                    :value="mod"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row v-show="isAdmin">
             <el-col :span="8">
-            <el-form-item label="Mode" :label-width="formLabelWidth" style="text-align:left">
+              <el-form-item label="Mode" :label-width="formLabelWidth" style="text-align:left">
                 <el-select
                   size="mini"
                   v-model="newRec._source.mode"
@@ -116,8 +154,18 @@
 
             
           </el-row>
-
-          
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="Logo URL" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Logo Bg Color" :label-width="formLabelWidth">
+                    <el-color-picker v-model="newRec._source.logobackgroundcolor"></el-color-picker>
+              </el-form-item>
+            </el-col>  
+          </el-row>
           <el-row v-show="isAdmin">
             <el-col :span="8">
               <el-form-item label="Primary Color" :label-width="formLabelWidth">
@@ -130,12 +178,120 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Icon URL" :label-width="formLabelWidth">
-                <el-input size="mini" v-model="newRec._source.iconurl" autocomplete="off"></el-input>
+              <el-form-item label="Third Color" :label-width="formLabelWidth">
+                    <el-color-picker v-model="newRec._source.thirdcolor"></el-color-picker>
               </el-form-item>
-            </el-col>             
+            </el-col>
           </el-row>
-      
+        </el-card>
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+          <el-row type="flex" slot="header" class="row-bg" justify="space-between">
+            <h2><b>Default carrousel view</b></h2>
+            <el-switch v-model="newRec._source.defaultviewactivated" @change="handleDefaultViewButtonSwitch"></el-switch>
+          </el-row>
+          <el-collapse-transition>
+            <div v-if="newRec._source.defaultviewactivated" style="padding:20px;">
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="View" :label-width="formLabelWidth" style="text-align:left">
+                    <el-select
+                      size="mini"
+                      v-model="selectedView"
+                      filterable
+                      placeholder="Select a view"
+                      @change="handleDefaultViewChange"
+                    >
+                      <el-option
+                        v-for="view in currentCarrouselViewsList"
+                        :key="view._id"
+                        :label="view.title"
+                        :value="view._id"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="7">
+                  <el-form-item label="Start" :label-width="formLabelWidth" style="text-align:left">
+                    <el-time-picker
+                      v-model="selectedStartTime"
+                      size="mini"
+                      placeholder="Start Time"
+                      :picker-options="pickerOptions"
+                      @change="handleStartTimeChange"
+                    ></el-time-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="7">
+                  <el-form-item label="End" :label-width="formLabelWidth" style="text-align:left">
+                    <el-time-picker
+                      v-model="selectedEndTime"
+                      size="mini"
+                      placeholder="End Time"
+                      :picker-options="pickerOptions"
+                      @change="handleEndTimeChange"
+                    ></el-time-picker>
+                  </el-form-item>
+                </el-col>
+                <el-button v-if="selectedView && selectedStartTime && selectedEndTime" 
+                type="normal" style="transform: translateY(21%);" size="mini" @click="addNewEntryRow">+</el-button>
+              </el-row>
+              <div v-if="newRec._source.defaultviews">
+                <div v-for="(entry, index) in newRec._source.defaultviews" :key="index">
+                  <!-- Vous pouvez personnaliser l'affichage des entrées ici -->
+                  <!-- Par exemple, afficher la date, l'heure de début et l'heure de fin de chaque entrée -->
+                  <el-row>
+                    <el-col :span="8">
+                      <el-form-item :label-width="formLabelWidth" style="text-align:left">
+                        {{ entry.view.title }}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="7">
+                      <el-form-item :label-width="formLabelWidth" style="text-align:left">
+                        {{ `${padTwo(new Date(entry.startTime).getHours())}:${padTwo(new Date(entry.startTime).getMinutes())}:${padTwo(new Date(entry.startTime).getSeconds())}` }}
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="7">
+                      <el-form-item :label-width="formLabelWidth" style="text-align:left">
+                        {{ `${padTwo(new Date(entry.endTime).getHours())}:${padTwo(new Date(entry.endTime).getMinutes())}:${padTwo(new Date(entry.startTime).getSeconds())}` }}
+                      </el-form-item>
+                    </el-col>
+                    <el-button style="transform: translateY(21%);" type="danger" size="mini" @click="removeEntry(index)">X</el-button>
+                  </el-row>
+                </div>
+              </div>
+            </div>
+          </el-collapse-transition>
+        </el-card>
+        <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
+          <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
+            <h2><b>Widgets URL</b></h2>
+          </el-row>
+          <el-row style="padding:20px;">
+            <el-col :span="8">
+              <el-form-item v-if="newRec._source.rsswidget == 'firstwidget'" label="First Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.firstwidget" :disabled="true"></el-input>
+              </el-form-item>
+              <el-form-item v-else label="First Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.firstwidget" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item v-if="newRec._source.rsswidget == 'secondwidget'" label="Second Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.secondwidget" :disabled="true"></el-input>
+              </el-form-item>
+              <el-form-item v-else label="Second Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.secondwidget" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item v-if="newRec._source.rsswidget == 'thirdwidget'" label="Third Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.thirdwidget" :disabled="true"></el-input>
+              </el-form-item>
+              <el-form-item v-else label="Third Widget" :label-width="formLabelWidth">
+                <el-input size="mini" v-model="newRec._source.thirdwidget" autocomplete="off" ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-card>
         <el-card v-show="isAdmin" shadow="hover" :body-style="{ padding: '0px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">
@@ -176,7 +332,6 @@
             </div>
           </el-collapse-transition>
         </el-card>
-        <div></div>
         <el-card shadow="hover" :body-style="{ padding: '10px' }" style="margin-top:10px">
           <el-row type="flex" slot="header" class="row-bg" justify="space-between">            
             <h2><b>Actions</b></h2>
@@ -243,11 +398,8 @@
           </el-row>
           <el-row></el-row>
         </el-card>
-
-        <div></div>
       </el-form>
     </div>
-
     <span slot="footer" class="dialog-footer" v-if="accepted == 1">
       <el-button
         v-show="isAdmin"
@@ -269,7 +421,7 @@
 <script>
 import Vue from "vue";
 import newscript from "@/components/tableEditor/NewScript";
-import vieweditor from "@/components/tableEditor/ViewEditor";
+// import vieweditor from "@/components/tableEditor/ViewEditor";
 //import YAML from "js-yaml";
 import axios from "axios";
 
@@ -294,9 +446,22 @@ export default {
     newScriptVisible: false,
     title: "Screen configuration",
     carouselList: [],
+    currentCarrouselViewsList: [],
     dockerList: [],
-    modeList: ["Main","Main3G", "MainNoBanner"]
-
+    modeList: ["Main", "Main4G", "MainOld", "Main3G", "MainNoBanner"],
+    usagecounterModeList: ["Nothing", "User", "Carousel", "User & Carousel"],
+    rsswidget: "",
+    rsswidgetList: ["", "firstwidget","secondwidget", "thirdwidget"],
+    pickerOptions: {
+      start: "00:00",
+      step: "00:30",
+      end: "23:30",
+    },
+    isCurrentEntryIncomplete: false,
+    selectedView: null,
+    selectedStartTime: null,
+    selectedEndTime: null,
+    timeEntries: [],
   }),
   computed: {
     recordin: function() {
@@ -311,7 +476,6 @@ export default {
     },
     readytovalidate: function() {
       if (this.newRec._source.optiboard == "") return false;
-      if (this.newRec._source.carrousel == null) return false;
       if (this.newRec._source.carrousel == null) return false;
 
       return true;
@@ -340,6 +504,119 @@ export default {
   },
   components: {},
   methods: {
+    padTwo(number) {
+      // Ajouter un zéro devant les heures si elles sont inférieures à 10
+      return number < 10 ? `0${number}` : number;
+    },
+    addNewEntryRow() {     
+      const objetTrouve = this.currentCarrouselViewsList.find(objet => objet._id === this.selectedView);
+      console.log('objetTrouve: ', objetTrouve);
+      this.newRec._source.defaultviews.push({
+        view: objetTrouve,
+        startTime: this.selectedStartTime,
+        endTime: this.selectedEndTime,
+      });
+      this.newRec._source.defaultviews.sort((a, b) => {
+        // Convertissez les heures de début en objets Date pour la comparaison
+        const startTimeA = new Date(a.startTime);
+        const startTimeB = new Date(b.startTime);
+        
+        var _startDate = new Date();
+          _startDate.setHours(startTimeA.getHours());
+          _startDate.setMinutes(startTimeA.getMinutes());
+          _startDate.setSeconds(startTimeA.getSeconds());
+        var _endDate = new Date();
+          _endDate.setHours(startTimeB.getHours());
+          _endDate.setMinutes(startTimeB.getMinutes());
+          _endDate.setSeconds(startTimeB.getSeconds());
+
+        // Utilisez la comparaison des objets Date pour trier le tableau
+        return _startDate - _endDate;
+      });
+
+      // Réinitialisez les sélecteurs de temps pour une nouvelle entrée
+      this.selectedView = null;
+      this.selectedStartTime = null;
+      this.selectedEndTime = null;
+    },
+    removeEntry(index) {
+      // Supprimez l'entrée du tableau newRec._source.defaultviews en utilisant l'index
+      this.newRec._source.defaultviews.splice(index, 1);
+    },
+    handleStartTimeChange() {
+      if (this.selectedStartTime && this.selectedEndTime) {
+        if (this.selectedEndTime <= this.selectedStartTime) {
+          this.selectedStartTime = null; // Reset end time to prevent invalid selection
+          return this.$message.error("Start time cannot be later than end time");
+        }
+      }
+      const overlappingEntry = this.newRec._source.defaultviews.find(entry => {
+        entry.startTime = new Date(entry.startTime)
+        entry.endTime = new Date(entry.endTime)
+        var _startDate = new Date();
+          _startDate.setHours(entry.startTime.getHours());
+          _startDate.setMinutes(entry.startTime.getMinutes());
+          _startDate.setSeconds(entry.startTime.getSeconds());
+        var _endDate = new Date();
+          _endDate.setHours(entry.endTime.getHours());
+          _endDate.setMinutes(entry.endTime.getMinutes());
+          _endDate.setSeconds(entry.endTime.getSeconds());
+        return this.selectedStartTime >= _startDate && this.selectedStartTime <= _endDate
+      });
+
+      if (overlappingEntry) {
+        // Affichez un message d'erreur ou faites quelque chose pour gérer le chevauchement des plages de temps
+        this.$message.error("Les plages de temps se chevauchent.");
+        this.selectedStartTime = null;
+      }
+    },
+    handleEndTimeChange() {
+      if (this.selectedStartTime && this.selectedEndTime) {
+        if (this.selectedEndTime <= this.selectedStartTime) {
+          this.selectedEndTime = null; // Reset end time to prevent invalid selection
+          this.$message.error("End time cannot be earlier than start time");
+        }
+      }
+      const overlappingEntry = this.newRec._source.defaultviews.find(entry => {
+        entry.startTime = new Date(entry.startTime)
+        entry.endTime = new Date(entry.endTime)
+        var _startDate = new Date();
+          _startDate.setHours(entry.startTime.getHours());
+          _startDate.setMinutes(entry.startTime.getMinutes());
+          _startDate.setSeconds(entry.startTime.getSeconds());
+          console.log('_startDate: ', _startDate);
+        var _endDate = new Date();
+          _endDate.setHours(entry.endTime.getHours());
+          _endDate.setMinutes(entry.endTime.getMinutes());
+          _endDate.setSeconds(entry.endTime.getSeconds());
+          console.log('_endDate: ', _endDate);
+        if (this.selectedStartTime) 
+          return this.selectedEndTime >= _startDate && this.selectedEndTime <= _endDate || this.selectedStartTime <= _startDate && this.selectedEndTime >= _endDate
+        else return this.selectedEndTime >= _startDate && this.selectedEndTime <= _endDate
+      });
+
+      if (overlappingEntry) {
+        // Affichez un message d'erreur ou faites quelque chose pour gérer le chevauchement des plages de temps
+        this.$message.error("Les plages de temps se chevauchent.");
+        this.selectedEndTime = null;
+      }
+    }, 
+    handleDefaultViewButtonSwitch(){
+      console.log('this.newRec._source.defaultviewactivated: ', this.newRec._source.defaultviewactivated);
+    },
+    handleDefaultViewChange(){
+      console.log('this.selectedView: ', this.selectedView);
+    },
+
+    carrouselPreview(){
+      console.log('this.$store.getters.url: ', this.$store.getters.url);
+      window.open("/opti?guid="+this.newRec._source.guid)
+    },
+    handleRssWidgetChange() {
+      console.log('this.newRec._source.rsswidget: ', this.newRec._source.rsswidget);
+      console.log('this.newRec._source.rss: ', this.newRec._source.rss);
+      // Tu peux également effectuer d'autres actions avec la valeur ici
+    },
     closeDialog: function() {
       this.$emit("dialogclose");
     },    
@@ -352,19 +629,20 @@ export default {
       this.isAdmin=this.$store.getters.creds.hasPrivilege("admin");
       
       if (this.newRec._source.primarycolor== undefined)
-        this.newRec._source.primarycolor="#00B0EF";
+        this.newRec._source.primarycolor="#012237";
       if (this.newRec._source.secondarycolor== undefined)
-        this.newRec._source.secondarycolor="#0BCBF5";
+        this.newRec._source.secondarycolor="#1DAA81";
+      if(this.newRec._source.defaultviews==undefined)
+        this.newRec._source.defaultviews=[]
 
     //console.log(this.newRec);
 
       this.accepted = this.newRec._source.accepted;
 
-      console.log(this.newRec._source);
-
       if (this.newRec._source.rss == null)
         this.newRec._source.rss =
-          "https://www.engie.com/en/journalists/news-flash/feed";
+          // "https://www.engie.com/en/journalists/news-flash/feed";
+          "http://feeds.bbci.co.uk/news/rss.xml";
 
       if (this.newRec._source.weather == null)
         this.newRec._source.weather = {
@@ -374,6 +652,51 @@ export default {
         };
 
       this.getCarousels();
+    },
+    handleCarrouselChange() {
+      var url =
+          this.$store.getters.apiurl +
+          "generic_search/nyx_view_carousel*?token=" +
+          this.$store.getters.creds.token;
+
+      var query = {
+        size: 2000,
+        query: {
+          bool: {
+            must: [
+              {
+                match_all: {}
+              }
+            ]
+          }
+        }
+      };
+
+      axios
+        .post(url, query)
+        .then(response => {
+          if (response.data.error != "")
+            console.log("generic search view carousel error...");
+          else {
+            this.currentCarrouselViewsList = [];
+            const records = response.data.records;
+            
+            const objetTrouve = this.carouselList.find(objet => objet.value === this.newRec._source.carrousel);
+            // var viewsCurrentCarrouselID = [];
+            for (var i in objetTrouve.views){
+              // viewsCurrentCarrouselID.push(objetTrouve.views[i].id)
+              const view = records.find(objet => objet._id === objetTrouve.views[i].id);
+              var obj = {
+                _id: view._id,
+                title: `${view._source.title} - ${view._source.summary}`,
+              };
+              this.currentCarrouselViewsList.push(obj)
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     getCarousels: function() {
       var url =
@@ -401,10 +724,12 @@ export default {
             console.log("generic search view carousel error...");
           else {
             console.log(response);
-            for (var i in response.data.records) {
+            const filteredRecords = response.data.records.filter(item => this.$store.getters.creds.user.privileges.includes(item._source.client) || this.isAdmin)
+            for (var i in filteredRecords) {
               var obj = {
-                label: response.data.records[i]._source.name,
-                value: response.data.records[i]._source.name
+                label: filteredRecords[i]._source.name,
+                value: filteredRecords[i]._source.name,
+                views: filteredRecords[i]._source.id_array,
               };
               this.carouselList.push(obj);
             }
@@ -413,6 +738,7 @@ export default {
         .catch(error => {
           console.log(error);
         });
+        this.handleCarrouselChange();
     },
     validateToken: function() {
       this.newRec._source.accepted = 1;
@@ -512,7 +838,6 @@ export default {
     },
 
     updateScreen: function() {
-      
       var refreshrec = {
         _index: "optiboard_command",
         _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
@@ -541,20 +866,27 @@ export default {
       });
     },
     saveRecord: function() {
+      // if (!this.newRec._source.defaultviewactivated){
+      //   delete this.newRec._source.defaultView
+      //   delete this.newRec._source.defaultviewstarttime
+      //   delete this.newRec._source.defaultviewendtime
+      // }
+
       if (!this.weatherActivated && this.newRec._source.weather != null) {
         delete this.newRec._source.weather;
       }
+      console.log('this.newRec: ', this.newRec);
 
       this.$store.commit({
         type: "updateRecord",
         data: this.newRec
       });
-      // this.$notify({
-      //   title: "Record saved.",
-      //   type: "success",
-      //   message: "The view has been succesfuly saved.",
-      //   position: "bottom-right"
-      // });
+      this.$notify({
+        title: "Record saved.",
+        type: "success",
+        message: "The view has been succesfuly saved.",
+        position: "bottom-right"
+      });
       this.$emit("dialogcloseupdated");
     }
   }

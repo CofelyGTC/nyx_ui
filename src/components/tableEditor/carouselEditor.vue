@@ -23,7 +23,7 @@
         @change="viewSelected()"
       >
         <el-option
-          v-for="item in viewListAll"
+          v-for="item in filteredViewList"
           :key="item.id"
           :label="item.type + ' - ' + item.description + ' ('+item.duration/1000+'s)'"
           :value="item"
@@ -59,7 +59,7 @@
       <el-col :span="12">
         <el-button @click="setFocus('carName')" type="text">Carousel Name</el-button>
       </el-col>
-      <el-col :span="12" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
+      <el-col :span="12" v-show="$store.getters.creds.hasPrivilege('admin')" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
         <el-button @click="setFocus('client')" type="text">Client</el-button>
       </el-col>
     </el-row>
@@ -69,14 +69,13 @@
         <el-form-item label="" prop="_source.name">
           <el-input
             placeholder="carousel name"
-            :disabled="!$store.getters.creds.hasPrivilege('admin')"
             ref="carName"
             v-model="newRec._source.name"
             size="mini"
           ></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="12"  v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
+      <el-col :span="12" v-show="$store.getters.creds.hasPrivilege('admin')" v-if="newRec._source.client || $store.getters.creds.hasPrivilege('admin')">
         <el-input
           placeholder="clients to filter"
           :disabled="!$store.getters.creds.hasPrivilege('admin')"
@@ -121,8 +120,6 @@
               <td style="text-align:left;">{{ item.description }}</td>
               <td style="text-align:left;">{{ item.duration }}</td>
               <td style="text-align:left; width:400px;">
-                
-
                 <el-button
                   size="mini"
                   v-if="!(item.type=='kibana' && $store.getters.creds.hasPrivilege('optiboard-nokibana') && !$store.getters.creds.hasPrivilege('admin'))"
@@ -156,10 +153,12 @@
       </el-card>
     </el-row>
 
-    <el-row style="height:40px;">
-      <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add Exsting view</el-button>
-      <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New view</el-button>
-    </el-row>
+      <el-row style="height:40px;">
+        <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add
+          Exsting view</el-button>
+        <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New
+          view</el-button>
+      </el-row>
 
     </el-form>
   </el-dialog>
@@ -198,17 +197,17 @@ export default {
     loadingViewList: false,
     rules: {
       _source: {
-        name : [
+        name: [
           { required: true, message: "Carousel name cannot be empty", trigger: "change" }
         ],
       }
     },
   }),
   computed: {
-    recordin: function() {
+    recordin: function () {
       return this.record;
     },
-    recchanged: function() {
+    recchanged: function () {
       return JSON.stringify(this.recordin) != JSON.stringify(this.newRec);
     },
     dragOptions() {
@@ -218,6 +217,21 @@ export default {
         disabled: false,
         ghostClass: "ghost"
       };
+    },
+    filteredViewList() {
+      if (this.$store.getters.creds.hasPrivilege('admin')) {
+        return this.viewListAll;
+      } else {
+        return this.viewListAll.filter(item => {
+          return this.$store.getters.creds.user.privileges.some(privilege => {
+            return (
+              privilege &&
+              item.client &&
+              privilege.toLowerCase() === item.client.toLowerCase()
+            );
+          });
+        });
+      }
     }
   },
   props: {
@@ -230,7 +244,7 @@ export default {
   },
   watch: {
     viewList: {
-      handler: function() {
+      handler: function () {
         this.viewListToRecord()
       },
       deep: true
@@ -242,37 +256,32 @@ export default {
     //   deep: true
     // },
   },
-  mounted: function() {
+  mounted: function () {
     console.log("mounted event");
-    console.log(this.record)
     this.prepareData();
   },
   components: {
   },
   methods: {
-    closeDialog: function() {
-      if (!(this.loading || !this.recchanged || this.newRec._source.name==''))
-      {
+    closeDialog: function () {
+      if (!(this.loading || !this.recchanged || this.newRec._source.name == '')) {
         this.$confirm('There are unsaved changes. Continue?', 'Warning', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
           this.$emit("dialogclose");
-        })      
+        })
       }
       else
         this.$emit("dialogclose");
     },
-    viewListToRecord: _.debounce(function() {
+    viewListToRecord: _.debounce(function () {
       this.newRec._source.id_array = this.viewList.map(function (obj) {
-                                                        return {'id': obj.id};
-                                                      });
+        return { 'id': obj.id };
+      });
     }, 500),
-    viewListAllToViewList: _.debounce(function() {
-      console.log('viewListAllToViewList')
-      console.log(this.newRec._source.id_array)
-      
+    viewListAllToViewList: _.debounce(function () {
       this.viewList = []
 
       for (var i in this.newRec._source.id_array) {
@@ -288,9 +297,20 @@ export default {
       this.viewList = null;
       this.viewList = JSON.parse(JSON.stringify(tmp));
     }, 500),
-    prepareData: function() {
+    prepareData: function () {
       this.newRec = JSON.parse(JSON.stringify(this.record));
       this.orgRec = JSON.parse(JSON.stringify(this.record));
+
+
+      const str = this.config.config.hiddenQuery;
+      if (str) {
+        const regex = /client:\s*"(.*?)"/;
+        const match = str.match(regex);
+        if (match) {
+          this.newRec._source.client = match[1]
+        }
+      }
+
 
       // if (this.orgRec._source.id_array == null) {
       //   this.orgRec._source.id_array = [];
@@ -339,8 +359,8 @@ export default {
     },
     viewUpdated() {
 
-      if(this.viewModifyMode == 'add') {
-        this.newRec._source.id_array.push({'id':this.viewToModify._id});
+      if (this.viewModifyMode == 'add') {
+        this.newRec._source.id_array.push({ 'id': this.viewToModify._id });
       }
 
       this.loadingViewList = true;
@@ -363,7 +383,7 @@ export default {
         }
       };
 
-      if(this.newRec._source.client)
+      if (this.newRec._source.client)
         this.viewToModify._source.client = this.newRec._source.client
 
       this.dialogViewVisible = true;
@@ -400,7 +420,7 @@ export default {
           }
         });
     },
-    saveRecord: function() {
+    saveRecord: function () {
       this.$store.commit({
         type: "updateRecord",
         data: this.newRec
@@ -412,6 +432,73 @@ export default {
         message: "Record updated.",
         position: "bottom-right"
       });
+      this.refreshScreen();
+    },
+    refreshScreen: function () {
+      var url =
+        this.$store.getters.apiurl +
+        "generic_search/optiboard_token*?token=" +
+        this.$store.getters.creds.token;
+
+      var query = {
+        query: {
+          bool: {
+            must: [
+              {
+                match_all: {}
+              }
+            ]
+          }
+        }
+      };
+
+      axios
+        .post(url, query)
+        .then(response => {
+          if (response.data.error != "")
+            console.log("generic search optiboard_token error...");
+          else {
+            response.data.records.forEach(element => {
+              if (this.$attrs.editMode == "edit") {
+                if (element._source.carrousel == this.orgRec._source.name && element._source.carrousel != this.newRec._source.name) {
+                  this.$store.commit({
+                    type: "onlyUpdateRecord",
+                    data: {
+                      _index: "optiboard_token",
+                      _id: element._id,
+                      _source: {
+                        carrousel: this.newRec._source.name
+                      }
+                    }
+                  });
+                }
+                if (this.newRec._source.name == element._source.carrousel) {
+                  var refreshrec = {
+                    _index: "optiboard_command",
+                    _id: "id_" + Math.floor((1 + Math.random()) * 0x1000000),
+                    _source: {
+                      "@timestamp": Date.now(),
+                      cmd: "REFRESH",
+                      cmdType: "REFRESH",
+                      executed: 0,
+                      guid: element._source.guid,
+                      screen: element._source.optiboard
+                    },
+                    _type: "doc"
+                  };
+                  this.$store.commit({
+                    type: "updateRecord",
+                    data: refreshrec
+                  });
+                }
+              }
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      return
     },
     getViews() {
       // this.viewList = [];
@@ -449,7 +536,8 @@ export default {
                 type: viewRec._source.type,
                 description: viewRec._source.description,
                 duration: viewRec._source.duration,
-                target: viewRec._source.target
+                target: viewRec._source.target,
+                client: viewRec._source.client
               };
 
               this.viewListAll.push(viewObj);
@@ -473,7 +561,7 @@ export default {
       let input = this.$refs.indexPattern;
       this.$nextTick(() => input.focus());
     },
-    setFocusSelect: function() {
+    setFocusSelect: function () {
       let select = this.$refs.timeField;
       this.$nextTick(() => select.focus());
     }
@@ -481,7 +569,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .carousel-editor .view-table {
   margin-bottom: 30px;
 }

@@ -1,31 +1,44 @@
 <template>
   
   <div class="login-container">
-    <div class="title-icon"></div>
-    <div class="login-logo1">
-    </div>
-    <div class="title-icon2">
-      <v-icon
-        style="color:white"
-        name="spinner"
-        scale="3"
-        spin
-        v-if="!initialized || loginunderway"
-      />
-      <v-icon
-        style="color:white"
-        :name="config.icon"
-        scale="3"
-        v-if="initialized  && !loginunderway"
-      />
-    </div>
+    <img class="logo-group" src="../assets/quantesx.png">
+    <img class="logo-team" src="../assets/equansDigital.png">
+    <div class="logo-container" style="display: none;">
+      <div class="title-icon"></div>
+      <div class="login-logo1">
+      </div>
+      <div class="title-icon2">
+        <v-icon style="color:white" name="spinner" scale="3" spin v-if="!initialized || loginunderway" />
+        <v-icon style="color:white" :name="config.icon" scale="3" v-if="initialized && !loginunderway" />
+      </div>
+    </div>
 
-    <div class="title-disclaimer">
-      <b>Nyx</b> Platform <b>{{this.$store.getters.version}}</b> ({{$store.getters.elasticVersion}})
-    </div>
-
-    <el-card class="login-card" :body-style="{ padding: '30px 20px'  }" shadow="hover">
-      <el-form class="login-form" label-width="0px">
+<div class="title-disclaimer">
+  <b>Nyx</b> Platform <b>{{this.$store.getters.version}}</b> ({{$store.getters.elasticVersion}})
+</div>
+    <el-card class="login-card" :body-style="{padding:'25px 25px'}" shadow="hover">
+      <div class="login-choice-card" v-if="!userPassword">
+        <el-button
+        class="login-button email-button"
+        @click="useEmail()"
+        type="secondary"
+        size="default"
+        >
+        <v-icon style="color:#DCDFE6" name="regular/envelope" scale="1.8"></v-icon>
+        Login using Email</el-button>
+        <!--a :href="azure_url" target="popup" -->
+        <el-button
+              class="login-button equans-login-button"
+              type="primary"
+              size="default"
+              @click="openPopup()"
+            >
+            <img class="equans-logo" src="../assets/EQUANS.png" height="40"/>
+            Equans Login</el-button>
+            <!--/a-->
+            <div class="login_error" v-if="azureError">{{azureError}}</div>
+      </div>
+      <el-form class="login-form" label-width="0px" v-if="userPassword && !resetPassword" >
         <el-col :span="24">
           <el-form-item label>
             <el-input
@@ -48,23 +61,25 @@
               size="medium"
             />
           </el-form-item>
-          <el-button
-            class="login-button"
-            @click="validateUser()"
-            type="primary"
-            size="default"
-            color="#048"
-            
-            :disabled="loginDisabled"
-            :loading="loginunderway"
-          >Login</el-button>
+            <el-button
+              class="login-button"
+              @click="validateUser()"
+              type="primary"
+              size="default"
+              color="#048"
+              :disabled="loginDisabled"
+              :loading="loginunderway"
+            >Login</el-button>
+          <div>
+            <a @click="forgottenPassword()" class="forgottenPassword">Forgot password?</a>
+          </div>
           <div class="login_error" v-if="form.error">{{form.error}}</div>
         </el-col>
       </el-form>
+      <ForgottenPassword v-if="resetPassword" @error="forgottenPasswordAction($event)"/>
     </el-card>
-    <h1 class="title-login">
+    <h1 class="title-login" style="display: none;">
       {{config.welcome}}
-      
     </h1>
 
   </div>
@@ -75,7 +90,10 @@
 
 import Vue from "vue";
 import axios from "axios";
+import forgottenPassword from "@/components/ForgottenPassword";
 import { loadLanguageAsync } from "../i18n-setup";
+
+Vue.component("ForgottenPassword",forgottenPassword)
 
 function getUrlVars() {
   var vars = {};
@@ -91,6 +109,7 @@ function getUrlVars() {
 
 export default {
   data: () => ({
+    userPassword: false,
     form: {
       login: "",
       password: "",
@@ -101,12 +120,111 @@ export default {
       welcome: "loading"
     },
     loginunderway: false,
-    initialized: false
+    initialized: false,
+    azure_url: "",
+    azureunderway: false,
+    azureError:"",
+    //cardHeight: 110,
+    resetPassword: false
   }),
-  created: function() {
+  created: async function() {
+    var vars = getUrlVars();
+    this.getAzureUrl();
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
+    forgottenPasswordAction(error){
+      this.resetPassword=false;
+      this.form.error=error;
+    },
+    forgottenPassword(){
+      this.resetPassword=true
+    },
+    async getAzureUrl(){
+      this.azureunderway = true;
+      const response = await axios.get(
+        this.$store.getters.apiurl + "checkstate?loggedout=" + this.$store.getters.loggedOut,{
+          withCredentials:true
+        }
+      );
+      
+      console.log('response.data: ', response.data);
+      //var response.data= await JSON.parse(response.data)
+      if (response.data.skipActiveDirectory){
+        this.userPassword=true;
+      }
+      if(response.data.azureSignedIn){
+        console.log("Azure signed in, signing in");
+        this.validateUser("azure/secondstep");
+      }else{
+        console.log("Azure not signed in, retrieving url: ", response.data.url )
+        this.azure_url=await response.data.url;
+        this.azureunderway = false;
+      }
+    },
+    async openPopup(){
+      var width = 650; // Width of the new window
+      var height = 700; // Height of the new window
+      
+      // Calculate the center position
+      var left = (window.innerWidth - width) / 2;
+      console.log('left: ', left);
+      var top = (window.innerHeight - height) / 2;
+      console.log('top: ', top);
+
+      // Define window features
+      //var features = `width=${width},height=${height},left=${left},top=${top}`;
+      var features = this.popupCenter(width,height)
+      console.log('features: ', features);
+
+      var win = window.open('about:blank', '_blank', features);
+      win.location.href = this.azure_url;
+      console.log('this.azure_url: ', this.azure_url);
+      
+      //let win=window.open(this.azure_url,"popup",features);
+      this.azureunderway=true;
+      console.log("entering loop, wainting for azure signin")
+      while (!win.closed&&this.azureunderway){
+        this.loopApi(win)
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      this.azureunderway=false;
+      console.log("Loop over, Logged in")
+    },
+    popupCenter(w, h) {
+      // Fixes dual-screen position                             Most browsers      Firefox
+      const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+      const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+
+      const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+      const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+      const systemZoom = width / window.screen.availWidth;
+      const left = (width - w) / 2 / systemZoom + dualScreenLeft
+      const top = (height - h) / 2 / systemZoom + dualScreenTop
+      const features =`width=${w}, height=${h}, top=${top}, left=${left} `
+      return features
+    },
+    async loopApi(win){
+      const response = await axios.get(
+        this.$store.getters.apiurl + "azure/finished",
+        {withCredentials:true}
+      );
+
+      if (response.data.error){
+        this.azureunderway=false
+        console.log("errror AZURE")
+        win.close()
+        //ADD message
+      }else{
+        if(response.data.finished){
+          this.azureunderway=false;
+          this.validateUser("azure/secondstep");
+          win.close()
+        }
+        return;
+      }
+    },
     async loadConfig() {
       const response = await axios.get(
         this.$store.getters.apiurl + "config",
@@ -126,15 +244,33 @@ export default {
 
       }
     },
-
-    async validateUser() {
+    useEmail(){
+      this.userPassword=true;
+      //this.cardHeight=150;
+    },
+    
+    async validateUser(endpoint="cred/login") {
       try {
+        let response
         this.loginunderway = true;
-        const response = await axios.post(
-          this.$store.getters.apiurl + "cred/login",
-          { login: this.form.login, password: this.form.password }
-        );
+        if(endpoint=="azure/secondstep"){
+          response = await axios.get(
+            this.$store.getters.apiurl + endpoint,
+            { 
+              withCredentials:true
+            }
+          );
+        }else{
+          response = await axios.post(
+            this.$store.getters.apiurl + endpoint,
+            {
+                login: this.form.login, 
+                password: this.form.password
+            },          
+          );
+        }
 
+        console.log('response.data.error: ', response.data.error);
         if (response.data.error == "") {
           this.authenticate(response);
         } else {
@@ -189,19 +325,17 @@ export default {
 
       var curVer = resVersion.data.uiversion
 
-      console.log(version)
-      console.log(curVer)
-
+      
       if(version != curVer)
       {
+        console.log(version)
+        console.log(curVer)
         console.log("Must be reload")
-        window.location.reload()
+        //window.location.reload()
       }
       else{
         console.log("Good Version")
       }
-
-
     },
     authenticate(response) {
 
@@ -220,8 +354,9 @@ export default {
         type: "login",
         data: response.data
       });
+      console.log('response.data: ', response.data);
       this.loginunderway = false;
-
+      
       var rec_id = null
       try {
         
@@ -267,10 +402,7 @@ export default {
           data: response.data.all_filters
         });
       }
-
-
       console.log('push this path: '+path)
-
       this.$router.push(path);
       this.$store.commit({
         type: "version",
@@ -304,12 +436,16 @@ export default {
     }
   },
   mounted: function() {
+
     var vars = getUrlVars();
     if (vars["user"] != undefined) {
-      this.form.login = vars["user"].split("#")[0];
+      this.form.login = decodeURIComponent(vars["user"].split("#")[0]);
     }
     if (vars["password"] != undefined) {
-      this.form.password = vars["password"].split("#")[0];
+      this.form.password = decodeURIComponent(vars["password"].split("#")[0]);
+      if (vars["user"] != undefined) {
+        this.validateUser()
+      }
     }
   }
 };
@@ -326,7 +462,6 @@ export default {
   height: 30px;
   color: red;
 }
-
 .title-login {
   position: absolute;
   width: 100%;
@@ -393,21 +528,53 @@ export default {
 .login-card {
   position: absolute;
   left: 50%;
-  height: 200px;
-  top: 50%;
-  margin-top: -50px;
+  top: 42%;
   width: 400px;
-  margin-left: -200px;
+  transform: translateX(-50%);
+  transition: height 3s;
 }
-
-.login-form .el-input__inner{
-  /*
-  border-radius:50px !important;
-  */
+.login-choice-card {
+  position: relative;
 }
-
 .login-form .el-button{
   margin-top: 12px;
-
+}
+.login-choice-card .el-button{
+  height:45px;
+  border-radius: 6px;
+  border-width: 2px;
+}
+.equans-login-button{
+  margin-left:0 !important;
+  margin-top:1em !important;
+  position: relative;
+}
+.equans-logo{
+  position:absolute;
+  left:8%;
+  top:-3%;
+}
+.login-choice-card .fa-icon{
+  position:absolute;
+  left:10%;
+  top:7%
+}
+.logo-group {
+  position: absolute;
+  left: 50%;
+  width: 300px;
+  transform: translate(-50%,-100%);
+  top: 40%;
+}
+.logo-team {
+  position: absolute;
+  left: 1%;
+  width: 150px;
+  top: 92%;
+}
+.forgottenPassword{
+  float: left;
+  margin-top: 0.3em;
+  cursor: pointer;
 }
 </style>

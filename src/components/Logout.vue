@@ -71,7 +71,7 @@ export default {
         type: "success",
         position: "bottom-right"
       });
-      this.$router.push("/");
+      setTimeout(() => {this.$router.push("/");},500);
     }
   }
 };
