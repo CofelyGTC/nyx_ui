@@ -276,13 +276,13 @@ export default {
         this.currentConfig.config.url =
         "." +
         this.$store.getters.kibanaurl.replace("kibana", "kibananyx") +
-        `app/${space}` +
+        `${space}app/dashboards#/view/` +
         this.computeKibanaUrlFromSelectedDash();
       }
     },
 
     computeKibanaUrlFromSelectedDash() {
-      var url = "dashboards#/view/" + this.currentConfig.config.kibanaId + "?embed=true";
+      var url = this.currentConfig.config.kibanaId + "?embed=true";
       console.log(this.currentConfig);
       if(this.currentConfig.hideFilter) url += "&hide-filter-bar=" + this.currentConfig.hideFilter;
       if(this.currentConfig.queryBarChecked) url += "&show-query-input=" + this.currentConfig.queryBarChecked;
