@@ -301,16 +301,13 @@ export default {
       if (this.currentConfig.timeRefresh && this.currentConfig.timeRefreshValue != null)
       strRefresh = 'refreshInterval:(pause:!f,value:'+this.currentConfig.timeRefreshValue+')'
     
-    url += "&_g=(" + strRefresh + ",time:(" + timek + ")";
+    url += "&_g=(" + strRefresh + ",time:(" + timek + "))";
     
     if (this.currentConfig.config.hiddenQuery != undefined) {
-      url += `,query:(language:lucene,query:'${this.currentConfig.config.hiddenQuery}')`;
+      url += `&_a=(query:(language:lucene,query:'${this.currentConfig.config.hiddenQuery}'))`;
     }else{
-      url += ",query:(language:lucene,query:'*')";
+      url += "&_a=(query:(language:lucene,query:'*'))";
     }
-    
-    url += ")";  
-    console.log('url: ', url);
     return url;
   },
   
