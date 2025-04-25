@@ -133,7 +133,7 @@ export default {
     setTimeout(this.loadConfig, 1000);
   },
   methods: {
-    forgottenPasswordAction(error){
+    forgottenPasswordAction(error){d
       this.resetPassword=false;
       this.form.error=error;
     },
@@ -323,14 +323,14 @@ export default {
 
       const resVersion = await axios.get("version");
 
-      var curVer = resVersion.version
+      var curVer = resVersion.data.version
 
       
       if(version != curVer)
       {
         console.log(version)
         console.log(curVer)
-        console.log("Must be reload")
+        console.log("Must be reloaded")
         //window.location.reload()
       }
       else{
