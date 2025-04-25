@@ -1,7 +1,7 @@
 #/bin/bash
 VERSION="5.3.37"
-sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
-sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
+#sed -i '' -e "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js #For MACOS
+#sed -i "s/version:.*\",/version: \"v$VERSION\",/" ./src/store/store.js  #For Windows
 docker build -t engiecofely/nyx_ui:v$VERSION .
 docker push engiecofely/nyx_ui:v$VERSION
 echo -en "\007"
