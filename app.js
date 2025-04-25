@@ -4,11 +4,10 @@
 
 
 var http = require('http');
-
-
 var express = require('express');
 var app = express();
 var path="/etc/opt/nyx_ui"
+
 //var cors = require('cors');
 console.log("Path:"+path)
 app.use(express.static(path));
@@ -28,7 +27,12 @@ app.use(express.static(path));
   app.use(bodyParser.urlencoded({ extended: true }))
   
   app.use(bodyParser.json())*/
-  
+app.get('/version', function (req, res) {
+  if (!process.env.VERSION) {
+    return res.status(500).json({ error: "Version number not set" });
+  }
+  res.json({ version: process.env.VERSION });
+});
 
 var server = app.listen(7654, function () {
 

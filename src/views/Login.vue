@@ -321,9 +321,9 @@ export default {
     },
     async verifyVersion(version) {
 
-      const resVersion = await axios.get(this.$store.getters.apiurl + "getLastVersion");
+      const resVersion = await axios.get("version");
 
-      var curVer = resVersion.data.uiversion
+      var curVer = resVersion.version
 
       
       if(version != curVer)

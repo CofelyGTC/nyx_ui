@@ -26,6 +26,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: engiecofely/nyx_ui:${{ github.ref_name }}
+          build-args: VERSION=${{ github.ref_name }}
 
       - name: Logout from Docker Hub
         run: docker logout
