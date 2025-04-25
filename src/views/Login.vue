@@ -331,7 +331,11 @@ export default {
         console.log(version)
         console.log(curVer)
         console.log("Must be reloaded")
-        //window.location.reload()
+        window.location.reload()
+        this.$store.commit({
+          type: "ui_version",
+          data: curVer
+        });
       }
       else{
         console.log("Good Version")

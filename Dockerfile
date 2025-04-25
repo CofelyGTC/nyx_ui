@@ -2,7 +2,6 @@ FROM node:16.19.0-slim AS base
 ARG VERSION
 
 FROM base AS builder
-ENV VERSION=${VERSION}
 WORKDIR /etc/opt
 RUN apt-get update && apt-get upgrade -y
 RUN npm i express

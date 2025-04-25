@@ -69,7 +69,7 @@ export default new Vuex.Store({
     apiVersion: "",
     kibanaurl: "/kibana/",
     grafanaurl: "/grafana/",
-    version: process.env.VERSION,
+    version: "v0.0.0",
     devMode: false,
     menus: [],
     menuOpen: true,
@@ -246,13 +246,15 @@ export default new Vuex.Store({
     },
     privileges(state, payload) {
       state.privileges = payload.data;
-    }
-    ,
+    },
     version(state, payload) {
       console.log("Version mutation called.");
       state.apiVersion = payload.data;
-    }
-    ,
+    },
+    ui_version(state, payload) {
+      console.log("Version UI mutation called.");
+      state.version = payload.data;
+    },
     login(state, payload) {
       console.log("Login mutation called.");
       state.initialized = false;
