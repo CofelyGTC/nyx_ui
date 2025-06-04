@@ -1,6 +1,6 @@
 module.exports = {
+    productionSourceMap: false,
     configureWebpack: config => {
-        compiler: false
-        // ...
+
     }
 };
