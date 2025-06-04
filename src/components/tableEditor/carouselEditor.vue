@@ -219,7 +219,7 @@ export default {
       };
     },
     filteredViewList() {
-      if (this.$store.getters.creds.hasPrivilege('admin')) {
+      if (this.$store.getters.creds.hasPrivilege('admin') || this.$store.getters.creds.hasPrivilege('OPTIBOARD_VIEW_ADMIN')) {
         return this.viewListAll;
       } else {
         return this.viewListAll.filter(item => {
