@@ -682,9 +682,7 @@ export default {
             const records = response.data.records;
             
             const objetTrouve = this.carouselList.find(objet => objet.value === this.newRec._source.carrousel);
-            // var viewsCurrentCarrouselID = [];
             for (var i in objetTrouve.views){
-              // viewsCurrentCarrouselID.push(objetTrouve.views[i].id)
               const view = records.find(objet => objet._id === objetTrouve.views[i].id);
               var obj = {
                 _id: view._id,
@@ -701,7 +699,7 @@ export default {
     getCarousels: function() {
       var url =
         this.$store.getters.apiurl +
-        "generic_search/nyx_carousel*?token=" +
+        "generic_search/nyx_carousel?token=" +
         this.$store.getters.creds.token;
 
       var query = {

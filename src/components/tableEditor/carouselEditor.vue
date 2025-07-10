@@ -152,14 +152,12 @@
         </table>
       </el-card>
     </el-row>
-
       <el-row style="height:40px;">
         <el-button size="mini" type="primary" @click="addExistingView" class="add-view-button" icon="el-icon-plus">Add
           Exsting view</el-button>
         <el-button size="mini" type="" @click="addNewView" class="add-view-button" icon="el-icon-edit">Create New
           view</el-button>
       </el-row>
-
     </el-form>
   </el-dialog>
 </template>
@@ -506,7 +504,7 @@ export default {
       this.viewListAll = [];
       var url =
         this.$store.getters.apiurl +
-        "generic_search/nyx_view_carousel*?token=" +
+        "generic_search/nyx_view_carousel?token=" +
         this.$store.getters.creds.token;
 
       var query = {
