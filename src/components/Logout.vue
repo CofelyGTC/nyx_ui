@@ -2,9 +2,7 @@
   <span>
     <el-dropdown @command="handleCommand">
       <el-button type circle>
-        <div
-          style="width:16px;height:16px;font-size:14px;"
-        >{{$store.getters.creds.user.firstname[0]}}</div>
+        <div style="width:16px;height:16px;font-size:14px;">{{ $store.getters.creds.user.firstname[0] }}</div>
       </el-button>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="info">
@@ -23,13 +21,13 @@
     </el-dropdown>
   </span>
 </template>
-  
+
 <script>
 export default {
   name: "Logout",
   data: () => ({}),
   props: {},
-  created: function() {},
+  created: function () { },
   methods: {
     handleCommand(e) {
       if (e == "info") this.info();
@@ -40,18 +38,20 @@ export default {
     },
     info() {
       this.$alert(
-        "<strong>UI Version:</strong> " +
-          this.$store.getters.version +
-          "<br/><strong>API Version:</strong> "+this.$store.getters.apiVersion+ "<br/><strong>Window size:</strong> (" +
-          this.$store.getters.containerSize.width +
-          "," +
-          this.$store.getters.containerSize.height +
-          ")"
-          +"<br/><strong>Browser:</strong> "+this.$browserDetect.meta.name 
-          +"<br/><strong>Browser Version:</strong> "+this.$browserDetect.meta.version
-          
-          ,
-        "Nyx Version",
+        "<strong>User:</strong> " + this.$store.getters.creds.user.firstname + " " + this.$store.getters.creds.user.lastname +
+        "<br/><strong>Email:</strong> " + this.$store.getters.creds.user.login + "<br/>" +
+        "<br/><strong>UI Version:</strong> " +
+        this.$store.getters.version +
+        "<br/><strong>API Version:</strong> " + this.$store.getters.apiVersion + "<br/><strong>Window size:</strong> (" +
+        this.$store.getters.containerSize.width +
+        "," +
+        this.$store.getters.containerSize.height +
+        ")"
+        + "<br/><strong>Browser:</strong> " + this.$browserDetect.meta.name
+        + "<br/><strong>Browser Version:</strong> " + this.$browserDetect.meta.version
+
+        ,
+        "Information",
         {
           confirmButtonText: "OK",
           dangerouslyUseHTMLString: true
@@ -71,7 +71,7 @@ export default {
         type: "success",
         position: "bottom-right"
       });
-      setTimeout(() => {this.$router.push("/");},500);
+      setTimeout(() => { this.$router.push("/"); }, 500);
     }
   }
 };
