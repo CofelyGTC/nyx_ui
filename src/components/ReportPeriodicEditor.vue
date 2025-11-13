@@ -427,7 +427,7 @@ export default {
     loadUsers: function() {
       var url =
         this.$store.getters.apiurl +
-        "generic_search/nyx_user*?token=" +
+        "generic_search/nyx_user?token=" +
         this.$store.getters.creds.token;
 
       axios
