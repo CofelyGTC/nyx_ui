@@ -3,7 +3,13 @@ ARG VERSION
 
 FROM base AS builder
 WORKDIR /etc/opt
-RUN apt-get update && apt-get upgrade -y
+
+# Correction des sources Debian obsolètes + update
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+    && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN npm i express
 COPY . /etc/build
 WORKDIR /etc/build
