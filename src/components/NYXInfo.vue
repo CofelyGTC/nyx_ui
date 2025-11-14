@@ -525,7 +525,7 @@ export default {
 
       url =
         this.$store.getters.apiurl +
-        "generic_search/elastalert?token=" +
+        "generic_search/elastalert_status?token=" +
         this.$store.getters.creds.token;
 
       if (this.$store.getters.elasticVersion == 6)
